@@ -6,6 +6,7 @@ __pycache__/
 .ipynb_checkpoints/
 *.ipynb.bak
 *.ipynb.bak2
+*.bak
 
 # --- OS / editor ---
 .DS_Store
@@ -22,7 +23,8 @@ slurm-*.err
 logs/
 
 # --- Licensed / huge data (must stay outside git) ---
-data/
+/data/**
+!/data/README.md
 Datasets/
 hf_cache/
 *.pkl
