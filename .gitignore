@@ -1,11 +1,74 @@
+# --- Python / Jupyter ---
 .venv/
+venv/
 __pycache__/
-*.pyc
+*.py[cod]
 .ipynb_checkpoints/
+*.ipynb.bak
+*.ipynb.bak2
+
+# --- OS / editor ---
 .DS_Store
-
-# Local runtime/browser artifacts
+Thumbs.db
 .local_chromium_libs/
+.cursor/
+.cursorrules
+*.swp
 
-# Keep research outputs and notebooks, skip raw source datasets
+# --- Logs / SLURM ---
+*.log
+slurm-*.out
+slurm-*.err
+logs/
+
+# --- Licensed / huge data (must stay outside git) ---
+data/
 Datasets/
+hf_cache/
+*.pkl
+*.faiss
+*.index
+*.npy
+sapbert_full_len3/
+
+# Hugging Face / torch caches
+.cache/
+**/huggingface/hub/
+
+# --- Raw / large pipeline artefacts (regenerate; see outputs/MANIFEST.md) ---
+outputs/**/intermediate/
+outputs/**/intermediate_smoke/
+outputs/**/cadec_model_raw/
+outputs/**/mm_model_raw/
+outputs/**/handoff/
+**/*_all_model_outputs.csv
+**/*_all_outputs_mapped.csv
+**/*mapped_outputs.csv
+**/*_validated_perturbations*.csv
+**/*_model_outputs.csv
+**/*_perturbations.csv
+outputs_archive/
+
+# Smoke / local scratch
+outputs/**/smoke/
+
+# --- Do not commit files > ~50MB ---
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.ckpt
+*.h5
+*.parquet
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+*.zst
+*.xz
+
+# Bulky assignment PDFs
+Documents/*.pdf
+notebooks/*.pdf

@@ -1,7 +1,0 @@
-model_name,architecture,identical_copy_H,typographic_H,excluded
-FLAN-T5-base,generative,0.0,0.0,False
-FLAN-T5-XXL,generative,0.0,0.0,False
-BioMistral-7B,generative,0.0,0.0,False
-BERT-base,encoder,0.3528,,False
-BioBERT,encoder,0.3473,,False
-PubMedBERT,encoder,0.3236,,False

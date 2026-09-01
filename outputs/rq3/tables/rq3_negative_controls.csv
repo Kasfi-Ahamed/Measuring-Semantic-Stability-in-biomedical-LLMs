@@ -1,4 +1,0 @@
-model_name,architecture,identical_copy_H,excluded
-BERT-base,encoder,0.0,False
-BioBERT,encoder,0.0,False
-PubMedBERT,encoder,0.0,False
