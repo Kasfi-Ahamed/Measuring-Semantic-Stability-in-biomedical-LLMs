@@ -7,6 +7,11 @@
 #SBATCH --time=12:00:00
 #SBATCH --output=logs/topk_%j.log
 #SBATCH --error=logs/topk_%j.log
+#SBATCH --exclude=g32-2gpu-1,g48-2gpu-1
+#
+# Small-model job: no 7-8B weights, so the 16/20 GB cards are fine. Excludes g32-2gpu-1
+# (V100, no native bf16 -- this job still loads bf16 weights) and g48-2gpu-1 (node health).
+#
 
 set -euo pipefail
 cd $HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs
