@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=12:00:00
-#SBATCH --exclude=g48-2gpu-1
+#SBATCH --exclude=g32-2gpu-1,g48-2gpu-1
 #SBATCH -o logs/mm_encflan_inf_%A_%a.log
 #SBATCH -J mm_encflan_inf
 
