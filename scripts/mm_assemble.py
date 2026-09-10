@@ -41,7 +41,9 @@ def assemble_partial_grid(project_root: Path | None = None, require_all_eight: b
     print("MM shard status:", status, flush=True)
 
     if require_all_eight:
-        ready = complete_shards_for_grid(root, require_enc=True, require_gen=True)
+        ready = complete_shards_for_grid(root, require_enc=True, require_gen=True, source="files")
+        # source="files": the shard CSVs are concatenated below, so they must be readable.
+        # A mapped-and-pruned shard is grid-complete but its CSVs are gone.
     else:
         n = n_shards(len(load_instance_index(root)))
         ready = [

@@ -16,7 +16,9 @@ from scripts.mm_shard_lib import complete_shards_for_grid, shard_root  # noqa: E
 
 def main() -> int:
     root = shard_root(_ROOT)
-    ready = complete_shards_for_grid(root, require_enc=True, require_gen=True)
+    ready = complete_shards_for_grid(root, require_enc=True, require_gen=True, source="files")
+    # source="files": this gates whether there is NEW un-mapped work; already-mapped
+    # shards have been pruned and need no further mapping.
     print(f"8-model complete blocks: {ready}", flush=True)
     if not ready:
         return 0

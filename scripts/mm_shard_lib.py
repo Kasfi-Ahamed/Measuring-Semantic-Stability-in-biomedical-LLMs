@@ -284,11 +284,66 @@ def record_shard_model(
         return man
 
 
-def complete_shards_for_grid(root: Path, require_enc: bool = True, require_gen: bool = True) -> list[int]:
-    """Instance-blocks where every required model family has a complete sidecar."""
+def mapped_outputs_path(root: Path) -> Path:
+    """The mapped-outputs CSV that sits beside the shard directory."""
+    return root.parent / "rq1_all_outputs_mapped.csv"
+
+
+def shard_model_counts_in_mapped(root: Path) -> tuple[dict[int, int], int]:
+    """(shard_id -> distinct model_name count in the mapped file, expected model count).
+
+    Model identity is taken from the mapped file itself rather than from ENC_KEYS/GEN_KEYS,
+    because the mapped file stores display names ("BioMistral-7B") while the shard files are
+    keyed by model key ("biomistral"). Deriving the expected set from the data keeps this
+    agnostic to that naming split.
+    """
+    mapped = mapped_outputs_path(root)
+    if not mapped.is_file():
+        return {}, 0
+    header = set(pd.read_csv(mapped, nrows=0).columns)
+    if not {"instance_id", "model_name"}.issubset(header):
+        # Degrade to the file-only view rather than taking down every caller of
+        # grid_status(); assert_grid_counts_consistent() is where this gets reported.
+        return {}, 0
+    idx = load_instance_index(root)
+    ordinal = dict(zip(idx["instance_id"].astype(str), idx["ordinal"].astype(int)))
+    df = pd.read_csv(mapped, usecols=["instance_id", "model_name"], low_memory=False)
+    df["_ord"] = df["instance_id"].astype(str).map(ordinal)
+    df = df.dropna(subset=["_ord"])
+    df["_sid"] = (df["_ord"].astype(int) // shard_size()).astype(int)
+    expected = df["model_name"].astype(str).nunique()
+    counts = df.groupby("_sid")["model_name"].nunique().astype(int).to_dict()
+    return {int(k): int(v) for k, v in counts.items()}, int(expected)
+
+
+def complete_shards_for_grid(
+    root: Path,
+    require_enc: bool = True,
+    require_gen: bool = True,
+    source: str = "any",
+) -> list[int]:
+    """Instance-blocks that are GRID-COMPLETE.
+
+    `source` selects the evidence used, and the choice is NOT cosmetic:
+
+      "files"  -- the 8 shard CSVs validate, i.e. the CSVs are READABLE RIGHT NOW.
+                  Use this whenever the caller is about to open those CSVs.
+      "mapped" -- every model's rows for the shard are present in
+                  rq1_all_outputs_mapped.csv. Survives pruning; the CSVs may be gone.
+      "any"    -- the union, and the project's definition of grid-complete
+                  (docs/ANALYSIS_PRECOMMIT.md, "Amendment 1 to section 5"). DEFAULT.
+
+    Why the default is the union: mm_prune_mapped_shards.py DELETES the shard CSVs once a
+    block has been mapped, so a file-only check reports a finished-and-mapped shard as
+    incomplete. That made the reported count fall toward zero exactly as the work succeeded
+    -- [2, 19] while [0, 1, 2, 19] were done, heading for [] after the next prune.
+    """
+    if source not in ("files", "mapped", "any"):
+        raise ValueError(f"source must be files|mapped|any, got {source!r}")
     man = load_manifest(root)
     n = int(man.get("n_shards") or n_shards(int(man.get("n_instances") or 0)))
-    ready = []
+
+    by_files = []
     for sid in range(n):
         ok = True
         if require_enc:
@@ -302,8 +357,69 @@ def complete_shards_for_grid(root: Path, require_enc: bool = True, require_gen: 
                     ok = False
                     break
         if ok:
-            ready.append(sid)
-    return ready
+            by_files.append(sid)
+    if source == "files":
+        return by_files
+
+    counts, expected = shard_model_counts_in_mapped(root)
+    by_mapped = (
+        [sid for sid in range(n) if counts.get(sid, 0) >= expected] if expected else []
+    )
+    if source == "mapped":
+        return by_mapped
+    return sorted(set(by_files) | set(by_mapped))
+
+
+def assert_grid_counts_consistent(root: Path) -> dict[str, Any]:
+    """Hard-error if the file view and the mapped view have drifted apart.
+
+    The two views answer the same question from independent evidence, so a disagreement
+    they cannot both explain means one of them is lying. This project has already shipped
+    two artefacts whose provenance did not match their contents (an August mapping cache
+    under a September mtime; 513 stale pilot instances surviving a rewind), which is why
+    this is an assertion and not a warning.
+
+    A shard finished but not yet mapped has ZERO mapped rows -- that is normal and not
+    drift. Drift is a shard that is PARTIALLY mapped, or a mapped-complete shard the
+    grid-complete union somehow omits.
+    """
+    man = load_manifest(root)
+    n = int(man.get("n_shards") or n_shards(int(man.get("n_instances") or 0)))
+    by_files = complete_shards_for_grid(root, source="files")
+    counts, expected = shard_model_counts_in_mapped(root)
+    union = complete_shards_for_grid(root, source="any")
+
+    problems = []
+    if counts and expected != len(ENC_KEYS) + len(GEN_KEYS):
+        problems.append(
+            f"mapped file carries {expected} distinct model_name values, "
+            f"expected {len(ENC_KEYS) + len(GEN_KEYS)}"
+        )
+    partial = {sid: c for sid, c in counts.items() if 0 < c < expected}
+    if partial:
+        problems.append(
+            f"shards partially present in the mapped file (some models mapped, not all): "
+            f"{dict(sorted(partial.items()))} of {expected}"
+        )
+    missed = [sid for sid, c in counts.items() if c >= expected and sid not in union]
+    if missed:
+        problems.append(f"mapped-complete shards missing from the grid-complete union: {missed}")
+    stray = [sid for sid in counts if not (0 <= sid < n)]
+    if stray:
+        problems.append(f"mapped file contains rows for shard ids outside 0..{n - 1}: {stray}")
+
+    if problems:
+        raise AssertionError(
+            "GRID COUNT DRIFT between shard files and "
+            f"{mapped_outputs_path(root)}:\n  - " + "\n  - ".join(problems)
+        )
+    return {
+        "n_shards": n,
+        "complete_by_files": by_files,
+        "complete_by_mapped": sorted(sid for sid, c in counts.items() if c >= expected),
+        "complete_grid_shards": union,
+        "expected_models": expected,
+    }
 
 
 def concat_family_shards(
@@ -331,7 +447,9 @@ def grid_status(root: Path) -> dict[str, Any]:
         "n_instances": man.get("n_instances"),
         "n_shards": n,
         "shard_size": man.get("shard_size"),
-        "complete_grid_shards": complete_shards_for_grid(root),
+        "complete_grid_shards": complete_shards_for_grid(root),          # union (definition)
+        "complete_grid_shards_files": complete_shards_for_grid(root, source="files"),
+        "complete_grid_shards_mapped": complete_shards_for_grid(root, source="mapped"),
         "per_model_complete": {},
     }
     for fam, keys in (("enc", ENC_KEYS), ("gen", GEN_KEYS)):

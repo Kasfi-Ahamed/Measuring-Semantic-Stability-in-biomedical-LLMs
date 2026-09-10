@@ -27,7 +27,8 @@ def prune_mapped_gen_shards(project_root: Path | None = None) -> list[int]:
         print("No mapped CSV yet; skip prune", flush=True)
         return []
     root = shard_root(project_root)
-    ready = complete_shards_for_grid(root, require_enc=True, require_gen=True)
+    ready = complete_shards_for_grid(root, require_enc=True, require_gen=True, source="files")
+    # source="files": only shards whose CSVs still exist can be pruned.
     if not ready:
         return []
     mapped_ids = set(
