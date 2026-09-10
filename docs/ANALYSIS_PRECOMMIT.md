@@ -1,0 +1,77 @@
+# Analysis pre-commitment
+
+**Date: 2026-09-10.**
+
+These choices are fixed **before** any of the affected results are recomputed or inspected.
+Each is recorded with its rationale so that the decision cannot be re-litigated after the
+numbers are seen. Where a choice could plausibly weaken a headline result, that is stated
+here explicitly and the result will be reported either way.
+
+---
+
+## 1. RQ4 significance testing
+
+**Committed:** paired bootstrap at **B = 20,000**, p-value estimated as **(r + 1) / (B + 1)**,
+with **Holm–Bonferroni at alpha = 0.05** over the **same six pre-specified headline cells**
+already fixed in `RQ4_margin_benchmark.ipynb` (`HEADLINE`): MedMentions x {FLAN-T5-base,
+BioMistral-7B, Mistral-7B-Instruct-v0.1, Llama3-OpenBioLLM-8B, Meta-Llama-3-8B-Instruct},
+and CADEC x FLAN-T5-base.
+
+**This result will be reported regardless of whether the number of cells surviving Holm falls
+from 2 to 1.**
+
+**Rationale.** At B = 2000 the empirical p-value is quantised to 0.0005, and the Holm step-2
+threshold is exactly `0.05 / 5 = 0.01`. The MedMentions Mistral-7B cell currently reports
+p = 0.01 exactly, so it survives only because the comparison is `p <= alpha/(m-rank)` at exact
+equality; a single additional bootstrap resample crossing zero would move it to 0.0105 and
+drop the surviving count to 1. A knife-edge of that kind must not be decided by the
+resolution of the estimator. B = 20,000 reduces the quantum to 5e-5, and the (r+1)/(B+1)
+estimator removes the p = 0 values currently produced for four CADEC cells, which are not
+zero but merely below 1/B.
+
+**Unchanged:** the family membership, alpha, the AURC estimator, and the bootstrap seed.
+Only B and the p-value estimator change.
+
+---
+
+## 2. RQ3 matched-pair testing
+
+**Committed:** **paired Wilcoxon signed-rank as the primary test**, with the existing
+**one-sided Mann–Whitney U retained and reported as a sensitivity analysis**.
+
+**Rationale.** The matched-pair design compares two models on the *same* instances, so the
+observations are paired; Mann–Whitney U treats them as independent samples and therefore
+discards the pairing and understates power. Both are reported so the change of test cannot be
+mistaken for selection of a favourable result.
+
+---
+
+## 3. Entropy denominator: which m
+
+**Committed:** **distinct accepted variants (`m_distinct`) as primary**, all accepted variants
+(`m_accepted`) retained as a **sensitivity analysis** — **pending supervisor confirmation**,
+which is the one open item in this document.
+
+**Rationale.** Byte-identical input variants necessarily produce identical outputs and so fall
+in the same cluster, inflating the dominant cluster while simultaneously inflating m in the
+denominator `log2(m + 1)`; both effects push normalised entropy toward zero. This is not
+marginal: within-instance duplicates are 24.3% of accepted CADEC variants and 25.8% of
+MedMentions, and back-translation is **exactly 50.0%** in both lanes because it is greedy and
+deterministic yet generated in two slots per instance, so both slots always agree. Mean m
+falls 4.127 -> 3.125 (CADEC) and 4.780 -> 3.545 (MedMentions) under de-duplication, and the
+m >= 3 inclusion filter would drop 449 CADEC and 14,310 MedMentions instances. Both lanes show
+the same mechanism at the same magnitude, so a single definition applies consistently.
+
+Both views are computed in one pass and written as parallel columns
+(`m_accepted` / `m_distinct`, `normalised_entropy` / `normalised_entropy_dedup`, with
+`retained_m_accepted` / `retained_m_distinct`); no existing column is removed or renamed, and
+the downstream RQ notebooks continue to read the existing columns until this item is confirmed.
+
+---
+
+## Status of the affected artefacts at the time of writing
+
+None of the results these decisions govern have been recomputed. `rq4_combined3_wintest.csv`
+and `rq4_aurc_bootstrap_ci.csv` are from 2026-08-27 and still reflect B = 2000;
+`rq3_matched_pair_statistics.csv` does not currently exist; `entropy_cadec.csv` is from a run
+that reused a stale 2026-08-19 mapping cache and does not yet carry the parallel columns.
