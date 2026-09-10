@@ -43,6 +43,39 @@ SEED = 42
 OUT_DIR = Path(os.environ.get("DEDUP_CHECK_OUT", "/tmp/cadec_dedup_check"))
 
 
+def ensure_sapbert(ns: dict) -> None:
+    """Load the query encoder if cell 6 declined to.
+
+    Cell 6 short-circuits the SapBERT load when the mapped cache is present:
+
+        _mapped_cache_ready = (OUT_MAPPED.is_file() and ... columns present ...)
+        if _mapped_cache_ready:
+            _sap_tok = _sap_mdl = None
+
+    so both names EXIST but are None, and a mere `name in ns` check sails past it (that is
+    how job 32329 got as far as the first embed call before dying on
+    `'NoneType' object has no attribute 'eval'`). CADEC_FORCE_REMAP does not help: it gates
+    the mapping cell, not `_mapped_cache_ready`, which is pure file existence.
+
+    This check has to embed, so it needs the real encoder. Load it exactly as cell 6's
+    else-branch does -- same id, same .to("cuda").eval() then .half() order -- so the
+    vectors are the ones the notebook would have produced.
+    """
+    if ns.get("_sap_mdl") is not None and ns.get("_sap_tok") is not None:
+        return
+    from transformers import AutoModel, AutoTokenizer
+
+    sap_id = ns["SAPBERT_ID"]
+    print(f"[setup] mapped cache nulled the encoder — loading SapBERT on cuda: {sap_id}",
+          flush=True)
+    ns["_sap_tok"] = AutoTokenizer.from_pretrained(sap_id)
+    _mdl = AutoModel.from_pretrained(sap_id)
+    _mdl = _mdl.to("cuda").eval()
+    _mdl.half()
+    assert next(_mdl.parameters()).device.type == "cuda"
+    ns["_sap_mdl"] = _mdl
+
+
 def load_notebook_namespace() -> dict:
     nb = json.loads(NB.read_text(encoding="utf-8"))
     ns: dict = {"__name__": "__main__"}
@@ -54,8 +87,13 @@ def load_notebook_namespace() -> dict:
         exec(compile(src, f"{NB}:cell{i}", "exec"), ns, ns)
     for name in ("_embed_with_model", "_sap_mdl", "_sap_tok", "_faiss_index",
                  "_unique_forms", "_form_embeddings", "assign_with_encoder_scores",
-                 "TOP_K", "MIN_FORM_LEN", "_norm_cui", "df_out"):
+                 "TOP_K", "MIN_FORM_LEN", "_norm_cui", "df_out", "SAPBERT_ID"):
         assert name in ns, f"notebook namespace missing {name!r}"
+    ensure_sapbert(ns)
+    # Assert USABLE, not merely present -- being None is the failure mode this check hit.
+    for name in ("_sap_mdl", "_sap_tok", "_faiss_index", "_unique_forms",
+                 "_form_embeddings", "df_out"):
+        assert ns[name] is not None, f"notebook namespace has {name!r} set to None"
     return ns
 
 
