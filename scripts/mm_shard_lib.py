@@ -443,13 +443,22 @@ def concat_family_shards(
 def grid_status(root: Path) -> dict[str, Any]:
     man = load_manifest(root)
     n = int(man.get("n_shards") or 0)
+    # Compute the three views from ONE file validation and ONE read of the mapped CSV.
+    # Calling complete_shards_for_grid() once per view re-ran the sha256 sidecar check
+    # each time, and this runs once per model invocation.
+    _by_files = complete_shards_for_grid(root, source="files")
+    _counts, _expected = shard_model_counts_in_mapped(root)
+    _by_mapped = (
+        sorted(sid for sid, c in _counts.items() if c >= _expected) if _expected else []
+    )
+    _union = sorted(set(_by_files) | set(_by_mapped))
     out = {
         "n_instances": man.get("n_instances"),
         "n_shards": n,
         "shard_size": man.get("shard_size"),
-        "complete_grid_shards": complete_shards_for_grid(root),          # union (definition)
-        "complete_grid_shards_files": complete_shards_for_grid(root, source="files"),
-        "complete_grid_shards_mapped": complete_shards_for_grid(root, source="mapped"),
+        "complete_grid_shards": _union,          # union (the definition)
+        "complete_grid_shards_files": _by_files,
+        "complete_grid_shards_mapped": _by_mapped,
         "per_model_complete": {},
     }
     for fam, keys in (("enc", ENC_KEYS), ("gen", GEN_KEYS)):
