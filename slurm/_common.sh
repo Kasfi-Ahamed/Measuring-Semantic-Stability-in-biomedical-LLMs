@@ -9,14 +9,21 @@ export ASSUMED_QUOTA_GB="${ASSUMED_QUOTA_GB:-200}"
 export DISK_PAUSE_GB="${DISK_PAUSE_GB:-10}"
 
 # G4 LanguageTool needs a JRE. Binary lives at ~/data/jdk/temurin-17 (not ~/data/jdk/bin).
-if [ -x "${JAVA_HOME:-}/bin/java" ]; then
-  :
-elif [ -x "$HOME/data/jdk/temurin-17/bin/java" ]; then
-  export JAVA_HOME="$HOME/data/jdk/temurin-17"
-elif [ -x "$HOME/data/jdk/bin/java" ]; then
-  export JAVA_HOME="$HOME/data/jdk"
-else
-  echo "FATAL: no Java for LanguageTool G4 (tried JAVA_HOME, ~/data/jdk/temurin-17, ~/data/jdk)" >&2
+# Set JAVA_HOME EXPLICITLY; never infer it from the environment.
+#
+# The previous guard tested [ -x "${JAVA_HOME:-}/bin/java" ] first. With JAVA_HOME unset that
+# expands to [ -x "/bin/java" ]; on a node where /bin/java exists the branch matched, ran the
+# no-op ':' and left JAVA_HOME unset, so the "export PATH=$JAVA_HOME/bin" below died under
+# `set -u` (job 32306, g40-4gpu-1). It also made every job depend on whether the SUBMITTING
+# shell happened to export JAVA_HOME -- jobs submitted from a login shell worked while the
+# same script submitted from a clean environment failed on the first line.
+#
+# Hard-error if the JRE is not there, exactly as G4 refuses to run without real LanguageTool:
+# a silently missing Java would send G4 down the heuristic fallback and change gate results.
+export JAVA_HOME="$HOME/data/jdk/temurin-17"
+if [ ! -x "$JAVA_HOME/bin/java" ]; then
+  echo "FATAL: no Java for LanguageTool G4 at $JAVA_HOME/bin/java" >&2
+  echo "       G4 must run real LanguageTool; the heuristic fallback is not acceptable." >&2
   exit 1
 fi
 export PATH="$JAVA_HOME/bin:$PATH"
