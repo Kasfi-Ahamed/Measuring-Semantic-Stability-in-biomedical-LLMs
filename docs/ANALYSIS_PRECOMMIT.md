@@ -129,3 +129,57 @@ the reported sample. Partial grids are excluded.
 is not chosen after seeing which shards happened to finish, and it cannot be extended because
 the numbers came out unfavourably. The count of grid-complete shards on that date will be
 reported as-is, together with the number attempted, whatever the ratio.
+
+---
+
+# Amendment 1 to §5 — 2026-09-11
+
+Made **after** the 2026-09-11 amendment that introduced §5 and **before** any regenerated
+number was inspected. Job 32341 is still in step 1 of 3 (the dedup equivalence gate) and has
+produced no verdict, no mapping and no entropy values. §5 above is left exactly as written;
+this block states what changed and why, so the original wording and its revision are both on
+the record.
+
+## Defect in the original §5
+
+§5 fixed the cutoff by date but did not say **how** grid-completeness is counted, and the
+obvious implementation is wrong. `complete_shards_for_grid()` in `scripts/mm_shard_lib.py`
+re-validates the shard CSVs, while `scripts/mm_prune_mapped_shards.py` **deletes those CSVs by
+design** once a block has been mapped into `rq1_all_outputs_mapped.csv`. A mapped-and-pruned
+shard therefore reads as incomplete.
+
+The effect is not hypothetical and it grows over time. The function currently reports
+`[2, 19]` while `[0, 1, 2, 19]` are genuinely complete — shards 0 and 1 retain all eight
+`.complete.json` sidecars, their rows are already in the 734,512-row mapped file, and only
+their CSVs are gone. After tonight's `partial_map` maps and prunes shards 2 and 19, the same
+function would report `[]` with four shards complete. Left unfixed, the count reported at the
+cutoff would fall toward zero exactly as the work succeeded.
+
+## Corrected definition — GRID-COMPLETE
+
+A shard is **grid-complete** when **all 8 models' rows for that shard are present in
+`rq1_all_outputs_mapped.csv`**, **OR** when its **8 shard CSVs validate**. The union covers
+both states a finished shard can be in: mapped-and-pruned, or finished-but-not-yet-mapped.
+
+**Counting by `.complete.json` sidecars was considered and REJECTED.** A sidecar records that
+a job finished; it does not record that the data survived. This project has already hit two
+artefacts whose provenance did not match their contents — the August mapping cache carrying a
+September mtime, and 513 stale pilot instances that persisted through a rewind. Presence in
+the mapped file is evidence; a sidecar is a promise. Where the two disagree, the mapped file
+wins.
+
+## Separately defined — REPORTED SAMPLE
+
+The **reported sample** is the set of rows present in the entropy file at the cutoff, after
+the `m >= 3` inclusion rule and after instances whose outputs are all UNASSIGNED are excluded.
+
+The cutoff selects **shards**; the entropy file is what the manuscript quotes. These are
+different numbers and **both are to be stated in the paper** — the number of grid-complete
+shards at the cutoff, and the number of instances surviving into the reported sample. Quoting
+only one of them would misrepresent either the coverage or the analysed n.
+
+## Baseline, recorded while still observable
+
+As of **2026-09-11**, under the corrected definition: **4 shards grid-complete (0, 1, 2, 19)**
+and **22 incomplete**, out of 26 shards over 202,019 instances. Recorded now because tonight's
+`partial_map` prunes shards 2 and 19 and the pre-fix function would then report `[]`.
