@@ -1,6 +1,6 @@
 # Analysis pre-commitment
 
-**Date: 2026-09-10.**
+**Date: 2026-09-10.** Amended 2026-09-11 (see the amendment at the end of this file).
 
 These choices are fixed **before** any of the affected results are recomputed or inspected.
 Each is recorded with its rationale so that the decision cannot be re-litigated after the
@@ -75,3 +75,57 @@ None of the results these decisions govern have been recomputed. `rq4_combined3_
 and `rq4_aurc_bootstrap_ci.csv` are from 2026-08-27 and still reflect B = 2000;
 `rq3_matched_pair_statistics.csv` does not currently exist; `entropy_cadec.csv` is from a run
 that reused a stale 2026-08-19 mapping cache and does not yet carry the parallel columns.
+
+---
+
+# Amendment — 2026-09-11
+
+Recorded **before** any regenerated number has been inspected. At the time of writing, job
+32341 is still in step 1 of 3 (the full-corpus dedup equivalence gate), at 131,072 of 239,680
+rows on the non-deduped arm. It has produced no gate verdict, no mapping, and no entropy
+values. Nothing downstream of it has been looked at.
+
+Sections 1-3 above stand unchanged. Section 3's **decision** is unchanged; its rationale is
+sharpened and its confirmation date fixed below. Sections 4 and 5 are new.
+
+## 3a. Entropy denominator — rationale, restated
+
+**Committed (unchanged):** **distinct accepted variants (deduplicated m) is the PRIMARY
+analysis**; all accepted variants is reported as a **sensitivity analysis**.
+
+**Rationale.** A rewrite that is byte-identical to another rewrite is not an independent
+observation. Counting it twice inflates the dominant cluster and simultaneously inflates m in
+the denominator `log2(m + 1)`, pushing normalised entropy toward zero for reasons that have
+nothing to do with the model's semantic stability. This is not a new principle imported for
+convenience: **the pipeline already rejects rewrites identical to the original on exactly the
+same logic.** Deduplicating against the other accepted variants applies the rule the
+perturbation validator already applies against the original, and applying it in one place but
+not the other is the inconsistency.
+
+**Supervisor confirmation is scheduled for 17/09.** Both denominators are computed in the same
+pass and written as parallel columns, so reversing this decision needs no rerun — only a
+change of which column the RQ notebooks read.
+
+## 4. RQ4 comparator
+
+**Committed:** **`best_single` is retained as-is**, with its **data-dependent selection stated
+explicitly** in the text rather than presented as a fixed a-priori comparator. A
+**supplementary table reports `combined_3` against each of the three signals separately.**
+
+**Rationale.** `best_single` is chosen by looking at which single signal performs best on the
+same data the comparison is then made on, which biases the comparison against `combined_3`
+being seen to help. Retaining it keeps continuity with the analysis already run, but the
+selection has to be named for what it is, and the per-signal table lets a reader see the
+comparison that does not depend on that selection. Reported whichever way the supplementary
+table falls.
+
+## 5. MedMentions reporting cutoff
+
+**Committed:** the reporting cutoff is **21 September 2026**. Whatever shards are
+**grid-complete** — all 8 models present for that shard — on the morning of 21/09 constitute
+the reported sample. Partial grids are excluded.
+
+**Rationale.** Fixing the cutoff by date rather than by a target shard count means the sample
+is not chosen after seeing which shards happened to finish, and it cannot be extended because
+the numbers came out unfavourably. The count of grid-complete shards on that date will be
+reported as-is, together with the number attempted, whatever the ratio.
