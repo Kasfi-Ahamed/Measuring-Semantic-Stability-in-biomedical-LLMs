@@ -1,0 +1,110 @@
+dataset,dataset_label,model,n,small_n,signal,AURC,best_single_signal,best_single_AURC,combined_3_lt_best_single,combined_3_lt_combined2,combined_3_lt_both
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,combined,0.4427450508174726,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,combined_3,0.5556170420165715,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,confidence,0.4527868662210048,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,entropy,0.491592245200544,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,margin,0.7597914561748987,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,margin_min,0.7125801348684957,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BERT-base,5669,False,random,0.6170549845617301,confidence,0.4527868662210048,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,combined,0.3253419562000702,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,combined_3,0.3716178445411696,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,confidence,0.3579805514972435,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,entropy,0.3611119024271369,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,margin,0.6443847991363026,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,margin_min,0.587890037703204,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioBERT,5669,False,random,0.530284635989484,confidence,0.3579805514972435,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,combined,0.631861539268908,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,combined_3,0.637680695943611,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,confidence,0.6356783047419573,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,entropy,0.6305899276192659,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,margin,0.6810233414475502,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,margin_min,0.6718317884649977,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),BioMistral-7B,5658,False,random,0.681652408143588,entropy,0.6305899276192659,False,False,False
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,combined,0.6769646663567725,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,combined_3,0.6507874445461173,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,confidence,0.6892347121094748,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,entropy,0.6709748322218497,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,margin,0.6758183142807306,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,margin_min,0.6633506713772651,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),FLAN-T5-base,5668,False,random,0.7155729262281543,entropy,0.6709748322218497,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,combined,0.3718529111167173,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,combined_3,0.3702441495566981,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,confidence,0.3759414624692122,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,entropy,0.3805111594055289,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,margin,0.4007676065461483,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,margin_min,0.4171106351449396,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Llama3-OpenBioLLM-8B,233,True,random,0.5876304175596304,confidence,0.3759414624692122,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,combined,0.3608375123664676,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,combined_3,0.3595132944222985,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,confidence,0.3595456860499998,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,entropy,0.456408778746556,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,margin,0.3973498613242926,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,margin_min,0.4137413305151358,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Meta-Llama-3-8B-Instruct,5193,False,random,0.571745482103049,confidence,0.3595456860499998,True,True,True
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,combined,0.4470411796729284,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,combined_3,0.4575277662996638,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,confidence,0.4416352498563644,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,entropy,0.4957502637625753,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,margin,0.5437083742364117,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,margin_min,0.5525613589232887,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),Mistral-7B-Instruct-v0.1,5633,False,random,0.5780956807482222,confidence,0.4416352498563644,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,combined,0.3221092490440123,confidence,0.3523277392150173,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,combined_3,0.3731467452021546,confidence,0.3523277392150173,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,confidence,0.3523277392150173,confidence,0.3523277392150173,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,entropy,0.3644545925373443,confidence,0.3523277392150173,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,margin,0.6527832644063374,confidence,0.3523277392150173,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,margin_min,0.6096314399029434,confidence,0.3523277392150173,False,False,False
+CADEC,CADEC (patient-generated health text),PubMedBERT,5669,False,random,0.5339555657229997,confidence,0.3523277392150173,False,False,False
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,combined,0.6656266286082033,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,combined_3,0.6101747487539987,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,confidence,0.6497147519282236,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,entropy,0.7037034886312366,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,margin,0.6310268131343382,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,margin_min,0.648058234520092,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),BioMistral-7B,491,False,random,0.7033197402027971,margin,0.6310268131343382,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,combined,0.6442192161847068,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,combined_3,0.6115678109235365,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,confidence,0.6676121523477396,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,entropy,0.6732448031631045,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,margin,0.6287291227981204,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,margin_min,0.6470438420566246,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),FLAN-T5-base,491,False,random,0.7096730048790751,margin,0.6287291227981204,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,combined,0.6074900518429189,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,combined_3,0.5548099699192897,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,confidence,0.5848422655226488,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,entropy,0.6271935367269723,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,margin,0.6053157237066675,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,margin_min,0.6386645662299761,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Llama3-OpenBioLLM-8B,491,False,random,0.6874564775181398,confidence,0.5848422655226488,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,combined,0.6589652292587078,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,combined_3,0.6247376998344557,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,confidence,0.6716064105381621,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,entropy,0.6819615281930206,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,margin,0.6381530955905079,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,margin_min,0.6622538674681802,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Meta-Llama-3-8B-Instruct,490,False,random,0.7031547260598524,margin,0.6381530955905079,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,combined,0.6429079179237651,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,combined_3,0.6059526577240452,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,confidence,0.6371761995008902,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,entropy,0.6772111292718364,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,margin,0.6345688944101627,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,margin_min,0.6412438310074219,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),Mistral-7B-Instruct-v0.1,491,False,random,0.7103951242379696,margin,0.6345688944101627,True,True,True
+MedMentions,MedMentions (biomedical literature),BERT-base,491,False,entropy,0.8640375752204752,margin,0.8105458807071156,False,True,False
+MedMentions,MedMentions (biomedical literature),BERT-base,491,False,confidence,0.8660598061413696,margin,0.8105458807071156,False,True,False
+MedMentions,MedMentions (biomedical literature),BERT-base,491,False,margin,0.8105458807071156,margin,0.8105458807071156,False,True,False
+MedMentions,MedMentions (biomedical literature),BERT-base,491,False,random,0.8650026722126247,margin,0.8105458807071156,False,True,False
+MedMentions,MedMentions (biomedical literature),BERT-base,491,False,combined,0.8640375752204752,margin,0.8105458807071156,False,True,False
+MedMentions,MedMentions (biomedical literature),BERT-base,491,False,combined_3,0.822692577842119,margin,0.8105458807071156,False,True,False
+MedMentions,MedMentions (biomedical literature),BioBERT,491,False,entropy,0.8182369795457947,margin,0.7447983022351305,False,True,False
+MedMentions,MedMentions (biomedical literature),BioBERT,491,False,confidence,0.841162463926491,margin,0.7447983022351305,False,True,False
+MedMentions,MedMentions (biomedical literature),BioBERT,491,False,margin,0.7447983022351305,margin,0.7447983022351305,False,True,False
+MedMentions,MedMentions (biomedical literature),BioBERT,491,False,random,0.8332261837440249,margin,0.7447983022351305,False,True,False
+MedMentions,MedMentions (biomedical literature),BioBERT,491,False,combined,0.8182369795457947,margin,0.7447983022351305,False,True,False
+MedMentions,MedMentions (biomedical literature),BioBERT,491,False,combined_3,0.7555914684889868,margin,0.7447983022351305,False,True,False
+MedMentions,MedMentions (biomedical literature),PubMedBERT,491,False,entropy,0.8736802160649844,margin,0.8298274103770937,False,True,False
+MedMentions,MedMentions (biomedical literature),PubMedBERT,491,False,confidence,0.8761174888478026,margin,0.8298274103770937,False,True,False
+MedMentions,MedMentions (biomedical literature),PubMedBERT,491,False,margin,0.8298274103770937,margin,0.8298274103770937,False,True,False
+MedMentions,MedMentions (biomedical literature),PubMedBERT,491,False,random,0.8686369199020286,margin,0.8298274103770937,False,True,False
+MedMentions,MedMentions (biomedical literature),PubMedBERT,491,False,combined,0.8736802160649844,margin,0.8298274103770937,False,True,False
+MedMentions,MedMentions (biomedical literature),PubMedBERT,491,False,combined_3,0.8405584815476009,margin,0.8298274103770937,False,True,False

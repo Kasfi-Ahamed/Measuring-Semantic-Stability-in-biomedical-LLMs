@@ -1,0 +1,4 @@
+instance_id,model,output_text,gold_mention,gold_cui,gold_umls_name,winner_cui,winner_umls_name,s1,rival_cui,rival_umls_name,s2,margin,correct
+cadec_LIPITOR.207_TT2,BioMistral-7B,Charley horse,charley horses in legs,C0277823,Charleyhorse (finding),C0277823,Charleyhorse (finding),0.9999992847442628,C0324148,American Buckskin horse,0.7506638,0.2493354678153992,1
+cadec_ARTHROTEC.101_TT1,FLAN-T5-base,pill,shortness of breath,C0013404,Dyspnea,C0009905,"Contraceptives, Oral",0.999999463558197,C0994475,Pills,0.9999996,-1.1920928955078125e-07,0
+cadec_LIPITOR.360_TT4,Mistral-7B-Instruct-v0.1,Fatigue.,exhausted,C0392674,Exhaustion,C0392674,Exhaustion,0.7043708562850952,C0015672,Fatigue,0.98997444,-0.2856035828590393,1
