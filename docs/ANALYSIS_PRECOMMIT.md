@@ -49,8 +49,8 @@ mistaken for selection of a favourable result.
 ## 3. Entropy denominator: which m
 
 **Committed:** **distinct accepted variants (`m_distinct`) as primary**, all accepted variants
-(`m_accepted`) retained as a **sensitivity analysis** — **pending supervisor confirmation**,
-which is the one open item in this document.
+(`m_accepted`) retained as a **sensitivity analysis** — **FINAL as of 2026-09-11**
+(supervisor delegation, see Amendment 2).
 
 **Rationale.** Byte-identical input variants necessarily produce identical outputs and so fall
 in the same cluster, inflating the dominant cluster while simultaneously inflating m in the
@@ -102,7 +102,7 @@ same logic.** Deduplicating against the other accepted variants applies the rule
 perturbation validator already applies against the original, and applying it in one place but
 not the other is the inconsistency.
 
-**Supervisor confirmation is scheduled for 17/09.** Both denominators are computed in the same
+**FINAL as of 2026-09-11** (supervisor delegation, see Amendment 2). Both denominators are computed in the same
 pass and written as parallel columns, so reversing this decision needs no rerun — only a
 change of which column the RQ notebooks read.
 
@@ -183,3 +183,92 @@ only one of them would misrepresent either the coverage or the analysed n.
 As of **2026-09-11**, under the corrected definition: **4 shards grid-complete (0, 1, 2, 19)**
 and **22 incomplete**, out of 26 shards over 202,019 instances. Recorded now because tonight's
 `partial_map` prunes shards 2 and 19 and the pre-fix function would then report `[]`.
+
+---
+
+# Amendment 2 — 2026-09-11
+
+Recorded after job 32341 reported its gate verdict and before the canonical outputs are
+written. It does three things: it revises a gating criterion that was mis-specified, it
+records a decision NOT to change the tiebreak, and it closes the supervisor-confirmation
+item that §3 left open.
+
+## The gate result
+
+Original criterion: **`predicted_cui` identical on 100% of rows.**
+
+Actual result over all 239,680 rows: **239,674 / 239,680 = 0.99997497**, i.e. 6 differing
+rows (2 distinct cases). The other three gating criteria passed — `assign_rule_path`
+identical on 100% of rows, zero UNASSIGNED status changes, zero rows crossing
+`CONFIDENCE_THRESHOLD = 0.7`.
+
+## Diagnosis, with evidence
+
+Both failing cases tie **exactly** on the tiebreak's primary key `_cui_n_forms`:
+
+| output_text | competing CUIs | n_forms | surface forms |
+|---|---|---|---|
+| `blockage` | C1879887 / C2237319 | **3 v 3** | `"Blockage"` / `"blockage"` |
+| `Left knee pain` | C5442019 / C2142181 | **5 v 5** | `"Left knee pain"` / `"left knee pain"` |
+
+In each case both competing CUIs carry a surface form differing from the model output only
+in capitalisation, so both sit at cosine ~1.0 and the primary sort key cannot separate them.
+The winner therefore falls through to a raw float comparison. The orders reversed under
+perturbations of **1.79e-07** and **8.94e-07** respectively, which places the top-1/top-2
+gaps roughly **3,300x** and **670x** below the measured maximum perturbation of **5.95e-04**.
+
+## Conclusion
+
+These are ties resolved **below floating-point reproducibility**. They are unstable under any
+numerical change — GPU model, batch composition, library version — in *either* arm. The
+criterion demanded bit-stability from a stage that does not have it: it was
+**mis-specified, not unmet**. **De-duplication is not implicated**; it is the input that
+happened to jitter two coin-flips that were already coin-flips.
+
+## Corrected criterion
+
+`predicted_cui` identical **except** where all three of the following hold:
+
+1. the `assign_rule_path` is identical in both arms, **and**
+2. the top-2 candidates tie on `_cui_n_forms`, **and**
+3. their score gap is below the measured maximum perturbation.
+
+Rows meeting the exemption are **enumerated individually in the validation report, not
+merely counted**, so that every exempted row remains auditable.
+
+## Tiebreak: NOT changed
+
+A deterministic fallback (breaking on CUI string order when scores tie within an epsilon)
+would buy **stability but no correctness** — it makes the coin-flip repeatable without making
+it right. Against that, the tiebreak is byte-identical in both mappers
+(`CADEC_entropy` cell 6 lines 147-148; `RQ1_PART2_full_umls_pool` cell 11 lines 260-261), and
+`entropy_full_umls.csv` already contains shards **0, 1, 2, 19** mapped under the current rule.
+Changing it would place those four shards on a different rule from everything after them
+**inside a single reported sample**, and shards 0 and 1 have been pruned, so re-mapping them
+would require regenerating deleted inputs.
+
+The non-determinism is **reported as a Limitation and listed as future work.**
+
+## Threshold band
+
+The count of rows lying within the measured maximum perturbation of
+`CONFIDENCE_THRESHOLD = 0.7` **will be computed on the canonical run and reported as a
+Limitation**, together with the closest 50 distances. These rows' assigned-versus-UNASSIGNED
+status is not reproducible across numerical perturbation, which is a property of the 0.7 cut
+and holds regardless of the de-duplication decision.
+
+The proxy figure obtained from the superseded 19 August cache is **not to be quoted** in the
+manuscript; it was an order-of-magnitude check on a wrong instance set.
+
+## Supervisor delegation — 2026-09-11
+
+**Dr. Ofoghi has delegated these methodological decisions.** Every "subject to / pending
+supervisor confirmation" marker in this file is updated to **FINAL as of 2026-09-11**; only
+the status is altered, and no rationale text is changed. The five decisions now final:
+
+1. **Entropy denominator** — distinct-m primary, raw m as sensitivity analysis.
+2. **RQ4 significance** — paired bootstrap at B = 20,000 with the (r+1)/(B+1) estimator.
+3. **RQ3** — paired Wilcoxon signed-rank primary, one-sided Mann-Whitney U as sensitivity.
+4. **RQ4 comparator** — `best_single` retained, data-dependent selection stated explicitly,
+   plus a fixed-baseline supplementary table.
+5. **Tiebreak** — unchanged, documented as a Limitation.
