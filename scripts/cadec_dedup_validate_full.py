@@ -122,6 +122,56 @@ def order_stats(df):
     return out
 
 
+
+def trace_candidates(ns, text, mention, q_vec):
+    """Rebuild the candidate list that reached the tiebreak, at full precision.
+
+    Mirrors assign_with_encoder_scores (CADEC_entropy cell 6) up to and including the
+    freq_tiebreak sort, but returns the ranked list instead of just the winner. Recomputed
+    only for rows that actually differ, so the cost is a handful of FAISS queries.
+    """
+    idx, top_k = ns["_faiss_index"], ns["TOP_K"]
+    D, I = idx.search(np.asarray([q_vec], dtype=np.float32), top_k)
+    forms, form_emb, min_len = ns["_unique_forms"], ns["_form_embeddings"], ns["MIN_FORM_LEN"]
+    form_scores = {}
+    for sc, ix in zip(D[0], I[0]):
+        if int(ix) < 0:
+            continue
+        f = forms[int(ix)]
+        if len(f) < min_len:
+            continue
+        form_scores[f] = float(np.dot(q_vec, form_emb[int(ix)]))
+
+    cand = []
+    for form, sc in form_scores.items():
+        for cui in ns["_form_to_cuis"].get(form, ()):
+            cand.append((cui, form, float(sc)))
+    if not cand:
+        return []
+    exact = set()
+    for key in (mention, text):
+        if key and str(key).strip():
+            exact |= set(ns["_exact_index"].get(str(key).strip().casefold(), ()))
+    if exact:
+        ec = [c for c in cand if c[0] in exact]
+        cand = ec if ec else [(c, str(mention), 1.0) for c in exact] + cand
+    st = [c for c in cand if ns["_cui_st21pv"].get(c[0], False)]
+    if st:
+        cand = st
+    cand.sort(key=lambda x: x[2], reverse=True)
+    best = cand[0][2]
+    top = [c for c in cand if (best - c[2]) <= 0.02]
+    nf = ns["_cui_n_forms"]
+    top.sort(key=lambda x: (nf.get(x[0], 0), x[2]), reverse=True)
+    out = [{"rank": i, "cui": c[0], "form": c[1], "cosine": f"{c[2]:.12f}",
+            "n_forms": int(nf.get(c[0], 0))} for i, c in enumerate(top)]
+    if len(out) >= 2:
+        gap = float(top[0][2]) - float(top[1][2])
+        out[0]["top2_gap"] = f"{gap:.12e}"
+        out[0]["n_forms_tied_with_rank1"] = bool(out[0]["n_forms"] == out[1]["n_forms"])
+    return out
+
+
 def main() -> int:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     ns = load_notebook_namespace()
@@ -214,6 +264,15 @@ def main() -> int:
 
     (OUT_DIR / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     ok = all(gates.values())
+
+    # Per-row evidence is written on BOTH branches. The previous version dumped it only on
+    # PASS, which discarded the evidence in exactly the case that needed it (job 32341).
+    res[["instance_id", "model_name", "conf_dedup", "conf_full"]].to_csv(
+        OUT_DIR / "conf_all_rows.csv", index=False)
+    res[delta > 0].to_csv(OUT_DIR / "rows_with_delta.csv", index=False)
+    print(f"\n  per-row evidence -> {OUT_DIR / 'conf_all_rows.csv'} ({len(res):,} rows), "
+          f"{OUT_DIR / 'rows_with_delta.csv'} ({int((delta > 0).sum()):,} rows)")
+
     if not ok:
         bad = pd.concat([cui_bad, path_bad, ua_bad, cross_bad]).drop_duplicates()
         bad.head(MAX_FAIL_ROWS).to_csv(OUT_DIR / "gate_failures.csv", index=False)
@@ -223,9 +282,25 @@ def main() -> int:
                 "pred_dedup", "pred_full", "conf_dedup", "conf_full",
                 "path_dedup", "path_full", "vec_max_absdiff"]
         print(bad[cols].head(25).to_string(index=False))
-    else:
-        # only worth keeping the full row dump when it is small; the point is the report
-        res[delta > 0].head(50_000).to_csv(OUT_DIR / "rows_with_delta.csv", index=False)
+
+        # Candidate traces: for every differing row, the list that reached the tiebreak in
+        # BOTH arms, so an exemption under the corrected criterion can be audited per row
+        # rather than taken on trust (docs/ANALYSIS_PRECOMMIT.md, Amendment 2).
+        traces = []
+        for i in bad.head(MAX_FAIL_ROWS).index:
+            traces.append({
+                "instance_id": str(res.at[i, "instance_id"]),
+                "model_name": str(res.at[i, "model_name"]),
+                "output_text": str(res.at[i, "output_text"]),
+                "gold_mention": str(res.at[i, "gold_mention"]),
+                "pred_dedup": str(res.at[i, "pred_dedup"]),
+                "pred_full": str(res.at[i, "pred_full"]),
+                "arm_dedup": trace_candidates(ns, texts[i], mentions[i], q_a[i]),
+                "arm_full": trace_candidates(ns, texts[i], mentions[i], vec_b[i]),
+            })
+        (OUT_DIR / "candidate_traces.json").write_text(json.dumps(traces, indent=2),
+                                                       encoding="utf-8")
+        print(f"  candidate traces -> {OUT_DIR / 'candidate_traces.json'} ({len(traces)} rows)")
     print(f"\n  report -> {OUT_DIR / 'report.json'}")
     print("\nRESULT: " + ("ALL GATES PASS — deduped mapping is equivalent"
                           if ok else "GATE FAILURE — do NOT write canonical outputs"))

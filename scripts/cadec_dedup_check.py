@@ -87,7 +87,9 @@ def load_notebook_namespace() -> dict:
         exec(compile(src, f"{NB}:cell{i}", "exec"), ns, ns)
     for name in ("_embed_with_model", "_sap_mdl", "_sap_tok", "_faiss_index",
                  "_unique_forms", "_form_embeddings", "assign_with_encoder_scores",
-                 "TOP_K", "MIN_FORM_LEN", "_norm_cui", "df_out", "SAPBERT_ID"):
+                 "TOP_K", "MIN_FORM_LEN", "_norm_cui", "df_out", "SAPBERT_ID",
+                 "_form_to_cuis", "_exact_index", "_cui_st21pv", "_cui_n_forms",
+                 "CONFIDENCE_THRESHOLD", "UNASSIGNED"):
         assert name in ns, f"notebook namespace missing {name!r}"
     ensure_sapbert(ns)
     # Assert USABLE, not merely present -- being None is the failure mode this check hit.
