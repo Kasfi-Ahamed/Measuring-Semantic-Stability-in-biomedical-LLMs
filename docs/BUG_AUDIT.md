@@ -500,3 +500,89 @@ corpus (`scripts/cadec_dedup_validate_full.py`, both arms in one job, ~90 min).
 
 **Status: running as job 32341.** Pass/fail and the reported statistics to be recorded here on
 completion. A gate failure stops the job before anything under `outputs/` is written.
+
+---
+
+## Post-submission items (deferred 2026-09-11)
+
+Investigated, evidence recorded, **deliberately not actioned before submission**. Each is
+written up here so it can be picked up without redoing the analysis. None of them blocks the
+results; all of them affect the repository as a public reproducibility artefact.
+
+### 1. Retire the three superseded launchers
+
+`run_mm_gen_inf`, `run_mm_entropy`, `run_embed` are dead — each targets a notebook that a
+modern launcher already handles with sharding, resume and pruning
+(`run_mm_gen_inf_array` / `run_mm_shard_inf` / `run_mm_causal_shard_inf`, and
+`run_mm_partial_map`). Intended destination `slurm/_legacy/`. Note `run_embed.sbatch` carries
+a pre-existing unauthored working-tree diff that must be resolved before it is moved.
+
+The other five nbconvert-era launchers are live and were given exclude lists in `5e1dc7f`.
+
+### 2. Replace `nbconvert --execute --inplace` with `scripts/exec_notebook.py`
+
+Six launchers still run `nbconvert --execute --inplace` against **tracked** notebooks, which
+writes execution counts and outputs back into the file. Three of those six targets are
+currently modified in the working tree with changes nobody authored by hand. **This is the
+most likely source of the recurring unauthored-diff problem**, and `exec_notebook.py` does
+not mutate the notebook. Verify on one launcher before converting the rest.
+
+### 3. `nbstripout` / `.gitattributes` clean filter
+
+No filter is configured, so notebook outputs and execution counts enter git freely. Needs
+documenting in CONTRIBUTING or the README so a fresh clone reproduces the setting.
+
+### 4. Strip committed notebook outputs at HEAD
+
+**11.6 MB** of committed output text across 13 notebooks, overwhelmingly tqdm progress bars
+and repeated transformers warnings (`CADEC_inference` is 98.3% progress bars;
+`QA_answer_level_semantic_entropy` carries 12,529 identical `max_new_tokens` lines). Also
+`RQ3_matched_pairs_gpu_pipeline_backup.ipynb`, deleted in the working tree but still tracked,
+duplicating 2 MB of the same outputs.
+
+**Stripping at HEAD does not unpublish anything** — `origin/main` already carries
+byte-identical blobs. Removing it from the public record needs a history rewrite plus a
+force-push, which is out of scope and was explicitly excluded.
+
+### 5. Classify the working-tree notebook diffs
+
+Per file: purely mechanical (execution counts and outputs) versus containing real source
+edits. **Sequencing note: do this BEFORE item 3.** Installing a clean filter makes git compare
+stripped notebooks, so the mechanical bucket disappears by construction and the evidence for
+the classification is destroyed.
+
+### 6. Licence exposure — needs a human decision, not a code change
+
+**CADEC / CSIRO.** The licence shipped with the distribution
+(`~/data/cadec/metadata/CSIRO Data Licence.html`) states: *"This licence allows user to use
+the data for non-commercial purposes with appropriate attribution. The rights granted under
+this licence are personal to the user and not capable of assignment. **Data cannot be
+distributed** nor have any intellectual property rights asserted over the data."* There is no
+excerpt or fair-dealing carve-out, and the grant is explicitly non-assignable. The full deed
+(`confluence.csiro.au/x/4QAYVQ`) is not held locally and was not fetched.
+
+Committed and already published exposures:
+
+| What | Where | Size |
+|---|---|---|
+| Verbatim CADEC forum posts | `CADEC_adapter.ipynb` cell 8 | 3 rows |
+| CADEC mention spans | `outputs/rq4/umls_margin_worked_examples.csv` | 3 rows |
+| SCTID → SNOMED preferred name | `CADEC_adapter.ipynb` cell 6 | 10 rows |
+
+**UMLS.** Notebook outputs carry almost nothing (3 CUI tokens total). The material exposure is
+in tracked CSVs: **6,994 distinct CUIs** across all tracked files, concentrated in
+`entropy_cadec.csv` and `umls_candidate_margin_cadec.csv` (4,186 each over 45,352 rows).
+`outputs/rq4/umls_margin_worked_examples.csv` is the only file publishing UMLS Metathesaurus
+*strings* (`gold_umls_name` / `winner_umls_name` / `rival_umls_name`), 3 rows.
+
+Clean: the raw `rq3_cadec_instances.csv` is **not** tracked, `.gitignore` correctly covers
+`outputs/**/intermediate/`, `*_model_outputs.csv` and `*_perturbations.csv`, and the
+`qa_results_*.csv` files carry no corpus text.
+
+**Also:** the submitting account's identifier appears throughout committed outputs
+(16 times in `CADEC_adapter.ipynb` alone) via absolute `/home/<id>/...` paths.
+
+The 45k-row entropy files contain instance identifiers plus derived metrics and mapped CUIs —
+a derived product rather than verbatim data, and defensible on a plain reading of the licence.
+The verbatim rows above are the ones that are not. **This needs a supervisor or CSIRO answer,
+not a code change.**
