@@ -22,5 +22,8 @@ echo "=== $(date) job ${SLURM_JOB_ID:-local} ==="
 "$PY" scripts/mm_assemble.py
 "$PY" scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
 "$PY" scripts/mm_prune_mapped_shards.py
+# Hard-errors under set -e if the shard-file and mapped-file views of grid-completeness
+# have drifted. Runs last, so the mapping and prune are already durable.
+"$PY" scripts/mm_assert_grid.py
 echo "=== done $(date) ==="
 "$PY" scripts/disk_guard.py

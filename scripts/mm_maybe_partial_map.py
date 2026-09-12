@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import fcntl
+import json
 import os
 import subprocess
 import sys
@@ -11,7 +12,11 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from scripts.mm_shard_lib import complete_shards_for_grid, shard_root  # noqa: E402
+from scripts.mm_shard_lib import (  # noqa: E402
+    assert_grid_counts_consistent,
+    complete_shards_for_grid,
+    shard_root,
+)
 
 
 def main() -> int:
@@ -45,6 +50,11 @@ def main() -> int:
             cwd=str(_ROOT),
             env=env,
         )
+        # Drift check runs AFTER the prune, so the mapping work is already durable and this
+        # can only report, never lose anything. A count-based cache test once let shards go
+        # file-complete-but-unmapped for 24 GPU-hours without a word in any log.
+        print("GRID COUNTS: " + json.dumps(
+            assert_grid_counts_consistent(root), default=list), flush=True)
         return rc
 
 
