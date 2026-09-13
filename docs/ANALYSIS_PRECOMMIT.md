@@ -236,6 +236,16 @@ happened to jitter two coin-flips that were already coin-flips.
 Rows meeting the exemption are **enumerated individually in the validation report, not
 merely counted**, so that every exempted row remains auditable.
 
+The enumeration lives in `logs/cadec_tiebreak_trace/candidate_traces.json`, produced by
+`scripts/cadec_trace_tiebreak.py` (job 32641, 2026-09-13); it lists every candidate within
+0.02 of the best score for both failing surface forms, under both arms, with cosines to 12
+decimal places. It confirms the diagnosis and sharpens it: for `blockage` the top-2 gap in
+the de-duplicated arm is **exactly 0.0** with `n_forms` tied 3 v 3, so the winner is decided
+purely by candidate list order -- and it came out C2237319 here against C1879887 in job
+32341, i.e. the same arm disagrees with itself between runs. For `Left knee pain` the gap is
+4.17e-07 with `n_forms` tied 5 v 5. Both are far below the 5.95e-04 measured maximum
+perturbation, which is the claim this section rests on.
+
 ## Tiebreak: NOT changed
 
 A deterministic fallback (breaking on CUI string order when scores tie within an epsilon)
