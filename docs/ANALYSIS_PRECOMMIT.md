@@ -391,3 +391,70 @@ agreement check on every run, so a future change of inputs that broke this equiv
 be visible rather than silent.
 
 **FINAL as of 2026-09-13** (supervisor delegation, see Amendment 2).
+
+---
+
+# Amendment 5 — 2026-09-13
+
+Recorded alongside §3, which stands exactly as written. This amendment was opened on the
+belief that §3's duplicate-rate figures were stale. **They are not.** Direct measurement
+confirms them, and the amendment instead records a second, different set of figures that must
+not be confused with them.
+
+## 8. Section 3 rationale — the figures are confirmed, and a second population is distinguished
+
+**§3's figures are correct at the level they were measured**: accepted perturbations in the
+validated-perturbations files, de-duplicated on `perturbation_text` within an instance.
+Re-measured today on the current files:
+
+| Quantity | §3 as written | Re-measured | |
+|---|---|---|---|
+| Duplicate share, CADEC | 24.3% | **24.28%** | confirms |
+| Duplicate share, MedMentions | 25.8% | **25.84%** | confirms |
+| Back-translation duplicate rate | exactly 50.0%, both lanes | **50.01% CADEC, 50.01% MedMentions** | confirms |
+| Instances dropped by m >= 3, CADEC | 449 | **449** | exact |
+| Instances dropped by m >= 3, MedMentions | 14,310 | **14,310** | exact |
+| Mean m, CADEC | 4.127 -> 3.125 | 3.975 -> 3.010 | close; different instance denominator |
+| Mean m, MedMentions | 4.780 -> 3.545 | 4.744 -> 3.518 | close; same |
+
+The "two slots per instance, so both slots always agree" mechanism is therefore supported:
+back-translation duplicates at 50.01% in both lanes independently.
+
+## A second population, measured at the entropy level
+
+A different set of duplicate rates arises from `entropy_cadec.csv` and `entropy_full_umls.csv`
+via `n_duplicate_variants`. These count duplicates **per instance x model, among variants that
+reached inference and passed the m >= 3 filter**, on the post-rewind CADEC set:
+
+| Quantity | Entropy level |
+|---|---|
+| Duplicate share, CADEC | **17.70%** |
+| Duplicate share, MedMentions | **26.02%** |
+| Back-translation duplicate rate, CADEC | **27.58%** |
+| Mean m, CADEC | **4.805 -> 3.955** |
+| Mean m, MedMentions | **5.117 -> 3.785** |
+| Instances losing every row, CADEC | **139** |
+| Instances losing every row, MedMentions | **5,070** |
+
+Both sets are correct; they describe different populations. The generation-level rates
+characterise **what the perturbation pipeline produced**; the entropy-level rates characterise
+**what the entropy analysis actually consumed**. The CADEC figures diverge most (24.28% vs
+17.70%) because the entropy set is the rewound 5,161 instances and because not every accepted
+sibling reaches inference.
+
+**Manuscript consequence.** A duplicate rate must be reported with the population it describes.
+Quoting 24.3% beside an entropy result computed on the 17.70% population, or vice versa, would
+be an error. Per-family CADEC rates likewise differ by level: at generation,
+synonym_substitution 2.97%, controlled_paraphrase 23.29%, back_translation 50.01%,
+syntactic_reordering 40.76%; at entropy level, 2.72% / 24.39% / 27.58% / 34.46%.
+
+## The decision is unchanged
+
+De-duplication was adopted on a **mechanistic** argument: byte-identical input variants
+necessarily yield identical outputs, so they fall in the same cluster, inflating the dominant
+cluster while simultaneously inflating m in the denominator `log2(m + 1)`, and both effects
+push normalised entropy toward zero. That argument is directional and **does not depend on the
+magnitude of the duplicate rate**; it holds at any non-zero rate, and every figure above is far
+from negligible. §3's conclusion stands, on either population.
+
+**FINAL as of 2026-09-13** (supervisor delegation, see Amendment 2).
