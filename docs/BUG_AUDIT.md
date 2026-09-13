@@ -822,3 +822,81 @@ instance set changed from 5,669 to 5,161.
 The fix is applied in the working tree (id-subset test, consistent with the identity-based
 resume ten lines below) but remains uncommitted, because the defect is not in HEAD and the file
 carries ~135k lines of deferred output-stripping. See the earlier entry for the full reasoning.
+
+---
+
+# Rule 1 feeds the gold mention into the prediction path (2026-09-13)
+
+**Recorded BEFORE the fix. Pre-fix numbers preserved, same discipline as the dedup key.**
+
+## The mechanism
+
+`assign_with_encoder_scores(query_text, mention_text, form_scores)` is called once per model
+output row to produce `predicted_cui`. At the call site (`RQ1_PART2` cell11:315, `CADEC_entropy`
+cell8) `query_text` is the **model output** and `mention_text` is the **gold mention**:
+
+```python
+exact_cuis = set()
+for key in [mention_text, query_text]:          # GOLD MENTION first, then model output
+    if key and str(key).strip():
+        exact_cuis |= set(_exact_index.get(str(key).strip().casefold(), ()))
+if exact_cuis:
+    exact_cand = [c for c in cand if c[0] in exact_cuis]
+    if exact_cand:
+        cand = exact_cand                        # BRANCH A: FILTER to gold-derived CUIs
+        rule_path.append("exact_match")
+    else:
+        cand = [(c, str(mention_text), 1.0) for c in exact_cuis] + cand   # BRANCH B: INJECT at 1.0
+        rule_path.append("exact_match_inject")
+```
+
+**Branch A (`exact_match`)** narrows the model's own FAISS candidates to CUIs the gold mention
+resolves to. **Branch B (`exact_match_inject`)** fires when none of the model's candidates match
+the gold-derived set, and inserts those CUIs at **score 1.0**, above any attainable cosine, so
+the returned CUI is derived from the gold annotation with the model's output contributing
+nothing.
+
+`gold_mention` is **never in the prompt**. The template is
+`"Identify the primary medical concept in the following clinical text. Reply with only the
+concept name.\n\nText: {text}"` with `{text}` = `input_text`, which is `mention_context` for
+originals and `perturbation_text` for rewrites.
+
+## gold_mention is CONSTANT across all variants
+
+| corpus | instances where gold_mention varies across variants | total |
+|---|---:|---:|
+| CADEC | **0** | 5,161 |
+| MedMentions | **0** | 56,000 |
+
+So the identical **unperturbed** mention string is used as the rule-1 key for the original and
+for all 8 rewrites. The perturbation is applied to what the model sees; rule 1 keys on what it
+was deliberately not shown.
+
+## Pre-fix accuracy by rule-1 branch
+
+| branch | CADEC rows | CADEC acc | MedMentions rows | MM acc |
+|---|---:|---:|---:|---:|
+| `exact_match` | 222,450 | 25.12% | 1,082,704 | 11.97% |
+| **`exact_match_inject`** | **6,187** | **70.16%** | **300,673** | **63.79%** |
+| `no_exact_match` | 11,043 | 5.33% | 212,143 | 7.07% |
+| `direct_cui` (encoders, bypasses assign) | n/a | n/a | 961,737 | 2.12% |
+
+Injection rows are **2.8x (CADEC) to 5.3x (MedMentions)** more accurate than any other branch.
+191,790 MedMentions rows scored correct on that path against a 2-12% baseline elsewhere.
+
+## Exposure
+
+Rows on a rule-1 exact path where the model output differs from the gold mention, so gold could
+contribute CUIs the model's string would not: **CADEC 190,715 (79.57%)**, **MedMentions
+1,453,670 (56.84%)**. These are upper bounds -- `exact_cuis` is the union of lookups on both
+strings, so the label alone does not prove gold was decisive. Injection counts are tight, since
+injection only fires when the model's candidates contain none of the gold CUIs.
+
+## What it affects
+
+`predicted_cui` is the basis of accuracy, of the cluster distribution, and hence of semantic
+entropy. Every RQ that reads either is affected. `direct_cui` rows (37.61% of MedMentions, the
+encoder path) bypass `assign_with_encoder_scores` and are not contaminated by this mechanism.
+
+Same failure class as the other three: a lookup that cannot fail, because the wrong input is a
+valid input.
