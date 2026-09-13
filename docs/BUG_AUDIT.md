@@ -939,3 +939,59 @@ Both branches share the same underlying cause -- gold constant across variants -
 manuscript should name **which branch did the damage** rather than attribute it to rule 1 as a
 whole. The old-branch x new-branch crosstab in `scripts/compare_goldleak.py` answers this
 directly.
+
+## Result (job 32755, 2026-09-14) -- prediction NOT confirmed
+
+| # | measure | before | after | change |
+|---|---|---:|---:|---|
+| 1 | assignments changed | -- | -- | **8,699 of 239,680 (3.63%)** |
+| 2 | correctness, overall | 25.37% | 23.39% | **-1.98 pp** |
+| 3 | normalised entropy (dedup, retained), mean | 0.3101 | 0.3173 | +0.0072 |
+| 4 | **zero-entropy fraction (primary arm)** | **43.33%** | **42.67%** | **-0.66 pp** |
+
+Raw arm for comparison: zero fraction 44.10% -> 43.43% (-0.67 pp), mean 0.2666 -> 0.2726.
+
+Assignment changes decompose as 642 UNASSIGNED -> assigned, 210 assigned -> UNASSIGNED, and
+7,847 assigned-to-a-different-CUI.
+
+### Correctness by pre-fix branch
+
+| old branch | rows | before | after | delta | rows changed |
+|---|---:|---:|---:|---:|---:|
+| `exact_match` | 222,450 | 25.12% | 24.94% | -0.18 pp | 1.27% |
+| `no_exact_match` | 11,043 | 5.33% | 5.33% | 0.00 pp | 0.47% |
+| **`exact_match_inject`** | **6,187** | **70.16%** | **0.00%** | **-70.16 pp** | **94.10%** |
+
+### Branch migration
+
+| old \ new | `exact_match` | `no_exact_match` |
+|---|---:|---:|
+| `exact_match` | 220,910 | 1,540 |
+| `exact_match_inject` | 0 | 6,187 |
+| `no_exact_match` | 0 | 11,043 |
+
+### Reading
+
+**The contamination was real and is now quantified exactly.** Every one of the 6,187 injection
+rows fell to **0.00% correct**: 4,341 rows were correct *solely* because the gold-derived CUI
+was inserted at score 1.0. All 6,187 migrate to `no_exact_match`, as expected -- injection fired
+precisely when the model's own string resolved to nothing, so removing gold leaves no exact
+CUIs at all.
+
+A further **1,540** rows migrate `exact_match` -> `no_exact_match`: gold was their sole source
+of exact CUIs, but their FAISS candidates already contained a gold CUI so they took the filter
+branch rather than injection. This exactly closes the CADEC gap noted in Step A between 7,727
+rows where "output resolves to nothing, gold does" and 6,187 recorded injections: 7,727 - 6,187
+= **1,540**.
+
+**But the zero-entropy prediction is not confirmed.** The pre-registered expectation
+(`9debd95`) was a material fall from ~44%. The observed fall is **0.66 pp**, below even the
+~2-3 point band that injection alone could account for. Gold held constant across variants was
+**not** the main mechanism manufacturing agreement between variants, and the zero-inflation
+collapse originates somewhere else. Under the pre-registered reading this is the "barely moves"
+case: **no Discussion of zero-inflation should be written until the real mechanism is found.**
+
+The filter branch moved almost nothing (222,450 rows, 1.27% changed, -0.18 pp accuracy), so it
+was not the dominant mechanism either. The honest summary is that rule 1 materially corrupted
+**correctness** -- and the injection branch catastrophically so -- while barely touching
+**entropy**.
