@@ -629,3 +629,41 @@ against a record set that did not change under it. This is preventive only.
 
 **To close:** decide the fate of the working-tree diff on this notebook (strip-outputs policy
 plus the uncommitted resume rework), then commit the predicate fix with it.
+
+---
+
+# Provenance — the committed RQ3 summary is not reproducible from the canonical notebook (2026-09-13)
+
+`outputs/rq3/rq3_matched_pairs_summary.csv` (committed; deleted in the working tree) reports
+**`wilcoxon_stat`, `wilcoxon_p` and `n_paired`** for every pair x dataset cell.
+
+The canonical notebook `notebooks/05_analysis/RQ3_matched_pairs.ipynb` contains **no
+`wilcoxon` call anywhere**, and no `n_paired`. Its only test is at cell13:59:
+
+```python
+u, p_two = stats.mannwhitneyu(bio, gen, alternative="less")
+```
+
+an **unpaired** Mann-Whitney U over two independently filtered vectors — in a notebook named
+"matched pairs". Those three columns therefore came from
+`notebooks/05_analysis/RQ3_matched_pairs_gpu_pipeline_backup.ipynb`, which is deleted in the
+working tree. **The result on record cannot be regenerated from the canonical notebook.**
+
+Two further staleness markers in the same file, independent of the above:
+
+| Field | On record | Actual |
+|---|---|---|
+| CADEC `n_paired` | 5,669 | pre-rewind count; the clean set is 5,161 (5,022 under distinct-m) |
+| MedMentions `n_paired` | 491 | a pilot sample of `rq1_sampled_instances.csv`, which now holds 202,019 |
+
+**No amendment is needed** — docs/ANALYSIS_PRECOMMIT.md Amendment 2 item 3 already commits to
+paired Wilcoxon signed-rank as primary with one-sided Mann-Whitney U as sensitivity, which is
+what the rewrite implements. This entry records only that the superseded numbers had a
+provenance the repository could not reproduce, so they are discarded rather than compared
+against.
+
+**Related:** the same notebook's generative loop was re-deriving per-instance entropy that
+`entropy_cadec.csv` and `entropy_full_umls.csv` already carry for all eight models, at
+~3.96M generations (~367 h) against a 12 h wall. Job 32680 ran 8h26m and wrote nothing before
+being cancelled. The loop predates those tables covering the generative models and was never
+removed when they did.
