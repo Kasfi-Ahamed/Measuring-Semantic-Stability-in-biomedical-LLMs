@@ -900,3 +900,42 @@ encoder path) bypass `assign_with_encoder_scores` and are not contaminated by th
 
 Same failure class as the other three: a lookup that cannot fail, because the wrong input is a
 valid input.
+
+---
+
+# Pre-registered prediction for the rule-1 fix (2026-09-14)
+
+**Recorded BEFORE job 32755 reported.** The remap was already running; no post-fix number had
+been seen.
+
+## Prediction
+
+`gold_mention` is identical across all nine rows of an instance (0 of 5,161 CADEC instances
+vary), so rule 1 pushes every variant toward the same gold-derived CUI set, and the inject
+branch does it hardest by inserting at score 1.0 above any attainable cosine. That is a
+mechanism for **manufacturing agreement between variants that actually disagreed**. The
+zero-entropy fraction should therefore **FALL** from its pre-fix ~44%.
+
+  * **falls materially** -> mechanism confirmed; the before/after is a methodological result
+  * **barely moves** -> the mechanism story is wrong and the zero-inflation collapse comes from
+    somewhere else, which must be found before any Discussion of zero-inflation is written
+  * **RISES** -> the fix is wrong rather than the original; stop and report
+
+Correctness is expected to fall in all three cases and that is not a defect.
+
+## Which branch, quantified in advance
+
+Injection touches **6,187 of 239,680 rows (2.58%)**. Even if every injected row flipped from
+zero to non-zero entropy, that bounds its contribution to the zero fraction at about
+**2.6 points**. So the size of the fall identifies the mechanism:
+
+| fall in zero fraction | implicates |
+|---|---|
+| ~2 to 3 points | injection alone (the score-1.0 insertion) |
+| more than ~3 points | the `exact_match` FILTER branch, 222,450 rows with narrowed candidate lists |
+| much more than 3 points | the filter was the dominant mechanism throughout |
+
+Both branches share the same underlying cause -- gold constant across variants -- but the
+manuscript should name **which branch did the damage** rather than attribute it to rule 1 as a
+whole. The old-branch x new-branch crosstab in `scripts/compare_goldleak.py` answers this
+directly.
