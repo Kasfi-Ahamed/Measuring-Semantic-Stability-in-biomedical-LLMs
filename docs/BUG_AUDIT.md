@@ -1032,3 +1032,51 @@ zero -- but that is the pipeline failing to map, not the model being stable.
 4. accuracy within each of those two groups
 5. zero fraction against m (do instances with more variants agree less often?)
 6. zero fraction against the number of candidate CUIs retrieved, as an ambiguity proxy
+
+---
+
+# Observation (not a defect): variance is not information (2026-09-14)
+
+**Class:** assertion-strength. Recorded alongside the count-vs-identity class because it is the
+same kind of error -- a check that is *cheap to write and looks like it proves the thing*, but
+tests a strictly weaker property than the one the analysis depends on.
+
+## Where
+
+`notebooks/03_mapping_entropy/RQ4_umls_candidate_margin.ipynb`, cell 5, lines 68-71:
+
+```python
+std_mean = float(zero["margin_mean"].std(ddof=1))
+assert std_mean > 1e-4, (
+    f"FAIL: margin_mean std inside H=0 is {std_mean:.6f} - margin does not see inside the zero block"
+)
+```
+
+## What it asserts, and what it does not
+
+The gate asserts that the candidate margin **varies** across instances inside the zero-entropy
+block, and it **passes**. The failure message goes further than the test does: "margin does not
+see inside the zero block" claims an informational property, while `std > 1e-4` establishes only
+that the numbers are not all identical.
+
+Nobody wrote an assertion that the margin **predicts** inside the zero block. Measured on the
+remapped CADEC data it does not: pooled AUROC for correctness within H=0 is **0.5046**
+(rank-biserial +0.0092, p = 0.314), and the per-model spread is incoherent rather than merely
+weak -- BERT-base **0.3014** (reversed), FLAN-T5-base **0.5717**.
+
+So the pipeline shipped a green gate on exactly the signal carrying contribution 3, while the
+property contribution 3 needs was never tested. A non-degenerate signal and an informative
+signal are different claims, and only the first was ever checked.
+
+## Relation to the count-vs-identity class
+
+Count-vs-identity substitutes `len(a) == len(b)` for `set(a) == set(b)`: a necessary condition
+standing in for the sufficient one. This is the same substitution one level up -- variance is
+necessary for a signal to inform, and nowhere near sufficient. Both pass loudly and both leave
+the real property unmeasured.
+
+## What was changed
+
+Nothing. The assertion is not wrong, it is weak, and it is retained. Its message should be
+reworded so it does not claim predictiveness, and any future "signal X works" gate should assert
+a discrimination statistic (AUROC with a CI that excludes 0.5) rather than a dispersion one.
