@@ -458,3 +458,67 @@ magnitude of the duplicate rate**; it holds at any non-zero rate, and every figu
 from negligible. §3's conclusion stands, on either population.
 
 **FINAL as of 2026-09-13** (supervisor delegation, see Amendment 2).
+
+---
+
+# Correction to Amendment 5 — 2026-09-14
+
+Amendment 5's text above is left exactly as written. This correction records what it was based
+on and what superseded it.
+
+## What was believed
+
+Amendment 5 presented two sets of duplicate rates as two valid populations: a generation-level
+set (confirming §3) and an **entropy-level** set of **17.70% overall** and **27.58%
+back-translation** for CADEC, described as "a different, also-correct set".
+
+## What it was based on
+
+The entropy-level figures were read from `n_duplicate_variants` in `entropy_cadec.csv`, which at
+that time was computed under the **defective de-duplication key**: `CADEC_inference.ipynb`
+renumbers accepted variants per instance, so `input_variant_id` is a position, and keying the
+lookup on `perturbation_id` resolved a real but different variant's text for 78.75% of
+instances (docs/BUG_AUDIT.md, "CADEC de-duplication key resolves the wrong variant text").
+
+**That entropy-level table is VOID.** It was not a second population; it was an artefact of the
+scrambled key, which under-collapsed duplicates.
+
+## The corrected entropy-level figures
+
+From `entropy_cadec.csv` regenerated under the repaired positional key (job 32752, 2026-09-13),
+alongside the generation-level figures for comparison:
+
+| family | generation level | entropy level (void) | **entropy level (repaired)** |
+|---|---:|---:|---:|
+| back_translation | 50.01% | 27.58% | **50.01%** |
+| syntactic_reordering | 40.76% | 34.46% | **40.86%** |
+| controlled_paraphrase | 23.29% | 24.39% | **23.20%** |
+| synonym_substitution | 2.97% | 2.72% | **2.72%** |
+| **overall** | **24.28%** | 17.70% | **25.55%** |
+
+## The two populations agree
+
+Back-translation is **50.01% at generation level and 50.01% at entropy level**. §3's claim that
+back-translation duplicates at **exactly 50.0%**, because it is generated in two deterministic
+greedy slots per instance, **was correct throughout**. Amendment 5's suggestion that the premise
+was falsified rested entirely on the void 27.58% figure and **is withdrawn**.
+
+## What still stands
+
+Amendment 5's methodological point is unaffected: **a duplicate rate must be quoted with the
+population it describes.** The two levels are close but **not identical** -- 24.28% against
+25.55% overall, 2.97% against 2.72% for synonym substitution -- and the difference is real. The
+generation level covers all 6,997 instances with candidates; the entropy level covers the 5,161
+that reached inference and passed m >= 3, counted per instance x model. Reporting one as though
+it were the other remains an error.
+
+## Text-derived, therefore final
+
+These figures depend only on variant text and row counts, not on `predicted_cui`, so they are
+unaffected by the outstanding rule-1 remap. Also final on the same basis: CADEC distinct-variant
+retention **4,712 instances** (37,696 of 41,288 rows), mean accepted variants per instance
+**4.805 raw / 3.577 distinct**, and distinct-variant family shares synonym_substitution
+**50.19%**, back_translation **23.27%**, controlled_paraphrase **22.39%**,
+syntactic_reordering **4.15%**.
+
+**FINAL as of 2026-09-14.**
