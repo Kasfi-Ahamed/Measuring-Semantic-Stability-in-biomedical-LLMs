@@ -794,3 +794,31 @@ Related: three MedMentions perturbations with `accepted_final = False` reached i
 (`mm_0001903_p06`, `mm_0001924_p02`, `mm_0007731_p01`; 24 output rows over 3 instances x 8
 models). Their text resolves correctly, so de-duplication is unaffected, but the accepted set
 and the inference input are not identical. Not fixed; recorded.
+
+---
+
+# Latent hazard: the QA resume predicate (2026-09-13)
+
+`notebooks/04_qa_lane/QA_answer_level_semantic_entropy.ipynb`, `run_one_model()`:
+
+```python
+if len(df_exist) >= len(records):
+    return df_exist
+```
+
+**Fourth instance of the count-vs-identity class**, after the MedMentions grid count
+(Amendment 1), the CADEC mapping cache (`8f440c6`) and the MedMentions map cache (`86270c2`).
+
+**It behaved correctly on 2026-09-04 only by luck.** The SQuAD 2.0 record set was enlarged from
+a subsample to the full validation set (11,873 questions), so the existing results file was
+SHORT, the predicate read False, and the run correctly extended rather than skipping. Had the
+record set been the **same size with different members** the predicate would have read True and
+returned a stale file as complete, resuming over the wrong data with no error.
+
+**No damage occurred.** Recorded because the hazard is live, not because it fired: a rewind or a
+re-sample that preserves n is exactly the case this project has already hit once, when the CADEC
+instance set changed from 5,669 to 5,161.
+
+The fix is applied in the working tree (id-subset test, consistent with the identity-based
+resume ten lines below) but remains uncommitted, because the defect is not in HEAD and the file
+carries ~135k lines of deferred output-stripping. See the earlier entry for the full reasoning.
