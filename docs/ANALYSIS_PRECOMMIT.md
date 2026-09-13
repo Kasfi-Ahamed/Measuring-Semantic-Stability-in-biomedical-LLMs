@@ -282,3 +282,45 @@ the status is altered, and no rationale text is changed. The five decisions now 
 4. **RQ4 comparator** — `best_single` retained, data-dependent selection stated explicitly,
    plus a fixed-baseline supplementary table.
 5. **Tiebreak** — unchanged, documented as a Limitation.
+
+---
+
+# Amendment 3 — 2026-09-13
+
+Recorded **before** the rewritten RQ3 has been run and before any n, effect size or p-value
+from it has been seen. The only RQ3 numbers inspected at the time of writing are those in the
+superseded committed summary (MedMentions n_paired = 491, CADEC n_paired = 5,669 — a
+pre-rewind count), and those are discarded, not used to choose the threshold below.
+
+## 6. RQ3 — minimum effect size worth interpreting
+
+**Committed:** a matched-pair cell is described as **supporting the hypothesis** only if it
+clears **both**:
+
+1. **|rank-biserial correlation| >= 0.10**, and
+2. **Holm-corrected significance** at alpha = 0.05 across the pair x dataset family.
+
+**Rationale.** The rewritten RQ3 reads per-instance entropy straight from `entropy_cadec.csv`
+and `entropy_full_umls.csv` instead of regenerating model outputs, which raises the
+MedMentions arm from 491 instances to the full mapped set (49,403 instance x model rows over
+7 shards at the time of writing, and growing as shards complete). At that n a paired Wilcoxon
+signed-rank test attains p < 0.05 for differences far too small to matter clinically or
+scientifically: significance becomes close to automatic and stops carrying information.
+
+0.10 is chosen because it is the conventional small-effect boundary for a correlation-family
+statistic, it is the value Cohen's convention already assigns, and it is fixed here **without
+reference to any computed RQ3 effect size**. It is not tuned to make any particular pair pass
+or fail.
+
+**Reporting consequence.** The RQ3 output table leads with the **rank-biserial correlation and
+its bootstrap 95% CI**; the p-value is reported alongside but is **secondary**, and no claim
+rests on a p-value whose effect size falls below the threshold. A cell that is significant but
+below |r| = 0.10 is reported as **"significant but below the interpretable-effect threshold"**,
+not as support.
+
+**Primary test:** paired Wilcoxon signed-rank on instances where **both** pair members have a
+usable value, per Amendment 2 item 3. One-sided Mann-Whitney U on the unpaired vectors is
+retained as the labelled sensitivity analysis. Both n values — paired and unpaired — are
+reported for every cell so the cost of pairing is visible.
+
+**FINAL as of 2026-09-13** (supervisor delegation, see Amendment 2).
