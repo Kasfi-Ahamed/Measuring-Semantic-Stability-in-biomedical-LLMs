@@ -19,6 +19,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from scripts.safe_read import read_csv_strict  # noqa: E402
 from scripts.mm_shard_lib import (  # noqa: E402
     ENC_KEYS,
     assert_cuda,
@@ -112,15 +113,17 @@ def load_encoder(model_name: str, device: str):
 
 def build_variants(project_root: Path) -> pd.DataFrame:
     inter = project_root / "outputs" / "rq1" / "intermediate"
-    inst = pd.read_csv(inter / "rq1_sampled_instances.csv", low_memory=False)
+    # keep_default_na=False: gold_mention 'NA' / 'null' are real mention strings, and the
+    # default reader turns them into NaN, which breaks rule 1 (docs/BUG_AUDIT.md).
+    inst = read_csv_strict(inter / "rq1_sampled_instances.csv")
     pert_path = inter / "rq1_validated_perturbations.csv"
     feat_path = inter / "rq1_linguistic_features.csv"
-    pert = pd.read_csv(pert_path, low_memory=False)
+    pert = read_csv_strict(pert_path)
     if "accepted_final" in pert.columns:
         pert = pert[pert["accepted_final"] == True].copy()
     feat_map = {}
     if feat_path.is_file():
-        feat = pd.read_csv(feat_path, low_memory=False)
+        feat = read_csv_strict(feat_path)
         if "perturbation_id" in feat.columns:
             feat_map = feat.set_index("perturbation_id").to_dict("index")
 
