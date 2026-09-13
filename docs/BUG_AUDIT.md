@@ -778,3 +778,19 @@ MedMentions inference never renumbered: its `input_variant_id` sets match the ac
 This is a second instance of a silent-fallback failure class: `dict.get(key, default)` where
 the default is unreachable-looking but the wrong key is a *valid* key for different data. A
 lookup that cannot fail is not the same as a lookup that is right.
+
+---
+
+# MedMentions numbers are provisional until the 21 September cutoff (2026-09-13)
+
+MedMentions figures entered the manuscript today and were reverted. The MedMentions sample
+**grows until the cutoff** — `docs/ANALYSIS_PRECOMMIT.md` §5 fixes the reporting date, and
+blocks keep completing against it (4 grid-complete on 11 Sept, 7 on 13 Sept, block 7 running).
+**Any MedMentions number in the paper before the cutoff is an error by default**, including n,
+shard counts, duplicate rates, entropy summaries and every RQ table with a MedMentions arm.
+Only CADEC is finalisable before 21 September.
+
+Related: three MedMentions perturbations with `accepted_final = False` reached inference anyway
+(`mm_0001903_p06`, `mm_0001924_p02`, `mm_0007731_p01`; 24 output rows over 3 instances x 8
+models). Their text resolves correctly, so de-duplication is unaffected, but the accepted set
+and the inference input are not identical. Not fixed; recorded.
