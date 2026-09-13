@@ -995,3 +995,40 @@ The filter branch moved almost nothing (222,450 rows, 1.27% changed, -0.18 pp ac
 was not the dominant mechanism either. The honest summary is that rule 1 materially corrupted
 **correctness** -- and the injection branch catastrophically so -- while barely touching
 **entropy**.
+
+---
+
+# Zero-inflation, hypothesis 2: degenerate zeros (2026-09-14)
+
+**Recorded BEFORE the characterisation was run.**
+
+## Hypothesis 1 is falsified and withdrawn
+
+The pre-registered prediction (`9debd95`) was that gold held constant across variants
+manufactured agreement, so removing it from rule 1 would materially lower the zero-entropy
+fraction. Measured fall: **0.66 pp** (43.33% -> 42.67%), below even the ~2-3 points injection
+alone could account for, with the filter branch moving 0.18 pp over 222,450 rows. Rule 1
+corrupted **correctness**, not stability. No Discussion of zero-inflation is to be written
+until the real mechanism is identified.
+
+## Hypothesis 2
+
+A large part of the zero-entropy block may be **DEGENERATE rather than stable**. If every
+accepted variant of an instance is UNASSIGNED the cluster distribution is empty and entropy is
+zero -- but that is the pipeline failing to map, not the model being stable.
+
+**Prediction: a material share of the zero block is all-UNASSIGNED or near-all-UNASSIGNED.**
+
+  * **material share degenerate** -> the paper must distinguish degenerate zeros from stable
+    zeros. They mean opposite things and only stable zeros motivate the candidate margin.
+  * **degenerate share negligible** -> the zero block is genuine model agreement and the margin
+    contribution stands as written.
+
+## What will be measured, CADEC, on the REMAPPED data
+
+1. zero fraction per model
+2. within the zero block, the fraction whose variants are all UNASSIGNED
+3. the zero fraction split into degenerate vs genuine single-concept agreement
+4. accuracy within each of those two groups
+5. zero fraction against m (do instances with more variants agree less often?)
+6. zero fraction against the number of candidate CUIs retrieved, as an ambiguity proxy
