@@ -586,3 +586,46 @@ The 45k-row entropy files contain instance identifiers plus derived metrics and 
 a derived product rather than verbatim data, and defensible on a plain reading of the licence.
 The verbatim rows above are the ones that are not. **This needs a supervisor or CSIRO answer,
 not a code change.**
+
+---
+
+# Post-submission item — QA resume predicate (2026-09-13)
+
+**Fourth instance of the count-vs-identity defect class.** The first three were the
+MedMentions grid count (`complete_shards_for_grid()`, Amendment 1), the CADEC mapping cache
+(`cell 6`/`cell 8`, commit `8f440c6`), and the MedMentions map cache (`_n_map < _n_all`,
+commit `86270c2`).
+
+`notebooks/04_qa_lane/QA_answer_level_semantic_entropy.ipynb`, `run_one_model()`:
+
+```python
+if len(df_exist) >= len(records):        # decides "done" from a ROW COUNT
+    return df_exist
+...
+if str(rec["id"]) in done_ids:           # but resumes by IDENTITY, ten lines below
+    continue
+```
+
+A row count says nothing about *which* records are present. A results file written before the
+record set changed can hold `>= len(records)` rows and still be missing some of them, and this
+project has already had one rewind change an instance set underneath a cache (CADEC, 5,669 ->
+5,161, 918 stale instances). The early return is also inconsistent with the identity-based
+resume immediately below it.
+
+**Status: fix applied in the working tree, deliberately NOT committed.**
+
+Two facts make this un-committable on its own:
+
+1. **The defect is not in HEAD.** HEAD's `run_one_model()` skips on *file existence alone* —
+   no count, no ids. The whole resume block, including the count test, exists only in the
+   uncommitted working tree.
+2. **That file carries ~135k lines of deferred change.** `git diff` is 87 insertions /
+   135,229 deletions: stripped notebook outputs plus the uncommitted resume rework. Committing
+   the predicate fix "alone" would sweep in the output-stripping and working-tree
+   classification that are themselves deferred post-submission items.
+
+**Impact: none on published results.** The QA results are valid — the lane ran to completion
+against a record set that did not change under it. This is preventive only.
+
+**To close:** decide the fate of the working-tree diff on this notebook (strip-outputs policy
+plus the uncommitted resume rework), then commit the predicate fix with it.
