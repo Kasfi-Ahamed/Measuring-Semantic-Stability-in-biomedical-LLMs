@@ -79,6 +79,25 @@ def rank_biserial_paired(d: np.ndarray) -> float:
     return float((tp - tn) / tot) if tot else 0.0
 
 
+def bh_fdr(pvals: list[float]) -> list[float]:
+    """Benjamini-Hochberg step-up, with the monotonicity enforcement.
+
+    Retained so the switch to Holm (Amendment 4) is auditable rather than asserted: the
+    study's earlier RQ3 code applied BH-FDR to the one-sided Mann-Whitney p-values, and both
+    corrections are now written to the summary so the classification can be compared.
+    """
+    p = np.asarray(pvals, dtype=float)
+    n = len(p)
+    order = np.argsort(p)
+    out = np.empty(n, dtype=float)
+    prev = 1.0
+    for k, idx in enumerate(order[::-1]):       # largest p first
+        rank = n - k
+        prev = min(prev, p[idx] * n / rank)
+        out[idx] = prev
+    return out.tolist()
+
+
 def holm(pvals: list[float]) -> list[float]:
     p = np.asarray(pvals, dtype=float)
     n = len(p)
@@ -170,8 +189,12 @@ def main() -> int:
     # Holm across the per-dataset family only; POOLED is descriptive and excluded.
     fam = res[(res["status"] == "ok") & (res["dataset"] != "POOLED")].index
     res["wilcoxon_p_holm"] = np.nan
+    res["mwu_p_bh_fdr"] = np.nan
     if len(fam):
         res.loc[fam, "wilcoxon_p_holm"] = holm(res.loc[fam, "wilcoxon_p"].tolist())
+        # The earlier arrangement, kept for audit (Amendment 4): BH-FDR on the one-sided
+        # Mann-Whitney p-values, i.e. FDR control applied to the SENSITIVITY statistic.
+        res.loc[fam, "mwu_p_bh_fdr"] = bh_fdr(res.loc[fam, "mwu_p_sensitivity"].tolist())
     res["effect_meets_threshold"] = res["rank_biserial"].abs() >= MIN_ABS_RB
     _sup = (
         res["effect_meets_threshold"]
@@ -193,9 +216,28 @@ def main() -> int:
                  "significant but below the interpretable-effect threshold",
                  "no support")))))
 
+    # Does the correction choice change any classification? Computed, not asserted.
+    res["supports_under_bh_on_mwu"] = (
+        res["effect_meets_threshold"]
+        & (res["mwu_p_bh_fdr"] < ALPHA)
+        & (res["rank_biserial"] < 0)
+    )
+    res.loc[res["dataset"] == "POOLED", "supports_under_bh_on_mwu"] = pd.NA
+    _f = res.loc[fam]
+    _agree = bool(
+        (_f["supports_hypothesis"].fillna(False).astype(bool)
+         == _f["supports_under_bh_on_mwu"].fillna(False).astype(bool)).all()
+    )
+    print(f"\nCorrection-procedure check over the {len(fam)}-cell family:")
+    print(f"  Holm on paired Wilcoxon vs BH-FDR on one-sided Mann-Whitney: "
+          f"{'IDENTICAL classification in every cell' if _agree else '*** CLASSIFICATIONS DIFFER ***'}")
+    print(_f[["pair", "dataset", "wilcoxon_p_holm", "mwu_p_bh_fdr",
+              "supports_hypothesis", "supports_under_bh_on_mwu"]].to_string(index=False))
+
     lead = ["pair", "dataset", "n_paired", "n_bio_unpaired", "n_gen_unpaired",
             "rank_biserial", "rb_ci95_low", "rb_ci95_high",
-            "wilcoxon_p_holm", "wilcoxon_p", "mwu_p_sensitivity", "interpretation"]
+            "wilcoxon_p_holm", "mwu_p_bh_fdr", "wilcoxon_p", "mwu_p_sensitivity",
+            "interpretation"]
     lead = [c for c in lead if c in res.columns]
     res = res[lead + [c for c in res.columns if c not in lead]]
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)

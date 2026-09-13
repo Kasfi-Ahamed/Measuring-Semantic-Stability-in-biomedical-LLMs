@@ -324,3 +324,70 @@ retained as the labelled sensitivity analysis. Both n values — paired and unpa
 reported for every cell so the cost of pairing is visible.
 
 **FINAL as of 2026-09-13** (supervisor delegation, see Amendment 2).
+
+---
+
+# Amendment 4 — 2026-09-13
+
+Recorded alongside Amendment 3, not replacing it. Amendment 3 stands exactly as written; this
+amendment discloses two changes that Amendment 3 made without stating them.
+
+## 7. RQ3 multiple-comparison procedure — disclosure of a change
+
+**(a) What the earlier analysis code did.** `notebooks/05_analysis/RQ3_matched_pairs.ipynb`
+both documented and implemented **Benjamini–Hochberg FDR** for the RQ3 family, applied to the
+**one-sided Mann–Whitney** p-values:
+
+  * markdown cell12:4 — "rank-biserial *r*; **BH-FDR across tests**";
+  * code cell13:11 — `def bh_fdr(pvals):`;
+  * code cell13:90 — `df_stats["p_bh_fdr"] = bh_fdr(df_stats["mannwhitney_p_onetail"].values)`.
+
+**(b) What Amendment 3 specified.** Amendment 3, dated **2026-09-13** (the same day as this
+amendment), §6 item 2 requires "**Holm-corrected significance** at alpha = 0.05 across the
+pair x dataset family". As implemented in `scripts/rq3_matched_pairs.py` this correction is
+applied to the **paired Wilcoxon** p-values. Against the earlier implementation that is
+**two** changes, not one:
+
+  1. the **correction procedure**: BH-FDR (FDR control) → Holm–Bonferroni (FWER control);
+  2. the **statistic corrected**: the Mann–Whitney p-values, which Amendment 2 item 3 had
+     already demoted to a sensitivity analysis, → the paired Wilcoxon p-values, the primary.
+
+**(c) Amendment 3 disclosed neither change.** It presented the Holm requirement as a fresh
+decision, with no reference to the BH-FDR procedure already documented and implemented in the
+study's analysis code. Amendment 4 records both changes. Note that §2 of the original
+pre-commitment specified no multiple-comparison procedure at all, and that the Holm–Bonferroni
+line in §1 governs **RQ4**, not RQ3; the BH-FDR procedure existed only in the notebook.
+
+**(d) Rationale.** Holm–Bonferroni controls the family-wise error rate and is **strictly more
+conservative** than BH's control of the false discovery rate: for any p-vector, every
+Holm-adjusted value is greater than or equal to the corresponding BH-adjusted value, so the
+change can only reduce the number of cells declared significant, never increase it. Correcting
+the **primary** statistic rather than the sensitivity statistic is also the correct
+arrangement — under the earlier code the reported correction was applied to a test the
+pre-commitment does not treat as primary. **Both changes were fixed before any matched-pair
+result was generated**: Amendment 3 was committed (`d5d4471`) before
+`scripts/rq3_matched_pairs.py` was first run.
+
+**(e) Impact: none.** This is a computed result, not an assertion.
+`scripts/rq3_matched_pairs.py` now writes **both** corrected columns — `wilcoxon_p_holm` and
+`mwu_p_bh_fdr` — to `outputs/rq3/rq3_matched_pair_statistics.csv`, and compares the
+classification each would produce. **All six cells of the pair x dataset family receive the
+same classification under BH-FDR on Mann–Whitney p-values as under Holm on Wilcoxon
+p-values:**
+
+| pair | dataset | Holm on Wilcoxon | BH-FDR on Mann–Whitney | supports (Holm) | supports (BH) |
+|---|---|---|---|---|---|
+| pair1_biobert_vs_bertbase | CADEC | 9.135465e-31 | 2.884102e-14 | True | True |
+| pair1_biobert_vs_bertbase | MedMentions | 0.0 | 2.468460e-301 | True | True |
+| pair2_biomistral_vs_mistral | CADEC | 1.000000e+00 | 1.000000e+00 | False | False |
+| pair2_biomistral_vs_mistral | MedMentions | 2.700032e-02 | **1.092818e-02** | False | False |
+| pair3_openbiollm_vs_llama3 | CADEC | 1.000000e+00 | 1.000000e+00 | False | False |
+| pair3_openbiollm_vs_llama3 | MedMentions | 1.000000e+00 | 1.000000e+00 | False | False |
+
+The pair2/MedMentions cell is the only one where the two corrections differ materially
+(0.027 vs 0.0109); both are below alpha, and the cell is excluded from support by the
+effect-size threshold of §6 (|rb| = 0.018), not by either p-value. The script prints the
+agreement check on every run, so a future change of inputs that broke this equivalence would
+be visible rather than silent.
+
+**FINAL as of 2026-09-13** (supervisor delegation, see Amendment 2).
