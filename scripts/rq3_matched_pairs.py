@@ -111,11 +111,18 @@ def holm(pvals: list[float]) -> list[float]:
 
 
 def main() -> int:
+    # Optional dataset restriction. MedMentions ANALYSIS must not be produced before the
+    # 21 September cutoff, and its entropy file is still pre-rule-1-fix, so an unrestricted
+    # run would write MedMentions rows computed on contaminated predicted_cui.
+    want = sys.argv[1].lower() if len(sys.argv) > 1 else "all"
+    if want not in ("all", "cadec", "medmentions"):
+        raise SystemExit(f"usage: {sys.argv[0]} [all|cadec|medmentions]")
     frames = []
-    if CADEC_ENT.is_file():
+    if want in ("all", "cadec") and CADEC_ENT.is_file():
         frames.append(load_frame(CADEC_ENT, "CADEC"))
-    if MM_ENT.is_file():
+    if want in ("all", "medmentions") and MM_ENT.is_file():
         frames.append(load_frame(MM_ENT, "MedMentions"))
+    print(f"datasets included: {want}")
     if not frames:
         raise SystemExit("no entropy tables found")
     ent = pd.concat(frames, ignore_index=True)
@@ -240,13 +247,15 @@ def main() -> int:
             "interpretation"]
     lead = [c for c in lead if c in res.columns]
     res = res[lead + [c for c in res.columns if c not in lead]]
-    OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    res.to_csv(OUT_CSV, index=False)
+    out = (OUT_CSV if want == "all"
+           else OUT_CSV.with_name(OUT_CSV.stem + f"_{want}" + OUT_CSV.suffix))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    res.to_csv(out, index=False)
 
     pd.set_option("display.width", 200)
     print(f"\n=== RQ3 matched pairs (effect size first; |rb| >= {MIN_ABS_RB} to interpret) ===")
     print(res[lead].to_string(index=False))
-    print(f"\nWrote {OUT_CSV}")
+    print(f"\nWrote {out}")
     return 0
 
 
