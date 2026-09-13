@@ -667,3 +667,114 @@ against.
 ~3.96M generations (~367 h) against a 12 h wall. Job 32680 ran 8h26m and wrote nothing before
 being cancelled. The loop predates those tables covering the generative models and was never
 removed when they did.
+
+---
+
+# CADEC de-duplication key resolves the wrong variant text (2026-09-13)
+
+**Recorded BEFORE any fix, so the pre-fix state is preserved rather than reconstructed.**
+
+## The defect
+
+`CADEC_entropy.ipynb` cell10 keys the de-duplication on the variant's *input text*, looked up
+by `input_variant_id` against a map built from the validated-perturbations file:
+
+```python
+# cell10:95-99  -- map built from perturbation_id
+_vt = pd.read_csv(_VALIDATED_FULL, usecols=["perturbation_id", "perturbation_text"], ...)
+_variant_text = dict(zip(_vt["perturbation_id"].astype(str),
+                         _vt["perturbation_text"].fillna("").astype(str)))
+
+# cell10:104-111 -- lookup
+def _variant_key(vid, itype, iid):
+    vid = str(vid)
+    if itype == "original":
+        return f"<<orig:{iid}>>"
+    return _variant_text.get(vid, f"<<missing:{vid}>>")
+```
+
+**The CADEC inference renumbered accepted variants sequentially**, so `input_variant_id` in
+`rq3_cadec_model_outputs.csv` is a *positional index* into the accepted set, not the original
+`perturbation_id`. Measured across all instances:
+
+| | contiguous `p01..pN` |
+|---|---:|
+| CADEC model-output perturbation ids | **100.00%** |
+| CADEC accepted perturbation ids | **21.25%** |
+
+So for **78.75%** of instances the lookup finds a **real but different** variant's text. It
+never falls through to `<<missing:>>` (0% unresolved), so the failure is **silent**.
+
+### Worked example — `cadec_ARTHROTEC.101_TT1`
+
+```
+accepted perturbation_ids (validated file) : p01, p05, p06, p07, p08
+input_variant_id (model outputs)           : p01, p02, p03, p04, p05
+```
+
+Same count (5), disjoint membership beyond p01/p05. `_variant_key("..._p02")` returns the text
+of a variant that was never accepted for this instance. Its two genuine duplicate pairs
+(p05/p06 controlled_paraphrase, p07/p08 back_translation) therefore fail to collapse: the
+validated file gives 5 accepted rows over **3** distinct texts; the entropy file records
+`m_distinct = 5`.
+
+## Scope
+
+**2,188 of 5,161 CADEC instances carry a wrong `m_distinct`** — 2,973 happen to match by
+coincidence. The bias is toward under-collapsing:
+
+| direction | instances |
+|---|---:|
+| entropy `m_distinct` **too high** (under-collapsed) | **2,054** |
+| exact match | 2,973 |
+| entropy `m_distinct` **too low** (over-collapsed) | **134** |
+
+`m_accepted` is unaffected and matches the validated file for **5,161/5,161** instances; the
+entropy instance set is exactly the validated `m_accepted >= 3` set.
+
+**Seven columns of `outputs/rq3/entropy_cadec.csv` are wrong:** `m_distinct`,
+`normalised_entropy_dedup`, `semantic_entropy_dedup`, `dominant_cui_dedup`,
+`n_unassigned_dedup`, `n_duplicate_variants`, `retained_m_distinct`. The raw columns
+(`normalised_entropy`, `m_accepted`, `accuracy`, `mapping_confidence`, `dominant_cui`,
+`n_unassigned`) never touch `_variant_key` and are sound.
+
+Consequently `retained_m_distinct` retains **5,022** CADEC instances where the intended
+definition retains **4,712**, and the entropy-level CADEC duplicate share of 17.70% is
+**understated** — real duplicates were missed.
+
+## Downstream artefacts that inherit it
+
+| Artefact | How |
+|---|---|
+| `outputs/rq3/rq3_matched_pair_statistics.csv` | CADEC rows filtered on `retained_m_distinct` and scored on `normalised_entropy_dedup` |
+| `outputs/rq3/umls_candidate_margin_cadec.csv` | regenerated 2026-09-13 21:29 under the `retained_m_distinct` filter (40,176 rows = 5,022 x 8) |
+| POOLED rows of the RQ3 statistics | mix affected CADEC with sound MedMentions |
+| Any RQ1/RQ2/RQ4 output regenerated after commit `805dca8` | the switchover points them at the dedup columns |
+
+Not affected: everything on the raw-m arm, and the entire MedMentions lane.
+
+## Pre-fix RQ3 CADEC values, verbatim
+
+**Computed under the defective key. Preserved for comparison; not to be reported.**
+
+| pair | n_paired | rank_biserial | CI low | CI high | Wilcoxon p (Holm) | Wilcoxon p (raw) | MWU p | MWU p (BH) | interpretation |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| pair1_biobert_vs_bertbase | 5022 | -0.283211 | -0.329574 | -0.238703 | 9.135465e-31 | 1.827093e-31 | 9.613674e-15 | 2.884102e-14 | supports |
+| pair2_biomistral_vs_mistral | 5021 | 0.123434 | 0.084211 | 0.164485 | 1.000000e+00 | 1.000000e+00 | 9.999999e-01 | 1.000000e+00 | effect exceeds threshold in the OPPOSITE direction |
+| pair3_openbiollm_vs_llama3 | 5016 | 0.502444 | 0.470381 | 0.533649 | 1.000000e+00 | 1.000000e+00 | 1.000000e+00 | 1.000000e+00 | effect exceeds threshold in the OPPOSITE direction |
+
+## Provenance
+
+The defect **entered at commit `125d9d6`** ("CADEC entropy: compute the de-duplicated
+denominator alongside the raw one"), which introduced `_variant_key` and the dual-m columns.
+It is **CADEC-only**.
+
+The MedMentions mirror at commit `ecc62e3` ("MedMentions entropy: compute the de-duplicated
+denominator alongside the raw one") copies the same code and is **correct**, because the
+MedMentions inference never renumbered: its `input_variant_id` sets match the accepted
+`perturbation_id` sets in **99.99%** of instances (contiguity 12.21% on both sides). So
+`entropy_full_umls.csv`'s dual-m columns are sound, and the MedMentions lane needs no repair.
+
+This is a second instance of a silent-fallback failure class: `dict.get(key, default)` where
+the default is unreachable-looking but the wrong key is a *valid* key for different data. A
+lookup that cannot fail is not the same as a lookup that is right.
