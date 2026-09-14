@@ -1482,3 +1482,54 @@ a line; only the reported AURC uses the grid, and the code says so.
 **Reporting order also decided:** risk at fixed coverage (90 / 75 / 50%) leads, AURC supports.
 Risk at fixed coverage is domain-independent, which is precisely the property this defect
 showed AURC lacks.
+
+---
+
+# Stale narrative: hardcoded prose asserting a fact the data no longer supports (2026-09-14)
+
+**Class:** stale-narrative. Prose that states a *quantitative* claim, interpolating the number
+but not re-deriving the claim. When the number moves, the sentence becomes false and nothing
+fails.
+
+## Where
+
+`notebooks/05_analysis/RQ2_Accuracy_Stability_Dissociation.ipynb`, verdict cell:
+
+```python
+r = cad.loc["Llama3-OpenBioLLM-8B"]
+print(f"  Near-ceiling stability ({r['frac_stable']:.1%}) with modest accuracy ...")
+```
+
+Two hardcodings in one line: the **model is named in advance**, and its stability is
+**described as "near-ceiling"** regardless of value.
+
+## What it printed
+
+On the remapped CADEC data, `Llama3-OpenBioLLM-8B` has `frac_stable = 17.6%` — **the lowest
+of all eight models**. The verdict block printed:
+
+> Near-ceiling stability (17.6%) with modest accuracy (7.6%)
+
+17.6% is the floor, not the ceiling. The sentence would have gone into Results 4.2 as written,
+and the interpolated number sitting inside it makes it read as computed.
+
+The claim was presumably true when written, on pre-fix data where OpenBioLLM's entropy was
+inflated by the rule-1 gold leak. Nothing re-checked it after the remap, because there was
+nothing to re-check: it is a string.
+
+## Fixed
+
+The model is now **selected from the data** as the highest `P(wrong | stable)`, and its
+stability is described by its **actual rank** among the models — "the highest", "the lowest",
+or "rank k of n", derived rather than asserted. It now reports
+`Llama3-OpenBioLLM-8B ... stability 17.6% (the lowest of the 8 models)`, which is both the
+same model and a true sentence.
+
+## Class note
+
+This sits with the assertion-strength and duplicate-estimator classes under one heading: the
+repository has several places where **a claim and the number supporting it are maintained
+separately**. Printed prose, an assertion message, and a figure caption are all places where
+a number is described. Any description that will not be re-derived when the number changes is
+a latent false statement. The cheap general rule: if a sentence contains an interpolated
+number, the adjectives around it must be computed from that number too.
