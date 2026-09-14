@@ -173,6 +173,20 @@ def _report_all_models(ns, frames, args):
     import pandas as pd
     rank_orders, aurc_of = ns["rank_orders"], ns["aurc_of"]
     selective_curve, boot_p = ns["selective_curve"], ns["boot_p"]
+
+    def boot_p_preregistered(deltas):
+        """The PRE-COMMITTED estimator: two-sided (r + 1) / (B + 1).
+
+        The notebook's boot_p is a plain proportion and can return exactly 0, which
+        docs/ANALYSIS_PRECOMMIT.md explicitly rejected: it implies a p-value below the
+        resolution the resample count can support. With B = 20,000 the floor here is
+        2 x 1 / 20,001 = 1.0e-4. Both are reported so the difference is visible.
+        """
+        d = np.asarray(deltas, dtype=float)
+        r_ge = int(np.sum(d >= 0.0))
+        r_le = int(np.sum(d <= 0.0))
+        B_ = d.size
+        return float(min(1.0, 2.0 * (min(r_ge, r_le) + 1) / (B_ + 1)))
     signals = list(ns["SIGNALS_BOOT"])
     singles = ["entropy", "confidence", "margin"]
     df = frames[args.dataset]
@@ -250,9 +264,13 @@ def _report_all_models(ns, frames, args):
             delta_point=pt["combined_3"] - pt[bs],
             delta_ci_low=float(lo_b), delta_ci_high=float(hi_b),
             p_vs_best=boot_p(d_best), p_vs_confidence=boot_p(d_conf), p_vs_combined2=boot_p(d_c2),
+            p_vs_best_preregistered=boot_p_preregistered(d_best),
+            p_vs_confidence_preregistered=boot_p_preregistered(d_conf),
+            p_vs_combined2_preregistered=boot_p_preregistered(d_c2),
             significant=bool(hi_b < 0.0)))
         print(f"  {m:28s} delta={win_rows[-1]['delta_point']:+.5f} "
-              f"[{lo_b:+.5f}, {hi_b:+.5f}]  p={win_rows[-1]['p_vs_best']:.4g}  "
+              f"[{lo_b:+.5f}, {hi_b:+.5f}]  p_prop={win_rows[-1]['p_vs_best']:.4g}  "
+              f"p_prereg={win_rows[-1]['p_vs_best_preregistered']:.4g}  "
               f"{'SIGNIFICANT WIN' if win_rows[-1]['significant'] else 'no win'}")
     print(f"  elapsed {time.perf_counter() - t0:.1f} s")
 
