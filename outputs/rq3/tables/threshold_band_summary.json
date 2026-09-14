@@ -1,0 +1,10 @@
+{
+  "rows": 239680,
+  "instances": 5161,
+  "threshold": 0.7,
+  "eps": 0.0005951523780822754,
+  "eps_source": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/logs/cadec_dedup_validation/report.json",
+  "rows_in_band": 26,
+  "instances_in_band": 16,
+  "nearest_distance": 0.00013129711151127488
+}

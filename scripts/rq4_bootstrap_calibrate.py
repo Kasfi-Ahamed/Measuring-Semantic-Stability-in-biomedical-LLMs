@@ -255,23 +255,41 @@ def _report_all_models(ns, frames, args):
             ci_rows.append(dict(dataset=args.dataset, model=m, n=n, signal=s,
                                 aurc_point=pt[s], ci_low=float(lo), ci_high=float(hi), B=B))
         bs = min(singles, key=lambda s: pt[s])
-        d_best, d_conf = boot["combined_3"] - boot[bs], boot["combined_3"] - boot["confidence"]
-        d_c2 = boot["combined_3"] - boot["combined"]
+        d_best = boot["combined_3"] - boot[bs]
         lo_b, hi_b = np.percentile(d_best, [2.5, 97.5])
-        win_rows.append(dict(
+        row = dict(
             dataset=args.dataset, model=m, n=n, B=B, best_single_signal=bs,
             best_single_AURC=pt[bs], AURC_combined_3=pt["combined_3"],
             delta_point=pt["combined_3"] - pt[bs],
             delta_ci_low=float(lo_b), delta_ci_high=float(hi_b),
-            p_vs_best=boot_p(d_best), p_vs_confidence=boot_p(d_conf), p_vs_combined2=boot_p(d_c2),
+            p_vs_best=boot_p(d_best),
             p_vs_best_preregistered=boot_p_preregistered(d_best),
-            p_vs_confidence_preregistered=boot_p_preregistered(d_conf),
-            p_vs_combined2_preregistered=boot_p_preregistered(d_c2),
-            significant=bool(hi_b < 0.0)))
-        print(f"  {m:28s} delta={win_rows[-1]['delta_point']:+.5f} "
-              f"[{lo_b:+.5f}, {hi_b:+.5f}]  p_prop={win_rows[-1]['p_vs_best']:.4g}  "
-              f"p_prereg={win_rows[-1]['p_vs_best_preregistered']:.4g}  "
-              f"{'SIGNIFICANT WIN' if win_rows[-1]['significant'] else 'no win'}")
+            significant=bool(hi_b < 0.0))
+        # docs/ANALYSIS_PRECOMMIT.md section 4 commits to a supplementary table reporting
+        # combined_3 against EACH OF THE THREE SIGNALS SEPARATELY, not only against the
+        # data-dependently chosen best_single. Emit delta, CI and both p-values for each,
+        # plus the old combined(2) comparator for continuity.
+        for comparator in ("entropy", "confidence", "margin", "combined"):
+            d = boot["combined_3"] - boot[comparator]
+            lo, hi = np.percentile(d, [2.5, 97.5])
+            key = "combined2" if comparator == "combined" else comparator
+            row[f"AURC_{key}"] = pt[comparator]
+            row[f"delta_vs_{key}"] = pt["combined_3"] - pt[comparator]
+            row[f"delta_vs_{key}_ci_low"] = float(lo)
+            row[f"delta_vs_{key}_ci_high"] = float(hi)
+            row[f"p_vs_{key}"] = boot_p(d)
+            row[f"p_vs_{key}_preregistered"] = boot_p_preregistered(d)
+            row[f"combined3_better_than_{key}"] = bool(hi < 0.0)
+        win_rows.append(row)
+        r = win_rows[-1]
+        print(f"  {m:28s} vs best_single ({bs}): delta={r['delta_point']:+.5f} "
+              f"[{lo_b:+.5f}, {hi_b:+.5f}]  p_prereg={r['p_vs_best_preregistered']:.4g}  "
+              f"{'SIGNIFICANT WIN' if r['significant'] else 'no win'}")
+        for key in ("entropy", "confidence", "margin", "combined2"):
+            print(f"      vs {key:<11s} delta={r[f'delta_vs_{key}']:+.5f} "
+                  f"[{r[f'delta_vs_{key}_ci_low']:+.5f}, {r[f'delta_vs_{key}_ci_high']:+.5f}] "
+                  f" p={r[f'p_vs_{key}_preregistered']:.4g}  "
+                  f"{'combined_3 BETTER' if r[f'combined3_better_than_{key}'] else 'no'}")
     print(f"  elapsed {time.perf_counter() - t0:.1f} s")
 
     out = ROOT / "outputs" / ("rq3" if args.dataset == "CADEC" else "rq1")
