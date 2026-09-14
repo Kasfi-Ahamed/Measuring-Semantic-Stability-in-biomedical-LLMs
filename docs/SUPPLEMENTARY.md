@@ -1,13 +1,48 @@
 # Supplementary material — index
 
-Reference these table numbers in `main.tex` in place of `[[SUPP_REF]]`.
+**Table numbers below are STABLE.** Cite them as *Supplementary Table S1* … *S9*. They will
+not be renumbered; anything added later takes S10 onward.
+
+## Placeholder substitution map
+
+Replace the four `[[SUPP_REF]]` placeholders in `main.tex` as follows.
+
+| what the sentence promises | replace with | artefact |
+|---|---|---|
+| the all-accepted-variants sensitivity analysis | **Supplementary Table S1** | `docs/S1_SENSITIVITY.md` |
+| the enumerated tie-break and threshold-band rows | **Supplementary Table S2** | `outputs/rq3/tables/threshold_band_*`, `tiebreak_*` |
+| `combined_3` against each signal separately | **Supplementary Table S3** | `outputs/rq3/rq4_combined3_wintest_cadec.csv` |
+| the full RQ1 coefficient table | **Supplementary Table S4** | `docs/RQ1_CADEC_results.md` |
+
+Supporting material not referenced by a `[[SUPP_REF]]`: **S5**–**S9**.
+
+| ref | holds |
+|---|---|
+| S1 | all-accepted-variants sensitivity (RQ1, RQ2, RQ4 on both denominators) |
+| S2 | tie-break cases and threshold-band row enumeration |
+| S3 | `combined_3` against entropy, confidence and margin separately |
+| S4 | full RQ1 hurdle coefficients, both parts |
+| S5 | zero-inflation audit under both denominators |
+| S6 | QA meaning-preservation gate recomputation |
+| S7 | QA lane results, BioASQ and SQuAD 2.0 separately |
+| S8 | selective risk at fixed coverage, CADEC |
+| S9 | mechanical artefact inventory |
 
 **All CADEC.** No MedMentions result is finalised before the 21 September cutoff; the
 MedMentions counterparts of S1, S3 and S4 are generated on the day (`docs/CUTOFF_RUNBOOK.md`).
 
+### Status
+
+| ref | status |
+|---|---|
+| S1 | **final** |
+| S2 | **PROVISIONAL** — threshold band is final on remapped data; the tie-break case count is still pre-remap and is re-confirmed by job `32853`. Do not quote the case count until that lands. |
+| S3, S4 | **final** |
+| S5–S9 | **final** |
+
 ---
 
-## S1 — All-accepted-variants sensitivity analysis
+## Supplementary Table S1 — All-accepted-variants sensitivity analysis
 
 **Promised in:** Limitations, the de-duplication paragraph.
 **Artefact:** `docs/S1_SENSITIVITY.md`
@@ -36,15 +71,25 @@ the same producer pass, so neither arm re-runs inference or mapping.
   of the four effects Results 4.1 leads with. This belongs in Limitations as a stated
   sensitivity, not as a footnote.
 
-**Known gap:** the margin rows of the RQ4 comparison are *not* a real sensitivity comparison.
-`umls_candidate_margin_cadec.csv` covers the primary arm only — 0 of the 3,592 raw-only cells
-have a margin — so the finite-margin mask drops exactly the rows that distinguish the arms and
-the delta is 0.0000 by construction. A true margin arm needs
-`RQ4_umls_candidate_margin.ipynb` re-run over the raw-arm row set.
+### Known gap, deliberately left open
+
+The margin rows of the RQ4 comparison in S1 are **not** a real sensitivity comparison.
+`umls_candidate_margin_cadec.csv` covers the primary arm only — **0 of the 3,592 raw-only
+cells have a margin** — so the finite-margin mask drops exactly the rows that distinguish the
+arms, and the delta is **0.0000 by construction, not by robustness**. The S1 table says so at
+the point of use.
+
+**Decision (14 September): not closed before the cutoff.** Closing it means re-running
+`RQ4_umls_candidate_margin.ipynb` over the raw-arm row set, which needs a GPU slot. The raw
+arm is a sensitivity analysis rather than the primary, and slots are worth more to
+MedMentions blocks accumulating toward the 21st. Revisit after the cutoff.
+
+If the paper cites S1 for RQ4 robustness, cite it for **entropy and confidence only** — those
+are genuinely compared across arms, and move by at most 0.0089.
 
 ---
 
-## S2 — Tie-break and threshold-band row enumeration
+## Supplementary Table S2 — Tie-break and threshold-band row enumeration
 
 **Promised in:** Limitations, the tie-break and threshold paragraphs.
 **Artefacts:** `outputs/rq3/tables/threshold_band_rows.csv`,
@@ -89,14 +134,23 @@ where the figure 16 originated.
 exact-match form, so both sit at cosine ~1.0 and tie exactly on `_cui_n_forms`, leaving the
 sort decided by list order.
 
-**Status:** the tie-break traces and gate failures currently on disk are dated **11-13
-September — before the rule-1 gold-leak fix and the remap**. Job `32853` regenerates them on
-remapped data and preserves the pre-remap copies with a `.PREREMAP_` suffix. **The 2 above is
-a pre-remap figure and must be re-confirmed from that job before it is quoted.**
+### `[[TIEBREAK_CASES]]` — do not fill yet
+
+The tie-break traces and gate failures currently on disk are dated **11-13 September, before
+the rule-1 gold-leak fix and the remap**. Rule 1 changed which CUIs enter the candidate list,
+and the tie-break cases are precisely rows where two candidates tie at cosine ~1.0, so the
+count can move. Job `32853` re-derives it on remapped data and preserves the pre-remap copies
+with a `.PREREMAP_` suffix (the promoted files here carry `.PREREMAP.` in their names for the
+same reason).
+
+**The 2 above is a pre-remap figure.** Given that all four numbers in the neighbouring
+threshold-band sentence turned out to be wrong, this one should not be carried over on
+assumption. When `32853` lands, `[[TIEBREAK_CASES]]` takes the re-derived count with its
+denominator — **N of 239,680 mapped-output rows** — and the surface forms involved.
 
 ---
 
-## S3 — combined_3 against each signal separately
+## Supplementary Table S3 — combined_3 against each signal separately
 
 **Promised in:** `docs/ANALYSIS_PRECOMMIT.md` section 4 — *"a supplementary table reports
 `combined_3` against each of the three signals separately"*.
@@ -134,7 +188,7 @@ ones' errors.
 
 ---
 
-## S4 — Full RQ1 coefficient table
+## Supplementary Table S4 — Full RQ1 coefficient table
 
 **Promised in:** Results 4.1.
 **Artefacts:** `docs/RQ1_CADEC_results.md`, `outputs/rq3/rq1_linguistic_predictors_summary.csv`
@@ -150,7 +204,7 @@ The raw-arm counterpart is `docs/RQ1_CADEC_results_rawm.md` (see S1).
 
 ---
 
-## S5-S9 — Additional supporting material
+## Supplementary Tables S5-S9 — Additional supporting material
 
 | ref | artefact | what it shows |
 |---|---|---|
