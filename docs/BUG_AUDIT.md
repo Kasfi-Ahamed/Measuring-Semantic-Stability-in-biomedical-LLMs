@@ -1273,3 +1273,67 @@ Full results: `docs/RQ1_CADEC_results.md`.
 assertion-strength class above, by a shared property: *the failure mode produces output that
 is well-formed*. A wrong count, a passing-but-weak assertion, and an empty coefficient table
 all look like results. See the bare-except sweep in this session for the full inventory.
+
+---
+
+# Broad-except fix decisions, and a correction to my own measurement (2026-09-14)
+
+Supervisor decisions on the sweep (`scripts/broad_except_sweep.py`, 99 handlers, all
+`except Exception:`, zero bare `except:`). Applied as instructed.
+
+## Fail loudly
+
+| site | before | after |
+|---|---|---|
+| `RQ1_linguistic_predictors_hurdle.ipynb` cell5 logit fit | stored the error, returned no model | **raises `RuntimeError`** naming the formula, n and predictors |
+| ″ cell5 OLS fallback for part 2 | stored the error, returned no model | **raises**, and reports the MixedLM state that preceded it |
+| `QA_answer_level_semantic_entropy.ipynb` cell6 `gate_g1` | `return True` — **accepted** on failure | **`return False`** — fail-closed, logged, counted |
+| ″ cell6 `gate_g2` | `return True` — **accepted** on failure | **`return False`** — fail-closed, logged, counted |
+| `cadec_dedup_validate_full.py` kendalltau import | `kendalltau = None`, every tau became `nan` | plain `from scipy.stats import kendalltau` |
+
+### One deliberate departure, flagged for decision
+
+`fit_magnitude`'s **MixedLM** handler was instructed to fail loudly, and it does **not** raise.
+The OLS-on-logit(H) path below it is the *designed* fallback and is named in the method string
+the notebook already reports ("MixedLM did not converge / failed -- fixed effects reported"),
+so a MixedLM failure still yields a fitted, correctly-labelled model. Re-raising would delete
+a documented analysis path rather than a silent failure. What was actually wrong is that the
+reason was stored and never shown; it is now printed with its traceback at the moment it
+happens. **Say the word and it becomes a raise like the other two.**
+
+## Count and report
+
+`RQ1_semantic_entropy_linguistic_predictors.ipynb` cell15 bootstrap. **Two** silent drops were
+present, not one: the `except Exception: pass` around the refit, and an `abs(coef) <= 100`
+filter discarding explosive estimates. Both remove replicates from a percentile CI and
+therefore narrow it by an unknown amount. Both are now counted separately, the failure reasons
+and worst-affected terms are printed, a `boot_n_used` column records how many replicates each
+term's CI actually rests on, and the run **asserts the refit failure rate is <= 1%**.
+
+## Keep, but assert
+
+The QA perturbation operators (`back_translate`, `paraphrase`, `synonym_sub`) still return the
+input unchanged on failure. A permanent assertion now fires when building the perturbation
+cache: **no accepted variant may be byte-identical to its original**, case- and
+whitespace-insensitive.
+
+### Correction: my earlier verification was against the wrong baseline
+
+I reported "0 of 7,779 SQuAD2 and 0 of 1,484 BioASQ persisted variants are identical to their
+original". **That is not what I measured.** In
+`qa_question_perturbations_{dataset}.csv`, `pert_idx == 0` is the **first accepted
+perturbation**, not the original question — the original is not in that file at all and comes
+from the SQuAD 2.0 validation split and the BioASQ zip. What I actually measured is that no
+variant is identical to *variant 0*, which is a real fact but a different and weaker one.
+
+It does not establish that the fallback never fired. `scripts/qa_gate_failopen_audit.py`
+recovers the true originals from both sources and measures the correct quantity alongside the
+gate recomputation; the assertion added to the notebook compares against the original, not
+against variant 0.
+
+## Acceptable as is
+
+`roc_auc_score` at QA cell10 (logged, lands as NaN, visible); the 17 import guards; the 11
+model-load fallbacks (all re-raise or print); `disk_guard.py`; `exec_notebook.py` (prints the
+traceback and returns 1 — my sweep's heuristic mislabelled it); `notebooks/_legacy/`;
+`mm_batch_gates.py` (re-raises).

@@ -100,16 +100,16 @@ def run_arm(ns, texts, mentions, vecs, label, row_u=None, D_u=None, I_u=None):
 
 def order_stats(df):
     """Kendall tau + adjacent order flips between the two confidence orderings, per model."""
-    try:
-        from scipy.stats import kendalltau
-    except Exception:                                        # pragma: no cover
-        kendalltau = None
+    # Was wrapped in `except Exception: kendalltau = None`, which turned a missing scipy into
+    # a corpus-wide NaN that reads as "no association measured" rather than "not measured".
+    # A missing dependency is an error (docs/BUG_AUDIT.md, 2026-09-14).
+    from scipy.stats import kendalltau
     out = {}
     for model, g in df.groupby("model_name"):
         a = g["conf_dedup"].to_numpy()
         b = g["conf_full"].to_numpy()
         tau = float("nan")
-        if kendalltau is not None and len(g) > 1:
+        if len(g) > 1:
             tau = float(kendalltau(a, b, variant="b").statistic)
         # adjacent flips: order rows by the canonical (dedup) confidence, then count
         # neighbouring pairs whose relative order is reversed under the non-deduped run.
