@@ -1080,3 +1080,77 @@ the real property unmeasured.
 Nothing. The assertion is not wrong, it is weak, and it is retained. Its message should be
 reworded so it does not claim predictiveness, and any future "signal X works" gate should assert
 a discrimination statistic (AUROC with a CI that excludes 0.5) rather than a dispersion one.
+
+---
+
+# Aliased predictors silently killed half of RQ1 (2026-09-14)
+
+**Class:** aliased-column. A column that is a *copy* of another, entered as though it were an
+independent measurement. Distinct from count-vs-identity: nothing here is compared, so no
+comparison can be wrong. The design matrix is simply rank-deficient and nobody is told.
+
+## The alias
+
+`notebooks/01_perturbations/CADEC_perturbations.ipynb`, cell writing the perturbation table:
+
+```python
+if "lexical_change_magnitude" not in df_out.columns and "g5_edit_distance" in df_out.columns:
+    df_out["lexical_change_magnitude"] = df_out["g5_edit_distance"]
+```
+
+`lexical_change_magnitude` is therefore a literal copy of `g5_edit_distance` on CADEC.
+Measured on `rq3_cadec_validated_perturbations_full.csv`, accepted rows only:
+**27,814 of 27,814 cells identical (100.0000%), max absolute difference 0.0.**
+
+## The consumer
+
+`notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb` builds `mean_edit_distance`
+from one and `mean_lexical_change_magnitude` from the other, then `_predictor_cols()` returns
+both. Two perfectly collinear continuous predictors entered every fit.
+
+## What it cost
+
+**The binary half of the hurdle model did not exist.** With both columns in the design the
+logit fit raised `Singular matrix` and was caught by the `except Exception` in
+`fit_logit_hurdle()`, which records the error and returns. The notebook then printed
+`Binary method: None` and `(no significant positive linguistic effects)` under
+`[raise P(entropy>0)]` -- a *null result where no model had been fitted at all*. RQ1 is a
+hurdle model; half of it was reported as empty rather than as failed.
+
+The magnitude half did fit, and reported **one effect twice**:
+
+```
++ edit distance (z):   coef=+0.072 [+0.047,+0.098] p=2.24e-08
++ mean lex-change (z): coef=+0.072 [+0.047,+0.098] p=2.24e-08
+```
+
+Identical coefficient, identical SE, identical p. A reader counts two corroborating linguistic
+predictors. There is one. The coefficient was also **halved** by the collinear split: after
+the fix the single predictor carries **+0.145**, not +0.072.
+
+## After the fix (drop any predictor identical to an earlier one)
+
+Logit fits. CADEC, remapped data, 37,695 rows, nonzero fraction 0.573:
+
+| effect | logit P(H>0) | magnitude given H>0 |
+|---|---|---|
+| mention length (z)   | **+0.412** [+0.368,+0.456] p=8.2e-75 | +0.097 [+0.057,+0.138] p=2.2e-06 |
+| mean lex-change (z)  | **+0.132** [+0.093,+0.170] p=1.7e-11 | **+0.145** [+0.094,+0.196] p=2.2e-08 |
+| n accepted perts (z) | **+0.135** [+0.094,+0.177] p=2.4e-10 | **-0.330** [-0.382,-0.278] p=2.2e-35 |
+| pert: back_translation | **-0.387** [-0.700,-0.074] p=0.016 | **+0.669** [+0.323,+1.015] p=1.5e-04 |
+
+Two of the four reverse sign between the hurdle's parts. `n_accepted_perts` and
+back-translation share both make entropy more likely to be non-zero while making it *smaller*
+once non-zero. That is exactly the structure a hurdle model exists to expose, and none of it
+was visible while the logit was silently failing.
+
+## What was changed
+
+`_predictor_cols()` now drops any core predictor byte-identical to one already selected and
+prints which and to what. The alias in `CADEC_perturbations.ipynb` is left alone: it is the
+source of the duplicate but it is also how `lexical_change_magnitude` comes to exist at all,
+and regenerating the perturbation table is out of scope before the cutoff.
+
+**Open, not fixed:** `fit_logit_hurdle()` catches every exception and reports the part as
+absent. A fit that fails and a fit that finds nothing print differently but read the same in
+the verdict block. Failure should be loud.
