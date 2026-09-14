@@ -1404,3 +1404,44 @@ Option 2 touches pre-registered numbers, so it is not mine to take.
 the single row with NaN entropy that the distribution plot drops and the other two retain
 (it is dropped later by their own finite-score masks). Cosmetic, but two figures in one paper
 should not state two n for the same corpus.
+
+---
+
+# QA gate fail-open: audited, clean. QA perturbation operators: not clean (2026-09-14)
+
+`scripts/qa_gate_failopen_audit.py`, job 32773. Full report in `docs/QA_GATE_AUDIT.md`.
+
+## The fail-open gates never fired
+
+**0 of 20,956 persisted variants fail G1 or G2 on recomputation.** The `return True` inside
+`except Exception` in `gate_g1`/`gate_g2` never admitted a variant that its own gate would
+reject. Both distributions are sharply truncated at exactly their thresholds (G1 minimum
+0.8500/0.8501 against a 0.85 cutoff; G2 maximum 0.7198/0.7200 against a 0.72 cutoff), which is
+positive evidence the gates ran rather than merely evidence of no failures. The gates are now
+fail-closed regardless.
+
+## What the audit found instead
+
+**26 accepted variants are byte-identical to their original question** (8 BioASQ, 18 SQuAD
+2.0, G1 cosine exactly 1.0000). The perturbation operators `return text` unchanged on failure
+and that fallback fired. Neither gate checks whether a perturbation perturbed anything, so all
+26 passed legitimately.
+
+**8 of 2,128 included instances (0.376%) carry one, and all 8 sit at exactly m = 3**, so each
+falls below the `m >= 3` filter once the unperturbed variant is removed. Measured impact of
+excluding them: largest movement **0.0011** in any unanswerable-detection AUROC and **0.06 pp**
+in any zero-fraction. No conclusion depends on them.
+
+## This also corrects my own earlier claim
+
+I previously reported "0 of 7,779 and 0 of 1,484 persisted variants identical to their
+original" from comparing variants against `pert_idx == 0`, which is the **first perturbation**,
+not the original. The true figure, measured against the real originals recovered from the
+SQuAD 2.0 validation split and the BioASQ zip, is **26**, not 0. The fallback did fire.
+
+## Open decision
+
+The permanent assertion added on the same day is **currently violated**, so it will halt any
+QA perturbation regeneration. Three options are set out at the end of `docs/QA_GATE_AUDIT.md`;
+none is taken here, because the assertion was requested on the understanding that the
+condition already held.
