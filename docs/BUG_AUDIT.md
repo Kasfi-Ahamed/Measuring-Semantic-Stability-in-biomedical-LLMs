@@ -1154,3 +1154,41 @@ and regenerating the perturbation table is out of scope before the cutoff.
 **Open, not fixed:** `fit_logit_hurdle()` catches every exception and reports the part as
 absent. A fit that fails and a fit that finds nothing print differently but read the same in
 the verdict block. Failure should be loud.
+
+## Hypothesis 2 result: FALSIFIED, and it could not have been true (2026-09-14)
+
+Measured by `scripts/zero_inflation_audit.py`, output in `docs/rq123_audit.md`, CADEC on the
+remapped data, both denominators.
+
+**Degenerate zeros: 0 rows (0.00%) under both arms.** Not "few" -- structurally impossible.
+`_entropy_from_labels` returns `semantic_entropy_full = NaN` and `all_unassigned = True` when
+every label is UNASSIGNED, under an explicit comment reading `must NOT count as entropy 0`. An
+all-UNASSIGNED instance therefore never reaches the zero block; it is dropped. Exactly **1**
+row in the whole CADEC file is all-UNASSIGNED, and it is excluded as designed.
+
+The minimum assigned-variant count inside the zero block is **1**, and 99.80% of the block has
+at least 4 assigned (primary arm; mean 4.66 against a whole-arm mean of 4.72). The zero block
+is genuine single-concept agreement, and its accuracy is **43.69%** against **23.47%** over the
+whole arm.
+
+**Both pre-registered zero-inflation hypotheses are now falsified.** Neither gold held constant
+across variants (hypothesis 1, -0.66 pp) nor pipeline failure to map (hypothesis 2, 0 rows)
+explains the ~43% zero fraction. Per the pre-registration, no Discussion of zero-inflation is
+written until a mechanism is actually identified.
+
+### What the data does say, without a hypothesis attached
+
+The discriminator separates the block cleanly. **82.75%** of zeros are instances where every
+variant produced the *identical output string* -- the model never moved at all -- at **39.88%**
+accuracy. The remaining **17.25%**, where different strings collapsed onto one CUI, run at
+**62.00%**. Accuracy rises monotonically with the number of distinct strings collapsed: 39.88%,
+58.02%, 72.26%, 78.03%, 88.89%.
+
+So the dominant contributor to zero entropy is **model invariance, not mapping absorption**, and
+the invariant cases are the *less* accurate ones. This is a description, not the mechanism: it
+says where the zeros are, not why perturbation fails to move the model.
+
+**Unmeasured:** zero fraction against candidate-set size. The FAISS candidate lists are not
+persisted and `rq3_cadec_mapped_outputs.csv` carries no candidate count, so the ambiguity proxy
+in the pre-registration cannot be computed without re-running the mapping with an extra column.
+Recorded as unmeasured rather than replaced with a substitute.
