@@ -59,8 +59,21 @@ and is not the bottleneck.
 | 32319 | none (cache hit) | 0 | **0:08:20** | COMPLETED — fixed overhead only |
 
 Fixed overhead (pool load, embedding cache, FAISS index load, entropy, write) is **~8 minutes**
-from 32319. Marginal cost is therefore roughly **2 hours for the first block and ~1.2 hours per
-additional block**, the first carrying the model load.
+from 32319.
+
+### The measurement that supersedes the estimate
+
+**Job 32768 (14 Sep) mapped block 6 end to end, clean, in 1:03:06** — map + entropy, with no
+assemble and no prune, writing to scratch. That is the closest analogue to a cutoff-day
+re-map block and it is the number to plan against:
+
+- 370,428 rows (139,173 direct-CUI, 231,255 free text) in **63 minutes**
+- minus ~8 minutes fixed overhead -> **~55 minutes marginal per block**
+- SapBERT embedding of the free-text rows took **27 seconds**; the rest is the FAISS
+  top-1000 search over 7,653,278 vectors, which is the whole cost
+
+Extrapolating to all 8 grid-complete blocks (2,927,685 rows): **~7.5 hours**, inside the
+6-10 h range estimated from `sacct` and at the upper-middle of it. Plan for 8 hours.
 
 ### Step-by-step
 
@@ -68,7 +81,7 @@ additional block**, the first carrying the model load.
 |---:|---|---:|---|
 | 1 | **Freeze inputs.** `scripts/freeze_validated_inputs.py` — sha256 sidecars on `rq1_validated_perturbations.csv` and the mapped file. Record the hashes in this file. | 5 min | yes |
 | 2 | **Count grid-complete blocks.** `complete_shards_for_grid(shard_root(ROOT))`, `source="any"`. Record the list. This is the denominator for every MedMentions number in the paper. | 2 min | yes |
-| 3 | **Release `32769` or submit a fresh clean re-map**, writing to a NEW path. See section 2. | **6-10 h** for 8 blocks | yes |
+| 3 | **Submit a fresh clean re-map**, writing to a NEW path. See section 2. Do NOT simply release `32769` — it runs the production partial-map, which reuses the contaminated cache and prunes. | **~7.5 h** for 8 blocks (measured) | yes |
 | 4 | **Verify 0.00% injection** on the new mapped file, per block, before anything reads it. | 5 min | yes — hard gate |
 | 5 | **Regenerate `entropy_full_umls.csv`** from the clean mapped file. Runs inside the same notebook as step 3. | included above | yes |
 | 6 | **`RQ4_umls_candidate_margin.ipynb`** with `DATASET=medmentions` — rebuilds `umls_candidate_margin_medmentions.csv`. | 1-2 h | no |
@@ -87,12 +100,21 @@ additional block**, the first carrying the model load.
 
 Two options. **Option A is the recommendation.**
 
+> **The fixed mapping code is validated end to end.** Job 32768 re-mapped block 6 on
+> 14 September with both gates clean: `exact_match_inject` **0 rows (0.00%)**, and the entropy
+> stage **reached** (57,224 rows with `m_accepted`, `m_distinct` and `retained_m_distinct` all
+> present). The `NameError` that killed 32750 after it had written 2.93M rows is gone, and the
+> rule-1 gold leak does not reappear. Production artefacts were untouched and block 6's shard
+> CSVs were not pruned.
+
 ### Option A — re-map from `output_text` in the existing mapped file (no re-inference)
 
 The mapped file carries every model output. Feed those back through the fixed assignment and
 write to a new path. Costs one pass of FAISS over 2.93M rows, of which ~1.8M are free text.
 
-- estimated **6-8 h** on one GPU, extrapolating 1.2 h/block over 7 contaminated blocks
+- estimated **~7.5 h** on one GPU, from the measured 55 min marginal per block over 8 blocks
+  (re-map all 8, not just the 7 contaminated ones: re-mapping block 6 too costs one hour and
+  removes any question about which blocks came from which code path)
 - requires a small runner that reads `rq1_all_outputs_mapped.csv` instead of
   `rq1_all_model_outputs.csv`. **This runner does not exist yet and is the one piece of code
   that must be written before the 21st.** Write and test it against block 6, whose clean
