@@ -16,8 +16,9 @@ complete result set and nothing below is load-bearing for it.
 
 | fact | value (as of 14 Sep) | how to recheck |
 |---|---|---|
-| grid-complete blocks | 8 — `[0,1,2,3,4,5,6,19]` | `complete_shards_for_grid(shard_root(ROOT))` |
-| blocks with shard CSVs still on disk | **1** — `[6]`, plus `[7]` newly assembled | `source="files"` |
+| grid-complete blocks | **10** — `[0,1,2,3,4,5,6,7,17,19]` (was 8 at 09:00; blocks 7 and 17 landed during the day) | `complete_shards_for_grid(shard_root(ROOT))` |
+| blocks with shard CSVs still on disk | **3** — `[6, 7, 17]` | `source="files"` |
+| blocks present in the mapped file | 8 — `[0,1,2,3,4,5,6,19]`; **7 and 17 are grid-complete but NOT yet mapped** | `source="mapped"` |
 | rows in `rq1_all_outputs_mapped.csv` | 2,927,685 | `wc -l` |
 | rows carrying the rule-1 injection | **300,673 (10.27%)** | `assign_rule_path` contains `exact_match_inject` |
 | held jobs | `30955_[20-25]` (pert), `32769` (auto partial-map) | `squeue -u $USER` |
@@ -72,8 +73,10 @@ re-map block and it is the number to plan against:
 - SapBERT embedding of the free-text rows took **27 seconds**; the rest is the FAISS
   top-1000 search over 7,653,278 vectors, which is the whole cost
 
-Extrapolating to all 8 grid-complete blocks (2,927,685 rows): **~7.5 hours**, inside the
-6-10 h range estimated from `sacct` and at the upper-middle of it. Plan for 8 hours.
+Extrapolating to the **10** grid-complete blocks as of 14 Sep (2,927,685 mapped rows plus the
+two unmapped blocks, ~3.66M rows total): **~9.2 hours**. The count will keep rising until the
+cutoff — every additional block adds **~55 minutes**. Re-derive the block count on the morning
+of the 21st and multiply; do not reuse this total.
 
 ### Step-by-step
 
@@ -112,9 +115,11 @@ Two options. **Option A is the recommendation.**
 The mapped file carries every model output. Feed those back through the fixed assignment and
 write to a new path. Costs one pass of FAISS over 2.93M rows, of which ~1.8M are free text.
 
-- estimated **~7.5 h** on one GPU, from the measured 55 min marginal per block over 8 blocks
-  (re-map all 8, not just the 7 contaminated ones: re-mapping block 6 too costs one hour and
-  removes any question about which blocks came from which code path)
+- **~55 min per block** measured; multiply by the block count on the day (10 as of 14 Sep
+  -> ~9.2 h, and rising). Re-map **every** block, not just the contaminated ones: re-mapping
+  block 6 costs one hour and removes any question about which blocks came from which code path
+- blocks **7 and 17** are grid-complete but absent from the mapped file, and their shard CSVs
+  are still on disk, so they can go through either route
 - requires a small runner that reads `rq1_all_outputs_mapped.csv` instead of
   `rq1_all_model_outputs.csv`. **This runner does not exist yet and is the one piece of code
   that must be written before the 21st.** Write and test it against block 6, whose clean
