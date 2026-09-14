@@ -1192,3 +1192,84 @@ says where the zeros are, not why perturbation fails to move the model.
 persisted and `rq3_cadec_mapped_outputs.csv` carries no candidate count, so the ambiguity proxy
 in the pre-registration cannot be computed without re-running the mapping with an extra column.
 Recorded as unmeasured rather than replaced with a substitute.
+
+---
+
+# The first false CONCLUSION, not the first wrong number (2026-09-14)
+
+This is the sixth instance of "a failure that produced a valid-looking output" and the first
+where the output was a **scientific claim** rather than an incorrect figure. Recording the full
+chain, because no single link in it is unusual and the combination is what made it dangerous.
+
+## The chain
+
+1. **An aliased predictor.** `CADEC_perturbations.ipynb` creates `lexical_change_magnitude` as
+   a literal copy of `g5_edit_distance`:
+   ```python
+   if "lexical_change_magnitude" not in df_out.columns and "g5_edit_distance" in df_out.columns:
+       df_out["lexical_change_magnitude"] = df_out["g5_edit_distance"]
+   ```
+   All **27,814 of 27,814** accepted CADEC cells are identical, max absolute difference 0.0.
+
+2. **The design went rank-deficient.** `RQ1_linguistic_predictors_hurdle.ipynb` entered the
+   means of both as separate predictors. Measured on the exact design matrix:
+
+   | design | columns | rank | deficit | condition number (scaled) |
+   |---|---:|---:|---:|---:|
+   | as shipped, with the alias | 15 | 14 | **1** | **6e+16** |
+   | alias dropped | 14 | 14 | 0 | **27.4** |
+
+3. **The fit raised `Singular matrix`.**
+
+4. **A broad `except Exception` swallowed it** into a dict field
+   (`fit_logit_hurdle`, `except Exception as e: result["error"] = str(e)`).
+   `coef_table()` then returned an **empty DataFrame** for a part with no model.
+
+5. **The verdict block printed a null result:**
+   ```
+   Binary method: None
+   [raise P(entropy>0)]
+     (no significant positive linguistic effects)
+   ```
+
+That last line is a **finding**. "No linguistic feature predicts whether entropy is non-zero"
+is exactly the kind of sentence that goes into a Results section and gets discussed. No model
+had been fitted. The distance between "this failed" and "this found nothing" is one `except`.
+
+Note the failure was **not** fully silent: `Logit: Singular matrix` was printed at the fit site.
+But the two artefacts a person actually writes from -- the verdict block and
+`rq1_linguistic_predictors_summary.csv` (15 rows, one part only) -- carried no trace of it. A
+diagnostic printed 100 lines above a contradicting conclusion is not a safeguard.
+
+## The signature worth recognising
+
+The magnitude half **did** fit, and reported the same effect twice at half its coefficient:
+
+```
++ edit distance (z):   coef=+0.072  [+0.047,+0.098]  p=2.24e-08
++ mean lex-change (z): coef=+0.072  [+0.047,+0.098]  p=2.24e-08
+```
+
+**Identical coefficient, identical standard error, identical p-value, on two differently named
+predictors, each about half the size of the single-predictor estimate (+0.145).** That is the
+fingerprint of an aliased pair: a perfectly collinear duplicate splits one effect evenly
+between the two columns. If you see two predictors agreeing to four decimal places, they are
+the same column, not two measurements that agree.
+
+## What was true after the fix
+
+Both halves fit. Full design clean: rank 14/14, scaled condition number 27.4 (part 1) and 27.5
+(part 2), maximum VIF 3.69 -- no other collinearity in the design. Two predictors **reverse
+sign between the hurdle's parts**: `n_accepted_perts` (+0.135 logit / -0.330 magnitude) and
+back-translation share (-0.387 / +0.669). Both make entropy more likely to be non-zero while
+making it smaller once non-zero. That structure is the reason to fit a hurdle model at all, and
+none of it was visible while part 1 was failing.
+
+Full results: `docs/RQ1_CADEC_results.md`.
+
+## Class
+
+**Broad-except-over-a-fit.** Related to the count-vs-identity class and to the
+assertion-strength class above, by a shared property: *the failure mode produces output that
+is well-formed*. A wrong count, a passing-but-weak assertion, and an empty coefficient table
+all look like results. See the bare-except sweep in this session for the full inventory.
