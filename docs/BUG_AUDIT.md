@@ -1299,7 +1299,15 @@ the notebook already reports ("MixedLM did not converge / failed -- fixed effect
 so a MixedLM failure still yields a fitted, correctly-labelled model. Re-raising would delete
 a documented analysis path rather than a silent failure. What was actually wrong is that the
 reason was stored and never shown; it is now printed with its traceback at the moment it
-happens. **Say the word and it becomes a raise like the other two.**
+happens.
+
+**DECIDED 2026-09-14: keep the loud-print fallback, do not raise.** The reasoning given:
+*"OLS is a designed, documented path and the reported method string names which one ran. That
+is a fallback, not a swallowed failure -- the distinction that matters is whether the output
+tells you what happened, and it does."* That is the criterion this whole class should be judged
+by, and it is worth stating once in general terms: **a handler is a defect when it destroys the
+information that something went wrong, not merely when it catches something.** The logit and
+OLS handlers destroyed it (empty table, printed as a null result); this one does not.
 
 ## Count and report
 

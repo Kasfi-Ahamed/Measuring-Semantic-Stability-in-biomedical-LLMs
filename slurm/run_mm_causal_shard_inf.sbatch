@@ -48,10 +48,15 @@ for k in biomistral mistral openbiollm llama3; do
   MM_MODEL_KEY="$k" MM_SHARD_ID="${MM_SHARD_ID}" "$PY" scripts/exec_notebook.py "$NB"
 done
 
-# This shard's grid may now be 8-model-complete -> map + entropy (idempotent). Submit one
-# partial-map unless one is already queued.
-if ! squeue -u "$USER" -h -n mm_partial_map -o "%A" 2>/dev/null | grep -q .; then
-  sbatch slurm/run_mm_partial_map.sbatch && echo "submitted partial_map catch-up" || true
-fi
+# MAPPING IS MANUAL UNTIL AFTER THE 21 SEPTEMBER CUTOFF.
+# This block used to auto-submit slurm/run_mm_partial_map.sbatch whenever a shard finished.
+# That job runs RQ1_PART2 in PRODUCTION mode, which (a) reuses the CONTAMINATED mapped cache
+# and writes outputs/rq1/entropy_full_umls.csv from it -- a MedMentions analysis artefact --
+# and (b) runs mm_prune_mapped_shards.py, which DELETES the shard CSVs of mapped blocks and
+# is the reason blocks 0-5 and 19 can no longer be re-mapped from source. Job 32769 was
+# auto-submitted this way on 14 September and had to be held.
+# Inference submission is UNTOUCHED: blocks must keep accumulating until the cutoff.
+# The full clean re-map happens ONCE, by hand, on the day. See docs/CUTOFF_RUNBOOK.md.
+echo "partial_map auto-submit DISABLED until after the 2026-09-21 cutoff (mapping is manual)"
 
 echo "=== done $(date) causal-inf shard=${MM_SHARD_ID} ==="

@@ -39,6 +39,26 @@ contaminated and must be re-mapped.
 at 99.96-99.99% per block. The re-map therefore needs **no re-inference**: the model outputs
 are still there, only the CUI assignment is wrong.
 
+### Mapping is MANUAL from 14 September onward
+
+The partial-map auto-submit has been **removed from all five sites** that had it:
+
+| file | was |
+|---|---|
+| `run_mm_causal_shard_inf.sbatch` | `sbatch run_mm_partial_map.sbatch` on shard completion |
+| `run_mm_causal_shard_inf_2gpu.sbatch` | same |
+| `run_mm_shard_inf.sbatch` | same |
+| `run_cadec_entropy_remap.sbatch` | step 3 of 3 |
+| `run_mm_assemble_then_inf.sbatch` | `--dependency=afterok:enc:gen` |
+
+**Inference submission is untouched** — blocks must keep accumulating until the cutoff. Only
+the mapping job is suppressed, because it writes `entropy_full_umls.csv` from the contaminated
+cache and prunes shard CSVs. Job `32769` was auto-submitted this way on 14 September and is
+held.
+
+**The full clean re-map therefore happens exactly once, by hand, on the day.** Nothing will
+map for you, and nothing will prune. Step 3 below is the only mapping run.
+
 > **DO NOT run `mm_prune_mapped_shards.py` before the re-map.** It is the reason this is
 > awkward, and running it again on block 6 or 7 would make those unre-mappable from source too.
 

@@ -53,11 +53,10 @@ echo "--- STEP 2/3: threshold band around CONFIDENCE_THRESHOLD ---"
 
 echo
 echo "--- STEP 3/3: MedMentions partial map for grid-complete shards ---"
-if squeue -u "$USER" -h -n mm_partial_map -o "%A" 2>/dev/null | grep -q .; then
-  echo "partial_map already queued — not submitting a duplicate"
-else
-  sbatch slurm/run_mm_partial_map.sbatch && echo "submitted partial_map" || true
-fi
+# DISABLED until after the 2026-09-21 cutoff: the partial map writes
+# outputs/rq1/entropy_full_umls.csv from the contaminated mapped cache and prunes
+# shard CSVs. Mapping is MANUAL and happens once, on the day. See docs/CUTOFF_RUNBOOK.md.
+echo "partial_map NOT submitted (mapping is manual until after the cutoff)"
 
 echo "=== done $(date) ==="
 "$PY" scripts/disk_guard.py

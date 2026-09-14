@@ -63,8 +63,9 @@ done
 
 # Incremental map + entropy: this shard's 8-model block is now complete. Submit one
 # partial-map catch-up (maps every complete-8-model block) unless one is already queued.
-if ! squeue -u "$USER" -h -n mm_partial_map -o "%A" 2>/dev/null | grep -q .; then
-  sbatch slurm/run_mm_partial_map.sbatch && echo "submitted partial_map catch-up" || true
-fi
+# DISABLED until after the 2026-09-21 cutoff: the partial map writes
+# outputs/rq1/entropy_full_umls.csv from the contaminated mapped cache and prunes
+# shard CSVs. Mapping is MANUAL and happens once, on the day. See docs/CUTOFF_RUNBOOK.md.
+echo "partial_map NOT submitted (mapping is manual until after the cutoff)"
 
 echo "=== done $(date) shard-inf shard=${MM_SHARD_ID} ==="

@@ -23,9 +23,11 @@ ENC_ID=$(sbatch --parsable slurm/run_mm_enc_inf_array.sbatch)
 echo "submitted enc array ${ENC_ID}"
 GEN_ID=$(sbatch --parsable slurm/run_mm_gen_inf_array.sbatch)
 echo "submitted gen array ${GEN_ID}"
-# Catch-up map after both arrays finish (incremental map also runs inside gen tasks).
-MAP_ID=$(sbatch --parsable --dependency=afterok:${ENC_ID}:${GEN_ID} slurm/run_mm_partial_map.sbatch)
-echo "submitted partial_map ${MAP_ID} afterok enc+gen"
+# DISABLED until after the 2026-09-21 cutoff: the partial map writes
+# outputs/rq1/entropy_full_umls.csv from the contaminated mapped cache and prunes
+# shard CSVs. Mapping is MANUAL and happens once, on the day. See docs/CUTOFF_RUNBOOK.md.
+# The enc and gen arrays above are UNCHANGED: blocks must keep accumulating.
+echo "partial_map NOT chained after enc+gen (mapping is manual until after the cutoff)"
 
 echo "=== done $(date) ==="
 "$PY" scripts/disk_guard.py
