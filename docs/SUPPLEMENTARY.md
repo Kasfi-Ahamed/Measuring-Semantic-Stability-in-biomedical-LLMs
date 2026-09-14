@@ -1,7 +1,7 @@
 # Supplementary material — index
 
-**Table numbers below are STABLE.** Cite them as *Supplementary Table S1* … *S9*. They will
-not be renumbered; anything added later takes S10 onward.
+**Table numbers below are STABLE.** Cite them as *Supplementary Table S1* … *S10*. They will
+not be renumbered; anything added later takes S11 onward.
 
 ## Placeholder substitution map
 
@@ -14,7 +14,7 @@ Replace the four `[[SUPP_REF]]` placeholders in `main.tex` as follows.
 | `combined_3` against each signal separately | **Supplementary Table S3** | `outputs/rq3/rq4_combined3_wintest_cadec.csv` |
 | the full RQ1 coefficient table | **Supplementary Table S4** | `docs/RQ1_CADEC_results.md` |
 
-Supporting material not referenced by a `[[SUPP_REF]]`: **S5**–**S9**.
+Supporting material not referenced by a `[[SUPP_REF]]`: **S5**–**S10**.
 
 | ref | holds |
 |---|---|
@@ -27,6 +27,7 @@ Supporting material not referenced by a `[[SUPP_REF]]`: **S5**–**S9**.
 | S7 | QA lane results, BioASQ and SQuAD 2.0 separately |
 | S8 | selective risk at fixed coverage, CADEC |
 | S9 | mechanical artefact inventory |
+| S10 | CADEC matched-pair statistics and tie counts |
 
 **All CADEC.** No MedMentions result is finalised before the 21 September cutoff; the
 MedMentions counterparts of S1, S3 and S4 are generated on the day (`docs/CUTOFF_RUNBOOK.md`).
@@ -36,7 +37,7 @@ MedMentions counterparts of S1, S3 and S4 are generated on the day (`docs/CUTOFF
 | ref | status |
 |---|---|
 | S1 | **final** |
-| S2 | **PROVISIONAL** — threshold band is final on remapped data; the tie-break case count is still pre-remap and is re-confirmed by job `32853`. Do not quote the case count until that lands. |
+| S2 | **PROVISIONAL** — threshold band is final on remapped data; the tie-break case count is still pre-remap. Job `32853` is HELD until **19 September** and must not run on cutoff day; if it never runs, the Limitations sentence quotes the threshold band only and drops the tie-break clause (`docs/CUTOFF_RUNBOOK.md` section 4a). |
 | S3, S4 | **final** |
 | S5–S9 | **final** |
 
@@ -148,6 +149,11 @@ threshold-band sentence turned out to be wrong, this one should not be carried o
 assumption. When `32853` lands, `[[TIEBREAK_CASES]]` takes the re-derived count with its
 denominator — **N of 239,680 mapped-output rows** — and the surface forms involved.
 
+`32853` is **HELD until 19 September** and **must not run on cutoff day**. If it does not run,
+`[[TIEBREAK_CASES]]` is not filled: the Limitations sentence is rephrased to quote the
+threshold band only, which is final. See `docs/CUTOFF_RUNBOOK.md` section 4a for the exact
+fallback wording.
+
 ---
 
 ## Supplementary Table S3 — combined_3 against each signal separately
@@ -213,6 +219,7 @@ The raw-arm counterpart is `docs/RQ1_CADEC_results_rawm.md` (see S1).
 | **S7** | `docs/QA_results.md` | QA lane per model and **per dataset** (BioASQ, SQuAD 2.0 separately): zero fraction, mean normalised entropy, AURC for all three signals, unanswerable-detection AUROC, and Spearman rho between signals. |
 | **S8** | `outputs/rq3/rq4_risk_coverage_operating_points_cadec.csv` | Selective risk at 90%, 75% and 50% coverage for every model and signal — the domain-independent statistic the paper leads with, against which AURC is supporting. |
 | **S9** | `docs/ARTEFACT_INVENTORY.csv` | Mechanical inventory of every derived artefact under `outputs/` (447 artefacts, 127 tracked), for reproducibility. |
+| **S10** | `outputs/rq3/rq3_matched_pair_statistics_cadec.csv` | Matched-pair statistics for all three CADEC pairs, including `n_ties_zero_diff` — the count of instances whose two models have identical normalised entropy, which is what the Wilcoxon signed-rank test discards. Post-remap. |
 
 **S6 is the one to foreground.** A reviewer asking whether the meaning-preservation gates
 actually ran has a document showing recomputed scores truncated at exactly the declared

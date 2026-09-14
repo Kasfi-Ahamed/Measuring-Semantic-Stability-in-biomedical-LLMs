@@ -205,6 +205,32 @@ improvise; each has a defined fallback.**
 
 ---
 
+## 4a. Job 32853 — the tie-break re-confirmation. DECIDED, with a fallback.
+
+`32853` (de-duplication equivalence gate -> tie-break tracer -> threshold band) is **HELD**.
+It re-derives the tie-break case count on remapped data; the count currently on disk is
+pre-remap and cannot be quoted, because rule 1 changed which CUIs enter the candidate list and
+tie-break cases are exactly the rows where two candidates tie at cosine ~1.0.
+
+**Decision, 14 September:** blocks accumulating are worth more than the tie-break count.
+
+| when | do |
+|---|---|
+| **19 September** | `scontrol release 32853`. Losing a slot for up to 5 h that late costs at most half a block rather than a whole one. |
+| **morning of the 21st, if it has not run** | **DO NOT run it on cutoff day.** The day is fully booked with the re-map and every MedMentions analysis. |
+
+**Fallback if it never runs:** rephrase the Limitations sentence to quote the **threshold band
+only**. That half is final on remapped data and does not depend on `32853`:
+
+> 26 mapped-output rows of 239,680 (0.0108%) fall within the reproducibility band of the 0.7
+> confidence cut, collapsing to 16 distinct (instance, model) cells across 16 instances;
+> 15 of those instances survive into the primary analysis arm, affecting 120 of 37,696
+> entropy rows (0.318%). Nearest row to the cut: 1.313e-4.
+
+Drop the tie-break clause entirely rather than carry the pre-remap figure of 2. **The 21st
+must not inherit this as an open question** — it is closed either by `32853` landing before
+the 21st or by the rephrase above.
+
 ## 5. Standing rules that apply on the day
 
 - `30955_[20-25]` stays **HELD** until after the cutoff. Release on the 21st **only after**
