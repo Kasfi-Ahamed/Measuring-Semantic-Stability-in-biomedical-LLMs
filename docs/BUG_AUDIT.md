@@ -1337,3 +1337,70 @@ against variant 0.
 model-load fallbacks (all re-raise or print); `disk_guard.py`; `exec_notebook.py` (prints the
 traceback and returns 1 — my sweep's heuristic mislabelled it); `notebooks/_legacy/`;
 `mm_batch_gates.py` (re-raises).
+
+---
+
+# Two AURCs in one repository, differing by the integration domain (2026-09-14)
+
+**Class:** duplicate-estimator. Two implementations of the same published statistic, in the
+same repository, returning different numbers for the same cell. Neither is wrong internally;
+they answer different questions under one name.
+
+**NOT FIXED. Recorded for a decision, because choosing between them is a scientific choice
+about what "AURC" means in this paper, not a bug fix.**
+
+## The two
+
+| | implementation | coverage domain | grid |
+|---|---|---|---|
+| **A** | `scripts/fig_risk_coverage.py`, `risk_coverage()` + `np.trapz` | `1/n` to `1.00`, width **0.9998** | per-instance, n points |
+| **B** | `RQ4_margin_benchmark.ipynb` cell 3, `selective_curve()` + `aurc_from_curve()` | `0.10` to `1.00`, width **0.90** | `COVERAGE_GRID`, 19 points |
+
+`COVERAGE_GRID = np.round(np.arange(1.00, 0.09, -0.05), 2)` stops at 0.10. **Neither divides
+by the width of its own domain.**
+
+## Measured, CADEC x FLAN-T5-base, entropy, n = 4,712
+
+```
+A) figure    coverage 1/n .. 1.00   = 0.75804
+B) notebook  coverage 0.10 .. 1.00  = 0.68872
+C) fine grid restricted to 0.10 .. 1.00 = 0.68830
+```
+
+C isolates the cause. Reducing the grid from n points to 19 changes the value by **0.00042**;
+the remaining **0.069** is entirely the integration domain. Mean risk is nearly identical
+either way (0.7648 over B's domain, 0.7582 over A's) — the numbers differ because one
+integrates over a 0.90-wide interval and the other over a 1.00-wide one, and both report the
+raw integral.
+
+## Why it matters
+
+`fig_risk_coverage_cadec.png` prints AURC values that do not match
+`rq4_aurc_margin_benchmark.csv`, `rq4_aurc_summary.csv`, or the RQ4 rehearsal in
+`docs/WORKLOG_2026-09-14.md`. A reader comparing the figure to the table sees the same model
+and signal with two different AURCs and no explanation. The figure is the artefact most likely
+to be read first.
+
+A second, latent difference: the figure binarises accuracy with `y = (y >= 0.5)`. On CADEC
+`accuracy` is already 0/1 so this is currently a no-op, but it is a divergence waiting to
+matter on any dataset with fractional correctness.
+
+## The decision, not taken here
+
+1. **Make the figure use the notebook's estimator** — consistent with every published table,
+   but discards the low-coverage region the per-instance curve shows, and that region is
+   where a selective classifier is most informative.
+2. **Keep the fine curve and normalise both by domain width** — makes AURC a mean risk,
+   comparable across domains, but changes every AURC already computed and pre-registered.
+3. **Keep both and rename** — e.g. `AURC@[0.10,1]` for the tables and `AURC@[0,1]` for the
+   figure, with both stated wherever either appears.
+
+Option 2 touches pre-registered numbers, so it is not mine to take.
+
+## Also observed
+
+`fig_entropy_distribution.py` reports "37,695 of 41,288" CADEC rows while
+`fig_signal_independence.py` and `fig_risk_coverage.py` report **37,696**. The difference is
+the single row with NaN entropy that the distribution plot drops and the other two retain
+(it is dropped later by their own finite-score masks). Cosmetic, but two figures in one paper
+should not state two n for the same corpus.
