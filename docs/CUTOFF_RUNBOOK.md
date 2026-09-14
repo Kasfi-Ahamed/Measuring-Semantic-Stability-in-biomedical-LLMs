@@ -113,9 +113,46 @@ of the 21st and multiply; do not reuse this total.
 | 9 | **RQ3** `scripts/rq3_matched_pairs.py --dataset MedMentions` | 1 min | no |
 | 10 | **RQ4** compiled + figures | 30 min | no |
 | 11 | **`scripts/zero_inflation_audit.py`** extended to MedMentions | 5 min | no |
+| 12 | **The three figure producers on MedMentions** — see below. **Must run after step 6**, not after step 5. | 5 min | no |
 
 **Total: 9-14 hours**, of which steps 1-5 are ~7-11 h and are the critical path. With the
 2-job QoS cap and one GPU, **start step 3 no later than 08:00 on the 21st.**
+
+### Step 12 — MedMentions figures, for symmetry with CADEC
+
+The manuscript places four figures: `fig_entropy_distribution_cadec`,
+`fig_risk_coverage_cadec`, `fig_signal_independence_cadec` and `fig_risk_coverage_qa`. The QA
+lane carries one figure and the two QA single-column figures are unused. **Produce the same
+three for MedMentions so the concept lane is symmetric across datasets.**
+
+```
+python scripts/fig_entropy_distribution.py medmentions
+python scripts/fig_signal_independence.py medmentions
+python scripts/fig_risk_coverage.py medmentions
+```
+
+All three already carry a `medmentions` config and the naming convention already holds —
+they write `fig_<name>_medmentions.png` into `outputs/rq1/figures/`, matching
+`outputs/rq3/figures/fig_<name>_cadec.png`. Nothing needs editing.
+
+**Ordering constraint.** `fig_entropy_distribution` needs only `entropy_full_umls.csv`
+(step 5), but `fig_signal_independence` and `fig_risk_coverage` also read
+`umls_candidate_margin_medmentions.csv`, which step 6 produces. Run all three **after step 6**.
+Each producer has a freshness guard over its `chain`, so running early fails loudly rather
+than plotting stale inputs — but do not rely on that to sequence the day.
+
+**Two things to check on the day, because they differ from CADEC:**
+
+- `fig_risk_coverage` reads accuracy from **`mean_accuracy_full`** on MedMentions against
+  `accuracy` on CADEC. If the re-mapped entropy file renames that column the figure fails; the
+  fix is the `acc=` key in the producer's `medmentions` config, not the data.
+- Height scales with model count (`0.62 x n + 2.2`), and MedMentions has the same 8 models as
+  CADEC, so expect the same aspect ratios: entropy distribution ~1.26, signal independence
+  ~1.50, risk-coverage ~1.21. All three want full-width (`figure*`) placement, as their CADEC
+  counterparts do.
+- Both risk-coverage captions in the manuscript state the resolution caveat (curves are
+  per-instance; reported AURC integrates the 19-point grid over coverage [0.10, 1.00]). The
+  MedMentions caption needs the same sentence.
 
 ---
 
