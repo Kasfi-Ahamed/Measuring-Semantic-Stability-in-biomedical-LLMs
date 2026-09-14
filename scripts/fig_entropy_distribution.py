@@ -59,8 +59,8 @@ CFG = {
         out=ROOT / "outputs/rq1/figures/fig_entropy_distribution_medmentions.png",
     ),
     "qa": dict(
-        label="QA (BioASQ and SQuAD 2.0)", chain=[ROOT / "outputs/qa/qa_results_combined.csv"],
-        path=ROOT / "outputs/qa/qa_results_combined.csv",
+        label="QA (BioASQ and SQuAD 2.0)", chain=[ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv"],
+        path=ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv",
         # The QA lane de-duplicates at generation time, so it has no distinct-m arm; `included`
         # already encodes the m >= 3 rule.
         h="norm_entropy", keep="included", model_col="model",

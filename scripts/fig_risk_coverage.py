@@ -66,22 +66,91 @@ CFG = {
     ),
     "qa": dict(
         label="QA (BioASQ and SQuAD 2.0)",
-        chain=[ROOT / "outputs/qa/qa_results_combined.csv"],
-        path=ROOT / "outputs/qa/qa_results_combined.csv",
+        chain=[ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv"],
+        path=ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv",
         model_col="model", acc="correct", keep="included",
+        # QA margin joined in from umls_candidate_margin_qa.csv (rebuilt 2026-09-14) so the
+        # QA panel carries the same three signals as CADEC.
         signals={"entropy": ("norm_entropy", False),
-                 "confidence": ("confidence", True)},
+                 "confidence": ("confidence", True),
+                 "margin": ("margin_mean", True)},
+        join=dict(path=ROOT / "outputs/qa/umls_candidate_margin_qa.csv", on=("id", "model", "dataset"), cols=("margin_mean",)),
         out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png",
     ),
 }
 
 
+# The PRE-REGISTERED AURC estimator, copied from RQ4_margin_benchmark.ipynb cell 3
+# (selective_curve + aurc_from_curve). docs/ANALYSIS_PRECOMMIT.md lists the AURC estimator as
+# UNCHANGED, so the figure conforms to the benchmark and never the reverse: changing an
+# estimator after seeing results is what a pre-registration exists to forbid.
+#
+# This file previously integrated a per-instance curve over coverage 1/n..1.00 and reported the
+# raw integral. That is a DIFFERENT quantity from the published tables -- CADEC x FLAN-T5-base
+# entropy came out 0.75804 here against 0.68872 in every table. Grid resolution accounted for
+# only 0.00042 of that gap; the rest was the integration domain, with neither version
+# normalised by its own width (docs/BUG_AUDIT.md, 2026-09-14).
+COVERAGE_GRID = np.round(np.arange(1.00, 0.09, -0.05), 2)   # 1.00 down to 0.10, 19 points
+AURC_DOMAIN = (float(COVERAGE_GRID.min()), float(COVERAGE_GRID.max()))
+
+
+def selective_curve(y, score_safe: np.ndarray, coverages=COVERAGE_GRID):
+    """Risk at each coverage, most certain first. score_safe: higher is safer."""
+    order = np.argsort(-score_safe, kind="mergesort")
+    ranked_y = y[order]
+    n = len(y)
+    cov, risk = [], []
+    for c in coverages:
+        k = max(1, int(np.ceil(float(c) * n)))
+        cov.append(float(c))
+        risk.append(1.0 - float(np.mean(ranked_y[:k])))
+    return np.asarray(cov), np.asarray(risk)
+
+
+def aurc_from_curve(coverages, risks) -> float:
+    c = np.asarray(coverages, dtype=float)
+    r = np.asarray(risks, dtype=float)
+    order = np.argsort(c)
+    trapz = getattr(np, "trapezoid", None) or np.trapz
+    return float(trapz(r[order], c[order]))
+
+
 def risk_coverage(y_correct: np.ndarray, score_safe: np.ndarray):
-    """Coverage and cumulative risk, most certain first. score_safe: higher is safer."""
+    """Kept for the plotted curve: fine per-instance resolution reads better as a line.
+
+    ONLY the curve is drawn from this. Every reported AURC comes from selective_curve /
+    aurc_from_curve above, on the pre-registered grid.
+    """
     order = np.argsort(-score_safe, kind="mergesort")
     y = y_correct[order]
     k = np.arange(1, y.size + 1)
     return k / y.size, np.cumsum(1.0 - y) / k
+
+
+
+def _apply_join(df, c):
+    """Merge an extra signal file in (QA margin). Declared per dataset in CFG."""
+    j = c.get("join")
+    if not j:
+        return df
+    extra = pd.read_csv(j["path"], low_memory=False)
+    keep = list(j["on"]) + list(j["cols"])
+    missing = [k for k in keep if k not in extra.columns]
+    assert not missing, f"{j['path'].name} missing {missing}"
+    before = len(df)
+    df = df.merge(extra[keep].drop_duplicates(j["on"]), on=list(j["on"]), how="left")
+    assert len(df) == before, (
+        f"join on {j['on']} changed the row count {before:,} -> {len(df):,}; the right side "
+        f"is not unique on those keys"
+    )
+    got = df[j["cols"][0]].notna().mean()
+    print(f"joined {j['path'].name}: {j['cols']} matched on {got:.2%} of the "
+          f"{len(df):,} rows being plotted")
+    assert got > 0.99, (
+        f"only {got:.2%} of plotted rows got {j['cols']} from {j['path'].name} — the join "
+        f"keys {j['on']} do not line up; refusing to plot a signal defined on a subset"
+    )
+    return df
 
 
 def main() -> int:
@@ -92,6 +161,10 @@ def main() -> int:
     df = pd.read_csv(c["path"], low_memory=False)
     if c.get("keep"):
         df = df[df[c["keep"]].astype(bool)].copy()
+    # Join AFTER the inclusion filter, so the reported match rate is over the rows actually
+    # plotted. Joining first reported 15.79% -- which was simply the included fraction of the
+    # file, not a join failure, and read like one.
+    df = _apply_join(df, c)
     mcol, acc = c["model_col"], c["acc"]
 
     present = {k: v for k, v in c["signals"].items() if v[0] in df.columns}
@@ -105,7 +178,11 @@ def main() -> int:
     print(f"dataset      : {c['label']}")
     print(f"input        : {c['path'].name}  ({ts(c['path'])})")
     print(f"rows         : {len(df):,}   models: {len(models)}")
-    print("\nper model, n and AURC by signal:")
+    print(f"\nAURC estimator: trapezoid over coverage "
+          f"[{AURC_DOMAIN[0]:.2f}, {AURC_DOMAIN[1]:.2f}] on a {len(COVERAGE_GRID)}-point grid "
+          f"(step 0.05), NOT normalised by domain width.")
+    print("Identical to RQ4_margin_benchmark.ipynb; the plotted curve is finer than the grid.")
+    print("\nper model: AURC by signal, then risk at fixed coverage (the headline statistic):")
 
     ncol = min(3, len(models))
     nrow = int(np.ceil(len(models) / ncol))
@@ -119,15 +196,21 @@ def main() -> int:
         y = (y >= 0.5).astype(float)
         total_n += y.size
         line = []
+        risk_at: dict[str, dict[float, float]] = {}
         for name, (col, higher_safe) in present.items():
             s = pd.to_numeric(g[col], errors="coerce").to_numpy(dtype=float)
             ok = np.isfinite(s)
             if ok.sum() < 10:
                 continue
             ss = s[ok] if higher_safe else -s[ok]
-            cov, risk = risk_coverage(y[ok], ss)
+            cov, risk = risk_coverage(y[ok], ss)          # fine curve, for the line only
+            gcov, grisk = selective_curve(y[ok], ss)      # pre-registered grid, for AURC
             ax.plot(cov, risk, lw=1.4, color=colours.get(name, "#888888"), label=name)
-            line.append(f"{name} AURC={np.trapz(risk, cov):.4f} (n={int(ok.sum()):,})")
+            line.append(f"{name} AURC={aurc_from_curve(gcov, grisk):.4f} "
+                        f"(n={int(ok.sum()):,})")
+            for want in (0.90, 0.75, 0.50):
+                j = int(np.argmin(np.abs(gcov - want)))
+                risk_at.setdefault(name, {})[want] = float(grisk[j])
         base = 1.0 - y.mean()
         ax.axhline(base, ls=":", lw=1.0, color="#999999", label="random baseline")
         ax.set_title(f"{m}\nn = {y.size:,}", fontsize=9)
@@ -138,6 +221,9 @@ def main() -> int:
         if i == 0:
             ax.legend(fontsize=7, frameon=False)
         print(f"  {m:<28} n={y.size:>7,}  " + "  ".join(line))
+        for name, at in risk_at.items():
+            print(f"      risk@cov  {name:<12}"
+                  + "".join(f"  {int(c*100)}%={at[c]:.4f}" for c in (0.90, 0.75, 0.50)))
     for j in range(len(models), nrow * ncol):
         axes[j // ncol][j % ncol].axis("off")
     fig.suptitle(f"{c['label']}: risk against coverage, total n = {total_n:,}", y=1.0)

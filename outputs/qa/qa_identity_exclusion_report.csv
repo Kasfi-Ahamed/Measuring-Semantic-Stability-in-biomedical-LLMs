@@ -1,0 +1,9 @@
+id,dataset,m_before,n_identical,m_after,n_model_rows,reason
+5727d6faff5b5019007d969a,squad2,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+57302cd004bcaa1900d772d9,squad2,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+57339902d058e614000b5e70,squad2,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+5a664447c2b11c001a425eed,squad2,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+5acfef1b77cf76001a68657c,squad2,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+5ad4faa45b96ef001a10a85a,squad2,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+5c5f2c0c1a4c55d80b000021,bioasq,3,1,2,5,accepted variant identical to original; m < 3 after exclusion
+5e5d24811af46fc130000006,bioasq,3,1,2,5,accepted variant identical to original; m < 3 after exclusion

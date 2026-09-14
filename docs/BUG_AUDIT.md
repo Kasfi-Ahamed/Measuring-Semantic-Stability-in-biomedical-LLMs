@@ -1453,3 +1453,32 @@ The permanent assertion added on the same day is **currently violated**, so it w
 QA perturbation regeneration. Three options are set out at the end of `docs/QA_GATE_AUDIT.md`;
 none is taken here, because the assertion was requested on the understanding that the
 condition already held.
+
+## AURC decision, and a correction to the report that prompted it (2026-09-14)
+
+**DECIDED: the paper reports the `RQ4_margin_benchmark.ipynb` number, 0.68872.**
+`scripts/fig_risk_coverage.py` was corrected to match it; the benchmark was not changed.
+Changing an estimator after seeing results is what a pre-registration exists to forbid, and
+`docs/ANALYSIS_PRECOMMIT.md` lists the AURC estimator as UNCHANGED.
+
+**Correction to the instruction as written.** The decision described 0.68872 as
+"domain 1/n..1". It is not — the two domains were transposed:
+
+| value | source | actual domain |
+|---|---|---|
+| **0.68872** | `RQ4_margin_benchmark.ipynb` (the one adopted) | **[0.10, 1.00]**, 19-point grid |
+| 0.75804 | `fig_risk_coverage.py` (the one corrected) | [1/n, 1.00], per-instance |
+
+`COVERAGE_GRID = np.round(np.arange(1.00, 0.09, -0.05), 2)` stops at 0.10. Implementing the
+instruction literally — moving the benchmark onto a `1/n..1.00` domain — would have changed
+the pre-registered estimator to the figure's, the exact reverse of the intent. The adopted
+number is unchanged; only the stated domain is corrected.
+
+The estimator now prints its own domain on every run:
+`AURC estimator: trapezoid over coverage [0.10, 1.00] on a 19-point grid (step 0.05), NOT
+normalised by domain width.` The plotted curve stays per-instance because it reads better as
+a line; only the reported AURC uses the grid, and the code says so.
+
+**Reporting order also decided:** risk at fixed coverage (90 / 75 / 50%) leads, AURC supports.
+Risk at fixed coverage is domain-independent, which is precisely the property this defect
+showed AURC lacks.

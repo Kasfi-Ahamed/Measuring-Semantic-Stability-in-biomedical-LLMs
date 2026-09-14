@@ -68,15 +68,44 @@ CFG = {
     ),
     "qa": dict(
         label="QA (BioASQ and SQuAD 2.0)",
-        chain=[ROOT / "outputs/qa/qa_results_combined.csv"],
-        path=ROOT / "outputs/qa/qa_results_combined.csv",
+        chain=[ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv"],
+        path=ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv",
         model_col="model", keep="included",
-        # The answer-level QA lane has no UMLS candidate margin; see outputs/rq4/
-        # RQ4_results_discussion.md. Only two signals are available here.
-        signals={"entropy": "norm_entropy", "confidence": "confidence"},
+        # The QA candidate margin now exists (outputs/qa/umls_candidate_margin_qa.csv,
+        # rebuilt 2026-09-14), so the QA panel carries the same three signals as CADEC.
+        # A two-signal panel beside a three-signal one only raises the question of why.
+        signals={"entropy": "norm_entropy", "confidence": "confidence",
+                 "margin": "margin_mean"},
+        join=dict(path=ROOT / "outputs/qa/umls_candidate_margin_qa.csv", on=("id", "model", "dataset"), cols=("margin_mean",)),
         out=ROOT / "outputs/qa/figures/fig_signal_independence_qa.png",
     ),
 }
+
+
+
+def _apply_join(df, c):
+    """Merge an extra signal file in (QA margin). Declared per dataset in CFG."""
+    j = c.get("join")
+    if not j:
+        return df
+    extra = pd.read_csv(j["path"], low_memory=False)
+    keep = list(j["on"]) + list(j["cols"])
+    missing = [k for k in keep if k not in extra.columns]
+    assert not missing, f"{j['path'].name} missing {missing}"
+    before = len(df)
+    df = df.merge(extra[keep].drop_duplicates(j["on"]), on=list(j["on"]), how="left")
+    assert len(df) == before, (
+        f"join on {j['on']} changed the row count {before:,} -> {len(df):,}; the right side "
+        f"is not unique on those keys"
+    )
+    got = df[j["cols"][0]].notna().mean()
+    print(f"joined {j['path'].name}: {j['cols']} matched on {got:.2%} of the "
+          f"{len(df):,} rows being plotted")
+    assert got > 0.99, (
+        f"only {got:.2%} of plotted rows got {j['cols']} from {j['path'].name} — the join "
+        f"keys {j['on']} do not line up; refusing to plot a signal defined on a subset"
+    )
+    return df
 
 
 def main() -> int:
@@ -87,6 +116,10 @@ def main() -> int:
     df = pd.read_csv(c["path"], low_memory=False)
     if c.get("keep"):
         df = df[df[c["keep"]].astype(bool)].copy()
+    # Join AFTER the inclusion filter, so the reported match rate is over the rows actually
+    # plotted. Joining first reported 15.79% -- which was simply the included fraction of the
+    # file, not a join failure, and read like one.
+    df = _apply_join(df, c)
     mcol = c["model_col"]
 
     present = {k: v for k, v in c["signals"].items() if v in df.columns}
