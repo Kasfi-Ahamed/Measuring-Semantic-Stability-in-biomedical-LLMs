@@ -1533,3 +1533,60 @@ separately**. Printed prose, an assertion message, and a figure caption are all 
 a number is described. Any description that will not be re-derived when the number changes is
 a latent false statement. The cheap general rule: if a sentence contains an interpolated
 number, the adjectives around it must be computed from that number too.
+
+---
+
+# Empty generations were assigned a real CUI at 0.99 confidence (2026-09-15)
+
+**Class:** empty-input-as-signal. A missing value coerced to a *valid* input rather than
+rejected, so the pipeline scores it and returns a confident answer about nothing.
+
+## The defect
+
+```python
+texts = df_out["output_text"].fillna("").astype(str).tolist()
+```
+
+`CADEC_entropy.ipynb` cell8:51, and the equivalent MedMentions path. A generation failure —
+the inference notebooks append `""` inside `except Exception` — becomes an **empty string**,
+which is then embedded by SapBERT and assigned whatever CUI it lands nearest, with a real
+cosine attached as `confidence`.
+
+## The fingerprint
+
+All **82** affected CADEC rows carry the **identical** CUI `C6024506` at the **identical**
+confidence `0.9899882078170776`. That is the signature: one empty string, one embedding, one
+nearest neighbour, one cosine, repeated. A real score distribution is not a single value to
+sixteen digits.
+
+It is worth naming as a general check — **a confidence column with zero variance across a
+subgroup is evidence that the subgroup shares an input, not that the model is certain.**
+
+## Why it mattered
+
+The 0.99 is not evidence about the model's answer, and `mapping_confidence` is an **abstention
+signal in RQ4**. The defect injected maximally-confident garbage into exactly the analysis that
+asks whether confidence identifies answers worth trusting. On CADEC it affected 20 cells'
+mapping confidence, dropping a mean of 0.4605 once corrected.
+
+Entropy was affected on 42 of 43 cells, all **downward** once corrected, because the
+empty-string CUI was almost always a singleton cluster inflating apparent diversity.
+
+## Scope
+
+CADEC **82 rows / 43 cells / 43 instances** (0.0342%). MedMentions **639 rows** in the mapped
+file (0.0218%), plus 49 in unmapped raw shards. Generative models only.
+
+## What saved it from being worse
+
+Accuracy is **unchanged**: `C6024506` matches gold on 0 of 82 rows, so these were already
+counted incorrect. Had the empty string happened to embed near a common gold CUI, the same
+defect would have manufactured *correct* answers out of generation failures.
+
+That is luck, not design, and it is the reason the fix is worth making even though every
+aggregate moves in the third decimal.
+
+## Fixed
+
+`docs/ANALYSIS_PRECOMMIT.md` Amendment 7, dated before the correction ran: empty or
+whitespace-only generation is UNASSIGNED with the row retained.

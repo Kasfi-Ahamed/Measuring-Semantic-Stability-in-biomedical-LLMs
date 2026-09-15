@@ -593,3 +593,105 @@ full, so the comparison is auditable rather than asserted.
 
 **If the verification is not performed, the early re-map is void** and the analysis must be
 re-run on cutoff day against the set enumerated that morning.
+
+---
+
+# Amendment 7 — empty generations are UNASSIGNED (2026-09-15)
+
+**Recorded BEFORE either correction runs, and before any corrected number is computed.**
+Applies to **both corpora**: CADEC and MedMentions.
+
+## The rule
+
+**An empty or whitespace-only `output_text` is UNASSIGNED. The row is retained.**
+
+`predicted_cui = UNASSIGNED`, `confidence = 0.0`. The row stays in the cluster label list, so
+`m = n_variants - 1` is unchanged and the `m >= 3` inclusion rule is unaffected.
+
+## The mechanism being corrected
+
+`CADEC_entropy.ipynb` cell 8 and the equivalent MedMentions path do:
+
+```python
+texts = df_out["output_text"].fillna("").astype(str).tolist()
+```
+
+A failed generation — the inference notebooks append `""` when generation raises — therefore
+has the **empty string embedded** and is assigned whatever CUI that embedding lands nearest.
+
+**This is demonstrable, not inferred.** On CADEC all 82 affected rows carry the *identical*
+CUI `C6024506` at the *identical* confidence `0.9899882078170776`. One empty string produces
+one embedding, one nearest neighbour, one cosine. A genuine score distribution cannot be a
+single value repeated to sixteen digits. The same CUI dominates the MedMentions cases.
+
+The resulting 0.99 confidence is not evidence about the model's answer, and it propagates into
+RQ4, where mapping confidence is an abstention signal.
+
+## Counts
+
+| corpus | rows | cells | instances | share |
+|---|---:|---:|---:|---|
+| **CADEC** (`rq3_cadec_mapped_outputs.csv`) | **82** | 43 | 43 | 0.0342% of 239,680 rows |
+| **MedMentions** (`rq1_all_outputs_mapped.csv`) | **639** | — | — | 0.0218% of 2,927,685 rows |
+| — of which job B blocks `[0-5,19]` | 581 | 326 | 316 | 0.0227% |
+| — of which block 6 | 58 | — | — | 0.0157% |
+
+A further 49 empty rows sit in the raw generative shards for MedMentions blocks
+`7,8,9,15,17,18`, not yet mapped. All affected rows are generative models; encoder rows emit
+a CUI string and are never empty.
+
+CADEC: 20 empty originals, 62 empty perturbations, concentrated in BioMistral-7B (64),
+Llama3-OpenBioLLM-8B (14), Mistral-7B-Instruct-v0.1 (3), Meta-Llama-3-8B-Instruct (1).
+
+## Why retain the row rather than drop it
+
+Measured on the MedMentions job B blocks, the two candidate treatments differ by **47x**:
+
+| treatment | cells lost |
+|---|---:|
+| **mark UNASSIGNED, keep the row** (adopted) | **2** |
+| drop the row, letting `m` fall by one | **95** |
+
+Dropping the row also conflates two different things. `m` counts variants *attempted*;
+`n_assigned` counts variants that *resolved*. An empty generation is a **non-answer, not a
+missing measurement** — the model was asked and produced nothing. UNASSIGNED is the category
+the pipeline already uses for output that does not resolve, and this is that case. Dropping
+the row would instead assert the variant was never run.
+
+Carrying the existing assignment forward was rejected outright: on MedMentions, 299 of the 581
+job B rows currently hold `exact_match_inject` assignments, which are gold-leaked, and the
+remainder are empty-string artefacts regardless.
+
+## Accuracy is unchanged
+
+**On CADEC, 0 of 43 affected cells change accuracy.** Correctness is read from the original
+row as `pred != UNASSIGNED and gold != UNASSIGNED and pred == gold`. All 82 rows already
+predicted `C6024506`, which matches gold on **0 of 82**, so they were already counted
+incorrect and remain so. No accuracy figure in the manuscript moves.
+
+## What does move, on CADEC
+
+| quantity | before | after |
+|---|---|---|
+| entropy | changes on **42 of 43** cells, all **downward**, mean \|dH\| 0.2445, max 0.5000 | |
+| cells becoming all-UNASSIGNED (dropped) | — | 1 |
+| cells newly at zero entropy | — | 12 |
+| zero fraction | 42.6650% | 42.6980% |
+| mean normalised entropy | 0.317279 | 0.317050 |
+| mapping_confidence | changes on 20 cells, mean drop 0.4605 | |
+| primary-arm n | 37,696 | 37,695 |
+
+Entropy falls rather than rises because `C6024506` was almost always a singleton cluster
+adding spurious diversity; removing it concentrates the distribution.
+
+## Implementation
+
+The assignment function operates on one row's own retrieval with no cross-row state, so
+overriding these rows post hoc is **equivalent to re-mapping under this rule**, not an
+approximation. CADEC is corrected surgically — no re-map, no GPU — and the equivalence is
+**verified empirically** by re-mapping one affected block once a slot frees after 17 September
+and comparing row for row. That verification is a receipt, not a blocker; if it disagrees, it
+disagrees days before the cutoff.
+
+MedMentions applies the same rule inside the re-map itself, in both job A and job B, so the
+two corpora are treated identically.
