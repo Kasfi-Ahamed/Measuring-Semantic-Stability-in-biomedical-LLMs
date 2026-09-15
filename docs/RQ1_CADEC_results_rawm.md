@@ -88,27 +88,26 @@ n = 41,286
 
 ### Part 2 — magnitude of H given H > 0
 
-Method: MixedLM (RE intercept: instance_id; model_name fixed). Crossed RE for model_name not identified separately — FE used.
+Method: OLS on logit(H) among H>0 + cluster-robust SE (cluster=instance_id); model_name as fixed effects. ENFORCED primary estimator (docs/ANALYSIS_PRECOMMIT.md Amendment 8)
 
 n = 23,339
 
 | term | coef | 95% CI | p | sig |
 |---|---:|:---:|---:|:--:|
-| `Intercept` | +0.4779 | [+0.4538, +0.5021] | 0 | **yes** |
-| `C(model_name)[T.BioBERT]` | +0.0225 | [+0.0132, +0.0318] | 2.23e-06 | **yes** |
-| `C(model_name)[T.BioMistral-7B]` | -0.0410 | [-0.0495, -0.0326] | 1.4e-21 | **yes** |
-| `C(model_name)[T.FLAN-T5-base]` | -0.0542 | [-0.0628, -0.0456] | 8.01e-35 | **yes** |
-| `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.0486 | [+0.0406, +0.0565] | 7.53e-33 | **yes** |
-| `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.0330 | [-0.0414, -0.0246] | 1.12e-14 | **yes** |
-| `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.0597 | [-0.0683, -0.0511] | 4.55e-42 | **yes** |
-| `C(model_name)[T.PubMedBERT]` | +0.0187 | [+0.0094, +0.0281] | 8.71e-05 | **yes** |
-| `mean_lexical_change_magnitude_z` | +0.0070 | [+0.0037, +0.0103] | 3.65e-05 | **yes** |
-| `mention_char_len_z` | +0.0094 | [+0.0070, +0.0118] | 7.13e-15 | **yes** |
-| `n_accepted_perts_z` | -0.0291 | [-0.0320, -0.0261] | 2.89e-81 | **yes** |
-| `share_back_translation` | -0.0190 | [-0.0433, +0.0054] | 0.127 | no |
-| `share_controlled_paraphrase` | +0.0264 | [+0.0046, +0.0481] | 0.0175 | **yes** |
-| `share_synonym_substitution` | +0.0418 | [+0.0084, +0.0751] | 0.014 | **yes** |
-| `Group Var` | +0.0767 | [+0.0638, +0.0896] | 2.05e-31 | **yes** |
+| `Intercept` | -0.0603 | [-0.1972, +0.0766] | 0.388 | no |
+| `C(model_name)[T.BioBERT]` | +0.0668 | [+0.0117, +0.1220] | 0.0176 | **yes** |
+| `C(model_name)[T.BioMistral-7B]` | -0.2333 | [-0.2844, -0.1822] | 3.6e-19 | **yes** |
+| `C(model_name)[T.FLAN-T5-base]` | -0.2915 | [-0.3425, -0.2405] | 3.88e-29 | **yes** |
+| `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.2044 | [+0.1509, +0.2579] | 6.9e-14 | **yes** |
+| `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.1867 | [-0.2382, -0.1352] | 1.18e-12 | **yes** |
+| `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.3013 | [-0.3542, -0.2485] | 5.8e-29 | **yes** |
+| `C(model_name)[T.PubMedBERT]` | +0.0641 | [+0.0103, +0.1178] | 0.0195 | **yes** |
+| `mean_lexical_change_magnitude_z` | +0.0423 | [+0.0233, +0.0614] | 1.33e-05 | **yes** |
+| `mention_char_len_z` | +0.0446 | [+0.0304, +0.0588] | 7.26e-10 | **yes** |
+| `n_accepted_perts_z` | -0.1654 | [-0.1817, -0.1491] | 8.04e-88 | **yes** |
+| `share_back_translation` | -0.3252 | [-0.4823, -0.1680] | 5.01e-05 | **yes** |
+| `share_controlled_paraphrase` | +0.1818 | [+0.0473, +0.3164] | 0.00809 | **yes** |
+| `share_synonym_substitution` | +0.4647 | [+0.2761, +0.6534] | 1.37e-06 | **yes** |
 
 Significance threshold alpha = 0.05. No multiplicity correction is applied within this table.
 
