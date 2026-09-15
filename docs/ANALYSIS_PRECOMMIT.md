@@ -522,3 +522,74 @@ retention **4,712 instances** (37,696 of 41,288 rows), mean accepted variants pe
 syntactic_reordering **4.15%**.
 
 **FINAL as of 2026-09-14.**
+
+---
+
+# Amendment 6 — early execution of the MedMentions re-map (2026-09-15)
+
+**Recorded BEFORE the re-map is started, and before any MedMentions number is computed.**
+
+## What is changing, and what is not
+
+The **sample is unchanged**. §5 fixes it by date: *"Whatever shards are grid-complete on the
+morning of 21/09 constitute the reported sample."* That rule stands exactly as written and is
+not being reinterpreted.
+
+What changes is **when the mechanical work runs**. The full clean re-map is executed on
+**19 or 20 September** instead of on cutoff day, for wall-clock reasons only.
+
+## Why the block set is already determined
+
+As of 2026-09-15 16:55 AEST, **14 blocks** are grid-complete:
+`[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 15, 17, 18, 19]`.
+
+Six more are in flight in array `31879` — tasks `10` (running) and `11, 12, 13, 14, 16`
+(pending) — projected complete by **17 September ~04:00** at `ArrayTaskThrottle=2`, from a
+measured mean task time of **11.53 h** over seven completions (range 11:14:24 to 11:39:00).
+
+That brings the set to **20 of 26 blocks**, `[0-19]`. **Nothing further can complete**, because
+the only remaining work is held by standing instruction:
+
+| held | what it is | consequence |
+|---|---|---|
+| `30955_[20-25]` | perturbation generation for blocks 20-25 | those blocks cannot reach inference |
+| `32769` | auto-submitted partial map | held; mapping is manual |
+| `32853` | CADEC de-duplication validator | CADEC only, irrelevant to the block set |
+
+The partial-map auto-submit has additionally been removed from all five launchers, so no
+mapping job can start on its own. **The grid-complete set therefore freezes around
+17-18 September and cannot grow before the 21st.**
+
+## Why this does not weaken the rule
+
+§5 exists so that **the sample cannot be chosen after seeing the numbers**. That property is
+untouched:
+
+1. Every analysis decision is already pre-committed and dated in this document — the
+   denominator (§3), the RQ4 comparator (§4), the RQ3 tests (Amendment 3), the multiplicity
+   correction (Amendment 4), the AURC estimator (unchanged), and the bootstrap B (Amendment 3).
+2. The block set is determined by **which jobs are held**, a state fixed on 14 September and
+   recorded in `docs/CUTOFF_RUNBOOK.md`, not by anything observed in the results.
+3. No MedMentions number has been computed. The re-map produces a mapped file and an entropy
+   table; the analyses run afterward, against a sample nobody has yet been able to inspect.
+
+Running the mapping early is doing mechanical work ahead of a deadline. It would be a problem
+only if the sample could still change **and** the change could be steered by the numbers.
+Neither holds.
+
+## The verification that makes this a claim rather than an assumption
+
+**On the morning of 21 September, before any number is reported:**
+
+1. Enumerate the grid-complete blocks: `complete_shards_for_grid(shard_root(ROOT))`,
+   `source="any"`.
+2. Compare that set against the set actually re-mapped, which the re-map job records.
+3. **Identical** — the premise held, the analysis stands, report it.
+4. **Different** — the premise failed. Add the new blocks, re-map them, and re-run every
+   affected analysis before reporting. The reported sample is the one §5 defines, either way.
+
+Step 3 or 4 is recorded in `docs/CUTOFF_RUNBOOK.md` on the day, with both sets written out in
+full, so the comparison is auditable rather than asserted.
+
+**If the verification is not performed, the early re-map is void** and the analysis must be
+re-run on cutoff day against the set enumerated that morning.
