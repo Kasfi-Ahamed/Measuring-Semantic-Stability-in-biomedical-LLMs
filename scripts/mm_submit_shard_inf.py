@@ -34,14 +34,27 @@ def main() -> int:
         print(f"[inf-gate] no new complete pert shards to submit (ready={ready})", flush=True)
         return 0
     arr = ",".join(str(s) for s in todo)
-    script = str(ROOT / "slurm" / "run_mm_shard_inf.sbatch")
-    print(f"[inf-gate] submitting per-shard cheap-first inference for shards: {todo}", flush=True)
-    res = subprocess.run([_sbatch(), f"--array={arr}", script], capture_output=True, text=True)
-    print("[inf-gate]", res.stdout.strip(), res.stderr.strip(), flush=True)
-    if res.returncode == 0:
+    # Split submission (scheduling only): the CHEAP tier (3 encoders + FLAN-T5) targets the
+    # small-GPU pool so it never waits for a scarce big GPU; the CAUSAL tier (4x 7-8B) keeps
+    # the big-GPU requirement and queues for an A100/L40S. Both are resume-safe.
+    jobs = {
+        "encflan": str(ROOT / "slurm" / "run_mm_enc_flan_shard_inf.sbatch"),
+        "causal": str(ROOT / "slurm" / "run_mm_causal_shard_inf.sbatch"),
+    }
+    print(f"[inf-gate] submitting split per-shard inference (cheap small-GPU + causal big-GPU) for shards: {todo}", flush=True)
+    rc = 0
+    submitted = []
+    for tier, script in jobs.items():
+        res = subprocess.run([_sbatch(), f"--array={arr}", script], capture_output=True, text=True)
+        print(f"[inf-gate] {tier}:", res.stdout.strip(), res.stderr.strip(), flush=True)
+        if res.returncode != 0:
+            rc = res.returncode
+        else:
+            submitted.append(f"{tier}:{res.stdout.strip()}")
+    if rc == 0:
         for sid in todo:
-            (markers / f"shard{sid}.submitted").write_text(res.stdout.strip() + "\n")
-    return res.returncode
+            (markers / f"shard{sid}.submitted").write_text("\n".join(submitted) + "\n")
+    return rc
 
 
 if __name__ == "__main__":

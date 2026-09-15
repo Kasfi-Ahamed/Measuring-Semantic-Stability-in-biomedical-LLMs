@@ -242,20 +242,20 @@ assignments across meaning-equivalent inputs.
 
 | Predictor | Model | Rank-biserial r | Threshold met | Spearman ρ | Dissociation | Wilcoxon BH-p | Sig |
 |---|---|---|---|---|---|---|---|
-| Top vs Bottom quartile | BERT-base | 0.016 | ❌ | -0.018 | ✅ | 0.024 | ✅ |
-| Top vs Bottom quartile | BioBERT | 0.017 | ❌ | -0.043 | ✅ | 0.689 | ❌ |
-| Top vs Bottom quartile | PubMedBERT | 0.012 | ❌ | 0.021 | ✅ | 0.024 | ✅ |
-| Top vs Bottom quartile | BioMistral-7B | 0.236 | ❌ | 0.142 | ✅ | 0.024 | ✅ |
-| Top vs Bottom quartile | FLAN-T5-XXL | 0.045 | ❌ | 0.067 | ✅ | 0.024 | ✅ |
-| Top vs Bottom quartile | FLAN-T5-base | 0.033 | ❌ | 0.013 | ✅ | 0.024 | ✅ |
+| Top vs Bottom quartile | BERT-base | 0.016 | No | -0.018 | Yes | 0.024 | Yes |
+| Top vs Bottom quartile | BioBERT | 0.017 | No | -0.043 | Yes | 0.689 | No |
+| Top vs Bottom quartile | PubMedBERT | 0.012 | No | 0.021 | Yes | 0.024 | Yes |
+| Top vs Bottom quartile | BioMistral-7B | 0.236 | No | 0.142 | Yes | 0.024 | Yes |
+| Top vs Bottom quartile | FLAN-T5-XXL | 0.045 | No | 0.067 | Yes | 0.024 | Yes |
+| Top vs Bottom quartile | FLAN-T5-base | 0.033 | No | 0.013 | Yes | 0.024 | Yes |
 
 **Fisher z-pooled Spearman ρ (Global Dissociation Test):**
 
 | Scope | ρ_pooled | 95% CI | |ρ| < 0.30 |
 |---|---|---|---|
-| All models | 0.030 | [-0.004, 0.065] | ✅ Confirmed |
-| Encoder only | -0.013 | [-0.062, 0.035] | ✅ Confirmed |
-| Generative only | 0.074 | [0.026, 0.122] | ✅ Confirmed |
+| All models | 0.030 | [-0.004, 0.065] | Confirmed |
+| Encoder only | -0.013 | [-0.062, 0.035] | Confirmed |
+| Generative only | 0.074 | [0.026, 0.122] | Confirmed |
 
 **Pre-registered rank-biserial threshold r ≥ 0.30:** Not met by
 any model. Effects are statistically detectable (Wilcoxon BH-FDR

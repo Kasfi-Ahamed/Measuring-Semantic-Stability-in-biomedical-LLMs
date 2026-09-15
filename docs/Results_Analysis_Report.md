@@ -179,7 +179,7 @@ SQ3 answered descriptively only.
 
 ---
 
-#### Figure 1a — Lexical Magnitude vs Entropy (Combined, all three encoder models)
+#### Figure 1a: Lexical Magnitude vs Entropy (Combined, all three encoder models)
 
 ![Figure 1a](outputs/rq1/figures/rq1_figure3_lexical_change_vs_entropy.png)
 
@@ -187,7 +187,7 @@ Dual-panel scatter plot of mean lexical change magnitude
 (normalised Levenshtein distance) versus normalised semantic
 entropy (Ĥ), averaged across all three 110M encoder models.
 Points are colour-coded by number of unique CUIs assigned
-across the eight perturbation variants — light blue for one
+across the eight perturbation variants: light blue for one
 CUI (stable), blue for two CUIs (binary competition), and
 orange for three CUIs (multi-concept fragmentation, rare).
 
@@ -203,7 +203,7 @@ fragmentation cases (orange).
 Right panel shows non-zero entropy instances only (n = 1,007,
 Spearman rho = -0.401). Among instances that became unstable,
 larger lexical changes are associated with lower entropy rather
-than higher — meaning minor surface changes produce more
+than higher: meaning minor surface changes produce more
 diffuse multi-CUI fragmentation while larger changes tend to
 produce focused two-way concept competition. The negative
 correlation among unstable instances is consistent across all
@@ -218,7 +218,7 @@ quantitative figure for SQ2.
 
 ---
 
-#### Figure 1b — Lexical Magnitude vs Entropy (BERT-base, General domain, 110M)
+#### Figure 1b: Lexical Magnitude vs Entropy (BERT-base, General domain, 110M)
 
 ![Figure 1b](outputs/rq1/figures/rq1_fig_bertbase_C_scatter.png)
 
@@ -233,7 +233,7 @@ panel of the three encoder models, indicating the weakest
 
 ---
 
-#### Figure 1c — Lexical Magnitude vs Entropy (BioBERT, Biomedical domain, 110M)
+#### Figure 1c: Lexical Magnitude vs Entropy (BioBERT, Biomedical domain, 110M)
 
 ![Figure 1c](outputs/rq1/figures/rq1_fig_biobert_C_scatter.png)
 
@@ -249,7 +249,7 @@ unstable.
 
 ---
 
-#### Figure 1d — Lexical Magnitude vs Entropy (PubMedBERT, Biomedical PubMed-only, 110M)
+#### Figure 1d: Lexical Magnitude vs Entropy (PubMedBERT, Biomedical PubMed-only, 110M)
 
 ![Figure 1d](outputs/rq1/figures/rq1_fig_pubmedbert_C_scatter.png)
 
@@ -272,14 +272,14 @@ model-agnostic rather than driven by any single encoder.
 
 ---
 
-#### Figure 2a — Entropy Heatmap by Perturbation Type and Linguistic Category (Combined)
+#### Figure 2a: Entropy Heatmap by Perturbation Type and Linguistic Category (Combined)
 
 ![Figure 2a](outputs/rq1/figures/rq1_figure5_entropy_heatmap.png)
 
 Mean conditional entropy for every perturbation-type by
 linguistic-category combination, averaged across all three
 110M encoder models. Colour scale 0 to 0.25 using YlGnBu
-palette — yellow indicates low entropy (stable), dark blue
+palette: yellow indicates low entropy (stable), dark blue
 indicates high entropy (unstable). Grey cells with "excluded
 (n<3)" labels indicate combinations with fewer than three
 unique instances that were excluded from inferential modelling.
@@ -298,7 +298,7 @@ for SQ1 and descriptive evidence for SQ3.
 
 ---
 
-#### Figure 2b — Entropy Heatmap (BERT-base, General domain, 110M)
+#### Figure 2b: Entropy Heatmap (BERT-base, General domain, 110M)
 
 ![Figure 2b](outputs/rq1/figures/rq1_fig_bertbase_E_heatmap.png)
 
@@ -314,7 +314,7 @@ noun by back-translation (Ĥ = 0.331).
 
 ---
 
-#### Figure 2c — Entropy Heatmap (BioBERT, Biomedical domain, 110M)
+#### Figure 2c: Entropy Heatmap (BioBERT, Biomedical domain, 110M)
 
 ![Figure 2c](outputs/rq1/figures/rq1_fig_biobert_E_heatmap.png)
 
@@ -329,20 +329,20 @@ reordering (Ĥ = 0.288).
 
 ---
 
-#### Figure 2d — Entropy Heatmap (PubMedBERT, Biomedical PubMed-only, 110M)
+#### Figure 2d: Entropy Heatmap (PubMedBERT, Biomedical PubMed-only, 110M)
 
 ![Figure 2d](outputs/rq1/figures/rq1_fig_pubmedbert_E_heatmap.png)
 
 Per-model heatmap for PubMedBERT. PubMedBERT produces the
 single highest entropy value of any model-cell combination —
-noun by syntactic reordering at Ĥ = 0.368 — indicating that
+noun by syntactic reordering at Ĥ = 0.368: indicating that
 PubMed-specific pretraining creates the greatest sensitivity
 to noun-level syntactic reordering of the three encoder
 models. This is consistent with the PubMedBERT training
 corpus being highly structured and syntactically regular,
 making the model more sensitive to clause-order disruption.
-The verb by back-translation cell is 0.000 — the lowest
-non-excluded value across all three models — indicating
+The verb by back-translation cell is 0.000: the lowest
+non-excluded value across all three models: indicating
 near-perfect stability for verb-level back-translation
 perturbations. Maximum cell: noun by syntactic reordering
 (Ĥ = 0.368).
@@ -381,7 +381,7 @@ Fisher z-pooled absolute rho < 0.30 for global confirmation.
 
 RQ2 uses all six models across both encoder and generative
 architectures. The input for all models is the same set used
-in RQ1 — 550 original MedMentions clinical sentences plus
+in RQ1: 550 original MedMentions clinical sentences plus
 2,674 accepted meaning-preserving perturbations giving 3,224
 total input texts per model. Each instance can have up to 8
 perturbations but the actual number varies per instance after
@@ -412,43 +412,43 @@ original and accepted perturbations for that instance.
 
 #### How Top and Bottom Quartiles Are Calculated
 
-Step 1 — Calculate instance-level accuracy. For each of the
+Step 1: Calculate instance-level accuracy. For each of the
 547 instances, compute the proportion of inputs where the
 model output matched the gold label across the original and
 all accepted perturbations.
 
-Step 2 — Rank all 547 instances by accuracy from lowest to
+Step 2: Rank all 547 instances by accuracy from lowest to
 highest.
 
-Step 3 — Split into quartiles. Top-Q is the 137 instances
+Step 3: Split into quartiles. Top-Q is the 137 instances
 with the highest accuracy. Bottom-Q is the 137 instances with
 the lowest accuracy. The middle 50 percent are excluded from
 the quartile comparison.
 
-Step 4 — Compute mean entropy for each group. Compare
+Step 4: Compute mean entropy for each group. Compare
 Top-Q mean entropy against Bottom-Q mean entropy using the
 Wilcoxon signed-rank test. If accuracy and entropy were
 related, Top-Q instances would show substantially lower
 entropy than Bottom-Q instances. The finding across all six
 models is that mean entropy in the top and bottom quartiles
-is nearly identical — confirming the accuracy-stability
+is nearly identical: confirming the accuracy-stability
 dissociation.
 
 ---
 
-#### Accuracy vs Entropy — The Core Distinction
+#### Accuracy vs Entropy: The Core Distinction
 
 Accuracy measures whether the model output matched the gold
 label. Entropy measures how consistently the model produced
 the same output across meaning-preserving input variations.
 They are independent properties. A model can be:
 
-- High accuracy and low entropy — correct and consistent
-- High accuracy and high entropy — correct on average but
+- High accuracy and low entropy: correct and consistent
+- High accuracy and high entropy: correct on average but
   produces different answers when the same content is
   rephrased (the dangerous case in clinical NLP)
-- Low accuracy and low entropy — wrong but consistently wrong
-- Low accuracy and high entropy — wrong and inconsistent
+- Low accuracy and low entropy: wrong but consistently wrong
+- Low accuracy and high entropy: wrong and inconsistent
 
 RQ2 finds that high accuracy provides no reliable indication
 of low entropy. Between 30.7 and 57.6 percent of high-accuracy
@@ -599,7 +599,7 @@ UMLS-linked entities. This was documented before analysis.
 
 #### Pipeline Acceptance by Dataset
 
-**MedMentions ST21pv (550 instances — primary dataset)**
+**MedMentions ST21pv (550 instances: primary dataset)**
 
 | Perturbation type | Generated | Accepted |
 |---|---|---|
@@ -609,7 +609,7 @@ UMLS-linked entities. This was documented before analysis.
 | Syntactic reordering | | 161 |
 | **Total** | **4,400** | **2,674 (60.8%)** |
 
-**BioASQ Task B (150 instances — biomedical midpoint)**
+**BioASQ Task B (150 instances: biomedical midpoint)**
 
 | Perturbation type | Generated | Accepted |
 |---|---|---|
@@ -619,7 +619,7 @@ UMLS-linked entities. This was documented before analysis.
 | Syntactic reordering | | 2 |
 | **Total** | **1,200** | **456 (38.0%)** |
 
-**SQuAD 2.0 (200 instances — general distal)**
+**SQuAD 2.0 (200 instances: general distal)**
 
 | Perturbation type | Generated | Accepted |
 |---|---|---|

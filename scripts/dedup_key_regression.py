@@ -66,10 +66,13 @@ KEYING = {
 def build_map(acc: pd.DataFrame, out_vids: set[str], out_pairs, lane: str) -> dict[str, str]:
     declared = KEYING[lane]
     all_ids = acc.attrs.get("all_ids", {})
-    acc_by_inst = (acc.groupby("_iid")["_id_vid"].agg(set).to_dict()
-                   if "_id_vid" in acc.columns else {})
-    belong = (sum(1 for iid, vid in out_pairs if vid in acc_by_inst.get(iid, ()))
-              / max(len(out_pairs), 1)) if acc_by_inst else 0.0
+    # Vectorised: a joined "iid\x00vid" key set, tested with isin. The Python-level
+    # per-row set lookup this replaces did not finish inside 20 minutes on 2.1M rows.
+    if "_id_vid" in acc.columns:
+        acc_keys = set(acc["_iid"] + "\x00" + acc["_id_vid"])
+        belong = float(out_pairs.isin(acc_keys).mean()) if len(out_pairs) else 0.0
+    else:
+        belong = 0.0
     observed = "direct_id" if belong >= 0.99 else "positional"
     print(f"  [{lane}] declared={declared}  observed={observed}  "
           f"(output ids in their own instance's accepted set: {100 * belong:.3f}%)")
@@ -89,30 +92,36 @@ def build_map(acc: pd.DataFrame, out_vids: set[str], out_pairs, lane: str) -> di
     return m
 
 
-def m_distinct_from_outputs(outputs_csv: Path, vmap: dict[str, str], lane: str) -> pd.Series:
+def load_outputs(outputs_csv: Path) -> pd.DataFrame:
     o = pd.read_csv(
         outputs_csv,
         usecols=["instance_id", "model_name", "input_variant_id", "input_type"],
         low_memory=False,
     )
     p = o[o["input_type"] != "original"].copy()
-    p["_txt"] = p["input_variant_id"].astype(str).map(vmap)
+    p["_iid"] = p["instance_id"].astype(str)
+    p["_vid"] = p["input_variant_id"].astype(str)
+    p["_key"] = p["_iid"] + "\x00" + p["_vid"]
+    return p
+
+
+def m_distinct_from_outputs(p: pd.DataFrame, vmap: dict[str, str], lane: str) -> pd.Series:
+    p = p.copy()
+    p["_txt"] = p["_vid"].map(vmap)
     bad = int(p["_txt"].isna().sum())
     assert bad == 0, f"[{lane}] {bad:,} perturbation rows failed to resolve a variant text"
     # m_distinct = number of DISTINCT perturbation texts in the (instance, model) group; the
     # original keys on its own id so it never collapses and contributes exactly 1 to n_outputs.
-    return p.groupby([p["instance_id"].astype(str), "model_name"])["_txt"].nunique()
+    return p.groupby(["_iid", "model_name"])["_txt"].nunique()
 
 
 def main() -> int:
     print("=== MedMentions: fixed keying must reproduce the existing values EXACTLY ===")
     acc = accepted_frame(ROOT / "outputs/rq1/intermediate/rq1_validated_perturbations.csv")
     out = ROOT / "outputs/rq1/intermediate/rq1_all_outputs_mapped.csv"
-    _po = (pd.read_csv(out, usecols=["instance_id", "input_variant_id", "input_type"], low_memory=False)
-             .query("input_type != 'original'"))
-    vids = set(_po["input_variant_id"].astype(str))
-    pairs = set(zip(_po["instance_id"].astype(str), _po["input_variant_id"].astype(str)))
-    got = m_distinct_from_outputs(out, build_map(acc, vids, pairs, "MedMentions"), "MedMentions")
+    po = load_outputs(out)
+    got = m_distinct_from_outputs(
+        po, build_map(acc, set(po["_vid"]), po["_key"], "MedMentions"), "MedMentions")
 
     e = pd.read_csv(ROOT / "outputs/rq1/entropy_full_umls.csv",
                     usecols=["instance_id", "model_name", "m_distinct"])
@@ -129,11 +138,9 @@ def main() -> int:
     print("=== CADEC: the lane the defect was in ===")
     acc_c = accepted_frame(ROOT / "outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv")
     out_c = ROOT / "outputs/rq3/intermediate/rq3_cadec_model_outputs.csv"
-    _pc = (pd.read_csv(out_c, usecols=["instance_id", "input_variant_id", "input_type"], low_memory=False)
-             .query("input_type != 'original'"))
-    vids_c = set(_pc["input_variant_id"].astype(str))
-    pairs_c = set(zip(_pc["instance_id"].astype(str), _pc["input_variant_id"].astype(str)))
-    got_c = m_distinct_from_outputs(out_c, build_map(acc_c, vids_c, pairs_c, "CADEC"), "CADEC")
+    pc = load_outputs(out_c)
+    got_c = m_distinct_from_outputs(
+        pc, build_map(acc_c, set(pc["_vid"]), pc["_key"], "CADEC"), "CADEC")
     ec = pd.read_csv(ROOT / "outputs/rq3/entropy_cadec.csv",
                      usecols=["instance_id", "model_name", "m_distinct"])
     ec.index = pd.MultiIndex.from_arrays([ec["instance_id"].astype(str), ec["model_name"]])

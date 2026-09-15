@@ -4,7 +4,7 @@ Source: `outputs/rq3/entropy_cadec.csv`, filtered by `retained_m_distinct` (PRIM
 
 `stable` means normalised entropy is exactly 0. `correct` is original-input correctness. The dissociation claim is that these come apart: a model can be perfectly stable under perturbation and still wrong.
 
-Overall: **stable 42.7%**, **correct 23.5%**, **stable-but-wrong 24.0%**.
+Overall: **stable 42.7%**, **correct 23.5%**, **stable-but-wrong 24.1%**.
 
 ## Per model
 
@@ -12,7 +12,7 @@ Overall: **stable 42.7%**, **correct 23.5%**, **stable-but-wrong 24.0%**.
 |---|---:|---:|---:|---:|---:|:---:|---:|---:|:---:|
 | BERT-base | 4,712 | 50.1% | 34.1% | 22.8% | 45.5% | [43.5%, 47.5%] | 86.3% | -40.8% | [-43.2%, -38.3%] |
 | BioBERT | 4,712 | 59.5% | 44.0% | 18.3% | 30.8% | [29.1%, 32.5%] | 93.0% | -62.2% | [-64.2%, -60.1%] |
-| BioMistral-7B | 4,711 | 36.2% | 17.6% | 26.3% | 72.6% | [70.4%, 74.6%] | 87.9% | -15.4% | [-17.8%, -13.0%] |
+| BioMistral-7B | 4,711 | 36.5% | 17.6% | 26.5% | 72.7% | [70.6%, 74.8%] | 87.9% | -15.2% | [-17.6%, -12.8%] |
 | FLAN-T5-base | 4,712 | 42.2% | 17.9% | 31.2% | 73.9% | [71.9%, 75.8%] | 88.1% | -14.1% | [-16.4%, -11.9%] |
 | Llama3-OpenBioLLM-8B | 4,712 | 17.6% | 7.6% | 14.3% | 81.2% | [78.4%, 83.7%] | 94.8% | -13.6% | [-16.5%, -11.0%] |
 | Meta-Llama-3-8B-Instruct | 4,712 | 34.3% | 9.9% | 27.8% | 81.1% | [79.1%, 82.9%] | 94.8% | -13.7% | [-15.8%, -11.7%] |
@@ -27,7 +27,7 @@ Positive rho means higher entropy goes with being wrong, i.e. instability tracks
 |---|---:|---:|:---:|
 | BERT-base | 4,712 | +0.464 | [+0.441, +0.486] |
 | BioBERT | 4,712 | +0.615 | [+0.597, +0.633] |
-| BioMistral-7B | 4,711 | +0.208 | [+0.180, +0.235] |
+| BioMistral-7B | 4,711 | +0.206 | [+0.179, +0.233] |
 | FLAN-T5-base | 4,712 | +0.181 | [+0.154, +0.209] |
 | Llama3-OpenBioLLM-8B | 4,712 | +0.191 | [+0.163, +0.218] |
 | Meta-Llama-3-8B-Instruct | 4,712 | +0.207 | [+0.180, +0.234] |
@@ -38,21 +38,21 @@ Positive rho means higher entropy goes with being wrong, i.e. instability tracks
 
 | quantity | value | 95% CI | n |
 |---|---:|:---:|---:|
-| P(wrong \| stable) | **56.31%** | [55.54%, 57.07%] | 16,083 |
-| P(wrong \| unstable) | 91.58% | [91.20%, 91.94%] | 21,612 |
-| gap, stable minus unstable | **-35.27%** | [-36.12%, -34.42%] (Newcombe) | 37,695 |
+| P(wrong \| stable) | **56.33%** | [55.57%, 57.10%] | 16,095 |
+| P(wrong \| unstable) | 91.58% | [91.20%, 91.94%] | 21,600 |
+| gap, stable minus unstable | **-35.24%** | [-36.09%, -34.39%] (Newcombe) | 37,695 |
 | Spearman rho, H vs error, rows pooled | **+0.404** | [+0.395, +0.412] (Fisher z) | 37,695 |
-| Spearman rho, mean of per-model via Fisher z | +0.351 | [+0.195, +0.491] | 8 models |
+| Spearman rho, mean of per-model via Fisher z | +0.351 | [+0.194, +0.491] | 8 models |
 
 ## The headline dissociation statistic
 
-**P(wrong | stable) = 56.3% pooled** [55.54%, 57.07%], over 16,083 stable rows. Being perfectly stable under perturbation leaves a CADEC prediction wrong about 56% of the time.
+**P(wrong | stable) = 56.3% pooled** [55.57%, 57.10%], over 16,095 stable rows. Being perfectly stable under perturbation leaves a CADEC prediction wrong about 56% of the time.
 
-The gap against unstable rows is **-35.27%** [-36.12%, -34.42%]. It is NEGATIVE, so stable predictions are *less* often wrong than unstable ones — stability carries some signal, but nothing like enough to act on.
+The gap against unstable rows is **-35.24%** [-36.09%, -34.39%]. It is NEGATIVE, so stable predictions are *less* often wrong than unstable ones — stability carries some signal, but nothing like enough to act on.
 
 Worst cell: **Llama3-OpenBioLLM-8B**, P(wrong | stable) = 81.2% over 828 stable rows.
 
-Every per-model Spearman rho is **positive** (entropy up, error up), so the direction is consistent; the magnitudes split sharply by family — encoders +0.464 to +0.625, generative models +0.181 to +0.208.
+Every per-model Spearman rho is **positive** (entropy up, error up), so the direction is consistent; the magnitudes split sharply by family — encoders +0.464 to +0.625, generative models +0.181 to +0.207.
 
 That split is the substantive RQ2 result: **entropy tracks error usefully in the encoders and barely at all in the generative models**, and the generative models are the ones with the high stable-but-wrong rates.
 

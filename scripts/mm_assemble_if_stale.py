@@ -30,7 +30,15 @@ def main() -> int:
             newest = max(newest, sc.stat().st_mtime)
     if (not val.exists()) or (val.stat().st_mtime < newest):
         print(f"[assemble] validated stale -> assembling {len(ready)} complete pert shards {ready}", flush=True)
-        print("[assemble]", assemble_perts(ROOT), flush=True)
+        # assemble_perts() no-ops for a sharded job unless MM_ASSEMBLE_PERTS=1. We are the
+        # single writer here (called under flock), so force the concatenation; clear
+        # MM_SHARD_ID too so the guard cannot skip.
+        os.environ["MM_ASSEMBLE_PERTS"] = "1"
+        os.environ.pop("MM_SHARD_ID", None)
+        res = assemble_perts(ROOT)
+        print("[assemble]", res, flush=True)
+        if res.get("skipped") or res.get("perts") is None:
+            raise RuntimeError(f"assemble_perts did not write the validated file: {res}")
     else:
         print(f"[assemble] validated fresh (covers {len(ready)} shards); skip", flush=True)
     return 0
