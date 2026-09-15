@@ -695,3 +695,53 @@ disagrees days before the cutoff.
 
 MedMentions applies the same rule inside the re-map itself, in both job A and job B, so the
 two corpora are treated identically.
+
+---
+
+# Amendment 8 — RQ1 part 2 estimator is enforced, not selected (2026-09-15)
+
+**Recorded BEFORE the re-run.**
+
+## The rule
+
+**RQ1 part 2 (magnitude of H given H > 0) is OLS on logit(H) with cluster-robust standard
+errors, clustered on `instance_id`. Always.** The estimator does not depend on whether any
+other model converges.
+
+**MixedLM becomes a sensitivity analysis**: fitted, and reported as a sensitivity result when
+it converges and as non-convergent when it does not. It is never the reported primary.
+
+## Why
+
+1. **The Methods section already specifies OLS on logit(H) with clustered SE.** The code was
+   substituting MixedLM opportunistically — `fit_magnitude` tried MixedLM first and used it
+   whenever it converged. The implementation and the written method had silently diverged.
+
+2. **The reported estimator cannot depend on an optimiser's luck.** Applying Amendment 7
+   changed 42 of 37,695 cells — **0.1% of the data** — and that was enough to push MixedLM
+   across its convergence boundary, flipping the reported parameterisation from logit(H) to
+   H. An analysis whose parameterisation changes under a 0.1% perturbation is not reproducible
+   in the sense this paper claims. OLS always converges.
+
+3. **Cluster-robust SE already handles the dependence the random effect was there for.**
+   Repeated measurements within an instance are accounted for by clustering on `instance_id`;
+   the random intercept was a second treatment of the same dependence, not an additional one.
+
+4. **The two parameterisations are not interchangeable in a Results sentence.** A logit(H)
+   coefficient and an H coefficient differ in scale and in meaning, and the paper quotes
+   logit-scale coefficients. Reporting whichever converged would make the numbers in the text
+   depend on which file the reader happened to get.
+
+## What this changes in the reported numbers
+
+Nothing that was reported under OLS changes. The 2026-09-14 tables were produced under OLS
+(MixedLM had failed), so Amendment 8 **restores** the estimator the manuscript was written
+against and removes the accidental MixedLM switch introduced by Amendment 7's data change.
+
+The `Group Var` row that MixedLM added is removed; the part-2 table returns to 14 terms.
+
+## Scope
+
+CADEC and MedMentions alike, primary and raw-m arms alike. The enforcement lives in
+`fit_magnitude` in `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb`, so no
+caller can re-introduce the selection.
