@@ -166,6 +166,7 @@ re-map block and it is the number to plan against:
 | 3 | **Verify the block set** against what was re-mapped early (Amendment 6), then merge. The re-map itself ran on the 19th/20th — see section 0a. Do NOT release `32769`: it runs the production partial-map, which reuses the contaminated cache and prunes. | **~15 min** if the sets match; **~11.9 h** if they do not | yes |
 | 4 | **Verify 0.00% injection** on the new mapped file, per block, before anything reads it. | 5 min | yes — hard gate |
 | 5 | **Regenerate `entropy_full_umls.csv`** from the clean mapped file. Runs inside the same notebook as step 3. | included above | yes |
+| 5a | **CADEC entropy, if it needs recomputing at all**: `CADEC_entropy.ipynb` now decides cache reuse in cell 3, *before* the FAISS index and SapBERT load, so a valid mapped cache recomputes entropy **on CPU in ~3 minutes with no slot**. `CADEC_FORCE_REMAP=1` overrides. **This is the entry point that makes the day survivable — do not spend a GPU slot on CADEC entropy.** | 3 min, no slot | no |
 | 6 | **`RQ4_umls_candidate_margin.ipynb`** with `DATASET=medmentions` — rebuilds `umls_candidate_margin_medmentions.csv`. | 1-2 h | no |
 | 7 | **RQ1** `RQ_DATASETS=MedMentions` | 10 min | no |
 | 8 | **RQ2** `RQ_DATASETS=MedMentions` | 10 min | no |
@@ -347,6 +348,34 @@ can run behind it.
 
 Both carry Amendment 7, so the corpus is treated identically either side of the seam. Run them
 concurrently on the two slots: ~11.9 h wall clock against ~18.3 h sequential.
+
+## 4c. Amendments 7 and 8 apply to the cutoff re-map
+
+Both were recorded on 15 September, dated before the corrections they govern.
+
+### Amendment 7 — empty generations are UNASSIGNED
+
+An empty or whitespace-only `output_text` is a non-answer: `predicted_cui = UNASSIGNED`,
+`confidence = 0.0`, **row retained** so `m` is unchanged. Enforced inside the MedMentions
+assign path — empty rows are excluded from both the direct-CUI branch and the embedding batch.
+
+**`MM_EMPTY_POLICY` is REQUIRED and has no default.** Both production jobs run with
+`MM_EMPTY_POLICY=unassigned`. The only other value, `replicate`, reproduces the pre-amendment
+behaviour and exists solely so job `33061` can match job 32768 row for row; **it must never be
+used for a production re-map.**
+
+Expected scale on MedMentions: **639 empty rows** in the current mapped file (0.0218%) plus 49
+in the unmapped raw shards. On CADEC it was 82 rows, moving 42 cells and no accuracy figure.
+
+### Amendment 8 — RQ1 part 2 is OLS on logit(H), enforced
+
+`fit_magnitude` no longer returns MixedLM as primary. MedMentions RQ1 will report OLS on
+logit(H) with cluster-robust SE regardless of whether MixedLM converges, matching CADEC and the
+Methods section. MixedLM is recorded under `sensitivity_*` keys.
+
+This matters on the day because the MedMentions data is new: under the old code, whether part 2
+reported logit(H) or H coefficients would have depended on an optimiser meeting a convergence
+threshold on data nobody had seen.
 
 ## 5. Standing rules that apply on the day
 

@@ -36,19 +36,36 @@ MedMentions counterparts of S1, S3 and S4 are generated on the day (`docs/CUTOFF
 
 | ref | status |
 |---|---|
-| S1 | **final** |
-| S2 | **PROVISIONAL** — threshold band is final on remapped data; the tie-break case count is still pre-remap. Job `32853` is HELD until **19 September** and must not run on cutoff day; if it never runs, the Limitations sentence quotes the threshold band only and drops the tie-break clause (`docs/CUTOFF_RUNBOOK.md` section 4a). |
-| S3, S4 | **final** |
-| S5–S9 | **final** |
+| S1 | **final** — regenerated 15 Sep under Amendments 7 and 8, both arms OLS |
+| S2 | **PROVISIONAL.** Threshold band is final and its numbers are **unchanged by Amendment 7** (verified: 26 rows / 16 instances / nearest 1.313e-4 before and after — the 82 patched rows sit at distance 0.29 pre and 0.70 post, never inside a 5.95e-4 band). The promoted CSVs carry a pre-Amendment-7 mtime and are mechanically stale but substantively correct. The **tie-break case count is still pre-remap**: job `32853` is HELD, released on the 19th, must not run on cutoff day; if it never runs the Limitations sentence quotes the threshold band only (`docs/CUTOFF_RUNBOOK.md` section 4a). |
+| S3 | **final** — regenerated 15 Sep at B = 20,000 on the corrected margin file |
+| S4 | **final** — regenerated 15 Sep under **Amendment 8**, OLS on logit(H) enforced, 14 terms |
+| S5, S7–S9 | **final** |
+| S6 | **final** — QA lane untouched by the CADEC correction |
+| S10 | **final** — regenerated 15 Sep; pair 2 ties moved 1,720 -> 1,716 |
+
+### Post-correction provenance
+
+Every entry below points at the **post-Amendment-7/8 artefact**. Pre-correction copies are
+preserved alongside with a `_PREEMPTYFIX` suffix and are **not** referenced by any supplementary
+table. A staleness sweep of all 36 derived CADEC and QA artefacts
+(`scripts/staleness_sweep_cadec_qa.py`, 15 Sep) found **32 current**; the four flagged are
+named in `docs/WORKLOG_2026-09-15.md` and **none of them backs a supplementary table**.
 
 ---
 
 ## Supplementary Table S1 — All-accepted-variants sensitivity analysis
 
 **Promised in:** Limitations, the de-duplication paragraph.
-**Artefact:** `docs/S1_SENSITIVITY.md`
+**Artefact:** `docs/S1_SENSITIVITY.md` (regenerated 15 Sep 20:36)
 **Backing data:** `outputs/rq3/rq1_linguistic_predictors_summary_rawm.csv`,
 `outputs/rq3/rq2_dissociation_summary_rawm.csv`, `docs/RQ1_CADEC_results_rawm.md`
+
+> **Both arms are OLS on logit(H)** under Amendment 8, and were OLS before it — MixedLM did not
+> converge on either arm on 14 September. The arm comparison is therefore like-for-like, and the
+> headline count is **unchanged at 6 of 28**, the *same six terms*. Three of the six are the
+> intercept and two model fixed effects; only three are linguistic terms, of which
+> `share_back_translation` flipping sign is the substantive one.
 **Producer:** `scripts/s1_sensitivity_delta.py`; arms selected by `RQ_ENTROPY_ARM=raw|dedup`
 
 The primary arm de-duplicates byte-identical input variants (`normalised_entropy_dedup` over
@@ -198,6 +215,11 @@ ones' errors.
 
 **Promised in:** Results 4.1.
 **Artefacts:** `docs/RQ1_CADEC_results.md`, `outputs/rq3/rq1_linguistic_predictors_summary.csv`
+(both regenerated 15 Sep 19:25 under Amendment 8)
+
+> Part 2 is **OLS on logit(H) with cluster-robust SE, enforced** — 14 terms. MixedLM is fitted
+> as a sensitivity result and converges on the current data, but is never the reported primary.
+> The `Group Var` row that appeared briefly on 15 September is gone.
 **Producer:** `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb`
 
 All 14 terms, both hurdle parts, coefficients with 95% CIs and p-values. n = 37,695 (part 1),
