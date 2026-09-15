@@ -55,23 +55,22 @@ The raw arm is **larger**: de-duplication removes variants, which pushes some in
 | logit P nonzero | `share_back_translation` | -0.3894 | -0.4631 | -0.0737 | yes | yes |  |
 | logit P nonzero | `share_controlled_paraphrase` | -0.1760 | -0.2305 | -0.0545 | no | no |  |
 | logit P nonzero | `share_synonym_substitution` | +0.2622 | +0.3428 | +0.0807 | no | no |  |
-| magnitude nonzero | `Intercept` | +0.5771 | +0.4779 | -0.0992 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.BioBERT]` | +0.0256 | +0.0225 | -0.0031 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.BioMistral-7B]` | -0.0508 | -0.0410 | +0.0097 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.FLAN-T5-base]` | -0.0706 | -0.0542 | +0.0164 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.0574 | +0.0486 | -0.0089 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.0427 | -0.0330 | +0.0097 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.0727 | -0.0597 | +0.0131 | yes | yes |  |
-| magnitude nonzero | `C(model_name)[T.PubMedBERT]` | +0.0214 | +0.0187 | -0.0026 | yes | yes |  |
-| magnitude nonzero | `mean_lexical_change_magnitude_z` | +0.0088 | +0.0070 | -0.0018 | yes | yes |  |
-| magnitude nonzero | `mention_char_len_z` | +0.0114 | +0.0094 | -0.0020 | yes | yes |  |
-| magnitude nonzero | `n_accepted_perts_z` | -0.0317 | -0.0291 | +0.0027 | yes | yes |  |
-| magnitude nonzero | `share_back_translation` | +0.0412 | -0.0190 | -0.0602 | yes | no | **SIG** |
-| magnitude nonzero | `share_controlled_paraphrase` | -0.0069 | +0.0264 | +0.0333 | no | yes | **SIG** |
-| magnitude nonzero | `share_synonym_substitution` | -0.0512 | +0.0418 | +0.0930 | yes | yes | **SIGN** |
-| magnitude nonzero | `Group Var` | +0.0744 | +0.0767 | +0.0023 | yes | yes |  |
+| magnitude nonzero | `Intercept` | +0.7077 | -0.0603 | -0.7680 | yes | no | **SIG** |
+| magnitude nonzero | `C(model_name)[T.BioBERT]` | +0.1153 | +0.0668 | -0.0484 | no | yes | **SIG** |
+| magnitude nonzero | `C(model_name)[T.BioMistral-7B]` | -0.6849 | -0.2333 | +0.4515 | yes | yes |  |
+| magnitude nonzero | `C(model_name)[T.FLAN-T5-base]` | -0.8598 | -0.2915 | +0.5683 | yes | yes |  |
+| magnitude nonzero | `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.3727 | +0.2044 | -0.1683 | yes | yes |  |
+| magnitude nonzero | `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.5793 | -0.1867 | +0.3926 | yes | yes |  |
+| magnitude nonzero | `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.7820 | -0.3013 | +0.4807 | yes | yes |  |
+| magnitude nonzero | `C(model_name)[T.PubMedBERT]` | +0.0467 | +0.0641 | +0.0174 | no | yes | **SIG** |
+| magnitude nonzero | `mean_lexical_change_magnitude_z` | +0.1438 | +0.0423 | -0.1014 | yes | yes |  |
+| magnitude nonzero | `mention_char_len_z` | +0.0971 | +0.0446 | -0.0526 | yes | yes |  |
+| magnitude nonzero | `n_accepted_perts_z` | -0.3261 | -0.1654 | +0.1607 | yes | yes |  |
+| magnitude nonzero | `share_back_translation` | +0.6684 | -0.3252 | -0.9936 | yes | yes | **SIGN** |
+| magnitude nonzero | `share_controlled_paraphrase` | -0.0006 | +0.1818 | +0.1824 | no | yes | **SIG** |
+| magnitude nonzero | `share_synonym_substitution` | +0.1646 | +0.4647 | +0.3002 | no | yes | **SIG** |
 
-**3 of 29 terms change significance or sign between the arms.**
+**6 of 28 terms change significance or sign between the arms.**
 
 ## RQ4 — AURC per signal
 

@@ -327,6 +327,27 @@ Drop the tie-break clause entirely rather than carry the pre-remap figure of 2. 
 must not inherit this as an open question** — it is closed either by `32853` landing before
 the 21st or by the rephrase above.
 
+## 4b. Release order once inference clears (~17 Sep 03:00)
+
+Both jobs are HELD. Release **in this order** — `33061` gates job B, `33062` is a receipt and
+can run behind it.
+
+| # | job | what | release |
+|---:|---|---|---|
+| 1 | **33061** | job B runner validation: block 6 re-mapped from the mapped file's `output_text`, compared row-for-row against job 32768. `MM_EMPTY_POLICY=replicate`, because 32768 predates Amendment 7. **If it fails, job B does not run.** | first |
+| 2 | **33062** | Amendment 7 receipt: full CADEC re-map with the rule enforced, compared row-for-row against the surgically patched file. | behind 33061 |
+| 3 | **32853** | CADEC de-duplication validator + tie-break traces (section 4a). | any time after |
+
+### Then the production re-map, both jobs with `MM_EMPTY_POLICY=unassigned`
+
+| job | blocks | n | route |
+|---|---|---:|---|
+| **A** | `6,7,8,9,10,11,12,13,14,15,16,17,18` | 13 | `MM_MAP_BLOCKS` from the shard CSVs |
+| **B** | `0,1,2,3,4,5,19` | 7 | `MM_MAP_SOURCE=mapped` from `output_text` |
+
+Both carry Amendment 7, so the corpus is treated identically either side of the seam. Run them
+concurrently on the two slots: ~11.9 h wall clock against ~18.3 h sequential.
+
 ## 5. Standing rules that apply on the day
 
 - `30955_[20-25]` stays **HELD** until after the cutoff. Release on the 21st **only after**
