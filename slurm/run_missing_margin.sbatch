@@ -47,5 +47,4 @@ print("\n=== notebook cells finished ===", flush=True)
 PY
 
 echo "=== done $(date) ==="
-ls -l outputs/rq1/umls_candidate_margin_medmentions.csv outputs/qa/umls_candidate_margin_qa.csv \
-      outputs/rq4/rq4_risk_coverage_margin_qa.csv outputs/rq4/rq4_aurc_margin_qa.csv
+ls -l outputs/rq1/umls_candidate_margin_medmentions.csv outputs/qa/umls_candidate_margin_qa.csv

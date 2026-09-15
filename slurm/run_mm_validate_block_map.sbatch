@@ -21,6 +21,7 @@ source slurm/_common.sh
 
 export MM_MAP_BLOCKS="${MM_MAP_BLOCKS:-6}"
 export MM_SCRATCH_DIR="${MM_SCRATCH_DIR:-$PWD/outputs/scratch/validate_map}"
+export MM_EMPTY_POLICY="${MM_EMPTY_POLICY:?set MM_EMPTY_POLICY=unassigned (Amendment 7) or =replicate (pre-amendment, validation only)}"
 mkdir -p "$MM_SCRATCH_DIR"
 
 echo "=== $(date) job ${SLURM_JOB_ID:-local} blocks=$MM_MAP_BLOCKS ==="

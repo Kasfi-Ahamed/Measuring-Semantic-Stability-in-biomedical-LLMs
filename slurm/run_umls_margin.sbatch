@@ -23,7 +23,10 @@ echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
 nvidia-smi --query-gpu=name,memory.total,memory.free --format=csv
 "$PY" -c "import torch; assert torch.cuda.is_available(), 'CUDA not visible'; print('torch', torch.__version__, torch.cuda.get_device_name(0))"
 
-# Execute notebook cells in-process (avoids ipykernel CUDA init). No new .py file.
+# Run twice: cadec then medmentions (RQ4_MARGIN_DATASET).
+for DS in cadec medmentions; do
+  echo "=== DATASET=${DS} ==="
+  export RQ4_MARGIN_DATASET="$DS"
 "$PY" - << 'PY'
 import json
 import traceback
@@ -46,6 +49,7 @@ for i, cell in enumerate(nb["cells"]):
         raise
 print("\n=== notebook cells finished ===", flush=True)
 PY
+done
 
 echo "=== done $(date) ==="
 ls -l outputs/rq1/umls_candidate_margin_medmentions.csv outputs/rq3/umls_candidate_margin_cadec.csv 2>/dev/null || true
