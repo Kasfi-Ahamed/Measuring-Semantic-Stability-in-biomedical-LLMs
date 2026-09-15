@@ -16,9 +16,9 @@ complete result set and nothing below is load-bearing for it.
 
 | fact | value (as of 14 Sep) | how to recheck |
 |---|---|---|
-| grid-complete blocks | **10** — `[0,1,2,3,4,5,6,7,17,19]` (was 8 at 09:00; blocks 7 and 17 landed during the day) | `complete_shards_for_grid(shard_root(ROOT))` |
-| blocks with shard CSVs still on disk | **3** — `[6, 7, 17]` | `source="files"` |
-| blocks present in the mapped file | 8 — `[0,1,2,3,4,5,6,19]`; **7 and 17 are grid-complete but NOT yet mapped** | `source="mapped"` |
+| grid-complete blocks | **14** as of 15 Sep 16:55 — `[0,1,2,3,4,5,6,7,8,9,15,17,18,19]`; **projected final 20** = `[0-19]` by 17-18 Sep (was 10 on 14 Sep) | `complete_shards_for_grid(shard_root(ROOT))` |
+| blocks with shard CSVs still on disk | **7** — `[6,7,8,9,15,17,18]`, becoming **13** once `31879` drains | `source="files"` |
+| blocks present in the mapped file | 8 — `[0,1,2,3,4,5,6,19]`; everything else is grid-complete but NOT yet mapped | `source="mapped"` |
 | rows in `rq1_all_outputs_mapped.csv` | 2,927,685 | `wc -l` |
 | rows carrying the rule-1 injection | **300,673 (10.27%)** | `assign_rule_path` contains `exact_match_inject` |
 | held jobs | `30955_[20-25]` (pert), `32769` (auto partial-map) | `squeue -u $USER` |
@@ -31,6 +31,66 @@ complete result set and nothing below is load-bearing for it.
 
 Block 6 is already clean; it was mapped after the rule-1 fix. Every other block is
 contaminated and must be re-mapped.
+
+---
+
+## 0a. REVISED PLAN — 15 September
+
+Three decisions, all recorded in `docs/ANALYSIS_PRECOMMIT.md` Amendment 6 where they touch
+the protocol.
+
+### 1. Array throttle raised to 2
+
+`scontrol update JobId=31879 ArrayTaskThrottle=2`, applied 15 Sep 16:56. It was 1 to leave a
+slot for CADEC and QA; both are finished and nothing else wants a slot before the 19th, so one
+of the two QoS slots was sitting idle.
+
+Projected completion of all inference moves from **18 Sep ~07:20** to **17 Sep ~04:00**, from a
+measured mean task time of **11.53 h** over seven completions (11:14:24 to 11:39:00, spread
++/-2%). The value is not the earlier finish — it is **~27 hours of buffer against a failed
+task** that would otherwise have to be re-run inside the window.
+
+### 2. The re-map runs EARLY, on 19 or 20 September
+
+**The block set freezes at 20** — `[0-19]` — around 17-18 September. Blocks 20-25 need
+`30955_[20-25]`, which is held through the cutoff, so nothing further can complete. The sample
+that §5 of the pre-commitment defines is therefore already determined.
+
+`docs/ANALYSIS_PRECOMMIT.md` **Amendment 6** records this before the fact: the sample rule is
+unchanged, only the timing of the mechanical work moves, and the premise is **verified on the
+morning of the 21st** rather than assumed. **If that verification is not performed, the early
+re-map is void** and the analysis must be re-run on the day.
+
+### 3. `32853` released as soon as inference clears
+
+Around **17-18 September**, not the 19th. The "losing a slot costs half a block" reasoning in
+section 4a is obsolete: once `31879` drains there are no blocks left to lose and both slots go
+idle.
+
+### The two-job split
+
+Sequential at 20 blocks is **~18.3 h**. Split across the two now-free slots it is **~11.9 h**
+wall clock, and the split falls along a seam that already exists:
+
+| job | blocks | n | route | est. |
+|---|---|---:|---|---:|
+| **A** | `6,7,8,9,10,11,12,13,14,15,16,17,18` | 13 | `MM_MAP_BLOCKS` + `MM_SCRATCH_DIR` — shard CSVs still on disk | ~11.9 h |
+| **B** | `0,1,2,3,4,5,19` | 7 | new runner reading `output_text` from the mapped file — CSVs pruned | ~6.4 h |
+
+This seam is worth more than the wall clock. **Job A goes through machinery already validated
+end to end** by job `32768` on 14 September (injection 0.00%, entropy stage reached). Only job
+B's 7 blocks depend on code that does not yet exist, so the new-code risk is confined to a
+third of the corpus and the other two thirds run on a proven path.
+
+> **CRITICAL PATH: job B's runner still does not exist, and its deadline moved from the 21st
+> to the 19th.** It reads `output_text` from `rq1_all_outputs_mapped.csv` instead of the
+> assembled shard CSVs. Validate it by reproducing block 6's known-clean mapping before
+> pointing it at blocks 0-5 and 19.
+
+After both jobs finish, merge their outputs into one mapped file and one entropy table, then
+verify **0.00% injection per block** before anything reads either.
+
+---
 
 ### The one thing that makes this feasible
 
@@ -93,10 +153,9 @@ re-map block and it is the number to plan against:
 - SapBERT embedding of the free-text rows took **27 seconds**; the rest is the FAISS
   top-1000 search over 7,653,278 vectors, which is the whole cost
 
-Extrapolating to the **10** grid-complete blocks as of 14 Sep (2,927,685 mapped rows plus the
-two unmapped blocks, ~3.66M rows total): **~9.2 hours**. The count will keep rising until the
-cutoff — every additional block adds **~55 minutes**. Re-derive the block count on the morning
-of the 21st and multiply; do not reuse this total.
+> **SUPERSEDED 15 September — see "Revised plan" below.** The block count reached **20**, not
+> 10, so the sequential re-map is **~18.3 hours**, not 9.2, and no longer fits a single day.
+> The re-map is therefore run **early and split across two jobs**.
 
 ### Step-by-step
 
@@ -104,7 +163,7 @@ of the 21st and multiply; do not reuse this total.
 |---:|---|---:|---|
 | 1 | **Freeze inputs.** `scripts/freeze_validated_inputs.py` — sha256 sidecars on `rq1_validated_perturbations.csv` and the mapped file. Record the hashes in this file. | 5 min | yes |
 | 2 | **Count grid-complete blocks.** `complete_shards_for_grid(shard_root(ROOT))`, `source="any"`. Record the list. This is the denominator for every MedMentions number in the paper. | 2 min | yes |
-| 3 | **Submit a fresh clean re-map**, writing to a NEW path. See section 2. Do NOT simply release `32769` — it runs the production partial-map, which reuses the contaminated cache and prunes. | **~7.5 h** for 8 blocks (measured) | yes |
+| 3 | **Verify the block set** against what was re-mapped early (Amendment 6), then merge. The re-map itself ran on the 19th/20th — see section 0a. Do NOT release `32769`: it runs the production partial-map, which reuses the contaminated cache and prunes. | **~15 min** if the sets match; **~11.9 h** if they do not | yes |
 | 4 | **Verify 0.00% injection** on the new mapped file, per block, before anything reads it. | 5 min | yes — hard gate |
 | 5 | **Regenerate `entropy_full_umls.csv`** from the clean mapped file. Runs inside the same notebook as step 3. | included above | yes |
 | 6 | **`RQ4_umls_candidate_margin.ipynb`** with `DATASET=medmentions` — rebuilds `umls_candidate_margin_medmentions.csv`. | 1-2 h | no |
@@ -253,7 +312,7 @@ tie-break cases are exactly the rows where two candidates tie at cosine ~1.0.
 
 | when | do |
 |---|---|
-| **19 September** | `scontrol release 32853`. Losing a slot for up to 5 h that late costs at most half a block rather than a whole one. |
+| ~~19 September~~ **17-18 September, as soon as `31879` drains** | `scontrol release 32853`. **Revised 15 Sep:** the half-a-block reasoning is obsolete — once inference finishes there are no blocks left to lose and both slots are idle, so releasing it costs nothing. |
 | **morning of the 21st, if it has not run** | **DO NOT run it on cutoff day.** The day is fully booked with the re-map and every MedMentions analysis. |
 
 **Fallback if it never runs:** rephrase the Limitations sentence to quote the **threshold band
