@@ -1,6 +1,6 @@
 # RQ4 — CADEC, final tables for the manuscript
 
-CADEC is frozen. Produced by `scripts/rq4_bootstrap_calibrate.py --full` on the remapped
+CADEC is frozen. **Regenerated 2026-09-15 under Amendments 7 and 8.** Produced by `scripts/rq4_bootstrap_calibrate.py --full` on the remapped
 data (rule-1 gold leak removed, positional de-duplication key), paired bootstrap at the
 pre-committed **B = 20,000**, seed `default_rng(42)`.
 
@@ -26,7 +26,7 @@ AURC integrates over coverages nobody operates at and is the supporting statisti
 | BioBERT | 4,712 | 0.3291 [0.3167, 0.3486] | 0.3350 [0.3192, 0.3507] | 0.6167 [0.6021, 0.6312] | 0.3428 [0.3273, 0.3591] |
 | PubMedBERT | 4,712 | 0.3289 [0.3175, 0.3490] | 0.3266 [0.3121, 0.3433] | 0.6204 [0.6057, 0.6348] | 0.3420 [0.3257, 0.3579] |
 | FLAN-T5-base | 4,712 | 0.6887 [0.6784, 0.7069] | 0.7420 [0.7311, 0.7559] | 0.7203 [0.7072, 0.7338] | 0.7044 [0.6907, 0.7191] |
-| BioMistral-7B | 4,711 | 0.6893 [0.6732, 0.7023] | 0.7378 [0.7244, 0.7502] | 0.7412 [0.7288, 0.7536] | 0.7109 [0.6975, 0.7249] |
+| BioMistral-7B | 4,711 | 0.6899 [0.6737, 0.7028] | 0.7378 [0.7244, 0.7502] | 0.7412 [0.7288, 0.7536] | 0.7110 [0.6976, 0.7250] |
 | Mistral-7B-Instruct-v0.1 | 4,712 | 0.7425 [0.7301, 0.7561] | 0.7830 [0.7722, 0.7946] | 0.7888 [0.7774, 0.7992] | 0.7679 [0.7557, 0.7796] |
 | Llama3-OpenBioLLM-8B | 4,712 | 0.7920 [0.7802, 0.8039] | 0.8254 [0.8163, 0.8345] | 0.8425 [0.8346, 0.8502] | 0.8148 [0.8045, 0.8247] |
 | Meta-Llama-3-8B-Instruct | 4,712 | 0.7661 [0.7538, 0.7791] | 0.7968 [0.7864, 0.8082] | 0.8091 [0.7991, 0.8190] | 0.7768 [0.7644, 0.7889] |
@@ -39,10 +39,10 @@ AURC integrates over coverages nobody operates at and is the supporting statisti
 | BioBERT | entropy | 0.3291 | 0.3428 | +0.0137 | [+0.0004, +0.0204] | 0.042 | **no** |
 | PubMedBERT | confidence | 0.3266 | 0.3420 | +0.0154 | [+0.0055, +0.0225] | 0.0013 | **no** |
 | FLAN-T5-base | entropy | 0.6887 | 0.7044 | +0.0157 | [+0.0041, +0.0202] | 0.004 | **no** |
-| BioMistral-7B | entropy | 0.6893 | 0.7109 | +0.0216 | [+0.0152, +0.0316] | 0.0001 | **no** |
+| BioMistral-7B | entropy | 0.6899 | 0.7110 | +0.0211 | [+0.0148, +0.0312] | 0.0001 | **no** |
 | Mistral-7B-Instruct-v0.1 | entropy | 0.7425 | 0.7679 | +0.0254 | [+0.0169, +0.0319] | 0.0001 | **no** |
 | Llama3-OpenBioLLM-8B | entropy | 0.7920 | 0.8148 | +0.0228 | [+0.0166, +0.0284] | 0.0001 | **no** |
-| Meta-Llama-3-8B-Instruct | entropy | 0.7661 | 0.7768 | +0.0106 | [+0.0035, +0.0173] | 0.0023 | **no** |
+| Meta-Llama-3-8B-Instruct | entropy | 0.7661 | 0.7768 | +0.0106 | [+0.0035, +0.0173] | 0.0024 | **no** |
 
 ### Table R3 — selective risk at fixed coverage (the headline statistic)
 
@@ -64,15 +64,15 @@ AURC integrates over coverages nobody operates at and is the supporting statisti
 | FLAN-T5-base | confidence | 0.8142 | 0.8220 | 0.8311 |
 | FLAN-T5-base | margin | 0.8118 | 0.8067 | 0.7933 |
 | FLAN-T5-base | combined_3 | 0.8104 | 0.7960 | 0.7907 |
-| BioMistral-7B | entropy | 0.8108 | 0.7915 | 0.7555 |
+| BioMistral-7B | entropy | 0.8108 | 0.7917 | 0.7559 |
 | BioMistral-7B | confidence | 0.8132 | 0.8181 | 0.8285 |
 | BioMistral-7B | margin | 0.8175 | 0.8166 | 0.8222 |
-| BioMistral-7B | combined_3 | 0.8139 | 0.7980 | 0.7874 |
-| Mistral-7B-Instruct-v0.1 | entropy | 0.8614 | 0.8469 | 0.8179 |
+| BioMistral-7B | combined_3 | 0.8139 | 0.7985 | 0.7874 |
+| Mistral-7B-Instruct-v0.1 | entropy | 0.8614 | 0.8472 | 0.8179 |
 | Mistral-7B-Instruct-v0.1 | confidence | 0.8696 | 0.8707 | 0.8705 |
 | Mistral-7B-Instruct-v0.1 | margin | 0.8689 | 0.8707 | 0.8833 |
 | Mistral-7B-Instruct-v0.1 | combined_3 | 0.8637 | 0.8582 | 0.8455 |
-| Llama3-OpenBioLLM-8B | entropy | 0.9168 | 0.9066 | 0.8820 |
+| Llama3-OpenBioLLM-8B | entropy | 0.9168 | 0.9069 | 0.8820 |
 | Llama3-OpenBioLLM-8B | confidence | 0.9170 | 0.9143 | 0.9185 |
 | Llama3-OpenBioLLM-8B | margin | 0.9262 | 0.9301 | 0.9393 |
 | Llama3-OpenBioLLM-8B | combined_3 | 0.9177 | 0.9114 | 0.9049 |

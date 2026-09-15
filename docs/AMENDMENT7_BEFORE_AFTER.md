@@ -1,3 +1,28 @@
+> # SUPERSEDED — 2026-09-15
+>
+> **Superseded by `docs/AMENDMENT7_8_BEFORE_AFTER.md`, which covers Amendments 7 and 8
+> together as a single before/after.**
+>
+> This file is retained, not deleted, because it is the document that was handed over as the
+> basis for editing six manuscript sections. Deleting it would remove the record of what was
+> handed over and when.
+>
+> **What was wrong with it.** It was generated at 18:24 on 15 September, in the window between
+> applying Amendment 7 and enforcing Amendment 8. Its **RQ1 part 2 section** therefore
+> describes a switch from OLS on logit(H) to MixedLM, and reports MixedLM coefficients in its
+> "after" column — for example `share_back_translation` +0.0412 and `n_accepted_perts_z`
+> -0.0317. **Amendment 8 has since reversed that switch**: part 2 is enforced OLS on logit(H),
+> and the current values are **+0.6684** and **-0.3261**.
+>
+> **Every other row in this file was correct**, and remains a valid record of the
+> Amendment 7 data change considered on its own.
+>
+> **Nothing wrong reached the paper.** The manuscript was refreshed from the enforced-OLS
+> table, not from this document. Results 4.1 currently reads **-0.326**, **+0.668** and
+> **+0.144**, which are the current values.
+
+---
+
 # Amendment 7 — every CADEC number, before and after
 
 `docs/ANALYSIS_PRECOMMIT.md` Amendment 7: empty or whitespace-only generation is UNASSIGNED,
