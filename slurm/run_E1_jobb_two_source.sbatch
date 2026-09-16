@@ -24,7 +24,7 @@ cd "$HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"
 source slurm/_common.sh
 
 BLOCK="${E1_BLOCK:-6}"
-EXPECT="${E1_EXPECT_ROWS:?set E1_EXPECT_ROWS to the block's exact row count, e.g. 370428}"
+EXPECT="${E1_EXPECT_ROWS:?set E1_EXPECT_ROWS to the exact row count for this block, e.g. 370428}"
 ROOTDIR="$PWD/outputs/scratch/E1"
 A="$ROOTDIR/shards"
 B="$ROOTDIR/mapped"
