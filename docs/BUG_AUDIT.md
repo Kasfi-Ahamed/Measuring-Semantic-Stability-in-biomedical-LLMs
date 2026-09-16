@@ -1590,3 +1590,53 @@ aggregate moves in the third decimal.
 
 `docs/ANALYSIS_PRECOMMIT.md` Amendment 7, dated before the correction ran: empty or
 whitespace-only generation is UNASSIGNED with the row retained.
+
+---
+
+# Verified but not enforced — the most common shape in this file (2026-09-16/17)
+
+**Class:** a check that runs, produces the right answer, and does not gate anything. The
+information exists; nothing consumes it.
+
+This is now the most frequent shape recorded here, so it is worth naming once with its members
+rather than as four separate notes.
+
+## The instance that named it
+
+Building the E1 launcher, `bash -n` correctly detected a quoting error — an apostrophe in
+`block's` inside `${VAR:?message}`, which opens a quote and breaks the script at parse time.
+The check ran and it was right. But the `sbatch` sat on a **separate line**, not chained to it,
+so job `33220` was submitted against a script that could not parse. It was held and cancelled
+before running.
+
+The fix is `bash -n script && sbatch script`, one `&&`. The defect is not the quoting; it is
+that verification and action were not connected.
+
+## Members of the class
+
+| where | what was verified | what was not enforced |
+|---|---|---|
+| E1 launcher | `bash -n` found the syntax error | the `sbatch` ran anyway |
+| `fig_risk_coverage.py` | the fine curve and the grid AURC were both computed | the reported number silently used the wrong one for a day |
+| RQ1 `fit_magnitude` | `Logit: Singular matrix` was printed at the fit site | the verdict block printed a null result 100 lines below it |
+| `RQ4_umls_candidate_margin` cell 5 | margin variance inside H=0 was asserted | the property that mattered, predictiveness, was never checked |
+| MedMentions validation mode | `assert len(df_model_part1) > 0` ran | the frame was emptied *after* it, by the incremental branch |
+
+The related but distinct classes already recorded above — count-vs-identity,
+assertion-strength, broad-except-over-a-fit, stale-narrative — are all specialisations of the
+same failure: **the pipeline knew, and the knowledge did not reach the decision.**
+
+## The general remedy, as applied
+
+Not more checks. Checks positioned where they gate:
+
+- **`bash -n … && sbatch …`** — verification and action in one expression.
+- **The row-count receipt** (2026-09-17): the expected row count is pinned at the block filter
+  and **re-asserted at the assign gate**, so any branch between them that changes the row
+  population is an error. `len > 0` caught nothing because emptiness was never the failure;
+  wrongness was. A receipt that is checked once is a comment; one that is checked again at the
+  point of use is a gate.
+- **Refuse-to-start over assert-later** — validation mode now raises `FileExistsError` if the
+  scratch output already exists, naming the specific way job `33217` consumed a previous run's
+  output as a production cache. A precondition that prevents the run beats an assertion that
+  describes the wreckage.
