@@ -21,7 +21,7 @@ complete result set and nothing below is load-bearing for it.
 | blocks present in the mapped file | 8 — `[0,1,2,3,4,5,6,19]`; everything else is grid-complete but NOT yet mapped | `source="mapped"` |
 | rows in `rq1_all_outputs_mapped.csv` | 2,927,685 | `wc -l` |
 | rows carrying the rule-1 injection | **300,673 (10.27%)** | `assign_rule_path` contains `exact_match_inject` |
-| held jobs | `30955_[20-25]` (pert), `32769` (auto partial-map) | `squeue -u $USER` |
+| held jobs | `30955_[20-25]` (pert, held until the 21 Sep verification passes — section 4d), `32769` (auto partial-map), `32853`, `33062` | `squeue -u $USER` |
 
 **Per-block injection rate in the mixed mapped file:**
 
@@ -377,10 +377,54 @@ This matters on the day because the MedMentions data is new: under the old code,
 reported logit(H) or H coefficients would have depended on an optimiser meeting a convergence
 threshold on data nobody had seen.
 
+## 4d. `30955` stays held until the 21 September verification passes
+
+**Decision, 16 September.** `30955_[20-25]` (perturbation generation for blocks 20-25) is
+released **only after the cutoff-day verification in Amendment 6 has passed** — not before,
+and not on a guard.
+
+### The rejected alternative
+
+Releasing generation early while suppressing inference would buy roughly two days on the
+post-cutoff full-corpus run. It was rejected:
+
+- **A held job cannot fire. A guard has to work.** Any mechanism that runs generation while
+  holding back inference — a check in `mm_submit_shard_inf.py`, a sentinel file, a dependency
+  chain — is a guard, and this project has spent a fortnight cataloguing guards that passed
+  while being wrong: count-vs-identity, the stale map-cache predicate, fail-open QA gates, a
+  variance assertion standing in for an informativeness one.
+- **The failure mode here is silent and voids the pre-registration.** If the guard leaks and a
+  block reaches grid-complete before the 21st, the block set is no longer frozen. Amendment 6's
+  premise — "nothing else can complete, because everything remaining is held" — becomes false,
+  and the early re-map it authorises becomes void. Nothing would announce this; the block count
+  would simply be 21 instead of 20 on the morning of the 21st.
+- **The two days land after submission anyway.** The full corpus completes around
+  **26-27 September** even starting after the cutoff, comfortably before the **29 September**
+  defence. The saving buys nothing that is needed.
+
+**Do not build a guard on `mm_submit_shard_inf.py`. Do not release generation early.**
+A held job is the only mechanism here with no failure mode.
+
+### Sequence
+
+1. `33061` — job B runner validation (**currently FAILED on a column collision in the source
+   switch; see section 0a — must pass before job B runs**)
+2. block 16 lands, ~17 Sep 04:00 -> block set final at **20**, `[0-19]`
+3. jobs A and B concurrently, 17 Sep, `MM_EMPTY_POLICY=unassigned`
+4. MedMentions analyses
+5. **21 September verification** (Amendment 6): enumerate grid-complete blocks, compare against
+   what was re-mapped, confirm identical, report
+6. **then** release `30955`
+7. post-cutoff full-corpus run, writing to **new paths**
+
+Steps 5 and 6 are in that order for the reason above: releasing `30955` before the verification
+would let the set it verifies against change underneath it.
+
 ## 5. Standing rules that apply on the day
 
-- `30955_[20-25]` stays **HELD** until after the cutoff. Release on the 21st **only after**
-  the re-map has finished; releasing it earlier competes for the two job slots.
+- `30955_[20-25]` stays **HELD** until the **21 September verification has passed** — see
+  section 4d. Not merely "until after the cutoff": releasing it before the verification would
+  unfreeze the block set that the verification checks against, voiding Amendment 6 silently.
 - `32769` is **HELD** and is deliberately acting as the sentinel that stops
   `run_mm_causal_shard_inf.sbatch` auto-submitting further partial-map jobs
   (the guard is `squeue -h -n mm_partial_map`). **Do not release or delete it casually** —
