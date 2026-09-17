@@ -1834,3 +1834,25 @@ this. It is not a defence of the design — a patch one cell over would have bee
 
 Verified: field absent → rc=1; false with no rationale → rc=1; false with rationale → rc=0 and
 the warning printed.
+
+
+---
+
+# OUTSTANDING — two launchers carry no `set -e` (2026-09-17)
+
+**Not fixed. Deliberately deferred until after submission.**
+
+`slurm/run_embed.sbatch` and `slurm/run_mm_entropy.sbatch` have no `set -euo pipefail`. Both
+chain several steps with no guard between them, so a failing step is followed by the next one
+regardless — the verified-but-not-enforced shape, in its plainest form: nothing is even checked.
+
+They were found while sweeping `PYTHONHASHSEED` across the mapping and margin launchers; the
+seed was anchored on their `cd` line because there was no `set -e` line to anchor on.
+
+**Why it is not being fixed now.** Neither is running, neither is on the cutoff path, and
+neither has been executed since the fix would change its failure semantics. Adding `set -e` to
+an untested script converts silent partial success into a hard stop, which is correct in
+principle and untested in fact. That is risk without benefit four days from the cutoff.
+
+**To do after submission:** add `set -euo pipefail`, then run each once and confirm it still
+completes, before trusting either again.
