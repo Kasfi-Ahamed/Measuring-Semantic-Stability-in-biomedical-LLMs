@@ -461,6 +461,36 @@ nothing; if `33167` ends early the job starts early.
 
 ---
 
+## 4f. STOP — neither MedMentions production re-map path exists yet (17 Sep)
+
+Found while preparing jobs A and B for the moved pin. **Not improvised around.** Both jobs were
+authorised and neither can currently be launched as a *production* Amendment 9 re-map.
+
+**Job A — blocks 6-18, `MM_MAP_SOURCE=shards`.** Production mode reuses the mapped cache. The
+cache test is identity-based (`_only_fresh = _ids_all - _ids_map`), deliberately, because a
+count test broke once when pruning shrank the fresh set. With the same instance set it reports
+the cache current and **skips the re-map entirely**. There is no `MM_FORCE_REMAP`; the six
+`MM_*` flags are `MAP_BLOCKS`, `SCRATCH_DIR`, `MAP_SOURCE`, `MAPPED_SRC`, `EXPECT_ROWS`,
+`EMPTY_POLICY`. CADEC has `CADEC_FORCE_REMAP`; MedMentions has no equivalent.
+
+**Job B — blocks 0-5 and 19, `MM_MAP_SOURCE=mapped`.** The notebook asserts
+`MM_MAP_SOURCE=mapped requires MM_MAP_BLOCKS`, and any non-empty `MM_MAP_BLOCKS` switches on
+validation mode, which redirects every write under `MM_SCRATCH_DIR` and reads no cache. The
+mapped-source route therefore **only exists inside scratch**. It can validate; it cannot produce.
+
+**Minimal change, for approval — not written.**
+
+1. `MM_FORCE_REMAP=1` — sets `_reuse_mapped = False` in production, nothing else.
+2. A production route for `MM_MAP_SOURCE=mapped`: allow `MM_MAP_BLOCKS` to select blocks
+   *without* forcing scratch redirection, plus a merge that writes those blocks back into the
+   production mapped file — with the existing row-count receipt re-asserted at the write.
+
+Item 2 is the one worth care: it is a write into the production corpus, gated on E1 passing.
+
+**Meanwhile** the node is held by work that can proceed: `33340` (CADEC) and `33345` (E1).
+
+---
+
 ## 5. Standing rules that apply on the day
 
 - `30955_[20-25]` stays **HELD** until the **21 September verification has passed** — see
