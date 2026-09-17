@@ -14,6 +14,10 @@
 #
 
 set -euo pipefail
+# Amendment 9: fix the hash seed for every job that touches the candidate pool.
+# The mapping and margin paths build _form_to_cuis as a defaultdict(set); without this,
+# set iteration order is per-process. The 803093e sweep missed this launcher.
+export PYTHONHASHSEED=0
 cd $HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs
 mkdir -p logs outputs/rq1/intermediate outputs/rq1/tables outputs/rq1/executed
 
