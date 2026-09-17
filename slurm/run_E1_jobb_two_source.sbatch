@@ -52,7 +52,12 @@ MM_MAP_BLOCKS="$BLOCK" MM_MAP_SOURCE=mapped MM_SCRATCH_DIR="$B" \
   "$PY" scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
 
 echo; echo "--- row-for-row comparison, A vs B, same GPU same run ---"
+# The verdict is written as a FILE, not only printed. Job B refuses to start without it:
+# a PASS in stdout is a sentence, and nothing downstream can gate on a sentence.
+export JOBB_RECEIPT_JSON="$ROOTDIR/e1_pass_receipt.json"
 "$PY" scripts/jobb_validate_rowwise.py \
       "$B/rq1_all_outputs_mapped_VALIDATE_b${BLOCK}.csv" \
       "$A/rq1_all_outputs_mapped_VALIDATE_b${BLOCK}.csv"
+# Re-assert what was just written, at the point it becomes evidence.
+"$PY" scripts/assert_e1_pass.py "$JOBB_RECEIPT_JSON" "$EXPECT"
 echo "=== done $(date) ==="

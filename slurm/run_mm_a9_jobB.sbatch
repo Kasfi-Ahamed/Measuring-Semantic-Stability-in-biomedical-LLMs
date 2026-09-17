@@ -38,6 +38,14 @@ export MM_SCRATCH_DIR="$PWD/outputs/scratch/A9_partB"
 export MM_EMPTY_POLICY=unassigned
 export MM_EXPECT_ROWS=2557257
 
+# --- E1 GATE. REFUSE TO START, rather than assert afterwards -------------------------------
+# Job B was previously gated on a sentence in this header claiming E1 had passed. It is now
+# gated on the artefact that sentence describes: the receipt must exist and report zero
+# differing rows on all three columns, zero keys in either side only, and 370,428 rows joined.
+# Chained with && as well as set -e, so the gate cannot be stepped over.
+E1_RECEIPT="$PWD/outputs/scratch/E1/e1_pass_receipt.json"
+"$PY" scripts/assert_e1_pass.py "$E1_RECEIPT" 370428 && echo "E1 gate cleared; job B may proceed"
+
 echo "=== $(date) job ${SLURM_JOB_ID:-local} on $(hostname) ==="
 nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
 echo "source:      $MM_MAPPED_SRC"

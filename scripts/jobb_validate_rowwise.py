@@ -8,7 +8,10 @@ Usage: jobb_validate_rowwise.py <candidate.csv> [reference.csv]
 """
 from __future__ import annotations
 
+import json
+import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -43,6 +46,7 @@ def main() -> int:
 
     m = a.merge(b, on=K, suffixes=("_ref", "_cand"))
     print(f"joined    : {len(m):,}")
+    diff_counts = {}
     for c in COLS:
         ca, cb = m[f"{c}_ref"], m[f"{c}_cand"]
         if c == "confidence":
@@ -52,12 +56,42 @@ def main() -> int:
         else:
             diff = ca.astype(str) != cb.astype(str)
         n = int(diff.sum())
+        diff_counts[c] = n
         print(f"  {c:20s} differ on {n:,} of {len(m):,} rows "
               f"({n / max(len(m), 1):.6%})")
         if n:
             fails.append(f"{c} differs on {n:,} rows")
             ex = m.loc[diff, K + [f"{c}_ref", f"{c}_cand"]].head(8)
             print(ex.to_string(index=False))
+
+    # --- PASS RECEIPT, AS A FILE ---------------------------------------------------------
+    # A PASS printed to stdout is a sentence. Downstream jobs cannot gate on a sentence, so
+    # job B was gated on a claim in its own launcher header instead of on the artefact that
+    # claim describes. This writes the verdict and the numbers behind it; assert_e1_pass.py
+    # re-asserts them at the point of use.
+    receipt_path = os.environ.get("JOBB_RECEIPT_JSON", "").strip()
+    if receipt_path:
+        rp = Path(receipt_path)
+        rp.parent.mkdir(parents=True, exist_ok=True)
+        rp.write_text(json.dumps({
+            "experiment": "E1",
+            "question": "does the mapped-file route reproduce the shard-CSV route, row for row",
+            "pass": not fails,
+            "reference": str(ref),
+            "candidate": str(cand),
+            "rows_reference": int(len(a)),
+            "rows_candidate": int(len(b)),
+            "rows_joined": int(len(m)),
+            "only_in_reference": int(len(only_a)),
+            "only_in_candidate": int(len(only_b)),
+            "columns_compared": COLS,
+            "differing_rows": {c: int(diff_counts.get(c, -1)) for c in COLS},
+            "confidence_tolerance": TOL,
+            "failures": fails,
+            "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
+            "written_utc": datetime.now(timezone.utc).isoformat(),
+        }, indent=2))
+        print(f"E1 PASS RECEIPT written -> {rp}")
 
     print()
     if fails:
