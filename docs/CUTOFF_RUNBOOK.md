@@ -420,6 +420,47 @@ A held job is the only mechanism here with no failure mode.
 Steps 5 and 6 are in that order for the reason above: releasing `30955` before the verification
 would let the set it verifies against change underneath it.
 
+## 4e. `33310` is queue-blocked on the node pin — 17 September, recorded not decided
+
+The CADEC Amendment 9 re-map (`33310`) did not start on the night of the 17th. Recorded here
+because it moves the whole CADEC chain and, behind it, the MedMentions re-map.
+
+**Measured state, 17 Sep:**
+
+| fact | value |
+|---|---|
+| `33310` state | PENDING, `Reason=Priority`, `Priority=1` (the floor; every queued job here is 1, so order is FIFO) |
+| GPU jobs ahead of it by job ID | `33018`, `33228`, `33240`, `33304` |
+| pinned node `g20-2gpu-1` | 2 GPUs, 1 free; 120000M configured, **80G held** by another user's `33167` |
+| memory free on the pin | ~38G — the job's own 80G request **does not fit** beside `33167` |
+| `33167` time limit | 2-22:00:00, 15h elapsed → worst-case end ~20 Sep |
+| `sbatch --test-only` on the pin | start estimate moved **20 Sep 20:04 → 22 Sep 20:53 within three minutes** |
+
+**The estimates are worst-case and volatile.** Slurm assumes every running job consumes its full
+time limit, which `33167` very likely will not. The pin's estimate crossing the 21 September
+cutoff is a scheduler projection, not a prediction.
+
+**Same GPU model exists on five other nodes.** `g20-2gpu-{1..6}` all carry `rtxa4000ada`, the
+model `32755` mapped CADEC on. `--test-only` against the best of them, `g20-2gpu-3` (1 GPU free,
+~101G free), estimates 20 Sep 13:56 — earlier than the pin, still not tonight.
+
+**Why the pin was not moved, and why memory was not lowered.**
+
+- Unpinning trades a known physical card for the same *model*. That is very probably sufficient —
+  identical architecture and kernels — but "very probably" is the standard this re-map exists to
+  replace. E2 exists because hardware changed a result once. Moving the node changes the
+  experimental conditions of a determinism experiment, which is the user's call, not the
+  operator's.
+- Lowering the memory request below 38G would fit it beside `33167`, but **would not start it
+  tonight anyway**: `--test-only` on `g20-2gpu-3`, which has ~101G free, still estimates the 20th.
+  Queue position, not memory, is the binding constraint. A lowered request would take an untested
+  OOM risk for no schedule gain. `80G` has succeeded on every prior CADEC map.
+
+**Nothing was cancelled or resubmitted.** `33310` remains queued on the pin. Waiting costs
+nothing; if `33167` ends early the job starts early.
+
+---
+
 ## 5. Standing rules that apply on the day
 
 - `30955_[20-25]` stays **HELD** until the **21 September verification has passed** — see
