@@ -1,7 +1,16 @@
 # Amendment 9 — CADEC before/after, and what the comparison conflates
 
-**Status:** in progress. Job `33340` (CADEC re-map under Amendments 7 + 9) started
-2026-09-17 10:55 on `g16-8gpu-1`. Numbers below marked *pending* land when it does.
+**Status:** CADEC done. Job `33340` COMPLETED in 21:52 on `g16-8gpu-1` (NVIDIA RTX A4000,
+driver 595.71.05), exit 0. MedMentions pending.
+
+**Amendment 9 receipt, stated positively:**
+
+```
+tie-break evaluated 239,289 times | terminal key decided the winner 1,442 times (0.6026%)
+| VIOLATIONS 0
+```
+
+Evaluations non-zero and violations zero — both asserted, neither inferred from silence.
 
 ---
 
@@ -75,3 +84,56 @@ This is why the re-map of both corpora is pinned to one node by `--nodelist`, no
 | `outputs/rq3/*_PRETIEBREAK.*` | the nine frozen CADEC artefacts, pre-Amendment-9 |
 | `outputs/scratch/E1_33221_PREAMENDMENT9/` | E1's scratch from the failing run `33221` |
 | `slurm/run_cadec_amendment9_remap.sbatch` | the superseded `g20-2gpu-1` launcher |
+
+---
+
+## 6. CADEC before/after — 41,288 cells, joined on (instance_id, model_name), 0 unmatched
+
+### Accuracy — the neutrality check
+
+| | value |
+|---|---|
+| mean accuracy **before** | 0.232658 |
+| mean accuracy **after** | 0.232707 |
+| **delta** | **+0.000048** |
+| cells with changed accuracy | **2** of 41,288 (0.0048%) |
+| **gained** correct | **2** |
+| **lost** correct | **0** |
+
+The direction is 2–0, which looks one-sided but carries no evidence: with two changed cells, the
+probability of a unanimous direction under a neutral rule is 0.5 — a coin landing the same way
+twice. The movement is 4.8 per 100,000, which is not "noticeable" by any reading. **The
+tie-break is neutral with respect to correctness, as pre-registered.**
+
+### Entropy — one result that is NOT neutral, and is not yet explained
+
+| | before | after | delta |
+|---|---|---|---|
+| mean normalised entropy | 0.272380 | 0.272637 | +0.000257 |
+| zero-entropy fraction | 43.4678% | 43.4267% | −0.0411 pp |
+| cells with changed entropy | — | **45** (0.1090%) | — |
+| **direction on changed cells** | — | **44 up, 0 down** | mean abs 0.2473, max 0.5000 |
+| `dominant_cui` changed | — | 24 cells | — |
+| `mapping_confidence` changed | — | **618** cells | +0.000479 |
+
+**44 up and 0 down is a systematic direction, and an arbitrary tie-break should not produce
+one.** It is being recorded, not explained away. Two candidate causes, and this run cannot
+separate them because it changed both things at once:
+
+1. **The hardware term.** 618 cells moved in `mapping_confidence`, which the tie-break cannot
+   touch — a tie-break chooses between candidates, it does not change a cosine score. Every one
+   of those 618 is the GPU change. Float noise breaking near-ties adds cluster diversity, which
+   raises entropy and lowers the zero fraction, exactly the observed sign.
+2. **The tie-break itself**, if lowest-CUI happens to de-correlate winners across variants of
+   the same instance where the previous FAISS-order rule correlated them.
+
+### The experiment that would separate them, not yet run
+
+For MedMentions the pair already exists (`33210` vs E1, §2). **For CADEC it does not.** The
+equivalent is one ~22-minute job: re-map CADEC on `g16-8gpu-1` with the tie-break disabled, and
+diff against `33340`. Same node, same run conditions, one variable. That isolates the tie-break
+term for CADEC exactly as E1 does for MedMentions, and it is cheap.
+
+Until it runs, the honest statement is: **accuracy is neutral (2 gained, 0 lost, +0.000048);
+entropy moved on 45 of 41,288 cells, all upward, under a combined tie-break-plus-hardware
+change whose terms are not yet separated for this corpus.**
