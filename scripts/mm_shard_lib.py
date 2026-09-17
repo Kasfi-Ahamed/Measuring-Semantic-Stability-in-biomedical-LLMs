@@ -284,12 +284,31 @@ def record_shard_model(
         return man
 
 
-def mapped_outputs_path(root: Path) -> Path:
-    """The mapped-outputs CSV that sits beside the shard directory."""
-    return root.parent / "rq1_all_outputs_mapped.csv"
+CANONICAL_MAPPED = "rq1_all_outputs_mapped.csv"
 
 
-def shard_model_counts_in_mapped(root: Path) -> tuple[dict[int, int], int]:
+def mapped_outputs_path(root: Path, mapped: Path | str | None = None) -> Path:
+    """The mapped-outputs CSV that grid-completeness is counted against.
+
+    Resolution order: the explicit argument, then $MM_MAPPED_CORPUS, then the historical
+    default beside the shard directory.
+
+    This used to return the literal default and nothing else, which pinned Amendment 1's
+    implementation -- and therefore Amendment 6's 21 September verification -- to the very
+    corpus the cutoff re-map exists to replace. Every function that reads it now reports WHICH
+    file it read, so a wrong-file read is visible in the output instead of silent.
+    """
+    if mapped is not None:
+        return Path(mapped)
+    env = os.environ.get("MM_MAPPED_CORPUS", "").strip()
+    if env:
+        return Path(env)
+    return Path(root).parent / CANONICAL_MAPPED
+
+
+def shard_model_counts_in_mapped(
+    root: Path, mapped: Path | str | None = None
+) -> tuple[dict[int, int], int]:
     """(shard_id -> distinct model_name count in the mapped file, expected model count).
 
     Model identity is taken from the mapped file itself rather than from ENC_KEYS/GEN_KEYS,
@@ -297,7 +316,7 @@ def shard_model_counts_in_mapped(root: Path) -> tuple[dict[int, int], int]:
     keyed by model key ("biomistral"). Deriving the expected set from the data keeps this
     agnostic to that naming split.
     """
-    mapped = mapped_outputs_path(root)
+    mapped = mapped_outputs_path(root, mapped)
     if not mapped.is_file():
         return {}, 0
     header = set(pd.read_csv(mapped, nrows=0).columns)
@@ -321,6 +340,7 @@ def complete_shards_for_grid(
     require_enc: bool = True,
     require_gen: bool = True,
     source: str = "any",
+    mapped: Path | str | None = None,
 ) -> list[int]:
     """Instance-blocks that are GRID-COMPLETE.
 
@@ -361,7 +381,7 @@ def complete_shards_for_grid(
     if source == "files":
         return by_files
 
-    counts, expected = shard_model_counts_in_mapped(root)
+    counts, expected = shard_model_counts_in_mapped(root, mapped)
     by_mapped = (
         [sid for sid in range(n) if counts.get(sid, 0) >= expected] if expected else []
     )
@@ -370,7 +390,9 @@ def complete_shards_for_grid(
     return sorted(set(by_files) | set(by_mapped))
 
 
-def assert_grid_counts_consistent(root: Path) -> dict[str, Any]:
+def assert_grid_counts_consistent(
+    root: Path, mapped: Path | str | None = None
+) -> dict[str, Any]:
     """Hard-error if the file view and the mapped view have drifted apart.
 
     The two views answer the same question from independent evidence, so a disagreement
@@ -385,9 +407,10 @@ def assert_grid_counts_consistent(root: Path) -> dict[str, Any]:
     """
     man = load_manifest(root)
     n = int(man.get("n_shards") or n_shards(int(man.get("n_instances") or 0)))
+    _mapped_path = mapped_outputs_path(root, mapped)
     by_files = complete_shards_for_grid(root, source="files")
-    counts, expected = shard_model_counts_in_mapped(root)
-    union = complete_shards_for_grid(root, source="any")
+    counts, expected = shard_model_counts_in_mapped(root, _mapped_path)
+    union = complete_shards_for_grid(root, source="any", mapped=_mapped_path)
 
     problems = []
     if counts and expected != len(ENC_KEYS) + len(GEN_KEYS):
@@ -411,9 +434,11 @@ def assert_grid_counts_consistent(root: Path) -> dict[str, Any]:
     if problems:
         raise AssertionError(
             "GRID COUNT DRIFT between shard files and "
-            f"{mapped_outputs_path(root)}:\n  - " + "\n  - ".join(problems)
+            f"{_mapped_path}:\n  - " + "\n  - ".join(problems)
         )
     return {
+        "mapped_corpus_read": str(_mapped_path),
+        "mapped_corpus_exists": _mapped_path.is_file(),
         "n_shards": n,
         "complete_by_files": by_files,
         "complete_by_mapped": sorted(sid for sid, c in counts.items() if c >= expected),
@@ -440,19 +465,24 @@ def concat_family_shards(
     return pd.concat(parts, ignore_index=True)
 
 
-def grid_status(root: Path) -> dict[str, Any]:
+def grid_status(root: Path, mapped: Path | str | None = None) -> dict[str, Any]:
     man = load_manifest(root)
     n = int(man.get("n_shards") or 0)
     # Compute the three views from ONE file validation and ONE read of the mapped CSV.
     # Calling complete_shards_for_grid() once per view re-ran the sha256 sidecar check
     # each time, and this runs once per model invocation.
+    _mapped_path = mapped_outputs_path(root, mapped)
     _by_files = complete_shards_for_grid(root, source="files")
-    _counts, _expected = shard_model_counts_in_mapped(root)
+    _counts, _expected = shard_model_counts_in_mapped(root, _mapped_path)
     _by_mapped = (
         sorted(sid for sid, c in _counts.items() if c >= _expected) if _expected else []
     )
     _union = sorted(set(_by_files) | set(_by_mapped))
     out = {
+        # NAMED FIRST, deliberately: every consumer of this dict prints it, so the file the
+        # counts came from is visible at a glance rather than assumed.
+        "mapped_corpus_read": str(_mapped_path),
+        "mapped_corpus_exists": _mapped_path.is_file(),
         "n_instances": man.get("n_instances"),
         "n_shards": n,
         "shard_size": man.get("shard_size"),

@@ -49,9 +49,17 @@ RQ4 pass is an open decision -- see `docs/BUG_AUDIT.md` W1.
 
 12. `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb`
 13. `notebooks/05_analysis/RQ2_Accuracy_Stability_Dissociation.ipynb`
-14. `notebooks/05_analysis/RQ3_matched_pairs.ipynb`: MM + CADEC only. One-sided Mann–Whitney U, BH-FDR, bootstrap CI → `outputs/rq3/tables/rq3_matched_pair_statistics.csv`.
+14. `scripts/rq3_matched_pairs.py`: MM + CADEC. **Wilcoxon signed-rank with Holm** as the
+    primary correction and `|rank-biserial| >= 0.10` as the effect gate (Amendments 3 and 4);
+    one-sided Mann–Whitney with BH-FDR is retained only as the labelled sensitivity column
+    `supports_under_bh_on_mwu`. Bootstrap CI on the rank-biserial.
+    → `outputs/rq3/rq3_matched_pair_statistics_{cadec,medmentions}.csv`.
+    The notebook that used to be named here implemented BH-FDR as the primary and is now
+    `notebooks/_legacy/RQ3_matched_pairs_PRE_AMENDMENT4_bhfdr.ipynb`, which raises on cell 0.
+    `outputs/rq3/rq3_matched_pair_statistics.csv` (unsuffixed, 13 Sep) is its stale output and
+    feeds nothing.
 15. `notebooks/05_analysis/RQ4_margin_benchmark.ipynb`: **sole writer** of concept-lane `rq4_aurc_*` / `rq4_risk_coverage_margin_{medmentions,cadec}` / `rq4_combined3_wintest.csv` / `rq4_aurc_bootstrap_ci.csv`. Paired bootstrap B=2000, `default_rng(42)`, Holm on the **6 concept-lane headline cells only** (QA is out of Holm). Does not read `umls_candidate_margin_qa.csv`.
 
 Optional figures (after 15): `RQ4_four_dataset_figures.ipynb` (concept curves from step 15; **no QA AURC panels** from the Holm/margin benchmark: QA UMLS-margin CSV is supplementary), `RQ4_Results_compiled.ipynb`.
 
-`RQ3_Domain_Adaptation_Semantic_Stability.ipynb` lives in `notebooks/_legacy/` (not this order). Live RQ3 is step 14. Other backups are also in `_legacy/`.
+`RQ3_Domain_Adaptation_Semantic_Stability.ipynb` lives in `notebooks/_legacy/` (not this order). Live RQ3 is step 14, which is a SCRIPT, not a notebook. Other backups are also in `_legacy/`.

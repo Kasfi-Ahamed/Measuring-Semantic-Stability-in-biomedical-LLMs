@@ -10,6 +10,12 @@
 > Read an entry's closing remedy as the operative part. The prose is a diagnosis; the `&&`,
 > the re-asserted receipt and the refusal-to-start are the treatment. An entry that ends in
 > description has not yet been fixed.
+>
+> **Detection rule, and it is cheap: a patch script in `scripts/apply_*.py` is evidence
+> AGAINST implementation, not for it.** If an amendment's rule is real, `grep` finds it in the
+> code that *produces* the artefact. If all you find is a script that edits the artefact after
+> the fact, the amendment is a snapshot and will revert on the next regeneration. Running that
+> one grep across all nine amendments took minutes and found Amendment 7 immediately.
 
 **Date:** 2026-09-10
 **Branch:** `chore/reproducible-structure` @ `968ba64`
