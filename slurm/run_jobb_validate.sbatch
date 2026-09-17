@@ -15,6 +15,10 @@
 # REPLICATE MODE: this run must reproduce 32768 exactly, so Amendment 7 is NOT applied here --
 # 32768 predates it. MM_EMPTY_POLICY is a required, explicit choice with no default.
 set -euo pipefail
+# Amendment 9: fix the hash seed for every mapping job. The terminal tie-break removes
+# the known set-ordering dependency; this defends against ones not yet found.
+export PYTHONHASHSEED=0
+
 cd "$HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"
 source slurm/_common.sh
 

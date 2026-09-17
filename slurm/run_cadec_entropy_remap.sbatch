@@ -33,6 +33,10 @@
 #   threshold band                                                ~1 min
 #   => ~30 min of work; 2 h is ~4x headroom.
 set -euo pipefail
+# Amendment 9: fix the hash seed for every mapping job. The terminal tie-break removes
+# the known set-ordering dependency; this defends against ones not yet found.
+export PYTHONHASHSEED=0
+
 cd "$HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"
 # shellcheck disable=SC1091
 source slurm/_common.sh

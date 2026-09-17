@@ -16,6 +16,10 @@
 # This re-maps CADEC from scratch with the amendment enforced and compares against the
 # surgically patched file row for row. Writes to a scratch path; touches no analysis artefact.
 set -euo pipefail
+# Amendment 9: fix the hash seed for every mapping job. The terminal tie-break removes
+# the known set-ordering dependency; this defends against ones not yet found.
+export PYTHONHASHSEED=0
+
 cd "$HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"
 source slurm/_common.sh
 export CADEC_FORCE_REMAP=1
