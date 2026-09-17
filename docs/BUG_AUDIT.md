@@ -1668,3 +1668,55 @@ line from running.
 Each of these replaced a check that was already correct. None of them added information the
 pipeline did not have. They connected it to a decision, which is the only thing that has ever
 worked.
+
+
+---
+
+# Amendment 7 never existed in CADEC's code — 2026-09-17
+
+**Class:** verified-but-not-enforced, in its purest form yet. The amendment was verified by
+patching an artefact. The code that regenerates that artefact never implemented it. The moment
+the artefact was regenerated, the amendment evaporated.
+
+## How it surfaced
+
+Job `33340` re-mapped CADEC under Amendment 9. The before/after showed entropy moving on 45
+cells, **44 up and 0 down**. Chasing that direction, the collision check found that **82 of the
+86 changed variants inside those cells moved out of UNASSIGNED**, with:
+
+| | before (`_PRETIEBREAK`) | after (`33340`) |
+|---|---|---|
+| `assign_rule_path` | `empty_output` × 82 | `no_exact_match+st21pv+encoder_cosine+freq_tiebreak` × 82 |
+| `predicted_cui` | UNASSIGNED | **`C6024506` × 82** |
+| `confidence` | 0.0 | **0.9899882078170776**, identical on all 82 |
+
+`C6024506` is the empty-string embedding artefact **named in this file as the original defect**.
+Amendment 7 was written to eliminate it. The re-map put all 82 rows straight back onto it.
+
+## Why
+
+`scripts/apply_amendment7_cadec.py` patched the 82 rows of the frozen CSV. Grepping the CADEC
+notebook for `empty_output`, `EMPTY_POLICY`, `Amendment 7`, or an empty-string test returns
+**nothing** — the mapping path has no empty-output branch at all. The MedMentions notebook has
+one (`_is_empty`, `_pred_path[_i] = "empty_output"`, `MM_EMPTY_POLICY` required with no
+default). CADEC never got it.
+
+So Amendment 7 held for CADEC only for as long as nobody re-ran the mapping.
+
+## The assertion that should have caught it, and did not exist
+
+The launcher `slurm/run_cadec_amendment9_remap_g16.sbatch` states, in a comment I wrote:
+
+> Amendment 7 (empty generation -> UNASSIGNED, **enforced in the assign path** rather than
+> patched after)
+
+That was asserted, not checked. A one-line receipt — *empty `output_text` rows carrying an
+assignment must be zero* — would have failed the job instead of shipping a contaminated corpus
+into the canonical path. It is the same receipt the concatenation design already requires for
+MedMentions (receipt 6), which is where the idea came from; nobody applied it to CADEC.
+
+## Status
+
+`outputs/rq3/entropy_cadec.csv` and `rq3_cadec_mapped_outputs.csv` from `33340` are **not
+canonical** and must not feed any table. Not deleted, not overwritten — reported. The fix is a
+code change to a production notebook and is the user's call, not the operator's.
