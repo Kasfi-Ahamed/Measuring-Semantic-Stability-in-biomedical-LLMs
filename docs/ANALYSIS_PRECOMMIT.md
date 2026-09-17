@@ -745,3 +745,81 @@ The `Group Var` row that MixedLM added is removed; the part-2 table returns to 1
 CADEC and MedMentions alike, primary and raw-m arms alike. The enforcement lives in
 `fit_magnitude` in `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb`, so no
 caller can re-introduce the selection.
+
+---
+
+# Amendment 9 — terminal deterministic tie-break (2026-09-17)
+
+**Recorded BEFORE any code change and BEFORE any re-run.** The tie-break direction is fixed
+here without reference to what it does to any result.
+
+## The rule
+
+In the five-rule assignment, after every existing ordering key has been applied and still
+leaves two or more candidates tied, **the candidate with the lexicographically smallest concept
+identifier (CUI string) wins.**
+
+Concretely, the final sort key becomes:
+
+```
+(_cui_n_forms[cui]  DESC,   score  DESC,   cui  ASC)
+```
+
+The first two keys are unchanged. The third is new and is **total**: two distinct candidates
+cannot tie on it, because two distinct candidates have distinct CUIs.
+
+Applies to **both corpora** — `CADEC_entropy.ipynb` and `RQ1_PART2_full_umls_pool.ipynb` — so
+CADEC and MedMentions are produced under one rule.
+
+`PYTHONHASHSEED` is additionally fixed for every mapping job. The tie-break removes the known
+set-ordering dependency; the seed defends against ones not yet found. Both, not either.
+
+## Why, and why now
+
+Experiment E1 (job 33221, 2026-09-17) mapped MedMentions block 6 twice **in one job, on one
+GPU, with one code version**, differing only in which file the model outputs were read from:
+
+| column | differing rows of 370,428 |
+|---|---:|
+| `confidence` | **0** (0.000000%) |
+| `assign_rule_path` | **0** (0.000000%) |
+| `predicted_cui` | **1,007 (0.271848%)** |
+
+`output_text` was identical on all 370,428 rows, and the row-count receipt held at 370,428 at
+both the block filter and the assign gate in both arms.
+
+Identical inputs, bit-identical scores, identical rule paths, **different concept on 0.27% of
+rows**. The cause is that the candidate list is built by iterating Python `set` objects
+(`_form_to_cuis` is a `defaultdict(set)`; `exact_cuis` is a `set`) and `list.sort` is stable, so
+a tie on `(n_forms, score)` is resolved by set-iteration order, which depends on per-process
+string hash randomisation.
+
+**The manuscript already names a terminal deterministic tie-break as the fix and defers it to
+future work.** That deferral is no longer tenable: this study pre-registers
+*"predicted_cui identical on 100% of rows"* as a gate (§ de-duplication equivalence), and a
+mapping stage that fails that gate **against itself** cannot ship behind it.
+
+## Direction, and why it is arbitrary-but-fixed
+
+Lowest CUI string is **not** claimed to be the better concept. It is chosen because it is
+total, cheap, and independent of anything about the data or the results. Any total order would
+do; what matters is that it is fixed in advance and applied identically to both corpora. It is
+recorded here before the rule is implemented so that it cannot be selected for its effect.
+
+## Receipt
+
+After assignment, the run asserts that the candidate ordering is **fully determined**: no two
+candidates tie on all keys including the terminal one. Under this rule such a tie is
+impossible, not merely unlikely, so the assertion is a statement about the code rather than
+about the data.
+
+## Expected effect, recorded before measurement
+
+CADEC and MedMentions numbers will move. The magnitude is **not** predicted here beyond the
+observation that E1 moved 0.27% of assignments, and that an assignment moving and a
+*measurement* moving are different magnitudes — a swapped singleton CUI may leave the
+instance's cluster structure and therefore its entropy unchanged. That difference is measured
+and reported, not assumed.
+
+Every pre-registered analysis decision (§3 denominator, §4 comparator, Amendments 3, 4, 7, 8)
+is unchanged.
