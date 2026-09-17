@@ -1,4 +1,4 @@
-# outputs/ MANIFEST — gitignored artefacts and how to regenerate
+# outputs/ MANIFEST: gitignored artefacts and how to regenerate
 
 Committed: small summary CSVs and figures under `outputs/rq1|rq3|rq4|qa|figures`.
 

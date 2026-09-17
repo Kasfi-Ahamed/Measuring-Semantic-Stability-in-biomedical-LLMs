@@ -823,3 +823,42 @@ and reported, not assumed.
 
 Every pre-registered analysis decision (§3 denominator, §4 comparator, Amendments 3, 4, 7, 8)
 is unchanged.
+
+
+---
+
+## Pre-registered corpus totals for the cutoff re-map — 2026-09-17
+
+Recorded **before** job A ran, so the row-count receipts are a prediction and not a description.
+
+| part | blocks | source | expected rows |
+|---|---|---|---:|
+| A | 6–18 (13) | shard CSVs | **4,774,988** |
+| B | 0–5, 19 (7) | `output_text` in the contaminated mapped file | **2,557,257** |
+| **new canonical corpus** | 0–19 (20) | concatenation of A and B | **7,332,245** |
+
+**The derivation's own validation.** Block 6 is the one block present in both sources: the shard
+CSVs hold **370,428** rows for it and the existing mapped file holds **370,428** rows for it.
+The counting rule is therefore checked against a known-good case before being trusted on the
+twelve blocks it has never been applied to.
+
+**Why the total is not a tautology.** `total == A + B` is true by construction of any
+concatenation. The assertion that carries information is that each part matches the number
+derived from its source *in advance*, and that the block set resolves to exactly `[0..19]`.
+
+**Receipts asserted at the join**, none inferred:
+
+1. exactly 20 blocks, and they are `[0..19]` — derived by joining `instance_id` to the ordinal
+   in `mm_shards/instance_index.csv` and taking `ordinal // 8000`
+2. **zero unresolved `instance_id`s** against that index
+3. part row counts equal the pre-registered numbers above; total equals their sum
+4. zero rows carrying `exact_match_inject`
+5. Amendment 9 receipt read from each part's `*.amendment9_receipt.json`: evaluations non-zero,
+   violations zero, in **both** parts
+6. zero rows with empty `output_text` carrying an assignment
+
+**Scope correction, recorded because it changes what a before/after can mean.** The existing
+mapped file contains **8** blocks, `[0,1,2,3,4,5,6,19]`, not 20. Blocks 7–18 (4,404,560 rows)
+have never been mapped. The cutoff re-map is therefore a re-map of 8 blocks and a **first map of
+12**, and the new corpus is **2.50×** the size of the contaminated one. No before/after
+comparison is possible for blocks 7–18, because there is no "before".

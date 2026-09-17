@@ -1,4 +1,4 @@
-# Measuring Semantic Stability in Clinical LLMs — central config.
+# Measuring Semantic Stability in Clinical LLMs: central config.
 # Paths under data_root live OUTSIDE git (licence + size). Outputs stay in-repo.
 
 project_name: Measuring-Semantic-Stability-in-Clinical-LLMs
@@ -19,7 +19,7 @@ umls:
   sapbert_id: cambridgeltl/SapBERT-from-PubMedBERT-fulltext
   sapbert_revision: 090663c3ae57bf35ffe4d0d468a2a88d03051a4d
   faiss_index_type: IndexFlatIP
-  faiss_top_k: 1000
+  faiss_top_k: 1000  # LOCKED; RQ4_MARGIN_DATASET=cadec|medmentions for margin notebook
   confidence_threshold: 0.70
   freq_tiebreak_delta: 0.02
 
@@ -29,8 +29,9 @@ datasets:
     extract: Datasets/MedMentions_extracted/MedMentions-master/st21pv/data/corpus_pubtator.txt.gz
     n_mentions_source: 203282
     n_abstracts: 4392
+    n_eligible_true_full: 202109  # quality + context>=20, gold mention>=2, gold CUI; no FULL_TARGET_N
     sample_seed: 42
-    # Full run: no PILOT_N / FULL_TARGET_N cap (see Phase 2).
+    # True-full: all eligible mentions. Seed 42 residual ordering only.
   cadec:
     text_dir: ~/data/cadec/data/cadec/text
     sct_dir: ~/data/cadec/data/cadec/sct
@@ -47,7 +48,7 @@ datasets:
     split: validation
     local_zip: Datasets/SQuAD2.0
     n_validation: 11873
-    subsample: null  # full validation; historical pilot used 1000 / seed 13
+    subsample: null  # full validation n=11873; notebook CFG must match (not 1000)
     seed: 13
 
 perturbation:

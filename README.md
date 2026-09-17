@@ -35,7 +35,7 @@ Code for measuring **meaning-preserving perturbation** stability of clinical / b
 | Mapping + entropy | `notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb`, `CADEC_entropy.ipynb` |
 | RQ1 hurdle | `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb` |
 | RQ2 | `notebooks/05_analysis/RQ2_Accuracy_Stability_Dissociation.ipynb` |
-| RQ3 | `notebooks/05_analysis/RQ3_matched_pairs.ipynb`, `RQ3_Domain_Adaptation_Semantic_Stability.ipynb` |
+| RQ3 | `notebooks/05_analysis/RQ3_matched_pairs.ipynb` (MM+CADEC; `rq3_matched_pair_statistics.csv`) |
 | RQ4 | `notebooks/05_analysis/RQ4_margin_benchmark.ipynb` (+ mapping in `03_mapping_entropy/`) |
 | QA lane | `notebooks/04_qa_lane/QA_answer_level_semantic_entropy.ipynb` |
 
