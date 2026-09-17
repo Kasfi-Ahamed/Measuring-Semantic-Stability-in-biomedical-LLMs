@@ -64,6 +64,23 @@ def main() -> int:
     if r.get("failures"):
         problems.append(f"receipt lists failures: {r['failures']}")
 
+    # The arms must be declared as same-source or not. A receipt that omits the question
+    # cannot be read as answering it, so absence is a failure, not a pass.
+    if "arms_same_source" not in r:
+        problems.append(
+            "receipt does not state arms_same_source — it cannot be read as a controlled "
+            "comparison without saying whether both arms ran the same code"
+        )
+    elif r["arms_same_source"] is not True:
+        note = r.get("arms_same_source_accepted")
+        if not note:
+            problems.append(
+                "arms_same_source is False and no arms_same_source_accepted rationale is "
+                "recorded — a known-asymmetric comparison must be accepted explicitly"
+            )
+        else:
+            print(f"E1 GATE WARNING: arms were NOT compiled from the same source.\n  {note}")
+
     if problems:
         sys.exit("E1 GATE: refusing to start —\n  - " + "\n  - ".join(problems))
 

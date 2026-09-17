@@ -88,6 +88,20 @@ def main() -> int:
             "differing_rows": {c: int(diff_counts.get(c, -1)) for c in COLS},
             "confidence_tolerance": TOL,
             "failures": fails,
+            # CODE IDENTITY PER ARM. The comparison proves the two SOURCES agree; it says
+            # nothing about whether the two arms were compiled from the same code. Job 33345
+            # ran with a notebook patch landing between its arms, and the receipt as first
+            # written would have read as a clean controlled comparison. A receipt that
+            # overstates its own conditions is the failure mode being closed here.
+            "code_identity": {
+                "arm_reference": os.environ.get("E1_ARM_A_SHA") or None,
+                "arm_candidate": os.environ.get("E1_ARM_B_SHA") or None,
+                "notebook_snapshot": os.environ.get("E1_NB_SNAPSHOT") or None,
+            },
+            "arms_same_source": (
+                bool(os.environ.get("E1_ARM_A_SHA"))
+                and os.environ.get("E1_ARM_A_SHA") == os.environ.get("E1_ARM_B_SHA")
+            ),
             "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
             "written_utc": datetime.now(timezone.utc).isoformat(),
         }, indent=2))

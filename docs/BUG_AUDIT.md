@@ -1780,3 +1780,57 @@ rather than rules. Two carry a live risk:
   `mm_shard_lib.mapped_outputs_path()` returns `rq1_all_outputs_mapped.csv` literally. The
   cutoff re-map writes `rq1_all_outputs_mapped_A9_partA.csv`, so grid-completeness will keep
   reporting against the old contaminated corpus unless the join accounts for it.
+
+
+---
+
+# A code change landing between two arms of a controlled comparison — 2026-09-17
+
+**Class:** an experiment that holds one variable by design, run by a harness that re-reads its
+code at each arm, while the code changes between them. The comparison still produces a verdict.
+The verdict still gets written down. Nothing anywhere states that the two arms were built from
+the same source, so the receipt reads as a clean controlled comparison and is not one.
+
+## The instance
+
+Experiment E1 (job `33345`) asks whether the mapped-file route reproduces the shard-CSV route,
+holding hardware, allocation, seed and code constant and varying only the source. It calls
+`scripts/exec_notebook.py` **twice**, and that script reads the notebook fresh on each call:
+
+```
+nb = json.loads(nb_path.read_text(encoding="utf-8"))
+```
+
+E1 started 10:57:14 with the tree at `68cf968`. Commit `ae791c4` landed at 11:53, between the
+arms. So arm A ran notebook `43b70f25…` and arm B ran `4b27db70…`.
+
+| arm | source | notebook sha256 |
+|---|---|---|
+| A, shards | `68cf968` | `43b70f2597c84bfe…` |
+| B, mapped | `ae791c4` | `4b27db70cb6a04d0…` |
+
+Corroborated behaviourally rather than assumed: the shards arm left no
+`amendment9_receipt.json` and the mapped arm did, and that write exists only in `ae791c4`.
+
+## Why it did not invalidate the result, and why that is luck
+
+The diff was the `MM_OUT_MAPPED` destination override and the receipt-JSON write. Neither
+touches the assign path, and **the experiment proves it**: had the change reached assignment,
+the arms would have differed, and they agree on 370,428 rows across all three columns. An inert
+change shown inert by the very experiment it could have confounded is the acceptable version of
+this. It is not a defence of the design — a patch one cell over would have been silent.
+
+## Remedy — mechanical
+
+1. **The launcher snapshots the notebook once and runs both arms from the snapshot.**
+   `cp` to `$ROOTDIR/_snapshot_*.ipynb`, hash it, point both `exec_notebook.py` invocations at
+   that copy. A commit landing mid-experiment can no longer reach either arm.
+2. **The receipt carries code identity per arm**, plus `arms_same_source`. The comparison proves
+   the two *sources* agree; only this states the two arms were the same *code*.
+3. **The gate refuses a receipt that omits the question.** `arms_same_source` absent is a
+   failure, not a pass — a receipt silent on a condition cannot be read as satisfying it. If it
+   is `false`, an explicit `arms_same_source_accepted` rationale is required and printed as a
+   warning, so a known-asymmetric comparison is accepted deliberately and visibly.
+
+Verified: field absent → rc=1; false with no rationale → rc=1; false with rationale → rc=0 and
+the warning printed.

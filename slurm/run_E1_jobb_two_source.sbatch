@@ -30,6 +30,14 @@ source slurm/_common.sh
 BLOCK="${E1_BLOCK:-6}"
 EXPECT="${E1_EXPECT_ROWS:?set E1_EXPECT_ROWS to the exact row count for this block, e.g. 370428}"
 ROOTDIR="$PWD/outputs/scratch/E1"
+# CODE IDENTITY. Snapshot the notebook ONCE and run BOTH arms from that copy, so a commit
+# landing mid-experiment cannot change the code between arm A and arm B. Job 33345 ran arm A
+# on the pre-patch notebook and arm B on the post-patch one, because exec_notebook.py reads
+# the file at each invocation and E1 invokes it twice. The arms agreed anyway, which is what
+# showed the patch was inert -- but that was luck about the content of the patch, not a
+# property of the design.
+E1_NB_SRC="notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb"
+E1_NB_SNAPSHOT="$ROOTDIR/_snapshot_RQ1_PART2_full_umls_pool.ipynb"
 A="$ROOTDIR/shards"
 B="$ROOTDIR/mapped"
 
@@ -40,16 +48,23 @@ nvidia-smi --query-gpu=name --format=csv,noheader
 # Fresh scratch. Validation refuses to start on a dirty directory, by design.
 rm -rf "$A" "$B"; mkdir -p "$A" "$B"
 
+# Take the snapshot now, and hash it. Both arms execute THIS file; neither reads the tree.
+cp "$E1_NB_SRC" "$E1_NB_SNAPSHOT"
+E1_ARM_SHA="$(sha256sum "$E1_NB_SNAPSHOT" | cut -d" " -f1)"
+export E1_NB_SNAPSHOT E1_ARM_A_SHA="$E1_ARM_SHA" E1_ARM_B_SHA="$E1_ARM_SHA"
+echo "notebook snapshot: $E1_NB_SNAPSHOT"
+echo "both arms sha256 : $E1_ARM_SHA"
+
 echo; echo "--- A) source = shard CSVs, block $BLOCK ---"
 MM_MAP_BLOCKS="$BLOCK" MM_MAP_SOURCE=shards MM_SCRATCH_DIR="$A" \
   MM_EMPTY_POLICY=unassigned MM_EXPECT_ROWS="$EXPECT" \
-  "$PY" scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
+  "$PY" scripts/exec_notebook.py "$E1_NB_SNAPSHOT"
 
 echo; echo "--- B) source = output_text in the mapped file, block $BLOCK ---"
 MM_MAP_BLOCKS="$BLOCK" MM_MAP_SOURCE=mapped MM_SCRATCH_DIR="$B" \
   MM_MAPPED_SRC="$PWD/outputs/rq1/intermediate/rq1_all_outputs_mapped.csv" \
   MM_EMPTY_POLICY=unassigned MM_EXPECT_ROWS="$EXPECT" \
-  "$PY" scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
+  "$PY" scripts/exec_notebook.py "$E1_NB_SNAPSHOT"
 
 echo; echo "--- row-for-row comparison, A vs B, same GPU same run ---"
 # The verdict is written as a FILE, not only printed. Job B refuses to start without it:
