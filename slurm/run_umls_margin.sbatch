@@ -17,6 +17,11 @@ export HF_HOME="$HOME/data/hf_cache"
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
+# Amendment 9: fix the hash seed for every job that touches the candidate pool. The
+# margin path builds _form_to_cuis as a defaultdict(set) and re-derives per-form CUI
+# sets, so it is the same class of set-iteration exposure as the mapping itself. The
+# 803093e sweep patched 13 launchers and missed these two.
+export PYTHONHASHSEED=0
 
 echo "=== $(date) job ${SLURM_JOB_ID:-local} on $(hostname) ==="
 echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
