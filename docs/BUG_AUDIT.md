@@ -1720,3 +1720,57 @@ MedMentions (receipt 6), which is where the idea came from; nobody applied it to
 `outputs/rq3/entropy_cadec.csv` and `rq3_cadec_mapped_outputs.csv` from `33340` are **not
 canonical** and must not feed any table. Not deleted, not overwritten — reported. The fix is a
 code change to a production notebook and is the user's call, not the operator's.
+
+
+---
+
+# An amendment applied to data is a snapshot, not a fix — 2026-09-17
+
+**Class:** the rule is recorded in the pre-commitment and applied to the *artefact* — by a patch
+script, a manual edit, or a one-off correction — but never written into the code path that
+produces that artefact. It holds for exactly as long as nobody regenerates the file, and then
+reverts **silently**, because regeneration is a success path and prints no warning.
+
+Distinct from *verified-but-not-enforced*: there, the check runs and its result is ignored.
+Here, no check exists at all — the amendment was never a check, only an edit. The two met in
+this incident, because the launcher comment asserting Amendment 7 was "enforced in the assign
+path" was verified-but-not-enforced in its own right: an assertion written without checking.
+
+**Detection rule.** An amendment is only real if `grep` finds its rule in the producer. A patch
+script in `scripts/apply_*.py` is evidence *against* implementation, not for it.
+
+## Audit of all nine amendments, per corpus (read-only, 2026-09-17)
+
+| # | rule | CADEC | MedMentions |
+|---|---|---|---|
+| §3a | deduplicated m is PRIMARY, raw m a labelled sensitivity | **implemented** | **implemented** |
+| 1 | grid-completeness counts mapped blocks, not only surviving CSVs | n/a | **implemented** ⚠ |
+| 2 | gate-criterion revision; decision *not* to change the tie-break | **document-only by design** | n/a |
+| 3 | RQ3 effect gate \|rank-biserial\| >= 0.10 | **implemented** | **implemented** |
+| 4 | RQ3 Holm primary, BH-FDR a labelled sensitivity | **implemented** ⚠ | **implemented** ⚠ |
+| 5 | disclosure of a second duplicate-rate population | **document-only by design** | same |
+| 6 | early re-map, with void clause | n/a | **procedural**, verification due 21 Sep |
+| 7 | empty generation -> UNASSIGNED | **PATCHED-ONLY — reverted** | **implemented** |
+| 8 | RQ1 part 2 is OLS on logit(H); MixedLM sensitivity only | **implemented** | **implemented** |
+| 9 | terminal deterministic tie-break | **implemented** + receipt | **implemented** + receipt |
+
+Evidence for "implemented": §3a `H_COL = "normalised_entropy_dedup"` in `rq3_matched_pairs.py`,
+`rq2_cadec_report.py`, `s1_sensitivity_delta.py` and the RQ1 hurdle notebook's `entropy_col`,
+with `RQ_ENTROPY_ARM` defaulting to `dedup`; 3 `MIN_ABS_RB = 0.10  # Amendment 3 section 6`;
+4 `wilcoxon_p_holm` as primary with `supports_under_bh_on_mwu` as the labelled sensitivity;
+8 the notebook's `fit_magnitude` docstring and `method=` string naming Amendment 8, MixedLM
+recorded under `sensitivity_*`; 9 the receipt counters in both notebooks.
+
+**Only one outright failure: Amendment 7 on CADEC.** The rest are implemented or are records
+rather than rules. Two carry a live risk:
+
+- ⚠ **Amendment 4 has a second producer that still implements the superseded rule.**
+  `RUN_ORDER.md` step 14 names `notebooks/05_analysis/RQ3_matched_pairs.ipynb` — which contains
+  `bh_fdr` and writes `outputs/rq3/rq3_matched_pair_statistics.csv` (stale, 13 Sep) — as the
+  producer, describing it as "One-sided Mann-Whitney U, **BH-FDR**". The live artefact is the
+  `_cadec` file from `scripts/rq3_matched_pairs.py`, which is correct. Anyone following the
+  documented run order reinstates the pre-Amendment-4 rule.
+- ⚠ **Amendment 1's implementation is pinned to a hardcoded path.**
+  `mm_shard_lib.mapped_outputs_path()` returns `rq1_all_outputs_mapped.csv` literally. The
+  cutoff re-map writes `rq1_all_outputs_mapped_A9_partA.csv`, so grid-completeness will keep
+  reporting against the old contaminated corpus unless the join accounts for it.
