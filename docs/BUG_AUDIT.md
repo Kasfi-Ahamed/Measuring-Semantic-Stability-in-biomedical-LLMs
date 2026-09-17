@@ -1,5 +1,16 @@
 # Bug audit — read-only static review
 
+> **A documented pattern is not a guardrail.**
+>
+> This is why the file exists and why the file is not sufficient. Every instance of
+> verified-but-not-enforced recorded below was committed by someone who already knew the
+> pattern — including the two committed on 2026-09-17, *after* the entry naming it was written.
+> Writing it down did not prevent the next one. Chaining the check to the action did.
+>
+> Read an entry's closing remedy as the operative part. The prose is a diagnosis; the `&&`,
+> the re-asserted receipt and the refusal-to-start are the treatment. An entry that ends in
+> description has not yet been fixed.
+
 **Date:** 2026-09-10
 **Branch:** `chore/reproducible-structure` @ `968ba64`
 **Method:** static analysis only (grep / AST+JSON parsing of notebooks / read-only path
@@ -1621,22 +1632,39 @@ that verification and action were not connected.
 | RQ1 `fit_magnitude` | `Logit: Singular matrix` was printed at the fit site | the verdict block printed a null result 100 lines below it |
 | `RQ4_umls_candidate_margin` cell 5 | margin variance inside H=0 was asserted | the property that mattered, predictiveness, was never checked |
 | MedMentions validation mode | `assert len(df_model_part1) > 0` ran | the frame was emptied *after* it, by the incremental branch |
+| Amendment 9 insertion (`33309`) | the edit script raised on a bad cell anchor | `git commit` and `sbatch` were on the next lines and ran regardless |
+| Amendment 9 receipt, first draft | the tie-break asserted no violations | a run that never reached rule 5 would have asserted nothing and looked clean |
 
 The related but distinct classes already recorded above — count-vs-identity,
 assertion-strength, broad-except-over-a-fit, stale-narrative — are all specialisations of the
 same failure: **the pipeline knew, and the knowledge did not reach the decision.**
 
-## The general remedy, as applied
+## The remedy — mechanical forms only
 
-Not more checks. Checks positioned where they gate:
+Not more checks, and not more prose. A check earns its place only where it can stop the next
+line from running.
 
-- **`bash -n … && sbatch …`** — verification and action in one expression.
-- **The row-count receipt** (2026-09-17): the expected row count is pinned at the block filter
-  and **re-asserted at the assign gate**, so any branch between them that changes the row
-  population is an error. `len > 0` caught nothing because emptiness was never the failure;
-  wrongness was. A receipt that is checked once is a comment; one that is checked again at the
-  point of use is a gate.
-- **Refuse-to-start over assert-later** — validation mode now raises `FileExistsError` if the
-  scratch output already exists, naming the specific way job `33217` consumed a previous run's
-  output as a production cache. A precondition that prevents the run beats an assertion that
-  describes the wreckage.
+1. **`&&` between the check and the act.** `bash -n script && sbatch script`. The E1 launcher
+   had the right check on the wrong line; `33220` and, a day later, `33309` were both submitted
+   behind a verification that had already failed. One operator fixes both. Applied to every
+   launcher and to every edit-then-commit-then-submit chain.
+
+2. **A receipt re-asserted at the point of use.** The expected row count is pinned at the block
+   filter and checked *again* at the assign gate, so any branch between them that changes the
+   row population is an error. `len > 0` caught nothing, because emptiness was never the
+   failure — wrongness was. A receipt checked once is a comment; a receipt checked again where
+   it matters is a gate.
+
+3. **A refusal to start, over an assertion after the fact.** Validation mode raises
+   `FileExistsError` when the scratch output already exists — the specific way `33217` consumed
+   a previous run's output as a production cache. A precondition that prevents the run beats an
+   assertion that describes the wreckage.
+
+4. **A positive receipt, over silence.** The Amendment 9 tie-break prints its counts and asserts
+   two things: violations are zero **and** the tie-break was evaluated a non-zero number of
+   times. A run that skipped rule 5 entirely can no longer be reported as having satisfied the
+   rule. Absence of an error is not evidence that the check ran.
+
+Each of these replaced a check that was already correct. None of them added information the
+pipeline did not have. They connected it to a decision, which is the only thing that has ever
+worked.
