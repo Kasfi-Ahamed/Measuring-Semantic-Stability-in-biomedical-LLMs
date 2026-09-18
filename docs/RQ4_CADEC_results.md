@@ -11,6 +11,17 @@ not normalised by domain width. This is the pre-registered estimator
 on 2026-09-14; it had been integrating a per-instance curve over 1/n..1.00 and reporting
 0.75804 where the tables said 0.68872 (docs/BUG_AUDIT.md).
 
+> **B = 20,000 on this page is true of CADEC and was NOT true of the six-cell Holm family
+> until 2026-09-18.** These tables come from `scripts/rq4_bootstrap_calibrate.py --full`,
+> which has implemented B = 20,000 and the `(r + 1) / (B + 1)` estimator since it was written.
+> The Holm family across both datasets is produced by a **different** file,
+> `notebooks/05_analysis/RQ4_margin_benchmark.ipynb`, and that notebook ran **B = 2000 with a
+> plain-proportion p-value** for the seven days after section 1 went FINAL on 2026-09-11. It
+> was brought into compliance on 2026-09-18. Nothing on this page is affected — the CADEC
+> numbers here were always produced at the pre-committed B — but no statement of the form
+> "RQ4 used B = 20,000" may be made about the Holm family for any artefact generated before
+> 2026-09-18. See `docs/AMENDMENT_IMPLEMENTATION_MATRIX.md`.
+
 **Read Table R3 first.** Risk at fixed coverage is domain-independent and interpretable;
 AURC integrates over coverages nobody operates at and is the supporting statistic.
 

@@ -927,3 +927,74 @@ mapped file contains **8** blocks, `[0,1,2,3,4,5,6,19]`, not 20. Blocks 7–18 (
 have never been mapped. The cutoff re-map is therefore a re-map of 8 blocks and a **first map of
 12**, and the new corpus is **2.50×** the size of the contaminated one. No before/after
 comparison is possible for blocks 7–18, because there is no "before".
+
+---
+
+# Reporting clarification — 2026-09-18
+
+**The test is unchanged. Only the naming and labelling of its output change.** No p-value, no
+family membership, no alpha, no estimator and no direction of any test is altered by this
+entry.
+
+**Provenance, which is what makes this a clarification and not a post hoc choice.** The defect
+was found by running `RQ4_margin_benchmark.ipynb` end to end **against the stale 13 September
+MedMentions margin file, with every output redirected to a throwaway directory**, as a
+rehearsal of the plumbing before the real run. No cut-off result existed at the time and none
+was inspected: A1 (`33870`) and A2 (`33871`) were still mapping, the corpus was not joined, the
+MedMentions margin for the cut-off had not been computed, and nothing from the rehearsal was
+written into `outputs/`, quoted, or retained. The isolation is checkable: every write in the
+notebook derives from `OUT_DIR` or `ALL_FIG`, both bound in cell 2, and both were rebound
+before the first cell that writes.
+
+## What was wrong
+
+The summary line read:
+
+    combined_3 vs best-single: 5 of 6 headline cells significant at 95% (6 survive Holm).
+
+Six cells cannot survive a correction that five passed uncorrected. The two counts were not
+commensurable: `significant` was `hi_b < 0.0`, a **one-sided** test for combined_3 being
+strictly better, while `holm_reject` runs on `boot_p`, which is **two-sided**
+(`2 * min(frac_ge, frac_le)`). A cell where combined_3 is significantly *worse* therefore
+recorded `significant=False` and `holm_significant=True`, and a column named
+`holm_significant` cannot be allowed to carry a loss.
+
+A second label was simply false about its own data: `cross = head[~head["significant"]]` was
+printed under the heading *"Point-wins whose 95% CI crosses zero"*, which selected
+not-a-one-sided-win, not CI-crosses-zero, and fired on a cell whose CI was entirely above zero.
+
+## The decision, and why the test stays two-sided
+
+**Procedural.** Switching to a one-sided family after a rehearsal in which five of six cells
+are wins and one is a significant loss would be choosing a test after seeing which direction
+the results fall — the exact thing this document exists to prevent, and visible to anyone who
+reads the commit dates. Holm already operates on the two-sided p, so keeping it leaves the
+pre-registered family untouched.
+
+**Substantive, and the stronger reason.** `best_single` is the argmin selected on the same
+data, so the comparison is biased towards it and against `combined_3`. A cell where combining
+is significantly worse is a real finding, and it is the same finding as contribution 3 being a
+**bound rather than a ranker**. A one-sided family would suppress evidence that supports the
+paper's own reframing.
+
+## What changes
+
+Three exhaustive, mutually exclusive categories per headline cell, in `holm_outcome`:
+
+| value | meaning |
+|---|---|
+| `rejected_combined3_better` | Holm rejects; point delta < 0, so combined_3 has the lower AURC |
+| `rejected_combined3_worse` | Holm rejects; point delta > 0, so combined_3 is worse |
+| `not_rejected` | Holm does not reject |
+
+(Rows outside the family carry `not_in_family`, and the partition is asserted at runtime.)
+
+Renames, so that no label can be false about its own data:
+
+- `holm_significant` -> **`holm_reject_two_sided`** — directionless, because the test is
+- `significant` -> **`combined3_better_ci_excludes_zero`** — says what it computes
+
+The "crosses zero" branch now computes the genuine condition, `ci_low < 0 < ci_high`, and
+reports it separately from the outcome categories. Losses are printed rather than filtered
+away, with the argmin-selection reason stated at the point of printing.
+
