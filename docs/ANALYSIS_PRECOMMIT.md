@@ -837,6 +837,41 @@ Recorded **before** job A ran, so the row-count receipts are a prediction and no
 | B | 0–5, 19 (7) | `output_text` in the contaminated mapped file | **2,557,257** |
 | **new canonical corpus** | 0–19 (20) | concatenation of A and B | **7,332,245** |
 
+**Part A was split on 2026-09-18.** Job `33347` hit its 16h wall at **97%** of the assign loop
+(2,895,864 of 2,978,947, 6m15s short) and wrote nothing. The FAISS top-1000 result is held in
+RAM and the only disk write is after the loop, so the run was unrecoverable and a resubmit at
+any wall time under ~16h would fail identically. Blocks 6–18 are therefore mapped as two parts:
+
+| part | blocks | source | expected rows |
+|---|---|---|---:|
+| A1 | 6–12 (7) | shard CSVs | **2,572,698** |
+| A2 | 13–18 (6) | shard CSVs | **2,202,290** |
+| A1 + A2 | 6–18 (13) | | 4,774,988 — identical to part A above |
+
+Derived from `rq1_all_model_outputs.csv` through `instance_index.csv`, `ordinal // 8000`.
+Per block: 6=370,428 7=366,248 8=368,306 9=362,857 10=368,316 11=368,788 12=367,755
+13=369,490 14=366,367 15=368,615 16=365,004 17=366,736 18=366,078. The join takes three parts;
+R3 binds per part and R1b is pairwise across all three pairs.
+
+### Corpus digests — the ledger
+
+`sha256` is recorded before anything consumes a part. Sidecar files live beside each corpus as
+`<name>.csv.sha256.json`, which is under a gitignored path, so the digests are additionally
+recorded here where they are version-controlled.
+
+| part | job | rows | bytes | sha256 |
+|---|---|---:|---:|---|
+| B | `33366` | 2,557,257 | 468,017,830 | `745bf2491d3fa76f6b3b9a8552576d42dab6404d4d04992672badc01355cc7b9` |
+| A1 | `33870` | *pending* | | |
+| A2 | `33871` | *pending* | | |
+
+Part B was written under the **old** write ordering — receipt first, corpus second — so the
+final name existing is not by itself evidence that the write completed. The digest is recorded
+for that reason. Its independent evidence is a row count equal to the pre-registered figure and
+an Amendment 9 receipt with 1,579,573 evaluations and zero violations. A1 and A2 run under the
+new ordering (corpus to a temporary name, then receipt, then `os.replace`), where the final
+name cannot exist unless the write finished.
+
 **The derivation's own validation.** Block 6 is the one block present in both sources: the shard
 CSVs hold **370,428** rows for it and the existing mapped file holds **370,428** rows for it.
 The counting rule is therefore checked against a known-good case before being trusted on the
@@ -856,6 +891,20 @@ derived from its source *in advance*, and that the block set resolves to exactly
 5. Amendment 9 receipt read from each part's `*.amendment9_receipt.json`: evaluations non-zero,
    violations zero, in **both** parts
 6. zero rows with empty `output_text` carrying an assignment
+
+**Three further gates were ADDED on 2026-09-17, during implementation, and are NOT
+pre-registered.** `scripts/a9_concat_corpus.py` fires nine checks, not six. The three below
+were written while implementing the six above and were never committed to in advance; they
+are reported as additions wherever the join's receipts are reported, including in the
+supplementary:
+
+- **R0** — the parts have identical column sets
+- **R1b** — the parts are disjoint by block; no block appears in more than one part
+- **POST-WRITE** — rows written equals rows scanned, asserted after the concatenation loop
+
+They are integrity checks on the join script's own behaviour rather than evidence about the
+corpus, which is the substantive reason they sit in a different class from items 1-6 above,
+and not merely the chronological one. The script's docstring carries the same split.
 
 **Scope correction, recorded because it changes what a before/after can mean.** The existing
 mapped file contains **8** blocks, `[0,1,2,3,4,5,6,19]`, not 20. Blocks 7–18 (4,404,560 rows)

@@ -1676,6 +1676,74 @@ pipeline did not have. They connected it to a decision, which is the only thing 
 worked.
 
 
+## The sibling class — disabled by default, and silent about it (2026-09-18)
+
+**Class:** a guard whose predicate is populated from a variable the caller may not set is
+**disabled by default**, and its log is silent about being disabled. Absence in a log is then
+ambiguous between "the check passed" and "the check never ran", which is strictly worse than
+a check that is simply missing: a missing check is visible in the code, whereas this one reads
+as present and reports nothing either way.
+
+### The instance that named it
+
+Job `33347` (job A of the cutoff re-map) set `MM_EXPECT_ROWS=4774988`. The value was correct.
+It was **never asserted**. The row-count receipt at cell 11 lines 301-307 and again at 343-349
+sits inside `if _VALIDATE_BLOCKS:`, and `_VALIDATE_BLOCKS` is populated from `MM_MAP_BLOCKS`,
+which job A does not set — its scope is derived from `assemble_partial_grid` instead. So the
+launcher declared an expectation, the notebook read it into `_N_EXPECT`, and nothing compared
+it to anything. Job A's log contains **zero** `ROW-COUNT RECEIPT` lines; job B's contains two.
+
+The two variables are unrelated in meaning. `MM_EXPECT_ROWS` says how many rows there should
+be; `MM_MAP_BLOCKS` says which blocks to map. Gating the first on the second couples an
+assertion to a scoping flag, and the coupling is invisible at the call site — the launcher
+looks correct, because it *is* correct about its own intent.
+
+### Sweep of cell 11 — every env-populated guard, and whether it fired
+
+`MM_EMPTY_POLICY`, `MM_EXPECT_ROWS`, `MM_MAPPED_SRC`, `MM_MAP_BLOCKS`, `MM_MAP_SOURCE`,
+`MM_OUT_MAPPED`, `PYTHONHASHSEED`, `SLURM_JOB_ID` are the environment reads in the cell. The
+guards standing on them, verified against the two production logs:
+
+| line | guard | gated on | job A `33347` | job B `33366` |
+|---|---|---|---|---|
+| 26 | validation-mode banner and scratch redirect | `_VALIDATE_BLOCKS` | **did not fire** | fired |
+| 38 | `assemble_partial_grid` runs | `not _VALIDATE_BLOCKS` | fired | did not fire |
+| 56 | output redirected to a `VALIDATE_` name | `_VALIDATE_BLOCKS` | **did not fire** | fired |
+| 68 | `MM_OUT_MAPPED` override + refuse-if-exists | `_OUT_OVERRIDE` | fired | fired |
+| 188 | validation disables every cache; refuses if output exists | `_VALIDATE_BLOCKS` | **did not fire** | fired |
+| 238 | `MM_MAP_SOURCE` is `shards` or `mapped` | always | fired | fired |
+| 242 | `MM_MAP_SOURCE=mapped` requires `MM_MAP_BLOCKS` | `_SRC == "mapped"` | did not fire (n/a) | fired |
+| 284 | block filter, and the frame is non-empty | `_VALIDATE_BLOCKS` | **did not fire** | fired |
+| 302 | **ROW-COUNT RECEIPT armed** at `MM_EXPECT_ROWS` | `_VALIDATE_BLOCKS` | **did not fire** | fired |
+| 343 | **ROW-COUNT RECEIPT re-checked** at the assign gate | `_VALIDATE_BLOCKS` | **did not fire** | fired |
+| 513 | `is_direct_cui` re-derivation receipt | `_SRC == "mapped"` | did not fire (n/a) | fired |
+
+Two rows in that table are the defect: lines 302 and 343, where job A set the expectation and
+the assertion did not run. The rows marked *(n/a)* are correct — they guard behaviour that
+genuinely does not apply to a `shards` run. The distinction matters: the problem is not that
+guards are conditional, it is that a conditional guard **says nothing when its condition is
+false**, so the log cannot tell the two cases apart.
+
+### The remedy
+
+**A guard that does not fire should say so, so absence in a log is evidence rather than
+ambiguity.** Concretely, and in the same mechanical spirit as the four remedies above:
+
+5. **Declare-then-assert, or refuse.** If a launcher sets `MM_EXPECT_ROWS`, the notebook must
+   either assert it or fail loudly that it cannot. An expectation that is read and dropped is
+   the worst of the three outcomes. The N-part join already implements exactly this shape: a
+   part whose label has no pre-registered count makes **R3 FAIL**, it does not skip that part
+   and check the others (`scripts/a9_concat_corpus.py`, "NO PRE-REGISTERED COUNT").
+
+6. **Print the skip.** Every conditional guard emits one line when its condition is false —
+   `SKIPPED: row-count receipt (MM_MAP_BLOCKS unset)` — so a log that lacks both the pass line
+   and the skip line is itself an error. This is remedy 4 ("a positive receipt, over silence")
+   generalised from the happy path to the disabled path.
+
+Not yet applied to cell 11: the halves `run_mm_a9_jobA1/A2.sbatch` close the instance by
+setting `MM_MAP_BLOCKS`, which makes the receipt bind, but the class remains open in the code.
+
+
 ---
 
 # Amendment 7 never existed in CADEC's code — 2026-09-17
