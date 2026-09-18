@@ -859,11 +859,27 @@ R3 binds per part and R1b is pairwise across all three pairs.
 `<name>.csv.sha256.json`, which is under a gitignored path, so the digests are additionally
 recorded here where they are version-controlled.
 
-| part | job | rows | bytes | sha256 |
+**The rule, from 2026-09-18.** Every margin, mapping and entropy artefact is recorded here by
+digest and kept **outside** the repository. This repository is public and these artefacts are
+CADEC-keyed and UMLS-derived, so they fall under both licences. The digest is the
+version-controlled object; the bytes are not.
+
+| artefact | job | rows | bytes | sha256 |
 |---|---|---:|---:|---|
-| B | `33366` | 2,557,257 | 468,017,830 | `745bf2491d3fa76f6b3b9a8552576d42dab6404d4d04992672badc01355cc7b9` |
-| A1 | `33870` | *pending* | | |
-| A2 | `33871` | *pending* | | |
+| `rq1_all_outputs_mapped_A9_partB.csv` | `33366` | 2,557,257 | 468,017,830 | `745bf2491d3fa76f6b3b9a8552576d42dab6404d4d04992672badc01355cc7b9` |
+| `rq1_all_outputs_mapped_A9_partA1.csv` | `33870` | *pending* | | |
+| `rq1_all_outputs_mapped_A9_partA2.csv` | `33871` | *pending* | | |
+| `outputs/rq3/umls_candidate_margin_cadec.csv` | `33411` | 37,696 | 9,667,994 | `534c64929f7996aca30b4b7c0091184839fd1f5263008bf352ca10dbb008d23d` |
+
+**Outstanding, and not resolved by this rule.** The rule governs artefacts from 2026-09-18
+onward. It does **not** retroactively remove what is already in history: `git ls-files` shows
+**24 tracked margin / mapping / entropy artefacts** under `outputs/`, including
+`umls_candidate_margin_medmentions.csv` (80.8 MB), `umls_candidate_margin_cadec.csv` itself
+(committed in `65a5da0`, `c9bf591`, `e3043c6`), `umls_candidate_margin_qa.csv` and
+`entropy_cadec.csv`. Declining to commit the 2026-09-18 update leaves the working tree dirty
+and does nothing about the versions already published. Whether to untrack them going forward,
+and whether the existing history needs anything done about it, is a licence decision that has
+not been made and is recorded here so it is not mistaken for one that has.
 
 Part B was written under the **old** write ordering — receipt first, corpus second — so the
 final name existing is not by itself evidence that the write completed. The digest is recorded

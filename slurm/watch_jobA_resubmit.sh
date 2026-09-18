@@ -6,19 +6,9 @@
 # nobody releases is a worse outcome than a delay to A2.
 cd "$HOME/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"
 
-sub () {   # sub <sbatch file> -> echoes job id, retries the controller I/O error
-  local f="$1" out jid
-  for try in 1 2 3 4 5 6 7 8 9 10; do
-    out=$(sbatch "$f" 2>&1)
-    jid=$(echo "$out" | grep -oE '[0-9]+$')
-    if echo "$out" | grep -q "Submitted batch job"; then
-      echo "  submit $f -> job $jid (attempt $try)" >&2
-      echo "$jid"; return 0
-    fi
-    echo "  submit $f attempt $try FAILED: $out" >&2
-    sleep 60
-  done
-  echo "" ; return 1
+sub () {   # sub <sbatch file> -> echoes job id. Delegates to slurm/sbatch_retry.sh so there
+           # is ONE retry implementation in the tree, not a copy that can drift from it.
+  SBATCH_RETRY_N=10 SBATCH_RETRY_SLEEP=60 ./slurm/sbatch_retry.sh "$1"
 }
 
 release_qa () {
