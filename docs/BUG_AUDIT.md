@@ -2010,3 +2010,54 @@ principle and untested in fact. That is risk without benefit four days from the 
 
 **To do after submission:** add `set -euo pipefail`, then run each once and confirm it still
 completes, before trusting either again.
+
+---
+
+# Uniqueness is not identity (2026-09-20)
+
+**Class:** a predicate that constrains the NUMBER of matches and says nothing about WHICH
+match. The guard passes, the value is wrong, and the failure presents as a clean result.
+
+## The instance
+
+`scripts/emit_placeholder_values.py` fills `[[MM_RQ3_PAIR1..3]]` from
+`rq3_matched_pair_statistics_medmentions.csv` by ranking rows on the `pair` column. That file
+carries every pair **twice** — once for `MedMentions` and once for `POOLED` — and the POOLED
+rows are descriptive, deliberately outside the Holm family, with `wilcoxon_p_holm = NaN`. The
+selector pinned neither dataset, so:
+
+| placeholder | intended | actually resolved to |
+|---|---|---|
+| `[[MM_RQ3_PAIR1]]` | pair1 / MedMentions | pair1 / MedMentions ✓ |
+| `[[MM_RQ3_PAIR2]]` | pair2 / MedMentions | **pair1 / POOLED** |
+| `[[MM_RQ3_PAIR3]]` | pair3 / MedMentions | **pair2 / MedMentions** |
+
+The emitter already carried a guard for exactly this shape — *"selector matched N rows, need
+exactly 1"* — and **it passed on all three**, because each rank did match exactly one row. It
+matched the wrong one.
+
+## Why this is worth recording plainly
+
+This defect would have put **wrong numbers into the manuscript through the mechanism built to
+remove transcription error**. The emitter exists because +0.373 once became +0.377 by hand;
+it was about to substitute a worse failure, silently, with a provenance trail attached to
+each wrong value making it look *more* trustworthy than a hand-copied one.
+
+**It was caught by coincidence, not by design.** PAIR1 and PAIR2 came back with an identical
+`rank_biserial` of −0.268335, which is only visible because the POOLED row duplicates the
+per-dataset effect size. Had the two differed in any digit, all three would have been reported
+`OK` with sha256 provenance and nothing would have looked wrong.
+
+## The remedy
+
+9. **A selector asserts every key it depends on, and echoes the full key of the row it chose.**
+   Not "did I get one row" but "did I get *this* row". The emitter now pins
+   `dataset="MedMentions"` and applies it *before* ranking, and its detail line names the pair
+   it selected, so the mapping is auditable in the output rather than inferred from the code.
+
+Regression test: `scripts/test_emit_placeholder_selectors.py`, with a fixture carrying both
+dataset variants for every pair, asserting that the unpinned selector **reproduces the
+original wrong mapping** (rather than merely failing), that each wrong pick is unique so a
+count-based guard passes, that the shared `rank_biserial` is the only tell, and that the
+shipped emitter pins the dataset on all three selectors. 7/7.
+
