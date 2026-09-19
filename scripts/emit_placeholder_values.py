@@ -75,6 +75,18 @@ PLACEHOLDERS = [
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
          column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=3),
          desc="rank-biserial and Holm p, matched pair 3"),
+    dict(section="methods — mapped corpus size (DENOMINATOR, not the analysed sample)",
+         placeholder="[[MM_MAPPED_ROWS]]",
+         # Counted from the CORPUS ITSELF, not from the entropy receipt's rows_before.
+         # This denominator describes the corpus; the analysed sample is 24 rows smaller and
+         # is a different quantity. Sourcing it from the entropy receipt would silently make
+         # it depend on whether the entropy stage had run, and would tie a corpus property to
+         # an analysis artefact. The corpus is its own staleness reference, so this row can
+         # never be STALE -- which is correct: it IS the thing everything else is dated
+         # against.
+         artefact="outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv",
+         column=None, agg="rows",
+         desc="rows in the joined cut-off corpus, counted from the corpus"),
     dict(section="limitations — tie-break exposure (FROZEN, E1)",
          placeholder="[[TIEBREAK_CASES]]",
          # SOURCE: job 33221's own log, which retained the row-for-row comparison in full:
