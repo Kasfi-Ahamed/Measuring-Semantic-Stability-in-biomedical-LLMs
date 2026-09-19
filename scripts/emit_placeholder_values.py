@@ -63,17 +63,38 @@ PLACEHOLDERS = [
     dict(section="4.3 matched pairs — pair 1",
          placeholder="[[MM_RQ3_PAIR1]]",
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=1),
+         column=["rank_biserial", "wilcoxon_p_holm"],
+         # dataset MUST be pinned. The file carries each pair TWICE, once for MedMentions and
+         # once for POOLED, and POOLED rows are "descriptive (outside Holm family)" with
+         # wilcoxon_p_holm = NaN. Ranking without the filter silently returned pair1/POOLED
+         # for PAIR2 and pair2/MedMentions for PAIR3 -- three placeholders, two wrong, all
+         # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
+         # rank_biserial.
+         select=dict(dataset="MedMentions", _pair_rank=1),
          desc="rank-biserial and Holm p, matched pair 1"),
     dict(section="4.3 matched pairs — pair 2",
          placeholder="[[MM_RQ3_PAIR2]]",
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=2),
+         column=["rank_biserial", "wilcoxon_p_holm"],
+         # dataset MUST be pinned. The file carries each pair TWICE, once for MedMentions and
+         # once for POOLED, and POOLED rows are "descriptive (outside Holm family)" with
+         # wilcoxon_p_holm = NaN. Ranking without the filter silently returned pair1/POOLED
+         # for PAIR2 and pair2/MedMentions for PAIR3 -- three placeholders, two wrong, all
+         # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
+         # rank_biserial.
+         select=dict(dataset="MedMentions", _pair_rank=2),
          desc="rank-biserial and Holm p, matched pair 2"),
     dict(section="4.3 matched pairs — pair 3",
          placeholder="[[MM_RQ3_PAIR3]]",
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=3),
+         column=["rank_biserial", "wilcoxon_p_holm"],
+         # dataset MUST be pinned. The file carries each pair TWICE, once for MedMentions and
+         # once for POOLED, and POOLED rows are "descriptive (outside Holm family)" with
+         # wilcoxon_p_holm = NaN. Ranking without the filter silently returned pair1/POOLED
+         # for PAIR2 and pair2/MedMentions for PAIR3 -- three placeholders, two wrong, all
+         # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
+         # rank_biserial.
+         select=dict(dataset="MedMentions", _pair_rank=3),
          desc="rank-biserial and Holm p, matched pair 3"),
     dict(section="methods — mapped corpus size (DENOMINATOR, not the analysed sample)",
          placeholder="[[MM_MAPPED_ROWS]]",
@@ -189,6 +210,11 @@ def resolve(spec: dict) -> dict:
             return {**row, "value": None, "status": "MISSING",
                     "detail": f"column(s) {miss} absent; have {list(df.columns)[:8]}"}
         if rank is not None:
+            for k, v in sel.items():                      # apply the real selectors FIRST
+                if k not in df.columns:
+                    return {**row, "value": None, "status": "MISSING",
+                            "detail": f"selector column {k!r} absent"}
+                df = df[df[k].astype(str) == str(v)]
             key = [c for c in ("pair", "model_a", "model_b") if c in df.columns]
             d = df.sort_values(key or list(df.columns)[:1]).reset_index(drop=True)
             if len(d) < rank:
@@ -198,7 +224,8 @@ def resolve(spec: dict) -> dict:
             return {**row, "value": {c: (float(r0[c]) if pd.api.types.is_number(r0[c])
                                          else str(r0[c])) for c in cols},
                     "status": "OK", "sha256": sha256(p),
-                    "detail": f"pair {rank} of {len(d)}, ordered by {key or 'first column'}"}
+                    "detail": f"pair {rank} of {len(d)} ({r0[key[0]] if key else '?'}), "
+                              f"selectors {sel}, ordered by {key or 'first column'}"}
         if spec["column"] not in df.columns:
             return {**row, "value": None, "status": "MISSING",
                     "detail": f"column {spec['column']!r} absent; have {list(df.columns)[:8]}"}

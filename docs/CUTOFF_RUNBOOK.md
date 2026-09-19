@@ -504,3 +504,39 @@ Item 2 is the one worth care: it is a write into the production corpus, gated on
 - Never `git add -A`, `git clean -fdx`, `git reset --hard`.
 - `set -e` on anything chaining a run behind a guard.
 - Preserve pre-fix artefacts at their old paths; new outputs to new paths.
+
+---
+
+# Deriving a launcher from a precedent job (2026-09-20)
+
+**Rule: when a launcher is derived from a precedent job, EVERY resource is scaled from that
+job's MEASURED usage, and the basis for each is recorded in the header.**
+
+Two halves, and the second is the one that was missed:
+
+1. **Every resource, not just walltime.** `run_mm_cutoff_entropy.sbatch` scaled `--time` from
+   job B with the arithmetic written into the header, and left `--mem` at a round 100G with no
+   derivation at all. Job B processed 2,557,257 rows; this job processed **7,332,245** — 2.87x
+   the rows on 1.25x the memory. It completed at `MaxRSS 98,023,748K` = **93.5 GB of 100 GB**,
+   with 6.5 GB of headroom, and the log went silent for forty minutes in the phase where an
+   OOM would have occurred. It landed. It should not have been that close, and nothing in the
+   launcher would have told anyone it was.
+
+2. **Measured usage, not the previous request.** The precedent job's `--mem=80G` is what
+   somebody once asked for; `sacct -j <id> --format=MaxRSS` is what it used. Scaling a request
+   by a ratio compounds whatever slack or shortfall the original request had. The same applies
+   to walltime: `Elapsed`, not `TimeLimit`.
+
+**The mechanical form**, in the header of any derived launcher:
+
+    # --mem 160G   <- job 33366 MaxRSS 62.4 GB measured (sacct), x2.87 rows = 179 GB, round up
+    # --time 4h    <- job 33366 Elapsed 10:47:35 measured, entropy-only phase ~9.5 min, x2.87
+
+A reviewer can then check the arithmetic against `sacct` without rerunning anything, and a
+resource with no stated basis is visibly a guess rather than silently one.
+
+**Why this is not a new failure class.** It is a plain omission, not a guard that failed to
+fire or a receipt that answered the wrong question. It is recorded here rather than in
+`docs/BUG_AUDIT.md` for that reason: the remedy is a habit in the runbook, not a check in the
+code.
+
