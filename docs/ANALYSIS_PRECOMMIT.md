@@ -867,8 +867,9 @@ version-controlled object; the bytes are not.
 | artefact | job | rows | bytes | sha256 |
 |---|---|---:|---:|---|
 | `rq1_all_outputs_mapped_A9_partB.csv` | `33366` | 2,557,257 | 468,017,830 | `745bf2491d3fa76f6b3b9a8552576d42dab6404d4d04992672badc01355cc7b9` |
-| `rq1_all_outputs_mapped_A9_partA1.csv` | `33870` | *pending* | | |
-| `rq1_all_outputs_mapped_A9_partA2.csv` | `33871` | *pending* | | |
+| `rq1_all_outputs_mapped_A9_partA1.csv` | `33870` | 2,572,698 | 470,351,880 | `b9b25053367c6bd05fba40664bd704384723781b970bf8d3af02f932d448702a` |
+| `rq1_all_outputs_mapped_A9_partA2.csv` | `33871` | 2,202,290 | 403,014,946 | `00182f4286d969c39b13d068b5fdc70741ee2e881dbba659a5bf7d4e49b9d706` |
+| **`rq1_all_outputs_mapped_A9_CUTOFF.csv`** (the join) | — | **7,332,245** | 1,341,264,922 | `3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9` |
 | `outputs/rq3/umls_candidate_margin_cadec.csv` | `33411` | 37,696 | 9,667,994 | `534c64929f7996aca30b4b7c0091184839fd1f5263008bf352ca10dbb008d23d` |
 
 **Outstanding, and not resolved by this rule.** The rule governs artefacts from 2026-09-18
@@ -997,4 +998,29 @@ Renames, so that no label can be false about its own data:
 The "crosses zero" branch now computes the genuine condition, `ci_low < 0 < ci_high`, and
 reports it separately from the outcome categories. Losses are printed rather than filtered
 away, with the argmin-selection reason stated at the point of printing.
+
+---
+
+# Cut-off verification dry-run — 2026-09-19
+
+Amendment 6's 21 September verification is now `scripts/cutoff_verify.py`, dry-run today
+against the joined corpus so that on the 21st it is an execution and not a debugging session.
+It returned **STEP 3 — IDENTICAL**, exit 0.
+
+`--corpus` is REQUIRED and has no default. The historical default in `mapped_outputs_path()`
+is the contaminated `rq1_all_outputs_mapped.csv`, so a verification that fell back to it would
+compare the new sample against the old corpus and pass; the path actually enumerated is
+printed and written into the receipt.
+
+**A limit of the procedure, recorded because the dry-run exposed it.** Step 1's `source="any"`
+union includes the "from the corpus" view, and step 2 reads the same corpus, so those two are
+not independent: pointed at the re-mapped corpus, that half of the comparison is
+self-confirming. The independent evidence is the **shard-CSV view, `[6..18]`**, which is a
+strict subset of the re-mapped set — blocks 0-5 and 19 had their CSVs pruned, so no file-based
+view of them can exist. What the verification therefore establishes is that nothing
+grid-complete *on disk* was left out of the re-map, not that the corpus and the enumeration
+are two independent measurements of the same set. That is still the assurance Amendment 6
+asks for, but it is weaker than the wording implies and should be stated that way on the day.
+
+It takes **~2 minutes**, not seconds: the 1.34 GB corpus is read twice.
 
