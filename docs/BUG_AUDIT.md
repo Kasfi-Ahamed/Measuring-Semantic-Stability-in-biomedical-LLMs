@@ -2061,3 +2061,49 @@ original wrong mapping** (rather than merely failing), that each wrong pick is u
 count-based guard passes, that the shared `rank_biserial` is the only tell, and that the
 shipped emitter pins the dataset on all three selectors. 7/7.
 
+---
+
+# A plausible name is not a verified one (2026-09-20)
+
+**Class:** an identifier or figure that *looks* right passes every check we have, because our
+checks test **form** and not **provenance**. `py_compile` cannot distinguish an invented
+dictionary key from a real one; a well-formatted number in a markdown table cannot be
+distinguished from a measured one.
+
+Two instances in a single day, which is what makes it a class rather than a slip:
+
+| where | what was invented | what passed it through |
+|---|---|---|
+| `docs/CUTOFF_RUNBOOK.md` | "job 33366 MaxRSS **62.4 GB**" — written to illustrate the format of a rule about using measured values | prose review; the number was plausible and correctly formatted. Real value: **107.2 GB** |
+| `scripts/cadec_tiebreak_replay.py` | `ns["ENCODER_SPECS"]` — the notebook defines `ENCODER_MODELS` and has never had a symbol by that name | `py_compile` passed; a missing dict key is not a syntax error |
+
+The second cost job `34290`: a GPU allocation, a SapBERT load, and **2m29s** before
+`FATAL: no encoder spec matches 'pubmedbert'; have []`. The safety guards held — the frozen
+CADEC set was mtime-identical and nothing was written — but the measurement it existed to
+produce was not made, on the night before the cut-off, for a name.
+
+## Why the existing remedies do not cover it
+
+Remedy 7 reads back the state a call *created*. Remedy 9 asserts the keys a selector
+*depends on within one file*. Neither applies to a symbol **borrowed from another module**:
+there is no state to read back until the expensive step has already run, and the dependency
+crosses a file boundary that no selector describes.
+
+## The remedy
+
+10. **A symbol borrowed from another module is verified against that module before the
+    expensive step, not discovered at use.** The borrowing script declares what it borrows,
+    and checks the source statically at startup — no execution, no allocation, no model load.
+
+`cadec_tiebreak_replay.py` now declares `BORROWED = {ENCODER_MODELS, run_one_encoder,
+raw_path_for}` with a one-line description of each, and `preflight(nb)` greps the notebook's
+**code cells** for a definition of every one, listing by name any it cannot find. It runs in
+about two seconds and needs no GPU. Verified both directions: clean against the real notebook,
+and returning `['ENCODER_SPECS']` when the invented name is injected. A second bound-check
+after the cells execute catches the different failure where a name exists in the notebook but
+falls outside the executed cell list.
+
+The general form: **the cost of a wrong name should be paid before the allocation, not after
+it.** Two seconds against two and a half minutes here, and against twelve hours in a job that
+fails late.
+

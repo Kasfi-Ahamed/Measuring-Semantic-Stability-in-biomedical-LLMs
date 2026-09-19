@@ -47,6 +47,30 @@ SETUP_CELLS = [0, 1, 2, 3, 4, 5, 6, 8]     # definitions and config; NOT 7 or 13
 ASSIGN_CELL = 9
 
 
+# Names this script BORROWS from the notebook. It does not own them, so it verifies them
+# against the notebook before the expensive step rather than discovering them at use.
+#
+# Attempt 1 (job 34290) died after 2m29s, an allocation and a SapBERT load, on
+# `ENCODER_SPECS` -- an identifier that exists nowhere in the notebook. The real name is
+# ENCODER_MODELS. py_compile passed because an invented dict key is not a syntax error, and
+# no check we had tests whether a plausible-looking name is a real one. This check is
+# static and costs ~2 seconds, so the same class of mistake now fails before the GPU.
+BORROWED = {
+    "ENCODER_MODELS": "list of encoder specs, each with a 'key'",
+    "run_one_encoder": "runs one encoder and writes via raw_path_for",
+    "raw_path_for": "output path builder; monkey-patched to redirect into scratch",
+}
+
+
+def preflight(nb: dict) -> list[str]:
+    """Names present in the notebook's code cells. Static: nothing is executed."""
+    src = "\n".join("".join(c.get("source", [])) for c in nb["cells"]
+                     if c.get("cell_type") == "code")
+    import re as _re
+    return [n for n in BORROWED
+            if not _re.search(rf"^\s*(def\s+{n}\b|{n}\s*=)", src, _re.M)]
+
+
 def frozen_state() -> dict:
     return {str(p): (p.stat().st_mtime_ns if p.is_file() else None) for p in FROZEN}
 
@@ -58,6 +82,13 @@ def run_arm(arm: str, scratch: Path, model_key: str) -> int:
     out_dir.mkdir(exist_ok=True)
 
     nb = json.loads(NB.read_text())
+    missing = preflight(nb)
+    if missing:
+        print(f"FATAL preflight: {NB.name} does not define {missing}. "
+              f"Needed: {[f'{m} ({BORROWED[m]})' for m in missing]}", file=sys.stderr)
+        return 4
+    print(f"preflight OK: {sorted(BORROWED)} all present in {NB.name}", flush=True)
+
     ns: dict = {"__name__": "__main__"}
     for ci in SETUP_CELLS:
         src = "".join(nb["cells"][ci].get("source", []))
@@ -72,11 +103,15 @@ def run_arm(arm: str, scratch: Path, model_key: str) -> int:
         return _d / f"raw_{key}.csv"
     ns["raw_path_for"] = _redirected
 
-    specs = [s for s in ns["ENCODER_SPECS"]
-             if model_key in (None, "", s.get("key"))] if "ENCODER_SPECS" in ns else []
+    unbound = [n for n in BORROWED if n not in ns]
+    if unbound:
+        print(f"FATAL: {unbound} not bound after executing cells {SETUP_CELLS + [ASSIGN_CELL]}; "
+              f"the cell list does not cover their definitions", file=sys.stderr)
+        return 4
+    specs = [sp for sp in ns["ENCODER_MODELS"] if sp.get("key") == model_key]
     if not specs:
         print(f"FATAL: no encoder spec matches {model_key!r}; "
-              f"have {[s.get('key') for s in ns.get('ENCODER_SPECS', [])]}", file=sys.stderr)
+              f"have {[sp.get('key') for sp in ns['ENCODER_MODELS']]}", file=sys.stderr)
         return 2
     print(f"arm {arm}: PYTHONHASHSEED={os.environ.get('PYTHONHASHSEED')!r} "
           f"model={specs[0].get('key')} -> {out_dir}", flush=True)
