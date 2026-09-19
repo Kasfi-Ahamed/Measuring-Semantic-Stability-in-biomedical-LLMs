@@ -98,6 +98,47 @@ def bh_fdr(pvals: list[float]) -> list[float]:
     return out.tolist()
 
 
+# --- REPORTING FORMAT (2026-09-20) ---------------------------------------------------------
+# At n ~= 127,000 the paired Wilcoxon is powered to detect effects of no practical size, and
+# its normal-approximation tail UNDERFLOWS: pair1 has z = -70.2, a true p near 1e-1073, and
+# norm.cdf returns exactly 0.0 because the smallest positive double is 5e-324. A printed
+# "p = 0.0" is an artefact of IEEE 754, not a measurement.
+#
+# So every cell carries n and z whether or not its p is interesting. That also fixes the
+# opposite problem, which is not an underflow at all: pair3 reports p = 1.0 beside
+# z = +125.39, and the p-value alone actively conceals a very large effect in the OPPOSITE
+# direction. The primary quantity remains the rank-biserial with its CI (Amendment 3).
+#
+# norm.logcdf is kept in the code to DETECT the underflow rather than pass it through: the
+# writer emits a bound when the representable value is zero, and records that it did so.
+P_FLOOR = 1e-300            # the bound printed when the representable value is zero
+
+
+def wilcoxon_z(d: np.ndarray, w_stat: float) -> float:
+    """scipy's normal-approximation z for the signed-rank statistic, ties included.
+
+    Reproduces scipy.stats.wilcoxon(method="approx", correction=False) exactly; validated
+    against scipy on tied and untied samples to rtol 1e-9.
+    """
+    nz = d[d != 0]
+    n = len(nz)
+    if n == 0:
+        return float("nan")
+    mean = n * (n + 1) / 4.0
+    _, cnt = np.unique(np.abs(nz), return_counts=True)
+    se = np.sqrt(n * (n + 1) * (2 * n + 1) / 24.0 - (cnt ** 3 - cnt).sum() / 48.0)
+    return float((w_stat - mean) / se) if se > 0 else float("nan")
+
+
+def p_display(p: float) -> tuple[str, bool]:
+    """(printable p, underflowed?). A zero is a bound, not a value."""
+    if p is None or (isinstance(p, float) and np.isnan(p)):
+        return "n/a (descriptive)", False
+    if p <= 0.0:
+        return f"< {P_FLOOR:.0e}", True
+    return f"{p:.6g}", False
+
+
 def holm(pvals: list[float]) -> list[float]:
     p = np.asarray(pvals, dtype=float)
     n = len(p)
@@ -187,6 +228,12 @@ def main() -> int:
                 "mean_diff_bio_minus_gen": float(d.mean()),
                 "n_ties_zero_diff": int((d == 0).sum()),
                 "wilcoxon_stat": float(w_stat), "wilcoxon_p": float(w_p),
+                "n_paired_nonzero": int((d != 0).sum()),
+                "wilcoxon_z": wilcoxon_z(d, float(w_stat)),
+                # log tail, computed where the linear tail cannot be: this is how the
+                # underflow is DETECTED rather than silently inherited as 0.0
+                "wilcoxon_log10_p": float(stats.norm.logcdf(wilcoxon_z(d, float(w_stat)))
+                                          / np.log(10)),
                 "mwu_stat_sensitivity": float(u_stat), "mwu_p_sensitivity": float(u_p),
                 "status": "ok",
             })
@@ -249,12 +296,33 @@ def main() -> int:
     res = res[lead + [c for c in res.columns if c not in lead]]
     out = (OUT_CSV if want == "all"
            else OUT_CSV.with_name(OUT_CSV.stem + f"_{want}" + OUT_CSV.suffix))
+    # --- REPORTED FORM: effect size first, with n and z on EVERY cell -----------------
+    _disp = [p_display(v) for v in res["wilcoxon_p_holm"]]
+    res["wilcoxon_p_holm_display"] = [d for d, _ in _disp]
+    res["p_holm_underflowed"] = [u for _, u in _disp]
+    _n_uf = int(res["p_holm_underflowed"].sum())
+
     out.parent.mkdir(parents=True, exist_ok=True)
     res.to_csv(out, index=False)
 
-    pd.set_option("display.width", 200)
+    pd.set_option("display.width", 220)
     print(f"\n=== RQ3 matched pairs (effect size first; |rb| >= {MIN_ABS_RB} to interpret) ===")
     print(res[lead].to_string(index=False))
+
+    print(f"\n=== REPORTED FORM — rank-biserial with CI is primary; n and z on every cell ===")
+    print(f"{'pair':28s} {'dataset':12s} {'n':>8s} {'z':>9s} "
+          f"{'rank-biserial [95% CI]':>28s}  Holm p")
+    for r in res.itertuples(index=False):
+        rb = f"{r.rank_biserial:+.4f} [{r.rb_ci95_low:+.4f}, {r.rb_ci95_high:+.4f}]"
+        z = f"{r.wilcoxon_z:+.2f}" if r.wilcoxon_z == r.wilcoxon_z else "n/a"
+        print(f"{r.pair:28s} {r.dataset:12s} {r.n_paired:>8,} {z:>9s} {rb:>28s}  "
+              f"{r.wilcoxon_p_holm_display}")
+    if _n_uf:
+        print(f"\n  {_n_uf} cell(s) printed as a BOUND: the Holm-adjusted p underflowed to")
+        print(f"  exactly 0.0 in the normal-approximation tail, which is an artefact of IEEE")
+        print(f"  754 and not a measurement. The log tail is retained in wilcoxon_log10_p")
+        print(f"  (e.g. {res.loc[res.p_holm_underflowed, 'wilcoxon_log10_p'].min():.0f} "
+              f"in log10), and n and z carry the magnitude.")
     print(f"\nWrote {out}")
     return 0
 
