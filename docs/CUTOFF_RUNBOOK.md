@@ -529,8 +529,18 @@ Two halves, and the second is the one that was missed:
 
 **The mechanical form**, in the header of any derived launcher:
 
-    # --mem 160G   <- job 33366 MaxRSS 62.4 GB measured (sacct), x2.87 rows = 179 GB, round up
-    # --time 4h    <- job 33366 Elapsed 10:47:35 measured, entropy-only phase ~9.5 min, x2.87
+    # --mem 200G   <- job 33366 MaxRSS 107.2 GB (sacct 112446088K), see the caveat below
+    # --time 4h    <- job 33366 Elapsed 10:47:35 (sacct), entropy-only phase ~9.5 min, x2.87
+
+**A caveat on MaxRSS that this rule ran into immediately.** Job 33366 was allocated `--mem=80G`
+and `sacct` reports `MaxRSS 112446088K = 107.2 GB` — **more than its own allocation**. So on
+this cluster either the cgroup limit is not enforced as a hard cap, or `MaxRSS` counts pages
+the job did not exclusively own. Until that is resolved, `MaxRSS` is a **usable upper bound
+and not a precise figure**: scale from it, round up, and do not treat a request below a
+previous job's reported `MaxRSS` as proven impossible. The first draft of this section quoted
+"62.4 GB" for job 33366, which was not measured from anything — it was a plausible-looking
+number written to illustrate the format, in a section about not doing that. The real value is
+above.
 
 A reviewer can then check the arithmetic against `sacct` without rerunning anything, and a
 resource with no stated basis is visibly a guess rather than silently one.
