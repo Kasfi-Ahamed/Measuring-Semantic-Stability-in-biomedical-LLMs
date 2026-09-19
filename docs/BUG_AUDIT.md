@@ -1785,6 +1785,32 @@ This is the fourth member of the family, and the first where the defective guard
 had written that week to prevent a different instance of the same family.
 
 
+## A near-neighbour, and NOT the same defect — a receipt that answers a different question (2026-09-19)
+
+**Class:** a receipt that exists, is accurate, and reports the wrong *population*. This is
+distinct from a guard that does not fire, and the remedy is different.
+
+Filling `[[TIEBREAK_CASES]]`, the obvious source was `outputs/scratch/E1/e1_pass_receipt.json`.
+It is a real receipt, it parses, and it reports **0 differing rows of 370,428**. It is also
+the **post**-Amendment-9 run (job 33345), and the number wanted was the **pre**-fix rate,
+1,007 of 370,428. Emitting from it would have put "0 rows were sensitive to hash order" into
+the Limitations as the measured pre-fix exposure — the exact opposite of the finding, sourced
+from an accurate artefact, with no error anywhere in the chain.
+
+The guard-that-does-not-fire class is fixed by making the check run. **This one cannot be: the
+check ran and passed.** The remedy is that a receipt must state the conditions under which it
+was measured, so that reading it for a different question fails instead of succeeding:
+
+8. **A receipt names its population, not just its result.** `e1_pass_receipt.json` records
+   `rows_joined` and `differing_rows` but nothing that says *which side of Amendment 9 it was
+   measured on*. Had it carried `amendment9_applied: true`, the mistake would have been a
+   mismatch instead of a plausible answer. Applied here by sourcing the value from job
+   33221's own log and labelling the population on the emitted value: block 6 only, 370,428
+   rows, pre-Amendment-9, two routes differing only in hash order — and stating that it is not
+   comparable with the post-fix receipt rate, which counts ties that EXISTED rather than
+   assignments that MOVED.
+
+
 ---
 
 # Amendment 7 never existed in CADEC's code — 2026-09-17

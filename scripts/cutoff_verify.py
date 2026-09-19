@@ -91,6 +91,9 @@ def main() -> int:
                     default=ROOT / "outputs/rq1/cutoff_verification_receipt.json")
     ap.add_argument("--dry-run", action="store_true",
                     help="run the comparison and print it; write no receipt")
+    ap.add_argument("--expect-sha",
+                    default="3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9",
+                    help="the cut-off corpus digest; '' disables the check")
     a = ap.parse_args()
 
     root = shard_root(ROOT)
@@ -106,6 +109,34 @@ def main() -> int:
     if not a.corpus.is_file():
         print(f"\nCANNOT VERIFY: corpus does not exist: {a.corpus}")
         return 2
+
+    # STEP 0 — THE CORPUS IS STILL THE CORPUS.
+    #
+    # outputs/rq1/intermediate/rq1_all_outputs_mapped.csv is a HARD LINK to the cut-off
+    # corpus: one inode, two names. That is what lets PART2's cache branch find it, and it
+    # means any stage that writes through the canonical path IN PLACE -- rather than writing a
+    # new file and renaming onto it -- modifies the cut-off corpus itself. os.replace is safe
+    # (new inode, link broken); an in-place `open(path,"w")` is not. Re-checking the digest is
+    # how that becomes visible instead of silent.
+    if a.expect_sha:
+        import hashlib
+        h = hashlib.sha256()
+        with a.corpus.open("rb") as f:
+            for chunk in iter(lambda: f.read(1 << 22), b""):
+                h.update(chunk)
+        got = h.hexdigest()
+        canon = a.corpus.parent / "rq1_all_outputs_mapped.csv"
+        linked = (canon.is_file()
+                  and canon.stat().st_ino == a.corpus.stat().st_ino)
+        print(f"\nSTEP 0 — corpus integrity")
+        print(f"  sha256 : {got}")
+        print(f"  expected {a.expect_sha}")
+        print(f"  canonical name is the same inode: {linked}")
+        if got != a.expect_sha:
+            print("\nCANNOT VERIFY: the corpus digest has CHANGED since the join. "
+                  "Something wrote through it in place.")
+            return 2
+        print("  OK — unchanged since the join")
 
     # STEP 1 — enumerate, against the corpus NAMED ON THE COMMAND LINE, not a default.
     enumerated = complete_shards_for_grid(root, source="any", mapped=a.corpus)
