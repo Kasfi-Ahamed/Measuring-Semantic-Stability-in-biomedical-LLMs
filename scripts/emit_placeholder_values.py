@@ -32,45 +32,59 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# section -> (placeholder name, artefact, column, row selector, description)
-# `placeholder` is the manuscript token. Fill these in once against main.tex.
+# The corpus every cut-off value must be at least as new as. A value drawn from an artefact
+# OLDER than this fails as STALE rather than resolving: the 13 September entropy file and the
+# 27 August RQ4 family both still exist on disk and both would otherwise answer cleanly.
+CORPUS = ROOT / "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv"
+
+# placeholder -> artefact, column, selector. Names supplied by the author 2026-09-19; they
+# live in main.tex, which is not in this repository.
 PLACEHOLDERS = [
-    dict(section="4.1 linguistic predictors (MM)",
-         placeholder="<UNMAPPED:RQ1_MM>",
-         artefact="outputs/rq1/rq1_linguistic_predictors_summary.csv",
-         column="coef", select=dict(term="n_accepted_perts_z"),
-         desc="hurdle part-2 coefficient on n_accepted_perts_z"),
-    dict(section="4.2 accuracy-stability dissociation (MM)",
-         placeholder="<UNMAPPED:RQ2_MM>",
-         artefact="outputs/rq1/rq2_dissociation_summary.csv",
-         column="spearman_rho", select=dict(dataset="MedMentions"),
-         desc="accuracy vs entropy rank correlation"),
-    dict(section="4.3 matched pairs (MM)",
-         placeholder="<UNMAPPED:RQ3_MM>",
-         artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column="rank_biserial", select=dict(dataset="MedMentions", pair="POOLED"),
-         desc="pooled matched-pair rank-biserial"),
-    dict(section="4.4 abstention, AURC (MM)",
-         placeholder="<UNMAPPED:RQ4_AURC_MM>",
-         artefact="outputs/rq4/rq4_aurc_margin_benchmark.csv",
-         column="AURC", select=dict(dataset="MedMentions", model="FLAN-T5-base",
-                                    signal="combined_3"),
-         desc="headline combined_3 AURC"),
-    dict(section="4.4 abstention, Holm outcome (MM)",
-         placeholder="<UNMAPPED:RQ4_HOLM_MM>",
-         artefact="outputs/rq4/rq4_combined3_wintest.csv",
-         column="holm_outcome", select=dict(dataset="MedMentions", model="FLAN-T5-base"),
-         desc="three-category Holm outcome, headline cell"),
-    dict(section="4.x zero-inflation (MM)",
-         placeholder="<UNMAPPED:ZEROINF_MM>",
+    dict(section="methods — analysed MM instances, all variants",
+         placeholder="[[MM_INSTANCES]]",
          artefact="outputs/rq1/entropy_full_umls.csv",
-         column="is_zero_entropy", select=None, agg="mean",
-         desc="zero-entropy share across the cut-off corpus"),
-    dict(section="methods, corpus size (MM)",
-         placeholder="<UNMAPPED:CORPUS_N>",
-         artefact="outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv",
-         column=None, agg="rows",
-         desc="rows in the cut-off corpus"),
+         column="m_accepted", select=None, agg="sum_int",
+         desc="all-variants count over the cut-off sample"),
+    dict(section="methods — analysed MM instances, distinct variants",
+         placeholder="[[MM_INSTANCES_DISTINCT]]",
+         artefact="outputs/rq1/entropy_full_umls.csv",
+         column="m_distinct", select=None, agg="sum_int",
+         desc="distinct-variant count (Amendment 3 primary denominator)"),
+    dict(section="methods — grid-complete block count",
+         placeholder="[[MM_SHARDS]]",
+         artefact="outputs/rq1/cutoff_verification_receipt.json",
+         column="enumerated_grid_complete", agg="json_len",
+         desc="number of grid-complete blocks, from the 21 Sep verification receipt"),
+    dict(section="methods — grid-complete block list",
+         placeholder="[[MM_BLOCK_LIST]]",
+         artefact="outputs/rq1/cutoff_verification_receipt.json",
+         column="enumerated_grid_complete", agg="json_list",
+         desc="the block list itself, from the same receipt"),
+    dict(section="4.3 matched pairs — pair 1",
+         placeholder="[[MM_RQ3_PAIR1]]",
+         artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
+         column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=1),
+         desc="rank-biserial and Holm p, matched pair 1"),
+    dict(section="4.3 matched pairs — pair 2",
+         placeholder="[[MM_RQ3_PAIR2]]",
+         artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
+         column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=2),
+         desc="rank-biserial and Holm p, matched pair 2"),
+    dict(section="4.3 matched pairs — pair 3",
+         placeholder="[[MM_RQ3_PAIR3]]",
+         artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
+         column=["rank_biserial", "wilcoxon_p_holm"], select=dict(_pair_rank=3),
+         desc="rank-biserial and Holm p, matched pair 3"),
+    dict(section="limitations — tie-break exposure (FROZEN, E1)",
+         placeholder="[[TIEBREAK_CASES]]",
+         # NO MACHINE-READABLE RECEIPT EXISTS for the PRE-fix E1 run (job 33221): only the
+         # POST-fix receipt survives on disk, and it reports 0 differing rows because
+         # Amendment 9 had already been applied. The 1,007 figure therefore has to come from
+         # the version-controlled pre-commitment, which is still emission and not
+         # transcription -- if the document changes, the emitted value changes with it.
+         artefact="docs/ANALYSIS_PRECOMMIT.md",
+         column=None, agg="e1_frozen", exempt_staleness=True,
+         desc="1,007 of 370,428 rows on block 6; pre-fix, frozen, corpus-independent"),
 ]
 
 
@@ -90,8 +104,51 @@ def resolve(spec: dict) -> dict:
     if not p.is_file():
         return {**row, "value": None, "status": "MISSING",
                 "detail": "artefact does not exist"}
+    # STALENESS REFUSAL. An artefact older than the cut-off corpus cannot be a cut-off value.
+    # Without this the 13 Sep entropy file and the 27 Aug RQ4 family answer cleanly and wrongly.
+    if not spec.get("exempt_staleness"):
+        if not CORPUS.is_file():
+            return {**row, "value": None, "status": "STALE",
+                    "detail": f"cut-off corpus {CORPUS.name} absent; cannot date-check"}
+        if p.stat().st_mtime < CORPUS.stat().st_mtime:
+            from datetime import datetime as _dt
+            return {**row, "value": None, "status": "STALE",
+                    "detail": f"artefact mtime {_dt.fromtimestamp(p.stat().st_mtime):%Y-%m-%d %H:%M} "
+                              f"predates the corpus "
+                              f"{_dt.fromtimestamp(CORPUS.stat().st_mtime):%Y-%m-%d %H:%M}"}
     try:
-        if spec.get("agg") == "rows":
+        agg = spec.get("agg")
+        if agg == "sum_int":                      # integer total over a column
+            tot = 0
+            for ch in pd.read_csv(p, usecols=[spec["column"]], chunksize=500_000):
+                tot += int(pd.to_numeric(ch[spec["column"]], errors="coerce").fillna(0).sum())
+            return {**row, "value": tot, "status": "OK", "sha256": sha256(p),
+                    "detail": f"sum of {spec['column']}"}
+        if agg in ("json_len", "json_list"):      # a key inside a JSON receipt
+            obj = json.loads(p.read_text())
+            if spec["column"] not in obj:
+                return {**row, "value": None, "status": "MISSING",
+                        "detail": f"key {spec['column']!r} absent; have {list(obj)[:8]}"}
+            v = obj[spec["column"]]
+            return {**row, "value": (len(v) if agg == "json_len" else v),
+                    "status": "OK", "sha256": sha256(p),
+                    "detail": f"receipt key {spec['column']}"}
+        if agg == "e1_frozen":                    # the PRE-fix E1 figure, corpus-independent
+            import re as _re
+            m = _re.search(r"\|\s*`predicted_cui`\s*\|\s*\*\*([\d,]+)\s*\(([\d.]+)%\)\*\*",
+                           p.read_text())
+            m2 = _re.search(r"differing rows of ([\d,]+)", p.read_text())
+            if not m or not m2:
+                return {**row, "value": None, "status": "MISSING",
+                        "detail": "the E1 row could not be parsed from the pre-commitment"}
+            n_diff = int(m.group(1).replace(",", ""))
+            n_rows = int(m2.group(1).replace(",", ""))
+            return {**row, "value": {"differing": n_diff, "of": n_rows,
+                                     "pct": float(m.group(2))},
+                    "status": "OK", "sha256": sha256(p),
+                    "detail": "PRE-FIX, block 6 only, frozen; NOT a cut-off number and not "
+                              "comparable with the tie-break receipt rate"}
+        if agg == "rows":
             n = sum(len(c) for c in pd.read_csv(p, usecols=[0], chunksize=500_000,
                                                 dtype=str))
             return {**row, "value": int(n), "status": "OK", "sha256": sha256(p),
@@ -107,6 +164,25 @@ def resolve(spec: dict) -> dict:
             return {**row, "value": tot / cnt, "status": "OK", "sha256": sha256(p),
                     "detail": f"mean over {cnt:,} rows"}
         df = pd.read_csv(p)
+        # _pair_rank: nth row in a stable ordering, for the three RQ3 matched pairs
+        sel = dict(spec.get("select") or {})
+        rank = sel.pop("_pair_rank", None)
+        cols = spec["column"] if isinstance(spec["column"], list) else [spec["column"]]
+        miss = [c for c in cols if c not in df.columns]
+        if miss:
+            return {**row, "value": None, "status": "MISSING",
+                    "detail": f"column(s) {miss} absent; have {list(df.columns)[:8]}"}
+        if rank is not None:
+            key = [c for c in ("pair", "model_a", "model_b") if c in df.columns]
+            d = df.sort_values(key or list(df.columns)[:1]).reset_index(drop=True)
+            if len(d) < rank:
+                return {**row, "value": None, "status": "MISSING",
+                        "detail": f"only {len(d)} pairs, wanted rank {rank}"}
+            r0 = d.iloc[rank - 1]
+            return {**row, "value": {c: (float(r0[c]) if pd.api.types.is_number(r0[c])
+                                         else str(r0[c])) for c in cols},
+                    "status": "OK", "sha256": sha256(p),
+                    "detail": f"pair {rank} of {len(d)}, ordered by {key or 'first column'}"}
         if spec["column"] not in df.columns:
             return {**row, "value": None, "status": "MISSING",
                     "detail": f"column {spec['column']!r} absent; have {list(df.columns)[:8]}"}

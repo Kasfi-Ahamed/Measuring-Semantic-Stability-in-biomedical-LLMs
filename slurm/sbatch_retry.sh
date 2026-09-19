@@ -15,7 +15,7 @@
 # defect (docs/BUG_AUDIT.md, "verified but not enforced"), and it is cheap to not repeat.
 #
 # Usage:
-#   slurm/sbatch_retry.sh <script.sbatch> [sbatch args...]
+#   slurm/sbatch_retry.sh <script.sbatch> [sbatch options...]   # options are placed BEFORE the script
 #   SBATCH_RETRY_N=20 SBATCH_RETRY_SLEEP=30 slurm/sbatch_retry.sh <script.sbatch>
 #   SBATCH_RETRY_DRYRUN=1 slurm/sbatch_retry.sh <script.sbatch>   # parse + echo, no submit
 #
@@ -39,7 +39,12 @@ if [ -n "${SBATCH_RETRY_DRYRUN:-}" ]; then
 fi
 
 for try in $(seq 1 "$N"); do
-  out="$(sbatch "$SCRIPT" "$@" 2>&1)"
+  # OPTIONS BEFORE THE SCRIPT. sbatch treats everything after the script path as arguments
+  # TO the script, so `sbatch script.sbatch --dependency=afterok:N` silently creates a job
+  # with NO dependency -- which is exactly what happened on 2026-09-19 to the whole cut-off
+  # chain: four jobs submitted, DEPENDENCY=(null) on all four, repaired with scontrol update
+  # before any of them started. Silent, and the same shape as every other defect this week.
+  out="$(sbatch "$@" "$SCRIPT" 2>&1)"
   if printf '%s' "$out" | grep -q "Submitted batch job"; then
     jid="$(printf '%s' "$out" | grep -oE '[0-9]+$')"
     echo "sbatch_retry: $SCRIPT -> job $jid (attempt $try/$N)" >&2
