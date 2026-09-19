@@ -812,6 +812,25 @@ Related: three MedMentions perturbations with `accepted_final = False` reached i
 models). Their text resolves correctly, so de-duplication is unaffected, but the accepted set
 and the inference input are not identical. Not fixed; recorded.
 
+> **CLOSED 2026-09-19, and the remainder was zero.** The open part of this item was scope: the
+> leak was measured on **shard 0** alone, and shards 6-17 shared the re-assembly exposure
+> window and had never been checked. The cut-off corpus covers all 20 blocks, and its
+> entropy-stage acceptance filter drops **exactly 24 rows** — the *same* three perturbation
+> ids, the *same* three instances, `block_distribution {0: 24}`. The exposure window existed
+> across many shards; it landed in one. The manuscript can state the leak as measured over
+> the whole corpus rather than over one shard with an unbounded remainder.
+>
+> Measured against corpus `3774ff8f…` and gate verdicts `249a735c…`, receipt at
+> `outputs/rq1/entropy_acceptance_filter_receipt.json`, reproducible with
+> `scripts/find_acceptance_filter_dropped.py`.
+>
+> **What caught it is the point-of-use principle, not the upstream filter.** The leak happened
+> in September when `rq1_validated_perturbations.csv` was re-assembled after that shard's
+> inference. Nothing at the leak detected it. The entropy stage re-checking acceptance *at the
+> point where m is computed* caught it on a corpus assembled months later — remedy 2 of
+> "verified but not enforced", a receipt re-asserted where it matters rather than where it
+> was first established.
+
 ---
 
 # Latent hazard: the QA resume predicate (2026-09-13)
