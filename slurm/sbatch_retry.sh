@@ -48,6 +48,38 @@ for try in $(seq 1 "$N"); do
   if printf '%s' "$out" | grep -q "Submitted batch job"; then
     jid="$(printf '%s' "$out" | grep -oE '[0-9]+$')"
     echo "sbatch_retry: $SCRIPT -> job $jid (attempt $try/$N)" >&2
+    # READ-BACK. A zero exit from sbatch says the command RAN, not that it did what was asked.
+    # On 2026-09-19 all four cut-off jobs were submitted with --dependency AFTER the script
+    # path; sbatch passed it to the script as an argument, every job was created with
+    # Dependency=(null), and every call returned 0. Nothing in the wrapper noticed. The remedy
+    # is not a better argument order -- that is this instance -- it is to read the resulting
+    # state back and assert it, so the class cannot recur through some other option.
+    # docs/BUG_AUDIT.md, "a success code is not a receipt".
+    if [ $# -gt 0 ]; then
+      _show="$(scontrol show job "$jid" 2>/dev/null)"
+      _bad=0
+      for _opt in "$@"; do
+        case "$_opt" in
+          --dependency=*)
+            _w="${_opt#--dependency=}"
+            printf '%s' "$_show" | grep -qE "Dependency=${_w}([( ]|$)" || {
+              echo "sbatch_retry: READ-BACK FAILED on $jid -- asked --dependency=$_w, got $(printf '%s' "$_show" | grep -oE 'Dependency=[^ ]*')" >&2
+              _bad=1; }
+            ;;
+          --hold)
+            printf '%s' "$_show" | grep -q "JobHeldUser" || {
+              echo "sbatch_retry: READ-BACK FAILED on $jid -- asked --hold, job is not held" >&2
+              _bad=1; }
+            ;;
+        esac
+      done
+      if [ "$_bad" -ne 0 ]; then
+        echo "sbatch_retry: job $jid EXISTS but does not match the request; NOT reporting success." >&2
+        echo "              Repair with scontrol update, or scontrol hold it." >&2
+        echo "$jid"; exit 3
+      fi
+      echo "sbatch_retry: read-back OK on $jid ($*)" >&2
+    fi
     echo "$jid"
     exit 0
   fi

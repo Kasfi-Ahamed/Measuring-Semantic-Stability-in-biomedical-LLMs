@@ -1744,6 +1744,47 @@ Not yet applied to cell 11: the halves `run_mm_a9_jobA1/A2.sbatch` close the ins
 setting `MM_MAP_BLOCKS`, which makes the receipt bind, but the class remains open in the code.
 
 
+## The fourth instance — a success code is not a receipt (2026-09-19)
+
+**Class:** a wrapper whose exit code reports that the command *ran*, not that it did *what was
+asked*. The caller reads zero, believes the request was honoured, and the divergence is
+invisible until something downstream depends on it.
+
+### The instance
+
+The whole cut-off chain was submitted through `slurm/sbatch_retry.sh` with
+`--dependency=afterok:<id>`. The wrapper ran `sbatch "$SCRIPT" "$@"`, and **sbatch treats
+everything after the script path as arguments to the script, not options to itself**. All four
+jobs were created with `Dependency=(null)`. Every call returned 0. The wrapper printed
+`-> job NNNNN` four times and reported success four times.
+
+Had the scheduler been faster than the entropy job, the MedMentions margin would have run
+against the **13 September** entropy file and RQ4 against a stale margin — and every receipt in
+those steps would have passed, because each one checks its own inputs for internal consistency
+and none of them checks *which* upstream produced them.
+
+It was caught by reading `squeue` instead of trusting the exit code, and repaired with
+`scontrol update` before any job started.
+
+### Why the argument order is not the lesson
+
+Fixing the order fixes *this* option. The class recurs through the next one — `--hold`,
+`--time`, `--exclude`, any of them silently swallowed the same way. The remedy has to be
+independent of which option was asked for.
+
+### The remedy — read the resulting state back and assert it
+
+7. **A wrapper asserts the state it created, not the exit code of the call that created it.**
+   `sbatch_retry.sh` now runs `scontrol show job <id>` after submission and checks every
+   requested option against what Slurm actually recorded, exiting 3 with the mismatch printed
+   if they disagree. It is the same shape as remedy 2 — a receipt re-asserted at the point of
+   use — applied to the act of submission rather than to a row count. First live confirmation:
+   job 34290, `read-back OK on 34290 (--dependency=afterok:34280)`.
+
+This is the fourth member of the family, and the first where the defective guard was one we
+had written that week to prevent a different instance of the same family.
+
+
 ---
 
 # Amendment 7 never existed in CADEC's code — 2026-09-17

@@ -77,12 +77,13 @@ PLACEHOLDERS = [
          desc="rank-biserial and Holm p, matched pair 3"),
     dict(section="limitations — tie-break exposure (FROZEN, E1)",
          placeholder="[[TIEBREAK_CASES]]",
-         # NO MACHINE-READABLE RECEIPT EXISTS for the PRE-fix E1 run (job 33221): only the
-         # POST-fix receipt survives on disk, and it reports 0 differing rows because
-         # Amendment 9 had already been applied. The 1,007 figure therefore has to come from
-         # the version-controlled pre-commitment, which is still emission and not
-         # transcription -- if the document changes, the emitted value changes with it.
-         artefact="docs/ANALYSIS_PRECOMMIT.md",
+         # SOURCE: job 33221's own log, which retained the row-for-row comparison in full:
+         #   "predicted_cui  differ on 1,007 of 370,428 rows (0.271848%)"
+         # NOT parsed from our own prose, and NOT from the E1 receipt on disk -- that receipt
+         # is the POST-fix run (33345) and reports 0 differing rows because Amendment 9 had
+         # already been applied when it ran. Reading the post-fix receipt for a pre-fix number
+         # would have been silently wrong.
+         artefact="logs/E1_two_source_33221.log",
          column=None, agg="e1_frozen", exempt_staleness=True,
          desc="1,007 of 370,428 rows on block 6; pre-fix, frozen, corpus-independent"),
 ]
@@ -133,21 +134,24 @@ def resolve(spec: dict) -> dict:
             return {**row, "value": (len(v) if agg == "json_len" else v),
                     "status": "OK", "sha256": sha256(p),
                     "detail": f"receipt key {spec['column']}"}
-        if agg == "e1_frozen":                    # the PRE-fix E1 figure, corpus-independent
+        if agg == "e1_frozen":                    # the PRE-fix E1 measurement, from its log
             import re as _re
-            m = _re.search(r"\|\s*`predicted_cui`\s*\|\s*\*\*([\d,]+)\s*\(([\d.]+)%\)\*\*",
-                           p.read_text())
-            m2 = _re.search(r"differing rows of ([\d,]+)", p.read_text())
-            if not m or not m2:
+            txt = p.read_text(errors="replace").replace("\r", "\n")
+            m = _re.search(r"predicted_cui\s+differ on ([\d,]+) of ([\d,]+) rows "
+                           r"\(([\d.]+)%\)", txt)
+            if not m:
                 return {**row, "value": None, "status": "MISSING",
-                        "detail": "the E1 row could not be parsed from the pre-commitment"}
+                        "detail": "the row-for-row comparison is not in this log"}
             n_diff = int(m.group(1).replace(",", ""))
-            n_rows = int(m2.group(1).replace(",", ""))
+            n_rows = int(m.group(2).replace(",", ""))
             return {**row, "value": {"differing": n_diff, "of": n_rows,
-                                     "pct": float(m.group(2))},
+                                     "pct": float(m.group(3))},
                     "status": "OK", "sha256": sha256(p),
-                    "detail": "PRE-FIX, block 6 only, frozen; NOT a cut-off number and not "
-                              "comparable with the tie-break receipt rate"}
+                    "detail": "POPULATION: MedMentions block 6 only, 370,428 rows, all 8 "
+                              "models, PRE-Amendment-9. Two routes, one GPU, one run, "
+                              "differing only in hash order. NOT a cut-off number; NOT "
+                              "comparable with the post-fix tie-break receipt rate, which "
+                              "counts ties that EXISTED rather than assignments that MOVED."}
         if agg == "rows":
             n = sum(len(c) for c in pd.read_csv(p, usecols=[0], chunksize=500_000,
                                                 dtype=str))
