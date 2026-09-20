@@ -550,3 +550,49 @@ fire or a receipt that answered the wrong question. It is recorded here rather t
 `docs/BUG_AUDIT.md` for that reason: the remedy is a habit in the runbook, not a check in the
 code.
 
+---
+
+# Staleness: mtime detects candidates, only content resolves them (2026-09-20)
+
+**Rule: a staleness sweep ends by comparing VALUES, not by listing files.**
+
+`scripts/staleness_sweep_cadec_qa.py` tests whether any declared input is newer than the
+artefact. That is a good first pass and it is not an answer. In one session it was got past
+three different ways:
+
+**1. Stale through an intermediate.** The sweep tests DIRECT inputs only. Four artefacts
+reported CURRENT while resting on something stale one level up — `docs/RQ1_CADEC_results_rawm.md`
+and three figures, all ultimately behind `entropy_cadec.csv`. A transitive closure over the
+declared graph finds them; the direct check cannot.
+
+**2. mtime reset by an unrelated edit.** `docs/RQ4_CADEC_results.md` reads CURRENT because it
+was edited on 2026-09-18 to add an annotation, which pushed its timestamp past its own inputs.
+Its numbers were computed on 2026-09-15 from three files that job `33411` superseded on
+2026-09-18. **Touching a file launders it.** Adding the staleness notice does it again, which
+is why that notice says in terms not to read the mtime as provenance.
+
+**3. Stale by mtime, identical in content.** Thirteen artefacts flagged; recomputation found
+**one** number actually moved (`nearest_distance` 1.3e-04 -> 2.53e-04 in the threshold band —
+every count around it identical). Regenerating all thirteen the night before a cut-off would
+have been hours of GPU for one figure, and the recomputation cost minutes.
+
+## What follows
+
+- **Recompute before regenerating.** A flagged artefact is a candidate, not a verdict. This is
+  the cheap direction: reading current inputs and comparing to the documented value costs
+  minutes, regenerating costs hours, and most flags are mtime artefacts.
+- **Extend digests to what the documents quote.** `scripts/regen_figures.py` already takes a
+  sha256 before and after, which is immune to both weakness 1 and weakness 2 — a digest cannot
+  be laundered by touching a file, and it compares content rather than an ordering. The
+  artefacts that documents quote deserve the same treatment.
+- **A document should say what it is stale against.** Editing its numbers hides the history;
+  a notice naming the job that superseded its inputs keeps it.
+
+## A smaller one: a commit message can delete its own content
+
+`git commit -m "...\`if not bak.exists()\`..."` inside a double-quoted shell string runs the
+backticked text as a command and substitutes the (empty) output. The message committed as
+"guarded by , which I had not read" — the clause naming the error was removed by the shell.
+**Write commit messages to a file and use `git commit -F`.** Nobody proofreads a commit message
+after the fact, which is what makes this worth a line.
+
