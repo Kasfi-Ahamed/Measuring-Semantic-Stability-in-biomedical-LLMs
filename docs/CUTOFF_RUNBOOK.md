@@ -596,3 +596,51 @@ backticked text as a command and substitutes the (empty) output. The message com
 **Write commit messages to a file and use `git commit -F`.** Nobody proofreads a commit message
 after the fact, which is what makes this worth a line.
 
+---
+
+# Perturbation-stage retention, recomputed and provenanced (2026-09-20)
+
+Both figures rest on a recomputation anyone can rerun, not on a copied report:
+`outputs/rq1/intermediate/rq1_validated_perturbations.csv`, restricted to the 160,000
+instances of blocks 0-19 via `mm_shards/instance_index.csv`.
+
+| quantity | value |
+|---|---|
+| instances with >= 3 accepted variants (all) | **141,909** |
+| instances with >= 3 accepted DISTINCT variants | **127,599** |
+| entropy file instances | 141,908 |
+| entropy file retained (m >= 3) | 127,598 |
+
+**The difference of one, in both counts, is the same instance.** `mm_0008783` (block 1) has 4
+accepted variants at the gate and only 2 in the corpus: `_p01` and `_p02` are accepted in the
+validated-perturbations file and have **no rows** in the mapped corpus, which puts it below
+m >= 3 at the entropy stage.
+
+**The class, counted at corpus scale rather than at the crossing:** 7 accepted perturbation
+ids across **5 instances** have no rows in the corpus (0.001% of 758,969 accepted ids, 0.003%
+of instances) — 3 instances lost one variant, 2 lost two. Four of the five stay above m >= 3
+and are analysed at m = 4 instead of 5 or 6; only `mm_0008783` crosses. Below the resolution
+of any corpus-level statistic, so a disclosure and not a definitional change.
+
+The five instances and the ids they lost, verified individually rather than by splitting
+identifiers on `_p`:
+
+| instance | accepted ids with no rows in the corpus |
+|---|---|
+| `mm_0001412` | `_p02` |
+| `mm_0001903` | `_p05` |
+| `mm_0008783` | `_p01`, `_p02`  ← the only one that crosses m >= 3 |
+| `mm_0009136` | `_p02` |
+| `mm_0013400` | `_p01`, `_p02` |
+
+`mm_0001903` appears in BOTH leak directions: it lost `_p05` (accepted, never reached
+inference) and carried `_p06` (rejected, reached inference anyway — one of the 24). The same
+instance sits on both sides of the same seam.
+
+Sentence for the manuscript:
+
+> 141,909 instances clear m >= 3 at the perturbation stage; 141,908 enter the analysis. Seven
+> accepted perturbations across five instances have no rows in the mapped corpus; for four of
+> those instances the loss leaves m >= 3 intact, and for `mm_0008783` it does not, which
+> accounts for the difference of one.
+

@@ -2158,3 +2158,52 @@ assertion** stays at the write gate against `len(ent)` at the merge, with a seco
 that `ent` has not drifted from what the early check predicted. Verified against 34278's real
 numbers before resubmission: the old comparison fails, the new one passes.
 
+---
+
+# A pilot threshold measures the pilot, not the invariant (2026-09-20)
+
+**Class:** a literal threshold chosen against one corpus, asserted forever. It does not fail by
+letting bad data through — it fails by **rejecting correct data at a scale it was never tested
+on**, and it does so on the first honest exposure, which is usually the run that matters.
+
+## The instance
+
+`assert n_gen_na <= 5` in `RQ4_compute_missing_umls_margin.ipynb` cell 4 killed job `34358`
+after 1h25m on **974 legitimate generative NA margins**. The 974 are exactly the
+direct-CUI-skipped cells, verified row for row: set difference empty in BOTH directions and
+0 disagreements across all 637,990 generative cells.
+
+**The constant had never been tested here.** `grep` over every log shows the string
+`NA margin before fill` appears **once**, in 34358. The only prior completed run of that cell
+is job `27239`, 2026-08-19, elapsed **2m07s** against 34358's 1h25m — a pilot. The two
+`qa_margin` jobs ran cells 1,2,3,**5** and skipped cell 4 entirely.
+
+## The remedy
+
+12. **Prefer a relation between two quantities the run computes over a number a human chose.**
+    A threshold encodes what one corpus looked like; a relation encodes what must be true.
+
+Applied: the constant became the identity
+
+    {generative cells with margin_mean NULL} == {generative cells with n_retrieval_rows == 0}
+
+which is **strictly stronger**, verified three ways before resubmission: it passes on the real
+file (974 == 974), it FAILS on one injected *unexplained* null, and it PASSES on one injected
+*legitimate* direct-CUI skip. `<= 5` tolerated five unexplained nulls at any scale; the
+identity tolerates zero and scales by construction. Job `34402` then completed in 56m25s with
+`IDENTITY HOLDS: 974 generative nulls == 974 zero-retrieval cells`.
+
+## Triage rule, from the sweep of all 239 assertions in the pipeline
+
+**The direction of the bound decides the risk.**
+
+- **Lower bounds get SAFER as the corpus grows** and are not in this class: `_n_cuis >
+  3_000_000`, `n_unique >= 200`.
+- **Upper bounds and equalities on counts are the exposed class.** In this pipeline:
+  `len(tidy) == 13` (`RQ4_four_dataset_figures`, last exercised 2026-08-20 at pilot scale, and
+  the first thing that will meet full scale), `nunique() >= 7` against an eight-model grid
+  (passes with a model missing), `len(df) == 55_976`.
+- **A literal that IS the commitment is not in this class.** `assert len(head) == 6` encodes a
+  pre-registered family size; rewriting it as a relation would weaken it. The test is whether
+  the number came from a measurement or from a decision.
+
