@@ -12,7 +12,10 @@
 # dependency chain lives in the scheduler rather than in a shell loop.
 #
 # Runs at B = 20,000 with the (r+1)/(B+1) estimator (Amendment 1, applied 2026-09-18).
-# Cell 9 is ~97% of the runtime: ~66 min at B=20,000, measured from 395s at B=2000.
+# Cell 9 is ~97% of the runtime. MEASURED 2h07m at B=20,000 (job 34423, 2026-09-21).
+# The earlier note here said ~66 min, extrapolated linearly from 395s at B=2000. That was
+# optimistic by about 2x -- the bootstrap does not scale linearly in B on this node -- and
+# the figure is replaced with the measurement rather than re-derived. 4h walltime holds.
 # Depends on the MedMentions margin: the Holm family is 5 MedMentions cells + 1 CADEC.
 set -euo pipefail
 export PYTHONHASHSEED=0

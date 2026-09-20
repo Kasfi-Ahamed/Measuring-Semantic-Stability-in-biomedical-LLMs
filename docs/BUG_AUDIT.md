@@ -2340,3 +2340,72 @@ Two different scripts, two different code paths, same instance count.
 states the operation and the population, in a field the machine requires and the reader sees
 first. And when a description and an aggregation sit in the same literal, they are two claims
 about one number: if nothing compares them, assume they disagree.
+
+---
+
+## 15. A `.copy()`, then two hours of bootstrap thrown away by the reporting block
+
+**Job 34423, 2026-09-21. FAILED at 02:06:59, in the last 36 lines of a 336-line cell, after
+the entire bootstrap had completed.** My defect, introduced by the Amendment 1 three-category
+change and sent to the cluster unexercised.
+
+### The bug
+
+```python
+head = df_win[df_win["headline"]].copy()      # DETACHED copy
+...
+df_win.loc[head.index, "holm_outcome"] = [...]  # written to the ORIGINAL
+...
+for r in head.itertuples(): ... r.holm_outcome   # read from the COPY -> stale
+_cat = head["holm_outcome"].value_counts()       # stale
+assert _n_better + _n_worse + _n_not == len(head)   # 0+0+0 != 6 -> raises
+```
+
+`head` still held the initialised `"not_in_family"` for all six cells, so the printed table
+showed `not_in_family` six times and the partition assertion failed.
+
+### What was and was not damaged
+
+**The artefact would have been correct.** `df_win` — the frame written to
+`rq4_combined3_wintest.csv` — received the right values. Only the *reads* were stale. So this
+is the inverse of the usual failure: the data was right and the human-readable summary was
+wrong, and it is the summary a reader transcribes from. Had the assertion not been there, the
+run would have succeeded, written a correct CSV, and printed a table claiming no cell was in
+the Holm family at all.
+
+**The assertion earned its cost.** It is the only reason this was caught. But it fired 31
+lines before `df_ci.to_csv(...)`, so the ~2h bootstrap was computed, held in memory, and
+discarded. Earlier-cell outputs (AURC, Spearman, risk-coverage, written 01:21, a minute after
+start) survived and were valid.
+
+### Why the cost was avoidable and the bug was not caught earlier
+
+The assertion could not have run sooner *on real data* — `holm` depends on bootstrap
+p-values. But it could have run on **synthetic** data in under a second, before submission.
+The standing preference recorded earlier this week was to exercise a notebook's own sequence
+rather than reason about it; here a 25-line edit went to a 2-hour job on the strength of
+reading it.
+
+`scripts/test_rq4_holm_outcome.py` now **slices the block out of the notebook by text and
+exec's it** — it is not a re-implementation, so an edit that reintroduces the shape fails the
+test. Four families: all-rejected-better, mixed, none-rejected, and 34423's actual deltas and
+p-values. Each case also asserts that `df_win` and `head` agree and that non-headline rows
+keep `not_in_family`. A reconstruction of the pre-fix shape is run as a regression guard and
+must still raise.
+
+### The fix
+
+Assign into `head`, then propagate to `df_win`, then assert the two agree. One object is
+computed and the other derived, so they cannot disagree. With 34423's real numbers the family
+resolves to **5 rejected / combined_3 better, 1 rejected / combined_3 worse**.
+
+Resubmitted as **34433**; 34424 and 34427 were `DependencyNeverSatisfied` and were re-pointed
+with `scontrol update Dependency=afterok:34433`, read back.
+
+**Remedy 15.** `df[mask].copy()` followed by `df.loc[idx, col] = ...` leaves the copy stale;
+write to one and derive the other. And a display or summary block that runs *after* hours of
+compute must be exercised on synthetic input before the job is submitted — it is the cheapest
+code in the notebook to test and the most expensive place to fail.
+
+**Also recorded:** the launcher's "~66 min at B=20,000", extrapolated linearly from 395s at
+B=2000, was optimistic by ~2x. Measured 2h07m. Replaced with the measurement.
