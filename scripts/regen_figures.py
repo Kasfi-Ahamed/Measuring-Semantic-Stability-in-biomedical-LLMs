@@ -47,6 +47,9 @@ def snapshot() -> dict[str, str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--datasets", default=",".join(DATASETS),
+                    help="comma-separated subset, e.g. cadec,qa — lets the lanes that are "
+                         "already fresh be exercised before the one that is not")
     ap.add_argument("--ledger", type=Path,
                     default=ROOT / "outputs/rq1/figure_digests.json")
     a = ap.parse_args()
@@ -54,9 +57,15 @@ def main() -> int:
     before = snapshot()
     print(f"before: {len(before)} figures on disk", flush=True)
 
+    wanted = [d.strip() for d in a.datasets.split(",") if d.strip()]
+    bad = [d for d in wanted if d not in DATASETS]
+    if bad:
+        print(f"unknown dataset(s) {bad}; have {DATASETS}", file=sys.stderr)
+        return 2
+    print(f"datasets: {wanted}", flush=True)
     runs = []
     for prod in PRODUCERS:
-        for ds in DATASETS:
+        for ds in wanted:
             cmd = [PY, str(ROOT / "scripts" / f"{prod}.py"), ds]
             print(f"\n--- {prod} {ds} ---", flush=True)
             r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)

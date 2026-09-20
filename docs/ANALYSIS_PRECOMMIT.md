@@ -872,6 +872,23 @@ version-controlled object; the bytes are not.
 | **`rq1_all_outputs_mapped_A9_CUTOFF.csv`** (the join) | — | **7,332,245** | 1,341,264,922 | `3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9` |
 | `outputs/rq3/umls_candidate_margin_cadec.csv` | `33411` | 37,696 | 9,667,994 | `534c64929f7996aca30b4b7c0091184839fd1f5263008bf352ca10dbb008d23d` |
 
+**Which producers read the linked canonical name.** `rq1_all_outputs_mapped.csv` is a HARD
+LINK to the cut-off corpus (one inode, two names), installed 2026-09-19 so PART2's cache
+branch would find it. The ledger should say who touches that name, because the link means a
+producer that writes through it IN PLACE modifies the corpus itself:
+
+| producer | how it touches `rq1_all_outputs_mapped.csv` |
+|---|---|
+| `RQ1_PART2_full_umls_pool.ipynb` (cache branch) | **reads** — this is why the link exists |
+| `RQ4_compute_missing_umls_margin.ipynb` cell 4 | **reads** as `MAPPED_PATH` |
+| `mm_shard_lib.mapped_outputs_path()` | **reads**, as the historical default when no corpus is named |
+| `scripts/cutoff_verify.py` STEP 0 | **reads**, and asserts the inode and digest still match |
+
+All reads. No producer currently writes through that name, and the two that write a corpus
+(`a9_concat_corpus.py`, cell 11) write a new file. `os.replace` is safe here — it creates a new
+inode and breaks the link — while an in-place `open(path, "w")` would not be. STEP 0 of the
+verification re-checks the digest for exactly that reason.
+
 **Outstanding, and not resolved by this rule.** The rule governs artefacts from 2026-09-18
 onward. It does **not** retroactively remove what is already in history: `git ls-files` shows
 **24 tracked margin / mapping / entropy artefacts** under `outputs/`, including
