@@ -35,8 +35,8 @@ CADEC must be labelled **patient-generated** / **consumer-health**, never clinic
 
 | File | loc | Line |
 |---|---|---|
-| `notebooks/RQ1_linguistic_predictors_hurdle.ipynb` | cell 9 (source + stdout) | `CADEC = patient-generated health text (not clinical notes)` |
-| `notebooks/RQ2_Accuracy_Stability_Dissociation.ipynb` | cell 9 (source + stdout) | `CADEC = patient-generated health text (not clinical notes)` |
+| `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb` | cell 9 (source + stdout) | `CADEC = patient-generated health text (not clinical notes)` |
+| `notebooks/05_analysis/RQ2_Accuracy_Stability_Dissociation.ipynb` | cell 9 (source + stdout) | `CADEC = patient-generated health text (not clinical notes)` |
 
 **Reading.** Every CADEC+clinical hit in the live RQ1–RQ3 notebooks is a **disclaimer**, not a mislabel. No live hit calls CADEC clinical notes. `RQ1_Report.md`, `RQ2_Report.md`, `RQ3_Report.md`, and `Results_Analysis_Report.md` have **no** CADEC+clinical co-occurrence.
 

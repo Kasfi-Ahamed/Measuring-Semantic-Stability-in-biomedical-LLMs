@@ -1,3 +1,3 @@
 dataset,n_instances,n_excluded_m_lt_min,n_included,min_m,mean_m
-squad2,1000,861,139,3,1.486
+squad2,11873,10137,1736,3,1.5153710098542912
 bioasq,1600,1208,392,3,1.8525

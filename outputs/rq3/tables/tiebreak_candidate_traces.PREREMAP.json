@@ -1,0 +1,154 @@
+{
+  "generated": "2026-09-13T10:04:13+1000",
+  "corpus": {
+    "rows": 239680,
+    "distinct_texts": 15229,
+    "instances": 5161
+  },
+  "max_abs_embedding_delta_fresh_corpus": 0.000824272632598877,
+  "max_abs_embedding_delta_row": 41256,
+  "traces": [
+    {
+      "row": 102190,
+      "n_rows_same_key": 3,
+      "instance_id": "cadec_LIPITOR.373_TT4",
+      "model_name": "FLAN-T5-base",
+      "output_text": "blockage",
+      "gold_mention": "blockage of the LAD",
+      "pred_dedup_32341": "C1879887",
+      "pred_full_32341": "C2237319",
+      "vec_max_absdiff": 0.00012881308794021606,
+      "arm_A_dedup": [
+        {
+          "rank": 0,
+          "cui": "C2237319",
+          "form": "blockage",
+          "cosine": "0.999999701977",
+          "n_forms": 3,
+          "top2_gap": "0.000000000000e+00",
+          "n_forms_tied_with_rank1": true
+        },
+        {
+          "rank": 1,
+          "cui": "C1879887",
+          "form": "Blockage",
+          "cosine": "0.999999701977",
+          "n_forms": 3
+        },
+        {
+          "rank": 2,
+          "cui": "C1706968",
+          "form": "Blockage",
+          "cosine": "0.999999701977",
+          "n_forms": 2
+        }
+      ],
+      "arm_B_full": [
+        {
+          "rank": 0,
+          "cui": "C2237319",
+          "form": "blockage",
+          "cosine": "0.999999523163",
+          "n_forms": 3,
+          "top2_gap": "1.192092895508e-07",
+          "n_forms_tied_with_rank1": true
+        },
+        {
+          "rank": 1,
+          "cui": "C1879887",
+          "form": "Blockage",
+          "cosine": "0.999999403954",
+          "n_forms": 3
+        },
+        {
+          "rank": 2,
+          "cui": "C1706968",
+          "form": "Blockage",
+          "cosine": "0.999999403954",
+          "n_forms": 2
+        }
+      ],
+      "winner_A": "C2237319",
+      "winner_B": "C2237319",
+      "order_reversed": false
+    },
+    {
+      "row": 198268,
+      "n_rows_same_key": 3,
+      "instance_id": "cadec_LIPITOR.60_TT2",
+      "model_name": "Llama3-OpenBioLLM-8B",
+      "output_text": "Left knee pain",
+      "gold_mention": "stiffness at left knee",
+      "pred_dedup_32341": "C5442019",
+      "pred_full_32341": "C2142181",
+      "vec_max_absdiff": 0.00019735842943191528,
+      "arm_A_dedup": [
+        {
+          "rank": 0,
+          "cui": "C5442019",
+          "form": "Left knee pain",
+          "cosine": "0.999998867512",
+          "n_forms": 5,
+          "top2_gap": "4.172325134277e-07",
+          "n_forms_tied_with_rank1": true
+        },
+        {
+          "rank": 1,
+          "cui": "C2142181",
+          "form": "left knee pain",
+          "cosine": "0.999998450279",
+          "n_forms": 5
+        },
+        {
+          "rank": 2,
+          "cui": "C5442019",
+          "form": "Pain in left knee",
+          "cosine": "0.989463210106",
+          "n_forms": 5
+        },
+        {
+          "rank": 3,
+          "cui": "C5442019",
+          "form": "Pain of left knee",
+          "cosine": "0.988744735718",
+          "n_forms": 5
+        }
+      ],
+      "arm_B_full": [
+        {
+          "rank": 0,
+          "cui": "C2142181",
+          "form": "left knee pain",
+          "cosine": "0.999997973442",
+          "n_forms": 5,
+          "top2_gap": "5.960464477539e-08",
+          "n_forms_tied_with_rank1": true
+        },
+        {
+          "rank": 1,
+          "cui": "C5442019",
+          "form": "Left knee pain",
+          "cosine": "0.999997913837",
+          "n_forms": 5
+        },
+        {
+          "rank": 2,
+          "cui": "C5442019",
+          "form": "Pain in left knee",
+          "cosine": "0.989449501038",
+          "n_forms": 5
+        },
+        {
+          "rank": 3,
+          "cui": "C5442019",
+          "form": "Pain of left knee",
+          "cosine": "0.988733410835",
+          "n_forms": 5
+        }
+      ],
+      "winner_A": "C5442019",
+      "winner_B": "C2142181",
+      "order_reversed": true
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+path,mtime,status,n,n_inputs,newer_inputs,producer,tracked
+outputs/MANIFEST.md,2026-09-01 22:48,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ1_predictors_cadec.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ1_predictors_medmentions.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ2_dissociation_cadec.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ2_dissociation_medmentions.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ3_matched_pairs.png,2026-08-16 10:25,STALE,,3,entropy_cadec.csv(09-11 19:11); entropy_full_umls.csv(09-13 12:29); rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_inference.ipynb; rq3_matched_pairs.py,True
+outputs/figures/all_rq_figures/RQ4_aurc_4datasets.png,2026-08-20 12:07,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_aurc_bioasq_squad2.png,2026-08-20 12:07,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_aurc_concept_medmentions_cadec.png,2026-08-20 12:21,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_aurc_grouped.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_aurc_medmentions_cadec.png,2026-08-20 12:07,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_aurc_qa_bioasq_squad.png,2026-08-20 12:21,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_h0_centrepiece_cadec_encoders.png,2026-08-20 04:18,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/figures/all_rq_figures/RQ4_risk_coverage_bioasq.png,2026-08-20 12:21,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_risk_coverage_cadec.png,2026-08-20 12:21,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_risk_coverage_margin_cadec.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_risk_coverage_margin_medmentions.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_risk_coverage_medmentions.png,2026-08-20 12:21,CURRENT,,1,,RQ4_MedMentions_Abstention.ipynb,True
+outputs/figures/all_rq_figures/RQ4_risk_coverage_squad.png,2026-08-20 12:21,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_riskcoverage_4datasets.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_riskcoverage_bioasq.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_riskcoverage_cadec.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_riskcoverage_medmentions.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_riskcoverage_squad2.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/figures/all_rq_figures/RQ4_spearman_independence.png,2026-08-20 14:41,UNKNOWN(no producer found),,0,,,True
+outputs/figures/all_rq_figures/RQ4_spearman_independence_table.png,2026-08-20 14:41,UNKNOWN(no producer found),,0,,,True
+outputs/qa/handoff/qa_exclusion_report.csv,2026-08-19 18:07,STALE,rows=2,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb,False
+outputs/qa/handoff/qa_results_combined.csv,2026-08-19 18:07,STALE,"ids=2,600",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,False
+outputs/qa/handoff/qa_summary.csv,2026-08-19 18:07,UNKNOWN(no inputs resolved),rows=10,0,,QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb,False
+outputs/qa/intermediate/qa_question_perturbations_bioasq.csv,2026-08-04 23:09,STALE,"ids=1,480",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate/qa_question_perturbations_bioasq.meta.json,2026-08-04 23:09,STALE,,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate/qa_question_perturbations_squad2.csv,2026-09-03 23:55,STALE,"ids=10,213",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate/qa_question_perturbations_squad2.meta.json,2026-09-03 23:55,STALE,,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate_smoke/qa_preflight_smoke_rows.csv,2026-08-04 17:00,UNKNOWN(no inputs resolved),ids=16,0,,QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate_smoke/qa_question_perturbations_bioasq.csv,2026-08-04 17:00,STALE,ids=8,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate_smoke/qa_question_perturbations_bioasq.meta.json,2026-08-04 17:00,STALE,,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate_smoke/qa_question_perturbations_squad2.csv,2026-08-04 16:59,STALE,ids=6,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/intermediate_smoke/qa_question_perturbations_squad2.meta.json,2026-08-04 16:59,STALE,,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; QA_preflight_smoke.ipynb,False
+outputs/qa/qa_exclusion_report.csv,2026-09-04 03:17,STALE,rows=2,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb,True
+outputs/qa/qa_results_bioasq_biomistral.csv,2026-08-04 23:43,STALE,"ids=1,600",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_bioasq_flan-t5-base.csv,2026-08-05 00:22,STALE,"ids=1,600",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_bioasq_llama3.csv,2026-08-05 00:20,STALE,"ids=1,600",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_bioasq_mistral.csv,2026-08-04 23:59,STALE,"ids=1,600",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_bioasq_openbiollm.csv,2026-08-05 00:15,STALE,"ids=1,600",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_combined.csv,2026-09-04 03:17,STALE,"ids=13,473",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_squad2_biomistral.csv,2026-09-04 00:55,STALE,"ids=11,873",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_squad2_flan-t5-base.csv,2026-09-04 03:17,STALE,"ids=11,873",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_squad2_llama3.csv,2026-09-04 03:09,STALE,"ids=11,873",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_squad2_mistral.csv,2026-09-04 01:52,STALE,"ids=11,873",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_results_squad2_openbiollm.csv,2026-09-04 02:49,STALE,"ids=11,873",1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/qa/qa_risk_coverage_bioasq.png,2026-09-04 03:17,CURRENT,,1,,QA_answer_level_semantic_entropy.ipynb,True
+outputs/qa/qa_risk_coverage_squad2.png,2026-09-04 03:17,CURRENT,,1,,QA_answer_level_semantic_entropy.ipynb,True
+outputs/qa/qa_summary.csv,2026-09-04 03:17,UNKNOWN(no inputs resolved),rows=10,0,,QA_answer_level_semantic_entropy.ipynb; RQ4_Results_compiled.ipynb,True
+outputs/qa/umls_candidate_margin_qa.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),ids=531,0,,RQ4_compute_missing_umls_margin.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq1/entropy_full_umls.csv,2026-09-13 12:29,STALE,"inst=49,403",4,rq3_matched_pair_statistics.csv(09-13 22:20),RQ1_PART2_full_umls_pool.ipynb; RQ1_linguistic_predictors_hurdle.ipynb; RQ2_Accuracy_Stability_Dissociation.ipynb,False
+outputs/rq1/fig_entropy_mesh_vs_full_umls.png,2026-09-13 12:29,UNKNOWN(no inputs resolved),,0,,RQ1_PART2_full_umls_pool.ipynb,False
+outputs/rq1/figures/rq1_conditional_entropy_heatmap_medmentions.png,2026-08-16 10:52,UNKNOWN(no inputs resolved),,0,,RQ1_semantic_entropy_linguistic_predictors.ipynb; RQ2_Accuracy_Stability_Dissociation_pipeline_backup.ipynb,True
+outputs/rq1/figures/rq1_lexical_magnitude_medmentions.png,2026-08-16 10:52,UNKNOWN(no producer found),,0,,,True
+outputs/rq1/figures/rq1_linguistic_predictors_coefs.png,2026-08-02 10:48,UNKNOWN(no inputs resolved),,0,,RQ1_linguistic_predictors_hurdle.ipynb,True
+outputs/rq1/figures/rq2_accuracy_quartile_medmentions.png,2026-08-16 10:58,UNKNOWN(no producer found),,0,,,True
+outputs/rq1/figures/rq2_dissociation_stable_but_wrong.png,2026-08-02 10:53,CURRENT,,1,,RQ2_Accuracy_Stability_Dissociation.ipynb,True
+outputs/rq1/figures/rq2_effect_sizes_medmentions.png,2026-08-16 10:58,UNKNOWN(no producer found),,0,,,True
+outputs/rq1/figures/rq4_aurc_grouped_both_datasets.png,2026-08-02 10:57,UNKNOWN(no inputs resolved),,0,,RQ4_Clinical_Utility_Abstention.ipynb,True
+outputs/rq1/figures/rq4_risk_coverage_medmentions.png,2026-08-06 15:08,CURRENT,,1,,RQ4_MedMentions_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq1/intermediate/mm_model_raw/mm_raw_biomistral.csv,2026-08-02 00:07,UNKNOWN(no producer found),inst=547,0,,,False
+outputs/rq1/intermediate/mm_model_raw/mm_raw_flan-t5-base.csv,2026-08-02 10:18,UNKNOWN(no producer found),inst=547,0,,,False
+outputs/rq1/intermediate/mm_model_raw/mm_raw_llama3.csv,2026-08-02 00:46,UNKNOWN(no producer found),inst=547,0,,,False
+outputs/rq1/intermediate/mm_model_raw/mm_raw_mistral.csv,2026-08-02 00:18,UNKNOWN(no producer found),inst=547,0,,,False
+outputs/rq1/intermediate/mm_model_raw/mm_raw_openbiollm.csv,2026-08-02 00:38,UNKNOWN(no producer found),inst=547,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0000.csv,2026-09-08 11:39,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0000.csv.complete.json,2026-09-08 11:39,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0001.csv,2026-09-08 11:48,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0001.csv.complete.json,2026-09-08 11:48,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0002.csv,2026-09-08 11:57,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0002.csv.complete.json,2026-09-08 11:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0003.csv,2026-09-08 12:05,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0003.csv.complete.json,2026-09-08 12:05,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0004.csv,2026-09-08 12:15,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0004.csv.complete.json,2026-09-08 12:15,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0005.csv,2026-09-08 12:25,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0005.csv.complete.json,2026-09-08 12:25,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0006.csv,2026-09-08 12:35,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0006.csv.complete.json,2026-09-08 12:35,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0007.csv,2026-09-08 12:45,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0007.csv.complete.json,2026-09-08 12:45,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0008.csv,2026-09-08 12:55,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0008.csv.complete.json,2026-09-08 12:55,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0009.csv,2026-09-08 13:06,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0009.csv.complete.json,2026-09-08 13:06,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0010.csv,2026-09-08 13:16,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0010.csv.complete.json,2026-09-08 13:16,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0011.csv,2026-09-08 13:27,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0011.csv.complete.json,2026-09-08 13:27,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0012.csv,2026-09-08 13:38,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0012.csv.complete.json,2026-09-08 13:38,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0013.csv,2026-09-08 13:52,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0013.csv.complete.json,2026-09-08 13:52,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0014.csv,2026-09-08 14:16,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0014.csv.complete.json,2026-09-08 14:16,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0015.csv,2026-09-09 08:12,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0015.csv.complete.json,2026-09-09 08:12,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0016.csv,2026-09-08 14:39,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0016.csv.complete.json,2026-09-08 14:39,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0017.csv,2026-09-09 07:47,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0017.csv.complete.json,2026-09-09 07:47,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0018.csv,2026-09-10 08:32,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0018.csv.complete.json,2026-09-10 08:32,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0019.csv,2026-09-10 08:57,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0019.csv.complete.json,2026-09-10 08:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0000.csv,2026-09-08 11:40,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0000.csv.complete.json,2026-09-08 11:40,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0001.csv,2026-09-08 11:49,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0001.csv.complete.json,2026-09-08 11:49,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0002.csv,2026-09-08 11:58,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0002.csv.complete.json,2026-09-08 11:58,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0003.csv,2026-09-08 12:07,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0003.csv.complete.json,2026-09-08 12:07,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0004.csv,2026-09-08 12:16,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0004.csv.complete.json,2026-09-08 12:16,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0005.csv,2026-09-08 12:26,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0005.csv.complete.json,2026-09-08 12:26,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0006.csv,2026-09-08 12:36,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0006.csv.complete.json,2026-09-08 12:36,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0007.csv,2026-09-08 12:46,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0007.csv.complete.json,2026-09-08 12:46,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0008.csv,2026-09-08 12:56,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0008.csv.complete.json,2026-09-08 12:56,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0009.csv,2026-09-08 13:07,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0009.csv.complete.json,2026-09-08 13:07,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0010.csv,2026-09-08 13:17,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0010.csv.complete.json,2026-09-08 13:17,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0011.csv,2026-09-08 13:28,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0011.csv.complete.json,2026-09-08 13:28,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0012.csv,2026-09-08 13:39,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0012.csv.complete.json,2026-09-08 13:39,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0013.csv,2026-09-08 13:55,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0013.csv.complete.json,2026-09-08 13:55,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0014.csv,2026-09-08 14:18,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0014.csv.complete.json,2026-09-08 14:18,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0015.csv,2026-09-09 08:14,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0015.csv.complete.json,2026-09-09 08:14,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0016.csv,2026-09-08 14:42,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0016.csv.complete.json,2026-09-08 14:42,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0017.csv,2026-09-09 07:49,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0017.csv.complete.json,2026-09-09 07:49,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0018.csv,2026-09-10 08:34,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0018.csv.complete.json,2026-09-10 08:34,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0019.csv,2026-09-10 08:59,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0019.csv.complete.json,2026-09-10 08:59,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0000.csv,2026-09-08 11:41,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0000.csv.complete.json,2026-09-08 11:41,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0001.csv,2026-09-08 11:50,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0001.csv.complete.json,2026-09-08 11:50,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0002.csv,2026-09-08 11:59,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0002.csv.complete.json,2026-09-08 11:59,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0003.csv,2026-09-08 12:08,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0003.csv.complete.json,2026-09-08 12:08,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0004.csv,2026-09-08 12:17,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0004.csv.complete.json,2026-09-08 12:17,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0005.csv,2026-09-08 12:27,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0005.csv.complete.json,2026-09-08 12:27,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0006.csv,2026-09-08 12:37,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0006.csv.complete.json,2026-09-08 12:37,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0007.csv,2026-09-08 12:47,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0007.csv.complete.json,2026-09-08 12:47,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0008.csv,2026-09-08 12:57,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0008.csv.complete.json,2026-09-08 12:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0009.csv,2026-09-08 13:08,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0009.csv.complete.json,2026-09-08 13:08,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0010.csv,2026-09-08 13:18,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0010.csv.complete.json,2026-09-08 13:18,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0011.csv,2026-09-08 13:29,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0011.csv.complete.json,2026-09-08 13:29,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0012.csv,2026-09-08 13:40,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0012.csv.complete.json,2026-09-08 13:40,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0013.csv,2026-09-08 13:57,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0013.csv.complete.json,2026-09-08 13:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0014.csv,2026-09-08 14:21,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0014.csv.complete.json,2026-09-08 14:21,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0015.csv,2026-09-09 08:17,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0015.csv.complete.json,2026-09-09 08:17,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0016.csv,2026-09-08 14:44,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0016.csv.complete.json,2026-09-08 14:44,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0017.csv,2026-09-09 07:51,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0017.csv.complete.json,2026-09-09 07:51,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0018.csv,2026-09-10 08:36,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0018.csv.complete.json,2026-09-10 08:36,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0019.csv,2026-09-10 09:01,UNKNOWN(no producer found),"inst=8,000",0,,,False
+outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0019.csv.complete.json,2026-09-10 09:01,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/feat_shard0000.csv,2026-09-04 03:21,STALE,"inst=7,951",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0000.csv.complete.json,2026-09-04 03:21,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0001.csv,2026-09-04 09:43,STALE,"inst=7,968",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0001.csv.complete.json,2026-09-04 09:43,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0002.csv,2026-09-04 09:39,STALE,"inst=7,948",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0002.csv.complete.json,2026-09-04 09:39,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0003.csv,2026-09-03 11:54,STALE,"inst=7,920",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0003.csv.complete.json,2026-09-03 11:54,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0004.csv,2026-09-04 16:10,STALE,"inst=7,918",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0004.csv.complete.json,2026-09-04 16:10,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0005.csv,2026-09-03 19:37,STALE,"inst=7,906",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0005.csv.complete.json,2026-09-03 19:37,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0006.csv,2026-09-04 16:22,STALE,"inst=7,964",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0006.csv.complete.json,2026-09-04 16:22,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0007.csv,2026-09-04 22:21,STALE,"inst=7,922",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0007.csv.complete.json,2026-09-04 22:21,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0008.csv,2026-09-04 22:52,STALE,"inst=7,946",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0008.csv.complete.json,2026-09-04 22:52,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0009.csv,2026-09-05 04:39,STALE,"inst=7,919",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0009.csv.complete.json,2026-09-05 04:39,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0010.csv,2026-09-05 05:22,STALE,"inst=7,928",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0010.csv.complete.json,2026-09-05 05:22,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0011.csv,2026-09-05 11:07,STALE,"inst=7,944",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0011.csv.complete.json,2026-09-05 11:07,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0012.csv,2026-09-05 11:57,STALE,"inst=7,967",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0012.csv.complete.json,2026-09-05 11:57,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0013.csv,2026-09-07 09:03,STALE,"inst=7,936",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0013.csv.complete.json,2026-09-07 09:03,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0014.csv,2026-09-07 07:46,STALE,"inst=7,939",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0014.csv.complete.json,2026-09-07 07:46,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0015.csv,2026-09-09 07:37,STALE,"inst=7,947",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0015.csv.complete.json,2026-09-09 07:37,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0016.csv,2026-09-08 03:27,STALE,"inst=7,914",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0016.csv.complete.json,2026-09-08 03:27,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0017.csv,2026-09-09 00:05,STALE,"inst=7,942",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0017.csv.complete.json,2026-09-09 00:05,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0018.csv,2026-09-09 22:12,STALE,"inst=7,958",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0018.csv.complete.json,2026-09-09 22:13,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0019.csv,2026-09-10 08:22,STALE,"inst=7,956",3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/feat_shard0019.csv.complete.json,2026-09-10 08:22,STALE,,3,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); shard_manifest.json(09-13 22:43),mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0000.csv.complete.json,2026-09-09 10:46,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0001.csv.complete.json,2026-09-09 21:44,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0002.csv.complete.json,2026-09-10 11:18,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0003.csv.complete.json,2026-09-11 03:54,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0004.csv.complete.json,2026-09-11 06:07,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0005.csv.complete.json,2026-09-11 07:55,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0006.csv,2026-09-13 12:57,UNKNOWN(no producer found),"inst=7,912",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0006.csv.complete.json,2026-09-13 12:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0019.csv.complete.json,2026-09-10 11:04,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0000.csv.complete.json,2026-09-08 11:45,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0001.csv.complete.json,2026-09-08 11:54,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0002.csv.complete.json,2026-09-08 12:03,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0003.csv.complete.json,2026-09-08 12:12,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0004.csv.complete.json,2026-09-08 12:21,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0005.csv.complete.json,2026-09-08 12:31,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0006.csv,2026-09-08 12:41,UNKNOWN(no producer found),"inst=7,912",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0006.csv.complete.json,2026-09-08 12:41,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0007.csv,2026-09-08 12:51,UNKNOWN(no producer found),"inst=7,845",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0007.csv.complete.json,2026-09-08 12:51,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0008.csv,2026-09-08 13:02,UNKNOWN(no producer found),"inst=7,898",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0008.csv.complete.json,2026-09-08 13:02,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0009.csv,2026-09-08 13:13,UNKNOWN(no producer found),"inst=7,862",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0009.csv.complete.json,2026-09-08 13:13,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0010.csv,2026-09-08 13:23,UNKNOWN(no producer found),"inst=7,854",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0010.csv.complete.json,2026-09-08 13:23,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0011.csv,2026-09-08 13:35,UNKNOWN(no producer found),"inst=7,890",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0011.csv.complete.json,2026-09-08 13:35,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0012.csv,2026-09-08 13:46,UNKNOWN(no producer found),"inst=7,907",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0012.csv.complete.json,2026-09-08 13:46,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0013.csv,2026-09-08 14:08,UNKNOWN(no producer found),"inst=7,873",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0013.csv.complete.json,2026-09-08 14:08,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0014.csv,2026-09-08 14:31,UNKNOWN(no producer found),"inst=7,875",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0014.csv.complete.json,2026-09-08 14:31,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0015.csv,2026-09-09 08:31,UNKNOWN(no producer found),"inst=7,875",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0015.csv.complete.json,2026-09-09 08:31,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0016.csv,2026-09-08 14:55,UNKNOWN(no producer found),"inst=7,831",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0016.csv.complete.json,2026-09-08 14:55,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0017.csv,2026-09-09 08:03,UNKNOWN(no producer found),"inst=7,867",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0017.csv.complete.json,2026-09-09 08:03,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0018.csv,2026-09-10 08:48,UNKNOWN(no producer found),"inst=7,914",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0018.csv.complete.json,2026-09-10 08:48,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0019.csv.complete.json,2026-09-10 09:14,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0000.csv.complete.json,2026-09-09 19:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0001.csv.complete.json,2026-09-10 06:59,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0002.csv.complete.json,2026-09-10 20:33,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0003.csv.complete.json,2026-09-12 01:44,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0004.csv.complete.json,2026-09-12 11:12,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0005.csv.complete.json,2026-09-11 18:48,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0006.csv,2026-09-13 22:39,UNKNOWN(no producer found),"inst=7,912",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0006.csv.complete.json,2026-09-13 22:39,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_llama3_shard0019.csv.complete.json,2026-09-10 20:37,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0000.csv.complete.json,2026-09-09 13:25,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0001.csv.complete.json,2026-09-10 00:20,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0002.csv.complete.json,2026-09-10 13:57,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0003.csv.complete.json,2026-09-11 15:08,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0004.csv.complete.json,2026-09-12 04:33,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0005.csv.complete.json,2026-09-11 10:40,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0006.csv,2026-09-13 15:51,UNKNOWN(no producer found),"inst=7,912",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0006.csv.complete.json,2026-09-13 15:51,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_mistral_shard0019.csv.complete.json,2026-09-10 13:55,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0000.csv.complete.json,2026-09-09 18:05,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0001.csv.complete.json,2026-09-10 05:06,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0002.csv.complete.json,2026-09-10 18:40,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0003.csv.complete.json,2026-09-11 22:44,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0004.csv.complete.json,2026-09-12 09:19,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0005.csv.complete.json,2026-09-11 15:29,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0006.csv,2026-09-13 20:47,UNKNOWN(no producer found),"inst=7,912",0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0006.csv.complete.json,2026-09-13 20:47,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0019.csv.complete.json,2026-09-10 18:43,UNKNOWN(no producer found),,0,,,False
+outputs/rq1/intermediate/mm_shards/instance_index.csv,2026-09-13 22:43,STALE,"inst=202,019",2,shard_manifest.json(09-13 22:43),RQ1_semantic_entropy_linguistic_predictors.ipynb; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0000.csv,2026-09-04 03:20,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0000.csv.complete.json,2026-09-04 03:20,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0001.csv,2026-09-04 09:41,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0001.csv.complete.json,2026-09-04 09:41,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0002.csv,2026-09-04 09:37,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0002.csv.complete.json,2026-09-04 09:37,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0003.csv,2026-09-03 11:52,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0003.csv.complete.json,2026-09-03 11:52,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0004.csv,2026-09-04 16:09,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0004.csv.complete.json,2026-09-04 16:09,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0005.csv,2026-09-03 19:36,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0005.csv.complete.json,2026-09-03 19:36,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0006.csv,2026-09-04 16:20,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0006.csv.complete.json,2026-09-04 16:20,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0007.csv,2026-09-04 22:19,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0007.csv.complete.json,2026-09-04 22:20,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0008.csv,2026-09-04 22:50,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0008.csv.complete.json,2026-09-04 22:50,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0009.csv,2026-09-05 04:37,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0009.csv.complete.json,2026-09-05 04:37,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0010.csv,2026-09-05 05:20,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0010.csv.complete.json,2026-09-05 05:20,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0011.csv,2026-09-05 11:05,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0011.csv.complete.json,2026-09-05 11:05,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0012.csv,2026-09-05 11:56,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0012.csv.complete.json,2026-09-05 11:56,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0013.csv,2026-09-07 08:59,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0013.csv.complete.json,2026-09-07 08:59,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0014.csv,2026-09-07 07:42,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0014.csv.complete.json,2026-09-07 07:42,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0015.csv,2026-09-09 07:33,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0015.csv.complete.json,2026-09-09 07:33,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0016.csv,2026-09-08 03:24,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0016.csv.complete.json,2026-09-08 03:24,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0017.csv,2026-09-09 00:01,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0017.csv.complete.json,2026-09-09 00:01,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0018.csv,2026-09-09 22:08,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0018.csv.complete.json,2026-09-09 22:08,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_sampled_instances.csv(09-09 22:15),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0019.csv,2026-09-10 08:20,STALE,"inst=8,000",6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_validated_perturbations.csv(09-10 08:26),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/pert_shard0019.csv.complete.json,2026-09-10 08:20,STALE,,6,instance_index.csv(09-13 22:43); rq1_all_outputs_mapped.csv(09-13 12:13); rq1_linguistic_features.csv(09-10 08:27); rq1_validated_perturbations.csv(09-10 08:26),mm_assemble_perts.py; mm_pin_verify.py; mm_shard_lib.py,False
+outputs/rq1/intermediate/mm_shards/shard_manifest.json,2026-09-13 22:43,CURRENT,,2,,RQ1_PART2_full_umls_pool.ipynb; RQ1_semantic_entropy_linguistic_predictors.ipynb; mm_shard_lib.py,False
+outputs/rq1/intermediate/rq1_all_model_outputs.csv,2026-09-13 22:41,CURRENT,"inst=8,000",1,,MedMentions_generative_inference.ipynb; RQ1_PART2_full_umls_pool.ipynb; mm_assemble.py,False
+outputs/rq1/intermediate/rq1_all_outputs_mapped.csv,2026-09-13 12:13,STALE,"inst=56,000",2,instance_index.csv(09-13 22:43); shard_manifest.json(09-13 22:43),RQ1_PART2_full_umls_pool.ipynb; RQ4_compute_missing_umls_margin.ipynb; RQ4_umls_candidate_margin.ipynb,False
+outputs/rq1/intermediate/rq1_generative_model_outputs.csv,2026-09-13 22:41,STALE,"inst=7,912",1,rq1_all_model_outputs.csv(09-13 22:41),MedMentions_generative_inference.ipynb; mm_assemble.py,False
+outputs/rq1/intermediate/rq1_linguistic_features.csv,2026-09-10 08:27,STALE,SKIPPED(large),4,rq1_model_outputs.csv(09-10 09:05),RQ1_linguistic_predictors_hurdle.ipynb; RQ1_semantic_entropy_linguistic_predictors.ipynb; RQ2_Accuracy_Stability_Dissociation_pipeline_backup.ipynb,False
+outputs/rq1/intermediate/rq1_model_outputs.csv,2026-09-10 09:05,CURRENT,SKIPPED(large),4,,MedMentions_generative_inference.ipynb; RQ1_PART2_full_umls_pool.ipynb; RQ1_linguistic_predictors_hurdle.ipynb,False
+outputs/rq1/intermediate/rq1_sampled_instances.csv,2026-09-09 22:15,STALE,SKIPPED(large),5,rq1_linguistic_features.csv(09-10 08:27); rq1_model_outputs.csv(09-10 09:05); rq1_validated_perturbations.csv(09-10 08:26); rq3_matched_pair_statistics.csv(09-13 22:20),MedMentions_generative_inference.ipynb; RQ1_PART2_full_umls_pool.ipynb; RQ1_semantic_entropy_linguistic_predictors.ipynb,False
+outputs/rq1/intermediate/rq1_validated_perturbations.csv,2026-09-10 08:26,STALE,SKIPPED(large),6,rq1_linguistic_features.csv(09-10 08:27); rq1_model_outputs.csv(09-10 09:05); rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_perturbations.ipynb; MedMentions_generative_inference.ipynb; RQ1_PART2_full_umls_pool.ipynb,False
+outputs/rq1/intermediate/rq1_validated_perturbations.csv.sha256.json,2026-09-13 23:04,CURRENT,,7,,CADEC_perturbations.ipynb; MedMentions_generative_inference.ipynb; RQ1_PART2_full_umls_pool.ipynb,False
+outputs/rq1/intermediate/umls_candidate_pool.csv,2026-09-07 18:33,STALE,"rows=88,100",4,rq1_linguistic_features.csv(09-10 08:27); rq1_model_outputs.csv(09-10 09:05); rq1_sampled_instances.csv(09-09 22:15); rq1_validated_perturbations.csv(09-10 08:26),RQ1_semantic_entropy_linguistic_predictors.ipynb; RQ2_Accuracy_Stability_Dissociation_pipeline_backup.ipynb; build_candidate_pool.py,False
+outputs/rq1/k_selection.json,2026-09-01 13:07,STALE,,1,rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_entropy.ipynb; CADEC_inference.ipynb; RQ1_PART2_full_umls_pool.ipynb,True
+outputs/rq1/rq1_linguistic_predictors_summary.csv,2026-08-02 10:48,UNKNOWN(no inputs resolved),rows=42,0,,RQ1_linguistic_predictors_hurdle.ipynb,True
+outputs/rq1/rq2_dissociation_summary.csv,2026-08-02 10:52,UNKNOWN(no inputs resolved),n=491,0,,RQ2_Accuracy_Stability_Dissociation.ipynb,True
+outputs/rq1/rq4_aurc_summary.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),n=491,0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq1/rq4_risk_coverage_medmentions.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),rows=608,0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq1/tables/rq1_accepted_perturbation_type_counts.csv,2026-09-10 08:20,UNKNOWN(no inputs resolved),rows=4,0,,RQ1_semantic_entropy_linguistic_predictors.ipynb,False
+outputs/rq1/tables/rq1_entropy_scores.csv,2026-08-02 10:10,UNKNOWN(no inputs resolved),inst=550,0,,RQ1_PART2_full_umls_pool.ipynb; RQ1_semantic_entropy_linguistic_predictors.ipynb,True
+outputs/rq1/tables/rq1_gate_rejection_summary.csv,2026-09-10 08:20,UNKNOWN(no inputs resolved),rows=7,0,,RQ1_semantic_entropy_linguistic_predictors.ipynb,False
+outputs/rq1/tables/rq1_mesh_full_zero_nonzero_transitions_per_model.csv,2026-09-13 12:29,UNKNOWN(no inputs resolved),n=124,0,,RQ1_PART2_full_umls_pool.ipynb,False
+outputs/rq1/tables/rq1_perturbation_diagnostics_by_type.csv,2026-09-10 08:20,UNKNOWN(no inputs resolved),rows=4,0,,RQ1_semantic_entropy_linguistic_predictors.ipynb,False
+outputs/rq1/umls_candidate_margin_medmentions.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),inst=491,0,,RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/rq123_audit.md,2026-09-01 13:04,UNKNOWN(no producer found),,0,,,True
+outputs/rq3/entropy_cadec.csv,2026-09-11 19:11,STALE,"inst=5,161",4,entropy_full_umls.csv(09-13 12:29); rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_entropy.ipynb; RQ1_PART2_full_umls_pool.ipynb; RQ1_linguistic_predictors_hurdle.ipynb,True
+outputs/rq3/figures/rq1_linguistic_predictors_coefs.png,2026-08-02 10:48,UNKNOWN(no inputs resolved),,0,,RQ1_linguistic_predictors_hurdle.ipynb,True
+outputs/rq3/figures/rq2_accuracy_quartile_cadec.png,2026-08-16 10:58,UNKNOWN(no producer found),,0,,,True
+outputs/rq3/figures/rq2_dissociation_stable_but_wrong.png,2026-08-02 10:53,CURRENT,,1,,RQ2_Accuracy_Stability_Dissociation.ipynb,True
+outputs/rq3/figures/rq2_effect_sizes_cadec.png,2026-08-16 10:58,UNKNOWN(no producer found),,0,,,True
+outputs/rq3/figures/rq3_matched_pairs.png,2026-08-16 10:25,STALE,,3,entropy_cadec.csv(09-11 19:11); entropy_full_umls.csv(09-13 12:29); rq3_matched_pair_statistics.csv(09-13 22:20),RQ3_matched_pairs.ipynb; RQ3_matched_pairs_gpu_pipeline_backup.ipynb; rq3_matched_pairs.py,True
+outputs/rq3/figures/rq3_matched_pairs_means.png,2026-08-02 10:55,STALE,,3,entropy_cadec.csv(09-11 19:11); entropy_full_umls.csv(09-13 12:29); rq3_matched_pair_statistics.csv(09-13 22:20),RQ3_matched_pairs.ipynb; RQ3_matched_pairs_gpu_pipeline_backup.ipynb; rq3_matched_pairs.py,True
+outputs/rq3/figures/rq4_aurc_grouped_both_datasets.png,2026-08-02 10:57,UNKNOWN(no inputs resolved),,0,,RQ4_Clinical_Utility_Abstention.ipynb,True
+outputs/rq3/figures/rq4_risk_coverage_cadec.png,2026-08-06 15:08,CURRENT,,1,,RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_bert-base.csv,2026-09-03 13:30,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_biobert.csv,2026-09-03 13:45,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_biomistral.csv,2026-09-03 15:12,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_flan-t5-base.csv,2026-09-03 14:00,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_llama3.csv,2026-09-03 21:08,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_mistral.csv,2026-09-03 16:52,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_openbiollm.csv,2026-09-03 20:00,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/cadec_model_raw/cadec_raw_pubmedbert.csv,2026-09-03 13:58,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_inference.ipynb,False
+outputs/rq3/intermediate/rq3_cadec_instances.csv,2026-09-01 23:09,STALE,"inst=7,006",1,rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_adapter.ipynb; CADEC_entropy.ipynb; CADEC_inference.ipynb,False
+outputs/rq3/intermediate/rq3_cadec_mapped_outputs.csv,2026-09-11 19:10,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_entropy.ipynb; RQ4_umls_candidate_margin.ipynb; cadec_threshold_band.py,False
+outputs/rq3/intermediate/rq3_cadec_model_outputs.csv,2026-09-03 21:08,UNKNOWN(no inputs resolved),"inst=5,161",0,,CADEC_entropy.ipynb; CADEC_inference.ipynb,False
+outputs/rq3/intermediate/rq3_cadec_perturbations.csv,2026-09-03 02:24,STALE,"inst=6,997",1,rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_g4_refit.ipynb; CADEC_inference.ipynb; CADEC_perturbations.ipynb,False
+outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv,2026-09-03 02:24,STALE,"inst=6,997",1,rq1_validated_perturbations.csv(09-10 08:26),CADEC_entropy.ipynb; CADEC_g4_refit.ipynb; CADEC_perturbations.ipynb,False
+outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv.sha256.json,2026-09-13 23:04,CURRENT,,2,,CADEC_entropy.ipynb; CADEC_g4_refit.ipynb; CADEC_perturbations.ipynb,False
+outputs/rq3/rq1_linguistic_predictors_summary.csv,2026-08-02 10:48,UNKNOWN(no inputs resolved),rows=30,0,,RQ1_linguistic_predictors_hurdle.ipynb,True
+outputs/rq3/rq2_dissociation_summary.csv,2026-08-02 10:52,UNKNOWN(no inputs resolved),"n=5212,5633,5659,5668,5669",0,,RQ2_Accuracy_Stability_Dissociation.ipynb,True
+outputs/rq3/rq3_matched_pair_statistics.csv,2026-09-13 22:20,CURRENT,rows=9,2,,RQ3_matched_pairs.ipynb; RQ3_matched_pairs_gpu_pipeline_backup.ipynb; rq3_matched_pairs.py,True
+outputs/rq3/rq4_aurc_summary.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),"n=5212,5633,5659,5668,5669",0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq3/rq4_risk_coverage_cadec.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),rows=608,0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb,True
+outputs/rq3/tables/rq3_cadec_accepted_perturbation_type_counts.csv,2026-09-03 02:24,UNKNOWN(no inputs resolved),rows=4,0,,CADEC_perturbations.ipynb,False
+outputs/rq3/tables/rq3_cadec_gate_rejection_summary.csv,2026-09-03 02:24,UNKNOWN(no inputs resolved),rows=7,0,,CADEC_perturbations.ipynb,False
+outputs/rq3/tables/rq3_cadec_perturbation_diagnostics_by_type.csv,2026-09-03 02:24,UNKNOWN(no inputs resolved),rows=4,0,,CADEC_perturbations.ipynb,False
+outputs/rq3/umls_candidate_margin_cadec.csv,2026-09-13 21:29,UNKNOWN(no inputs resolved),"inst=5,022",0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/rq4/RQ4_results_compiled.md,2026-08-20 11:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/RQ4_results_discussion.md,2026-08-27 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/present/RQ4_report.md,2026-08-27 12:07,UNKNOWN(no producer found),,0,,,True
+outputs/rq4/present/RQ4_results_discussion.md,2026-08-27 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/present/figures/qa_risk_coverage_bioasq.png,2026-08-20 11:29,STALE,,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb,True
+outputs/rq4/present/figures/qa_risk_coverage_squad2.png,2026-08-20 11:29,STALE,,1,qa_summary.csv(09-04 03:17),QA_answer_level_semantic_entropy.ipynb,True
+outputs/rq4/present/figures/rq4_aurc_bioasq_squad2.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/present/figures/rq4_aurc_concept_medmentions_cadec.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_aurc_medmentions_cadec.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/present/figures/rq4_aurc_qa_bioasq_squad.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_h0_centrepiece_cadec_encoders.png,2026-08-20 11:29,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_risk_coverage_bioasq.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_risk_coverage_cadec.png,2026-08-20 12:21,CURRENT,,1,,RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_risk_coverage_margin_cadec.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/present/figures/rq4_risk_coverage_margin_medmentions.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/present/figures/rq4_risk_coverage_medmentions.png,2026-08-20 12:21,CURRENT,,1,,RQ4_MedMentions_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_risk_coverage_squad.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_riskcoverage_bioasq.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/present/figures/rq4_riskcoverage_cadec.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/present/figures/rq4_riskcoverage_medmentions.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/present/figures/rq4_riskcoverage_squad2.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/present/figures/rq4_spearman_independence.png,2026-08-20 14:40,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/present/figures/rq4_spearman_independence_table.png,2026-08-20 14:40,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_aurc_4datasets.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
+outputs/rq4/rq4_aurc_bioasq_squad2.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/rq4_aurc_bootstrap_ci.csv,2026-08-27 12:18,UNKNOWN(no inputs resolved),"n=233,490,491,5193,5633,5658...",0,,RQ4_compute_missing_umls_margin.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/rq4/rq4_aurc_concept_medmentions_cadec.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_aurc_margin_benchmark.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),"n=233,490,491,5193,5633,5658...",0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/rq4/rq4_aurc_margin_qa.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),"n=139,392",0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_aurc_medmentions_cadec.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/rq4_aurc_qa_bioasq_squad.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_combined3_wintest.csv,2026-08-27 12:18,UNKNOWN(no inputs resolved),"n=233,490,491,5193,5633,5658...",0,,RQ4_compute_missing_umls_margin.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/rq4/rq4_h0_centrepiece_cadec_encoders.png,2026-08-20 04:18,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_bioasq.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_cadec.png,2026-08-20 12:21,CURRENT,,1,,RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_margin_cadec.csv,2026-08-19 17:51,UNKNOWN(no inputs resolved),"n=233,5193,5633,5658,5668,5669",0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_margin_cadec.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/rq4_risk_coverage_margin_medmentions.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),"n=490,491",0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_margin_medmentions.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
+outputs/rq4/rq4_risk_coverage_margin_qa.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),"n=139,392",0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_medmentions.png,2026-08-20 12:21,CURRENT,,1,,RQ4_MedMentions_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_risk_coverage_squad.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_riskcoverage_4datasets.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/rq4_riskcoverage_bioasq.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/rq4_riskcoverage_cadec.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/rq4_riskcoverage_medmentions.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/rq4_riskcoverage_squad2.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
+outputs/rq4/rq4_spearman_independence.csv,2026-08-20 14:40,UNKNOWN(no inputs resolved),"n=233,490,491,5193,5633,5658...",0,,RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_spearman_independence.png,2026-08-20 14:40,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_spearman_independence_table.png,2026-08-20 14:40,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
+outputs/rq4/rq4_spearman_margin.csv,2026-08-19 17:51,UNKNOWN(no inputs resolved),"n=233,490,491,5193,5633,5658...",0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb; RQ4_margin_benchmark.ipynb,True
+outputs/rq4/umls_margin_worked_examples.csv,2026-08-27 13:06,UNKNOWN(no inputs resolved),inst=3,0,,RQ4_compute_missing_umls_margin.ipynb; RQ4_umls_candidate_margin.ipynb,True
+outputs/rq4_aurc_grouped_both_datasets.png,2026-08-02 10:57,UNKNOWN(no inputs resolved),,0,,RQ4_Clinical_Utility_Abstention.ipynb,True
+outputs/rq4_aurc_summary_both_datasets.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),"n=491,5212,5633,5659,5668,5669",0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Results_compiled.ipynb,True
