@@ -742,3 +742,78 @@ job B and their per-block shard CSVs were consumed, so they are grid-complete vi
 
 With this receipt present, `scripts/emit_placeholder_values.py` resolves **9/9** — the two
 that were previously unresolvable, `[[MM_SHARDS]]` and `[[MM_BLOCK_LIST]]`, both read from it.
+
+---
+
+# Tie-break numbers now in the manuscript — provenance and recompute (2026-09-21)
+
+Six figures entered the paper on 2026-09-21, in the Limitations paragraph that previously
+deferred a terminal deterministic tie-break to future work. They are recorded here so they are
+recomputable from named artefacts, like every other reported number.
+
+| figure | value | artefact | how to recompute |
+|---|---|---|---|
+| MM tie-break evaluations | **4,529,896** | `outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_part{A1,A2,B}.amendment9_receipt.json` | sum of `tiebreak_checked` (1,589,768 + 1,360,555 + 1,579,573) |
+| MM terminal-key decisions | **57,499** | same three receipts | sum of `tiebreak_decided_by_terminal_key` (19,570 + 18,427 + 19,502) |
+| CADEC tie-break evaluations | **239,207** | `outputs/rq3/intermediate/rq3_cadec_mapped_outputs.amendment9_receipt.json` | `tiebreak_checked` |
+| CADEC terminal-key decisions | **1,442** | same receipt | `tiebreak_decided_by_terminal_key` |
+| MM pre-fix non-determinism | **1,007 of 370,428** (0.271848%) | `logs/E1_two_source_33221.log` | the `predicted_cui differ on …` line |
+| CADEC class size | **75 of 239,680**, **31 instances** | `rq3_cadec_mapped_outputs.csv` vs `…_A9CONTROL.csv` | join on (instance_id, model_name, input_variant_id), count `predicted_cui` mismatches |
+
+`tiebreak_violations` is **0** in all four production receipts, and `pythonhashseed` is `"0"`.
+The three MM part row counts sum to exactly 7,332,245, the cut-off corpus; the entropy run
+(job 34288) read that corpus at sha256 `3774ff8f…`. CADEC: job 33350 wrote the mapped file at
+17 Sep 14:37 and `entropy_cadec.csv` at 14:38.
+
+## Two ways to get these wrong
+
+**1. The 74 that is not the 75.** `rq3_cadec_mapped_outputs_PRETIEBREAK.csv` (17 Sep 10:06)
+differs from the reported file on **74** rows. That is a *different set* from the control's 75:
+59 in common, 16 only in the control, 15 only in the pre-tiebreak file. The pre-tiebreak file
+is a separate run realising a different hash order, so it measures what one earlier run
+happened to do. **Only the control isolates the rule**, because it differs in nothing else.
+Quote 75, from the control. Never quote "74-75" as one quantity.
+
+**2. 1,007 and 75 are not comparable.** 1,007 of 370,428 is MedMentions block 6, two routes in
+one run differing only in hash order, pre-Amendment-9. 75 of 239,680 is all of CADEC,
+rule-on versus rule-off. Different corpora, different populations, different comparisons.
+The post-fix MM rerun (job 33345, 17 Sep 13:37) reports **0 of 370,428**.
+
+## The shape of the 75 — MEASURED, and NOT what was claimed
+
+The paragraph asserted the competing concepts differ from the model output only in
+capitalisation. **Measured across all 31 instances, that is the minority case.** Each of the
+75 rows was classified by taking the model's `output_text`, finding every surface form of each
+competing CUI that matches it case-insensitively, and asking how those two form-sets relate
+(`~/data/umls/embeddings/sapbert_full_len3/cui_form_pairs.json`; identical counts with and
+without whitespace stripping):
+
+| relation between the competing concepts' matching forms | rows | instances |
+|---|---|---|
+| **byte-identical string belongs to both CUIs** | **42** | **24** |
+| case-only variants of one string | 23 | 4 |
+| no case-insensitive form match either side — tie arose at encoder cosine | 10 | 4 |
+
+So the dominant shape (42/75 rows, 24/31 instances) is **one surface string that legitimately
+names two distinct UMLS concepts** — `walking` is both C2346415 and C2368355; `ATHEROSCLEROSIS`
+is both C0003850 and C0004153; `Strength` is both C0237897 and C0808080; `CHAR` is both
+C1705949 and C1868570. No capitalisation is involved: the string is the same bytes in both
+concepts, and nothing in the surface form can separate them.
+
+Capitalisation is real but secondary (23 rows, 4 instances): `Sinus congestion` (C0152029) vs
+`SINUS CONGESTION` (C5848077), `Tight` (C0439816) vs `tight` (C0453911), `SAD` (C0085159) vs
+`Sad` (C0344315). These collide because the exact-match index is casefolded —
+`_exact_index[_f.casefold()]` in both mapping notebooks — so case variants of one string merge
+into a single bucket that resolves to several CUIs.
+
+`cadec_LIPITOR.460_TT7`, quoted as an example, is in the **capitalisation** group (18 rows,
+the largest single CUI pair) and is therefore **not representative of the majority**.
+
+**Why this makes the paragraph stronger, not weaker.** Capitalisation-only ambiguity sounds
+like a normalisation bug someone forgot to fix. A single string naming two distinct concepts
+is irreducible: no amount of string cleaning resolves `walking` into one CUI, so *some*
+deterministic rule must choose, and the contribution is that the choice is now made by a
+stated terminal key instead of by dictionary iteration order. Reported as capitalisation, the
+finding invites the response "just normalise case". Reported as measured, it does not.
+
+**Recompute:** `scripts/measure_cadec_tiebreak_shape.py` (added 2026-09-21).
