@@ -2207,3 +2207,52 @@ identity tolerates zero and scales by construction. Job `34402` then completed i
   pre-registered family size; rewriting it as a relation would weaken it. The test is whether
   the number came from a measurement or from a decision.
 
+
+---
+
+## 13. A p-value of exactly 0.0 reaching the manuscript, and a sidedness that is not written down
+
+**Found 2026-09-21, running the emitter for real on cut-off morning.** Two things, one
+observation. Neither is a code fault in the statistics; both are reporting faults.
+
+### (a) FIXED — the emitter emitted the underflowed float, not the display string
+
+`scripts/rq3_matched_pairs.py` was given `wilcoxon_p_holm_display`, `wilcoxon_log10_p` and
+`p_holm_underflowed` precisely so an underflow is reported as `< 1e-300` rather than as zero.
+`scripts/emit_placeholder_values.py` then pulled **`wilcoxon_p_holm`**, the raw float. For
+pair 1 that is *exactly* `0.0` — the normal approximation underflowed at z = -70.2, against a
+true p near 1e-1073. The machinery to report it honestly existed and the consumer did not use
+it: the same shape as "verified but not enforced". A thesis asserting p = 0 cannot be repaired
+after submission.
+
+The three RQ3 placeholders now emit the **reported cell** — rank-biserial with its 95% CI,
+`n_paired`, `wilcoxon_z`, and `wilcoxon_p_holm_display` — which is also the format required
+elsewhere (effect size and CI lead, n and z on every cell).
+
+**Remedy 13a.** When a producer adds a display-safe column *because* the raw one is
+unreportable, the raw one is not thereby safe for the consumer. Grep every consumer at the
+point the display column is added.
+
+### (b) NOT CHANGED — the primary test's sidedness is nowhere pre-registered
+
+`scripts/rq3_matched_pairs.py:212` runs the primary as
+`stats.wilcoxon(..., alternative="less")` — one-sided, H_bio < H_gen.
+`docs/ANALYSIS_PRECOMMIT.md` attaches the word "one-sided" **only to the Mann-Whitney
+sensitivity test**, in all four places it appears for RQ3 (section 2, Amendment 2 item 3,
+Amendment 3, Amendment 4 §7). The primary is called "paired Wilcoxon signed-rank" with no
+sidedness stated. Carrying the direction over from the test it replaced is defensible — the
+hypothesis was directional all along — but it is an undocumented inheritance.
+
+It is visible in the emitted table: pair 3 reports **rank-biserial +0.466 with p = 1**. That
+is not a null result. It is a large effect in the direction *opposite* to the hypothesis, and
+a one-sided test correctly assigns it p = 1. Printed without that sentence it reads as "no
+difference", which is the opposite of what the data show.
+
+**Not changed, deliberately.** Switching the primary test's sidedness on the morning of the
+reporting cut-off, after the effect sizes are known, is the exact move Amendment 8 §1001
+records as procedurally unacceptable. The fix is prose, not code: state in section 4.3 that
+the primary Wilcoxon is one-sided in the pre-registered direction, and report pair 3 as a
+significant effect *against* the hypothesis rather than as a non-result.
+
+**Remedy 13b.** A test's sidedness is part of its pre-registration. "Paired Wilcoxon
+signed-rank" does not specify a test.

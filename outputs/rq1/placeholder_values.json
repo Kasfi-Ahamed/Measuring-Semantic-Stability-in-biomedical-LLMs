@@ -1,0 +1,198 @@
+{
+  "generated_utc": "2026-09-20T15:58:06.149151+00:00",
+  "n_total": 9,
+  "n_resolved": 9,
+  "note": "placeholder names are UNMAPPED: no main.tex in this repository. Fill PLACEHOLDERS in scripts/emit_placeholder_values.py once.",
+  "values": [
+    {
+      "section": "methods \u2014 analysed MM instances, all variants",
+      "placeholder": "[[MM_INSTANCES]]",
+      "artefact": "outputs/rq1/entropy_full_umls.csv",
+      "column": "m_accepted",
+      "selector": null,
+      "description": "all-variants count over the cut-off sample",
+      "value": 5812288,
+      "status": "OK",
+      "sha256": "ed98865dc4e887ca2697f9defaff8f8aaf1acf601a1f3d17670d3e5df0242745",
+      "detail": "sum of m_accepted"
+    },
+    {
+      "section": "methods \u2014 analysed MM instances, distinct variants",
+      "placeholder": "[[MM_INSTANCES_DISTINCT]]",
+      "artefact": "outputs/rq1/entropy_full_umls.csv",
+      "column": "m_distinct",
+      "selector": null,
+      "description": "distinct-variant count (Amendment 3 primary denominator)",
+      "value": 4304048,
+      "status": "OK",
+      "sha256": "ed98865dc4e887ca2697f9defaff8f8aaf1acf601a1f3d17670d3e5df0242745",
+      "detail": "sum of m_distinct"
+    },
+    {
+      "section": "methods \u2014 grid-complete block count",
+      "placeholder": "[[MM_SHARDS]]",
+      "artefact": "outputs/rq1/cutoff_verification_receipt.json",
+      "column": "enumerated_grid_complete",
+      "selector": null,
+      "description": "number of grid-complete blocks, from the 21 Sep verification receipt",
+      "value": 20,
+      "status": "OK",
+      "sha256": "aeb142fa57f402629c1fe8c074910ac1683528010f926701a6f47b3edc65ed01",
+      "detail": "receipt key enumerated_grid_complete"
+    },
+    {
+      "section": "methods \u2014 grid-complete block list",
+      "placeholder": "[[MM_BLOCK_LIST]]",
+      "artefact": "outputs/rq1/cutoff_verification_receipt.json",
+      "column": "enumerated_grid_complete",
+      "selector": null,
+      "description": "the block list itself, from the same receipt",
+      "value": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "status": "OK",
+      "sha256": "aeb142fa57f402629c1fe8c074910ac1683528010f926701a6f47b3edc65ed01",
+      "detail": "receipt key enumerated_grid_complete"
+    },
+    {
+      "section": "4.3 matched pairs \u2014 pair 1",
+      "placeholder": "[[MM_RQ3_PAIR1]]",
+      "artefact": "outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
+      "column": [
+        "rank_biserial",
+        "rb_ci95_low",
+        "rb_ci95_high",
+        "n_paired",
+        "wilcoxon_z",
+        "wilcoxon_p_holm_display",
+        "wilcoxon_log10_p"
+      ],
+      "selector": {
+        "dataset": "MedMentions",
+        "_pair_rank": 1
+      },
+      "description": "rank-biserial with CI, n, z and display Holm p, matched pair 1",
+      "value": {
+        "rank_biserial": -0.2683349855397786,
+        "rb_ci95_low": -0.2751483484226427,
+        "rb_ci95_high": -0.2611082209548905,
+        "n_paired": 127598,
+        "wilcoxon_z": -70.2310027883443,
+        "wilcoxon_p_holm_display": "< 1e-300",
+        "wilcoxon_log10_p": -1073.3014014849125
+      },
+      "status": "OK",
+      "sha256": "a913330d00c0c6e822dc9b38e6e78a71351182d86cb92a0cef76d46ce192f2e7",
+      "detail": "pair 1 of 3 (pair1_biobert_vs_bertbase), selectors {'dataset': 'MedMentions'}, ordered by ['pair']"
+    },
+    {
+      "section": "4.3 matched pairs \u2014 pair 2",
+      "placeholder": "[[MM_RQ3_PAIR2]]",
+      "artefact": "outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
+      "column": [
+        "rank_biserial",
+        "rb_ci95_low",
+        "rb_ci95_high",
+        "n_paired",
+        "wilcoxon_z",
+        "wilcoxon_p_holm_display",
+        "wilcoxon_log10_p"
+      ],
+      "selector": {
+        "dataset": "MedMentions",
+        "_pair_rank": 2
+      },
+      "description": "rank-biserial with CI, n, z and display Holm p, matched pair 2",
+      "value": {
+        "rank_biserial": -0.0478968228444719,
+        "rb_ci95_low": -0.0560467771866754,
+        "rb_ci95_high": -0.040071463822383,
+        "n_paired": 127208,
+        "wilcoxon_z": -11.702095666377604,
+        "wilcoxon_p_holm_display": "1.24344e-31",
+        "wilcoxon_log10_p": -31.20640446981561
+      },
+      "status": "OK",
+      "sha256": "a913330d00c0c6e822dc9b38e6e78a71351182d86cb92a0cef76d46ce192f2e7",
+      "detail": "pair 2 of 3 (pair2_biomistral_vs_mistral), selectors {'dataset': 'MedMentions'}, ordered by ['pair']"
+    },
+    {
+      "section": "4.3 matched pairs \u2014 pair 3",
+      "placeholder": "[[MM_RQ3_PAIR3]]",
+      "artefact": "outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
+      "column": [
+        "rank_biserial",
+        "rb_ci95_low",
+        "rb_ci95_high",
+        "n_paired",
+        "wilcoxon_z",
+        "wilcoxon_p_holm_display",
+        "wilcoxon_log10_p"
+      ],
+      "selector": {
+        "dataset": "MedMentions",
+        "_pair_rank": 3
+      },
+      "description": "rank-biserial with CI, n, z and display Holm p, matched pair 3",
+      "value": {
+        "rank_biserial": 0.466046498691412,
+        "rb_ci95_low": 0.4599643781436629,
+        "rb_ci95_high": 0.4723856757063157,
+        "n_paired": 127187,
+        "wilcoxon_z": 125.39364488145016,
+        "wilcoxon_p_holm_display": "1",
+        "wilcoxon_log10_p": -0.0
+      },
+      "status": "OK",
+      "sha256": "a913330d00c0c6e822dc9b38e6e78a71351182d86cb92a0cef76d46ce192f2e7",
+      "detail": "pair 3 of 3 (pair3_openbiollm_vs_llama3), selectors {'dataset': 'MedMentions'}, ordered by ['pair']"
+    },
+    {
+      "section": "methods \u2014 mapped corpus size (DENOMINATOR, not the analysed sample)",
+      "placeholder": "[[MM_MAPPED_ROWS]]",
+      "artefact": "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv",
+      "column": null,
+      "selector": null,
+      "description": "rows in the joined cut-off corpus, counted from the corpus",
+      "value": 7332245,
+      "status": "OK",
+      "sha256": "3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9",
+      "detail": "7,332,245 data rows"
+    },
+    {
+      "section": "limitations \u2014 tie-break exposure (FROZEN, E1)",
+      "placeholder": "[[TIEBREAK_CASES]]",
+      "artefact": "logs/E1_two_source_33221.log",
+      "column": null,
+      "selector": null,
+      "description": "1,007 of 370,428 rows on block 6; pre-fix, frozen, corpus-independent",
+      "value": {
+        "differing": 1007,
+        "of": 370428,
+        "pct": 0.271848
+      },
+      "status": "OK",
+      "sha256": "ad97f420fe01007df9a5a6d97a0214fa7d6d68b5180116ed4d81272c635e0c45",
+      "detail": "POPULATION: MedMentions block 6 only, 370,428 rows, all 8 models, PRE-Amendment-9. Two routes, one GPU, one run, differing only in hash order. NOT a cut-off number; NOT comparable with the post-fix tie-break receipt rate, which counts ties that EXISTED rather than assignments that MOVED."
+    }
+  ]
+}

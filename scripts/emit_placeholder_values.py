@@ -63,7 +63,16 @@ PLACEHOLDERS = [
     dict(section="4.3 matched pairs — pair 1",
          placeholder="[[MM_RQ3_PAIR1]]",
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column=["rank_biserial", "wilcoxon_p_holm"],
+         # THE REPORTED CELL, not just the two numbers. rank-biserial and its CI lead;
+         # n and z appear on every cell; the p is the DISPLAY string.
+         #
+         # wilcoxon_p_holm is emitted as a float and pair 1's value is EXACTLY 0.0 --
+         # the normal approximation underflowed at z = -70.2, whose true p is around
+         # 1e-1073. A manuscript that printed that float would assert p = 0, which is
+         # false and unfixable after submission. wilcoxon_p_holm_display carries
+         # "< 1e-300" instead, and wilcoxon_log10_p carries the magnitude that survived.
+         column=["rank_biserial", "rb_ci95_low", "rb_ci95_high", "n_paired",
+                 "wilcoxon_z", "wilcoxon_p_holm_display", "wilcoxon_log10_p"],
          # dataset MUST be pinned. The file carries each pair TWICE, once for MedMentions and
          # once for POOLED, and POOLED rows are "descriptive (outside Holm family)" with
          # wilcoxon_p_holm = NaN. Ranking without the filter silently returned pair1/POOLED
@@ -71,11 +80,20 @@ PLACEHOLDERS = [
          # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
          # rank_biserial.
          select=dict(dataset="MedMentions", _pair_rank=1),
-         desc="rank-biserial and Holm p, matched pair 1"),
+         desc="rank-biserial with CI, n, z and display Holm p, matched pair 1"),
     dict(section="4.3 matched pairs — pair 2",
          placeholder="[[MM_RQ3_PAIR2]]",
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column=["rank_biserial", "wilcoxon_p_holm"],
+         # THE REPORTED CELL, not just the two numbers. rank-biserial and its CI lead;
+         # n and z appear on every cell; the p is the DISPLAY string.
+         #
+         # wilcoxon_p_holm is emitted as a float and pair 1's value is EXACTLY 0.0 --
+         # the normal approximation underflowed at z = -70.2, whose true p is around
+         # 1e-1073. A manuscript that printed that float would assert p = 0, which is
+         # false and unfixable after submission. wilcoxon_p_holm_display carries
+         # "< 1e-300" instead, and wilcoxon_log10_p carries the magnitude that survived.
+         column=["rank_biserial", "rb_ci95_low", "rb_ci95_high", "n_paired",
+                 "wilcoxon_z", "wilcoxon_p_holm_display", "wilcoxon_log10_p"],
          # dataset MUST be pinned. The file carries each pair TWICE, once for MedMentions and
          # once for POOLED, and POOLED rows are "descriptive (outside Holm family)" with
          # wilcoxon_p_holm = NaN. Ranking without the filter silently returned pair1/POOLED
@@ -83,11 +101,20 @@ PLACEHOLDERS = [
          # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
          # rank_biserial.
          select=dict(dataset="MedMentions", _pair_rank=2),
-         desc="rank-biserial and Holm p, matched pair 2"),
+         desc="rank-biserial with CI, n, z and display Holm p, matched pair 2"),
     dict(section="4.3 matched pairs — pair 3",
          placeholder="[[MM_RQ3_PAIR3]]",
          artefact="outputs/rq3/rq3_matched_pair_statistics_medmentions.csv",
-         column=["rank_biserial", "wilcoxon_p_holm"],
+         # THE REPORTED CELL, not just the two numbers. rank-biserial and its CI lead;
+         # n and z appear on every cell; the p is the DISPLAY string.
+         #
+         # wilcoxon_p_holm is emitted as a float and pair 1's value is EXACTLY 0.0 --
+         # the normal approximation underflowed at z = -70.2, whose true p is around
+         # 1e-1073. A manuscript that printed that float would assert p = 0, which is
+         # false and unfixable after submission. wilcoxon_p_holm_display carries
+         # "< 1e-300" instead, and wilcoxon_log10_p carries the magnitude that survived.
+         column=["rank_biserial", "rb_ci95_low", "rb_ci95_high", "n_paired",
+                 "wilcoxon_z", "wilcoxon_p_holm_display", "wilcoxon_log10_p"],
          # dataset MUST be pinned. The file carries each pair TWICE, once for MedMentions and
          # once for POOLED, and POOLED rows are "descriptive (outside Holm family)" with
          # wilcoxon_p_holm = NaN. Ranking without the filter silently returned pair1/POOLED
@@ -95,7 +122,7 @@ PLACEHOLDERS = [
          # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
          # rank_biserial.
          select=dict(dataset="MedMentions", _pair_rank=3),
-         desc="rank-biserial and Holm p, matched pair 3"),
+         desc="rank-biserial with CI, n, z and display Holm p, matched pair 3"),
     dict(section="methods — mapped corpus size (DENOMINATOR, not the analysed sample)",
          placeholder="[[MM_MAPPED_ROWS]]",
          # Counted from the CORPUS ITSELF, not from the entropy receipt's rows_before.
@@ -221,8 +248,22 @@ def resolve(spec: dict) -> dict:
                 return {**row, "value": None, "status": "MISSING",
                         "detail": f"only {len(d)} pairs, wanted rank {rank}"}
             r0 = d.iloc[rank - 1]
-            return {**row, "value": {c: (float(r0[c]) if pd.api.types.is_number(r0[c])
-                                         else str(r0[c])) for c in cols},
+            # COUNTS STAY INTEGERS. The unconditional float() below turned n_paired into
+            # 127598.0, because the column is float-typed: the POOLED rows of this file carry
+            # NaN for the Holm-family fields and pandas widens the whole column. A thesis that
+            # transcribes "n = 127598.0 instances" is not wrong so much as visibly machine-
+            # generated, and the emitter exists so these values are transcribed verbatim.
+            # Narrow rule, on the column NAME, so an effect size that happens to land on a
+            # whole number is not silently turned into an integer too.
+            def _cell(c):
+                v = r0[c]
+                if not pd.api.types.is_number(v):
+                    return str(v)
+                f = float(v)
+                if (c == "n" or c.startswith("n_")) and f.is_integer():
+                    return int(f)
+                return f
+            return {**row, "value": {c: _cell(c) for c in cols},
                     "status": "OK", "sha256": sha256(p),
                     "detail": f"pair {rank} of {len(d)} ({r0[key[0]] if key else '?'}), "
                               f"selectors {sel}, ordered by {key or 'first column'}"}

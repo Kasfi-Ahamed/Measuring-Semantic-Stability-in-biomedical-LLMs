@@ -709,3 +709,36 @@ to waste.
 The other three held jobs — `33062`, `32853`, `32769` — are unaffected by this reasoning and
 keep their own conditions.
 
+
+---
+
+# Amendment 6 verification — PERFORMED 2026-09-21 01:52 AEST — STEP 3, IDENTICAL
+
+Run for real, not rehearsed. `scripts/cutoff_verify.py --corpus
+outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv`, exit 0, receipt at
+`outputs/rq1/cutoff_verification_receipt.json`. Both sets in full, as the amendment requires:
+
+| | |
+|---|---|
+| STEP 0 corpus sha256 | `3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9` — unchanged since the join; canonical name is the same inode |
+| STEP 1 from shard CSVs | `[6 … 18]` |
+| STEP 1 from the corpus | `[0 … 19]` |
+| STEP 1 UNION (the definition) | `[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]` |
+| STEP 2 blocks in the corpus | `[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]`, 7,332,245 rows |
+| pre-registered (`--expect-blocks 0-19`) | identical to both |
+| grid-complete but NOT re-mapped | none |
+| re-mapped but NOT grid-complete | none |
+
+**The premise held. The early re-map is not void and the analysis stands.**
+
+Note on the date. `run_utc` in the receipt reads `2026-09-20T15:52:55Z`, which is
+**2026-09-21 01:52 AEST** — the morning of the 21st in the local timezone the pre-commitment
+was written in. The receipt stores UTC; the amendment is satisfied.
+
+Note on STEP 1. "From shard CSVs" is `[6…18]` and "from the corpus" is `[0…19]`; only their
+UNION is the definition (Amendment 1 to section 5). Reading either line alone would suggest a
+shortfall that does not exist. That asymmetry is expected: blocks 0-5 and 19 were mapped in
+job B and their per-block shard CSVs were consumed, so they are grid-complete via the corpus.
+
+With this receipt present, `scripts/emit_placeholder_values.py` resolves **9/9** — the two
+that were previously unresolvable, `[[MM_SHARDS]]` and `[[MM_BLOCK_LIST]]`, both read from it.
