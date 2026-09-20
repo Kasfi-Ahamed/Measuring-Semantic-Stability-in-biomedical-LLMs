@@ -1,5 +1,23 @@
 # RQ4 — CADEC, final tables for the manuscript
 
+> **STALENESS NOTICE (added 2026-09-20).** The tables on this page were produced on
+> **2026-09-15** by `scripts/rq4_bootstrap_calibrate.py --full`, from
+> `outputs/rq3/rq4_aurc_bootstrap_ci_cadec.csv`, `rq4_combined3_wintest_cadec.csv` and
+> `rq4_risk_coverage_operating_points_cadec.csv` — **all three dated 2026-09-15 18:22**.
+> Job `33411` regenerated their input, `outputs/rq3/umls_candidate_margin_cadec.csv`, on
+> **2026-09-18 02:06** under `PYTHONHASHSEED=0`, and none of the three has been re-run since.
+> They are stale by ~2.3 days and this page inherits that.
+>
+> **This page's own mtime does not show it.** It reads as current only because it was edited
+> on 2026-09-18 to add the B = 20,000 note below, which reset its timestamp past its own
+> inputs. A mechanical staleness sweep keyed on mtime therefore passes it. That is the
+> failure this notice exists to prevent, and it is the same shape as a document asserting
+> B = 20,000 while the code ran 2,000.
+>
+> The numbers have **not** been recomputed and are **not** corrected here. Whether to re-run
+> the three CADEC RQ4 artefacts against the 33411 margin is an open decision.
+
+
 CADEC is frozen. **Regenerated 2026-09-15 under Amendments 7 and 8.** Produced by `scripts/rq4_bootstrap_calibrate.py --full` on the remapped
 data (rule-1 gold leak removed, positional de-duplication key), paired bootstrap at the
 pre-committed **B = 20,000**, seed `default_rng(42)`.

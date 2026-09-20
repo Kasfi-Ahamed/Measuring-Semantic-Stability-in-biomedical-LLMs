@@ -1,5 +1,23 @@
 # QA lane — final numbers
 
+> **STALENESS NOTICE (added 2026-09-20).** The numbers on this page were computed on
+> **2026-09-14** from `outputs/qa/umls_candidate_margin_qa.csv` **as it stood before job
+> 33441**. That job re-ran the QA margin on 2026-09-18 15:00 under `PYTHONHASHSEED=0`
+> (Amendment 9), and this page has not been regenerated since. It is stale by ~3.9 days
+> against its own input.
+>
+> The numbers were **recomputed from the re-seeded file on 2026-09-19 and did not move
+> materially**: overall Spearman rho(entropy, margin) −0.0555 → **−0.0559**, and the
+> margin-involving per-model band −0.0855…+0.0757 → **−0.0850…+0.0762**, against the
+> "−0.084 to +0.076" stated below. `margin_mean` changed on 8,733 of 10,640 rows with a
+> maximum delta of **0.00154** — numeric jitter from set-iteration order, no structural
+> change. The near-independence claim stands.
+>
+> This notice records what the page is stale against rather than editing the numbers.
+> **Do not read the file's mtime as its provenance:** an unrelated edit resets it, which is
+> how `docs/RQ4_CADEC_results.md` came to look current while resting on stale inputs.
+
+
 Source: `outputs/qa/qa_results_combined_identity_filtered.csv` (identity-filtered, 10,600 rows over 2,120 instances x 5 models), with the candidate margin joined from `umls_candidate_margin_qa.csv` on `(id, model, dataset)` at 100% match.
 
 **AURC estimator:** trapezoid over coverage **[0.10, 1.00]**, 19-point grid (step 0.05), not normalised by domain width — the pre-registered estimator, identical to the concept lane.
