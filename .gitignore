@@ -81,3 +81,8 @@ outputs/rq1/entropy_full_umls.csv
 # Bulky assignment PDFs
 Documents/*.pdf
 notebooks/*.pdf
+
+# Derived margin outputs exceed GitHub's 100 MB limit and are recorded by digest
+# in docs/ANALYSIS_PRECOMMIT.md instead (2026-09-21).
+outputs/rq1/umls_candidate_margin_medmentions*.csv
+outputs/rq1/umls_candidate_margin_medmentions.csv.bak_before_encoder_margin

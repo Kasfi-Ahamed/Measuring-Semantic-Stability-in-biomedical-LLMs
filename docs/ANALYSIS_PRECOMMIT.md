@@ -889,6 +889,33 @@ All reads. No producer currently writes through that name, and the two that writ
 inode and breaks the link — while an in-place `open(path, "w")` would not be. STEP 0 of the
 verification re-checks the digest for exactly that reason.
 
+**Extended 2026-09-21: EVERY STAGE OUTPUT, not only the corpus parts.** The rule above
+covered the corpus; the margin and entropy outputs had none. That gap was found by needing
+it: restoring `umls_candidate_margin_medmentions.csv` after step 11 wrote gold-anchored
+encoder margins into it, there was no recorded digest to verify the backup against. The
+restore was verified by CONTENT instead — 1,020,784 rows, zero encoder margins, 974
+generative nulls, which is job 34357's signature — and that was the better check, but it was
+only available because the signature was known within the session. It does not survive.
+
+| stage output | job | bytes | sha256 |
+|---|---|---:|---|
+| `outputs/rq1/entropy_full_umls.csv` | `34288` | 195,293,231 | `ed98865dc4e887ca2697f9defaff8f8aaf1acf601a1f3d17670d3e5df0242745` |
+| `outputs/rq1/umls_candidate_margin_medmentions.csv` **(canonical)** | `34357` | 237,981,478 | `1397266faccbaa08d46013a002560d54aa655fb75392bf0f11ebd65d0659760d` |
+| `…csv.bak_before_encoder_margin` (byte-identical to canonical) | `34357` | 237,981,478 | `1397266faccbaa08d46013a002560d54aa655fb75392bf0f11ebd65d0659760d` |
+| `…_QUARANTINE_GOLD_ANCHORED_ENCODER_MARGIN.csv` **(do not use)** | `34402` | 272,223,084 | `908aadfa7f0bd43729137e60cc2788722faa4a09d90be891f702d70a3a429573` |
+| `outputs/rq3/umls_candidate_margin_cadec.csv` | `33411` | 9,667,994 | `534c64929f7996aca30b4b7c0091184839fd1f5263008bf352ca10dbb008d23d` |
+| `outputs/qa/umls_candidate_margin_qa.csv` | `33441` | 2,534,374 | `94d98406c3046dd5eeded0654130e59fb245a779f1e9f2565577f0ab25237ac7` |
+
+**Why the quarantined file is quarantined.** Step 11 fills MedMentions *encoder* margins by
+embedding **`gold_mention`** and searching UMLS from it — the query is the gold annotation,
+identical across BERT-base, BioBERT and PubMedBERT for **100%** of instances. The margins are
+not identical (1.91%), but the variation enters only through which CUI each encoder picked:
+`s2` is the same for **97.87%** of instances because the retrieval neighbourhood is
+gold-determined. So the quantity is gold-anchored, and it is not the generative margin, whose
+query is the model's own `output_text` with no gold input. Putting it in the abstention table
+would be the rule-1 gold-leakage defect arriving in the reliability signal. Encoder margins
+stay undefined, which is what `RQ4_margin_benchmark` cell 6 already assumes.
+
 **Outstanding, and not resolved by this rule.** The rule governs artefacts from 2026-09-18
 onward. It does **not** retroactively remove what is already in history: `git ls-files` shows
 **24 tracked margin / mapping / entropy artefacts** under `outputs/`, including
@@ -1040,4 +1067,48 @@ are two independent measurements of the same set. That is still the assurance Am
 asks for, but it is weaker than the wording implies and should be stated that way on the day.
 
 It takes **~2 minutes**, not seconds: the 1.34 GB corpus is read twice.
+
+---
+
+# Columns removed from the published derived tables — 2026-09-21
+
+**Recorded so their absence is never read as a defect.**
+
+The Data and code availability section states that the derived tables contain "stand-off
+annotations from which corpus text cannot be reconstructed". A **content** scan (sampling
+values, not matching column names) found that false of 14 tracked files. They have been
+regenerated without those columns by `scripts/strip_text_columns.py`. Row counts and every
+other column are unchanged.
+
+| file | columns removed | what they held |
+|---|---|---|
+| `outputs/qa/qa_gate_recheck.csv` | `orig_question`, `pert_question` | **verbatim SQuAD 2.0 / BioASQ question text** |
+| `outputs/qa/qa_results_combined.csv` | `pred` | model answer strings |
+| `outputs/qa/qa_results_combined_identity_filtered.csv` | `pred` | " |
+| `outputs/qa/qa_results_{bioasq,squad2}_{biomistral,flan-t5-base,llama3,mistral,openbiollm}.csv` (10 files) | `pred` | " |
+| `outputs/qa/umls_candidate_margin_qa.csv` | `pred` | " |
+
+**Why `pred` counts as corpus text.** Extractive SQuAD 2.0 answers are spans *of the passage*,
+so a column of model answers reproduces source text by another route even though the strings
+are model output.
+
+**Nothing analytical is lost.** No downstream stage computes from these columns: entropy comes
+from cluster assignments, accuracy from `correct`/`em`/`f1`, gate verdicts from `g1_*`/`g2_*`.
+The remaining prose-like columns are ours or are identifiers — `cluster_distribution` is a
+CUI-to-count JSON, `dataset_label` and `method` are our own strings.
+
+**One consequence, stated rather than discovered later.** `RQ4_compute_missing_umls_margin`
+cell 5 (the QA margin half) reads `pred` from `qa_results_combined.csv`. It can no longer be
+re-run from the *published* copy of that table. It re-runs normally from a full pipeline
+execution, because `qa_results_combined.csv` is itself produced by
+`QA_answer_level_semantic_entropy.ipynb` from intermediates that were never tracked — as is
+true of the corpora themselves, which are also not in the repository.
+`scripts/qa_gate_failopen_audit.py` is unaffected: it *writes* `qa_gate_recheck.csv` from
+those same untracked intermediates.
+
+**Also untracked today:** `outputs/rq1/umls_candidate_margin_medmentions.csv` (226.9 MB) and
+its `.bak`/quarantine siblings. GitHub rejects any file over 100 MB, so the commit could not
+have been pushed at all. Kept on disk, recorded by digest in the ledger above, and added to
+`.gitignore`. This is the rule already applied to the CADEC margin: **digest in the ledger,
+bytes outside the repository**, now extended to every derived artefact over ~50 MB.
 

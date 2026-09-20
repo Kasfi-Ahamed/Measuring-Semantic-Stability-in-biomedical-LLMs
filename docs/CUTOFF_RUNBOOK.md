@@ -644,3 +644,27 @@ Sentence for the manuscript:
 > those instances the loss leaves m >= 3 intact, and for `mm_0008783` it does not, which
 > accounts for the difference of one.
 
+---
+
+# Digest every stage output, not only the corpus (2026-09-21)
+
+**Rule: every artefact a later stage reads gets its sha256 recorded when it is written.**
+
+The digest ledger covered the corpus parts and the joined corpus. The margin and entropy
+outputs — which the whole selective-prediction analysis rests on — had none. The gap surfaced
+when `umls_candidate_margin_medmentions.csv` had to be restored from a backup and there was no
+recorded digest to verify the backup against.
+
+It was verified by CONTENT instead: row count, zero encoder margins, 974 generative nulls.
+That is the better check, because it tests the property that matters rather than only that
+bytes are unchanged. **But it was available only because the expected signature was known
+within the session**, and that knowledge does not survive it. A digest does.
+
+Both, therefore: **a digest for provenance, a content signature for meaning.** Record the
+digest in `docs/ANALYSIS_PRECOMMIT.md` and, where a stage has one, the property that makes the
+artefact recognisable (rows, and the counts a receipt already asserts).
+
+Corollary: **a `.bak` file is not provenance.** It records that something was replaced, not
+what it was. `bak_before_encoder_margin` happened to be the right bytes; nothing on disk said
+so until the content check was run.
+
