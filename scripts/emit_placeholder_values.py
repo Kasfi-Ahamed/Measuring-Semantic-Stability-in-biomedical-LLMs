@@ -29,6 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
+import textwrap as _tw
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -40,25 +41,40 @@ CORPUS = ROOT / "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv"
 # placeholder -> artefact, column, selector. Names supplied by the author 2026-09-19; they
 # live in main.tex, which is not in this repository.
 PLACEHOLDERS = [
+    # WRONG QUANTITY UNTIL 2026-09-21. These two read column=m_accepted / m_distinct with
+    # agg="sum_int" and returned 5,812,288 and 4,304,048. Those are TOTALS OF VARIANTS summed
+    # over 1,135,264 rows -- and the file carries 8 rows per instance, one per model, so the
+    # totals also count every instance eight times. The quantity the manuscript needs is a
+    # COUNT OF INSTANCES: 141,908 and 127,598. See docs/BUG_AUDIT.md 14.
     dict(section="methods — analysed MM instances, all variants",
          placeholder="[[MM_INSTANCES]]",
          artefact="outputs/rq1/entropy_full_umls.csv",
-         column="m_accepted", select=None, agg="sum_int",
-         desc="all-variants count over the cut-off sample"),
+         column="instance_id", select=None, agg="nunique_int",
+         definition="COUNT of distinct instance_id in the file. The file has one row per "
+                    "(instance, model) and 8 models, so rows = 8 x instances; this is the "
+                    "instance count, NOT a row count and NOT a sum over any column.",
+         desc="analysed MedMentions instances, all-variants rule"),
     dict(section="methods — analysed MM instances, distinct variants",
          placeholder="[[MM_INSTANCES_DISTINCT]]",
          artefact="outputs/rq1/entropy_full_umls.csv",
-         column="m_distinct", select=None, agg="sum_int",
-         desc="distinct-variant count (Amendment 3 primary denominator)"),
+         column="instance_id", select=None, agg="nunique_int",
+         where="retained_m_distinct",
+         definition="COUNT of distinct instance_id whose retained_m_distinct is True "
+                    "(Amendment 3 primary denominator). Instance-level: every instance is "
+                    "retained for all 8 models or for none, which the resolver checks. "
+                    "NOT a sum of the m_distinct column.",
+         desc="analysed MedMentions instances, distinct-variant rule"),
     dict(section="methods — grid-complete block count",
          placeholder="[[MM_SHARDS]]",
          artefact="outputs/rq1/cutoff_verification_receipt.json",
          column="enumerated_grid_complete", agg="json_len",
+         definition="COUNT of entries in the receipt's enumerated_grid_complete list. A block count, not a shard-file count and not an instance count.",
          desc="number of grid-complete blocks, from the 21 Sep verification receipt"),
     dict(section="methods — grid-complete block list",
          placeholder="[[MM_BLOCK_LIST]]",
          artefact="outputs/rq1/cutoff_verification_receipt.json",
          column="enumerated_grid_complete", agg="json_list",
+         definition="THE LIST ITSELF, verbatim from the same receipt key. Not a count.",
          desc="the block list itself, from the same receipt"),
     dict(section="4.3 matched pairs — pair 1",
          placeholder="[[MM_RQ3_PAIR1]]",
@@ -80,6 +96,7 @@ PLACEHOLDERS = [
          # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
          # rank_biserial.
          select=dict(dataset="MedMentions", _pair_rank=1),
+         definition="ONE ROW of the matched-pair table: rank-biserial with its 95% CI, n_paired (instances where BOTH members have a usable value), the Wilcoxon z, and the display-safe Holm p. The primary test is ONE-SIDED in the hypothesised direction (H_bio < H_gen), so p=1 means an effect the OTHER way, not no effect.",
          desc="rank-biserial with CI, n, z and display Holm p, matched pair 1"),
     dict(section="4.3 matched pairs — pair 2",
          placeholder="[[MM_RQ3_PAIR2]]",
@@ -101,6 +118,7 @@ PLACEHOLDERS = [
          # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
          # rank_biserial.
          select=dict(dataset="MedMentions", _pair_rank=2),
+         definition="ONE ROW of the matched-pair table; see pair 1. One-sided primary.",
          desc="rank-biserial with CI, n, z and display Holm p, matched pair 2"),
     dict(section="4.3 matched pairs — pair 3",
          placeholder="[[MM_RQ3_PAIR3]]",
@@ -122,9 +140,11 @@ PLACEHOLDERS = [
          # three reported OK. Caught because PAIR1 and PAIR2 came back with an identical
          # rank_biserial.
          select=dict(dataset="MedMentions", _pair_rank=3),
+         definition="ONE ROW of the matched-pair table; see pair 1. One-sided primary: this cell has |r|=0.47 WITH p=1, an effect against the hypothesis.",
          desc="rank-biserial with CI, n, z and display Holm p, matched pair 3"),
     dict(section="methods — mapped corpus size (DENOMINATOR, not the analysed sample)",
          placeholder="[[MM_MAPPED_ROWS]]",
+         definition="COUNT of data lines in the mapped cut-off corpus. This is a DENOMINATOR describing the corpus (instances x models x variants), NOT the analysed sample and NOT an instance count. The analysed sample is 24 rows smaller and is a different quantity.",
          # Counted from the CORPUS ITSELF, not from the entropy receipt's rows_before.
          # This denominator describes the corpus; the analysed sample is 24 rows smaller and
          # is a different quantity. Sourcing it from the entropy receipt would silently make
@@ -137,6 +157,7 @@ PLACEHOLDERS = [
          desc="rows in the joined cut-off corpus, counted from the corpus"),
     dict(section="limitations — tie-break exposure (FROZEN, E1)",
          placeholder="[[TIEBREAK_CASES]]",
+         definition="A PAIR OF ROW COUNTS from one pre-Amendment-9 comparison: rows whose predicted_cui DIFFERED between two routes, of rows compared, with the percentage. Population is MedMentions block 6 only, all 8 models. Rows, not instances; assignments that MOVED, not ties that existed.",
          # SOURCE: job 33221's own log, which retained the row-for-row comparison in full:
          #   "predicted_cui  differ on 1,007 of 370,428 rows (0.271848%)"
          # NOT parsed from our own prose, and NOT from the E1 receipt on disk -- that receipt
@@ -147,6 +168,16 @@ PLACEHOLDERS = [
          column=None, agg="e1_frozen", exempt_staleness=True,
          desc="1,007 of 370,428 rows on block 6; pre-fix, frozen, corpus-independent"),
 ]
+
+
+# EVERY PLACEHOLDER MUST DEFINE ITS QUANTITY. The 2026-09-21 defect (BUG_AUDIT 14) was a value
+# that resolved cleanly, carried a digest, named its artefact and its column, and was the wrong
+# quantity: desc said "count", agg said "sum_int", and nothing compared the two. A free-text
+# desc is a label; `definition` must say which OPERATION over which POPULATION produces the
+# number, so the reader can tell a count from a sum without opening the artefact.
+for _s in PLACEHOLDERS:
+    if not _s.get("definition"):
+        raise SystemExit(f"spec {_s['placeholder']} has no definition= (BUG_AUDIT 14)")
 
 
 def sha256(p: Path) -> str:
@@ -161,7 +192,8 @@ def resolve(spec: dict) -> dict:
     p = ROOT / spec["artefact"]
     row = dict(section=spec["section"], placeholder=spec["placeholder"],
                artefact=spec["artefact"], column=spec["column"],
-               selector=spec.get("select"), description=spec["desc"])
+               selector=spec.get("select"), description=spec["desc"],
+               definition=spec["definition"], where=spec.get("where"))
     if not p.is_file():
         return {**row, "value": None, "status": "MISSING",
                 "detail": "artefact does not exist"}
@@ -185,6 +217,38 @@ def resolve(spec: dict) -> dict:
                 tot += int(pd.to_numeric(ch[spec["column"]], errors="coerce").fillna(0).sum())
             return {**row, "value": tot, "status": "OK", "sha256": sha256(p),
                     "detail": f"sum of {spec['column']}"}
+        if agg == "nunique_int":                  # COUNT OF DISTINCT VALUES, never a sum
+            # The whole point of this branch is that it cannot be confused with sum_int. It
+            # reports the row count next to the answer, so a value that is secretly a total
+            # over rows is visible in the output rather than merely plausible.
+            need = [spec["column"]] + ([spec["where"]] if spec.get("where") else [])
+            df_n = pd.read_csv(p, usecols=need)
+            miss_n = [c for c in need if c not in df_n.columns]
+            if miss_n:
+                return {**row, "value": None, "status": "MISSING",
+                        "detail": f"column(s) {miss_n} absent"}
+            n_rows = len(df_n)
+            note = ""
+            if spec.get("where"):
+                w = df_n[spec["where"]].astype(bool)
+                # An instance-level filter must not split an instance across models. If it
+                # does, "count of instances retained" has no single meaning and the value is
+                # refused rather than silently resolved to the ANY-model reading.
+                g = w.groupby(df_n[spec["column"]])
+                n_all, n_any = int(g.all().sum()), int(g.any().sum())
+                if n_all != n_any:
+                    return {**row, "value": None, "status": "MISSING",
+                            "detail": f"{spec['where']} splits {n_any - n_all:,} instances "
+                                      f"across models (all={n_all:,} any={n_any:,}); "
+                                      f"'instances retained' is ambiguous"}
+                df_n = df_n[w]
+                note = (f", filtered to {spec['where']}==True "
+                        f"({int(w.sum()):,} of {n_rows:,} rows; all-or-none per instance "
+                        f"confirmed)")
+            n_u = int(df_n[spec["column"]].nunique())
+            return {**row, "value": n_u, "status": "OK", "sha256": sha256(p),
+                    "detail": f"COUNT of distinct {spec['column']} = {n_u:,} "
+                              f"over {n_rows:,} rows in the file{note}"}
         if agg in ("json_len", "json_list"):      # a key inside a JSON receipt
             obj = json.loads(p.read_text())
             if spec["column"] not in obj:
@@ -305,7 +369,15 @@ def main() -> int:
         vs = f"{v:.6g}" if isinstance(v, float) else str(v)
         print(f"[{r['status']:7s}] {r['placeholder']:26s} = {vs}")
         print(f"          {r['section']}")
-        print(f"          {r['artefact']}  col={r['column']}  sel={r['selector']}")
+        # THE DEFINITION SITS DIRECTLY UNDER THE VALUE, above the provenance. Provenance says
+        # where a number came from; only the definition says what it IS, and the 2026-09-21
+        # defect had flawless provenance (BUG_AUDIT 14).
+        for _ln in _tw.wrap(r["definition"], width=86):
+            print(f"          DEFINITION: {_ln}" if _ln == _tw.wrap(r["definition"], 86)[0]
+                  else f"                      {_ln}")
+        print(f"          {r['artefact']}  col={r['column']}"
+              + (f"  where={r['where']}" if r.get("where") else "")
+              + f"  sel={r['selector']}")
         print(f"          {r['detail']}")
     print("=" * 100)
     print(f"{len(rows) - len(missing)}/{len(rows)} resolved")
@@ -322,14 +394,17 @@ def main() -> int:
     print(f"-> {a.out}")
 
     if a.md:
-        print("\n| placeholder | value | artefact | column | selector |")
+        # DEFINITION IS THE SECOND COLUMN, before provenance: this table is what gets read
+        # when a value is transcribed, so the quantity must be legible without a lookup.
+        print("\n| placeholder | value | DEFINITION (what the number IS) | artefact | column |")
         print("|---|---|---|---|---|")
         for r in rows:
             v = r["value"]
             vs = f"`{v:.6g}`" if isinstance(v, float) else (
                 f"`{v}`" if v is not None else "**MISSING**")
-            print(f"| `{r['placeholder']}` | {vs} | `{r['artefact']}` | "
-                  f"`{r['column']}` | `{r['selector']}` |")
+            col = f"`{r['column']}`" + (f" where `{r['where']}`" if r.get("where") else "")
+            print(f"| `{r['placeholder']}` | {vs} | {r['definition']} | "
+                  f"`{r['artefact']}` | {col} |")
 
     if missing:
         print(f"\n{len(missing)} placeholder(s) UNRESOLVED — none may be filled by hand:")

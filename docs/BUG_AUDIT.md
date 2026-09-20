@@ -2256,3 +2256,87 @@ significant effect *against* the hypothesis rather than as a non-result.
 
 **Remedy 13b.** A test's sidedness is part of its pre-registration. "Paired Wilcoxon
 signed-rank" does not specify a test.
+
+---
+
+## 14. The wrong quantity, with perfect provenance — the emitter's own failure mode
+
+**Found 2026-09-21, cut-off morning, by the author reading the emitted table.** The sharpest
+instance in this catalogue, and the one worth reading if only one is read.
+
+### What happened
+
+`[[MM_INSTANCES]]` emitted **5,812,288** and `[[MM_INSTANCES_DISTINCT]]` emitted **4,304,048**.
+The correct values are **141,908** and **127,598**.
+
+The specs read `column="m_accepted"` / `"m_distinct"` with `agg="sum_int"`. Those columns hold
+a per-row variant count, and `outputs/rq1/entropy_full_umls.csv` has **1,135,264 rows =
+141,908 instances x 8 models**. So the emitted figures were totals of *variants*, summed over
+rows, each instance counted eight times. Not a count of instances by any reading.
+
+### Why nothing caught it
+
+Every safeguard in the emitter fired, and fired correctly:
+
+| safeguard | verdict | could it have caught this? |
+|---|---|---|
+| artefact exists | pass | no |
+| staleness vs the cut-off corpus | pass — the file is newer | no |
+| sha256 of the artefact | recorded | no |
+| named column present | pass — `m_accepted` exists | no |
+| selector resolves to exactly one row | n/a for an aggregate | no |
+| exit code / 9-of-9 count | 9/9, exit 0 | no |
+
+**Every one of them answers "where did this number come from". Not one answers "what is this
+number".** A value can be sourced from the right file, in the right column, freshly computed,
+digested, and reproducible — and still be the wrong quantity. Provenance and semantics are
+different properties and the emitter only ever had the first.
+
+The one field that carried semantics was free text: `desc="all-variants count over the cut-off
+sample"`. It said **count**; the adjacent `agg` said **sum_int**. Those two contradict each
+other inside the same six-line dict literal, and nothing compared them, because `desc` was a
+label printed for humans and `agg` was the instruction executed by the machine. A comment that
+disagrees with its code is a comment.
+
+### How it was actually detected
+
+**By implausibility, not by machinery.** 5.8 million "analysed instances" is visibly wrong
+against a sample known to be ~142k. The author's own assessment is the finding: *"the only
+reason it did not reach the manuscript is that the number was absurd enough to notice. Had the
+sample been a plausible 138,000 I would have substituted it."*
+
+That is the failure the emitter was built to eliminate. Its docstring opens by recording that
+a hand-transcribed **+0.373 became +0.377** and *"was caught by luck"*, and says this
+*"removes the opportunity rather than relying on the catch."* It did remove the transcription
+error. It then reintroduced the same dependence on a reader's prior, one layer up, where the
+number is no longer a digit that slipped but a quantity that was never the right one. An
+automated pipeline does not remove the need for a plausibility check; it moves it, and makes
+it harder to perform, because the output now looks authoritative.
+
+### The fix
+
+Both specs now use `agg="nunique_int"` on `instance_id`, the second filtered by
+`where="retained_m_distinct"`. The new resolver:
+
+  * is a **count of distinct values and cannot be a sum** — separate branch, no shared path
+    with `sum_int`;
+  * **prints the file's row count beside the answer**, so a value that is secretly a total
+    over rows is visible in the output instead of merely plausible;
+  * for a filtered count, **refuses if the filter splits an instance across models**, rather
+    than silently resolving to the any-model reading. (`retained_m_distinct` is all-or-none
+    per instance: all=any=127,598. Checked at run time, not assumed.)
+
+Every placeholder now carries a required `definition=` stating **which operation over which
+population** produces the number, printed directly under the value and as the second column of
+the markdown table — before provenance, because provenance was never the weak part. A spec
+without one raises at import: `spec [[...]] has no definition= (BUG_AUDIT 14)`. Verified by
+stripping one and observing rc=1.
+
+**Corroboration for 127,598**, independent of this file: `[[MM_RQ3_PAIR1]]` reports
+`n_paired = 127598`, computed by `scripts/rq3_matched_pairs.py` from the matched-pair join.
+Two different scripts, two different code paths, same instance count.
+
+**Remedy 14.** A number is not verified by knowing where it came from. Every emitted value
+states the operation and the population, in a field the machine requires and the reader sees
+first. And when a description and an aggregation sit in the same literal, they are two claims
+about one number: if nothing compares them, assume they disagree.

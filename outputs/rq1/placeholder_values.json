@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-09-20T15:58:06.149151+00:00",
+  "generated_utc": "2026-09-20T16:05:31.277739+00:00",
   "n_total": 9,
   "n_resolved": 9,
   "note": "placeholder names are UNMAPPED: no main.tex in this repository. Fill PLACEHOLDERS in scripts/emit_placeholder_values.py once.",
@@ -8,25 +8,29 @@
       "section": "methods \u2014 analysed MM instances, all variants",
       "placeholder": "[[MM_INSTANCES]]",
       "artefact": "outputs/rq1/entropy_full_umls.csv",
-      "column": "m_accepted",
+      "column": "instance_id",
       "selector": null,
-      "description": "all-variants count over the cut-off sample",
-      "value": 5812288,
+      "description": "analysed MedMentions instances, all-variants rule",
+      "definition": "COUNT of distinct instance_id in the file. The file has one row per (instance, model) and 8 models, so rows = 8 x instances; this is the instance count, NOT a row count and NOT a sum over any column.",
+      "where": null,
+      "value": 141908,
       "status": "OK",
       "sha256": "ed98865dc4e887ca2697f9defaff8f8aaf1acf601a1f3d17670d3e5df0242745",
-      "detail": "sum of m_accepted"
+      "detail": "COUNT of distinct instance_id = 141,908 over 1,135,264 rows in the file"
     },
     {
       "section": "methods \u2014 analysed MM instances, distinct variants",
       "placeholder": "[[MM_INSTANCES_DISTINCT]]",
       "artefact": "outputs/rq1/entropy_full_umls.csv",
-      "column": "m_distinct",
+      "column": "instance_id",
       "selector": null,
-      "description": "distinct-variant count (Amendment 3 primary denominator)",
-      "value": 4304048,
+      "description": "analysed MedMentions instances, distinct-variant rule",
+      "definition": "COUNT of distinct instance_id whose retained_m_distinct is True (Amendment 3 primary denominator). Instance-level: every instance is retained for all 8 models or for none, which the resolver checks. NOT a sum of the m_distinct column.",
+      "where": "retained_m_distinct",
+      "value": 127598,
       "status": "OK",
       "sha256": "ed98865dc4e887ca2697f9defaff8f8aaf1acf601a1f3d17670d3e5df0242745",
-      "detail": "sum of m_distinct"
+      "detail": "COUNT of distinct instance_id = 127,598 over 1,135,264 rows in the file, filtered to retained_m_distinct==True (1,020,784 of 1,135,264 rows; all-or-none per instance confirmed)"
     },
     {
       "section": "methods \u2014 grid-complete block count",
@@ -35,6 +39,8 @@
       "column": "enumerated_grid_complete",
       "selector": null,
       "description": "number of grid-complete blocks, from the 21 Sep verification receipt",
+      "definition": "COUNT of entries in the receipt's enumerated_grid_complete list. A block count, not a shard-file count and not an instance count.",
+      "where": null,
       "value": 20,
       "status": "OK",
       "sha256": "aeb142fa57f402629c1fe8c074910ac1683528010f926701a6f47b3edc65ed01",
@@ -47,6 +53,8 @@
       "column": "enumerated_grid_complete",
       "selector": null,
       "description": "the block list itself, from the same receipt",
+      "definition": "THE LIST ITSELF, verbatim from the same receipt key. Not a count.",
+      "where": null,
       "value": [
         0,
         1,
@@ -91,6 +99,8 @@
         "_pair_rank": 1
       },
       "description": "rank-biserial with CI, n, z and display Holm p, matched pair 1",
+      "definition": "ONE ROW of the matched-pair table: rank-biserial with its 95% CI, n_paired (instances where BOTH members have a usable value), the Wilcoxon z, and the display-safe Holm p. The primary test is ONE-SIDED in the hypothesised direction (H_bio < H_gen), so p=1 means an effect the OTHER way, not no effect.",
+      "where": null,
       "value": {
         "rank_biserial": -0.2683349855397786,
         "rb_ci95_low": -0.2751483484226427,
@@ -122,6 +132,8 @@
         "_pair_rank": 2
       },
       "description": "rank-biserial with CI, n, z and display Holm p, matched pair 2",
+      "definition": "ONE ROW of the matched-pair table; see pair 1. One-sided primary.",
+      "where": null,
       "value": {
         "rank_biserial": -0.0478968228444719,
         "rb_ci95_low": -0.0560467771866754,
@@ -153,6 +165,8 @@
         "_pair_rank": 3
       },
       "description": "rank-biserial with CI, n, z and display Holm p, matched pair 3",
+      "definition": "ONE ROW of the matched-pair table; see pair 1. One-sided primary: this cell has |r|=0.47 WITH p=1, an effect against the hypothesis.",
+      "where": null,
       "value": {
         "rank_biserial": 0.466046498691412,
         "rb_ci95_low": 0.4599643781436629,
@@ -173,6 +187,8 @@
       "column": null,
       "selector": null,
       "description": "rows in the joined cut-off corpus, counted from the corpus",
+      "definition": "COUNT of data lines in the mapped cut-off corpus. This is a DENOMINATOR describing the corpus (instances x models x variants), NOT the analysed sample and NOT an instance count. The analysed sample is 24 rows smaller and is a different quantity.",
+      "where": null,
       "value": 7332245,
       "status": "OK",
       "sha256": "3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9",
@@ -185,6 +201,8 @@
       "column": null,
       "selector": null,
       "description": "1,007 of 370,428 rows on block 6; pre-fix, frozen, corpus-independent",
+      "definition": "A PAIR OF ROW COUNTS from one pre-Amendment-9 comparison: rows whose predicted_cui DIFFERED between two routes, of rows compared, with the percentage. Population is MedMentions block 6 only, all 8 models. Rows, not instances; assignments that MOVED, not ties that existed.",
+      "where": null,
       "value": {
         "differing": 1007,
         "of": 370428,
