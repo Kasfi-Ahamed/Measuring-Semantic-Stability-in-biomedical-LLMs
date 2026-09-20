@@ -2107,3 +2107,54 @@ The general form: **the cost of a wrong name should be paid before the allocatio
 it.** Two seconds against two and a half minutes here, and against twelve hours in a job that
 fails late.
 
+---
+
+# Right check, wrong place — correctness at the point of use, cost at the earliest knowable point (2026-09-20)
+
+**Class:** a check that is correct in kind, placed where it cannot be cheap, and armed against
+a fact that is not yet the fact it will be compared with. Both of today's failures are this
+shape, and the remedy is a placement rule rather than a new check.
+
+## The instance
+
+Job `34278` computed the MedMentions candidate margin for **5h36m**, passed its own sanity
+checks, reached the write gate and died:
+
+    ROW-COUNT RECEIPT FAILED at the write gate: 1,020,784 rows, expected 1,135,264
+
+Nothing was wrong with the data. The receipt was armed at `len(ent)` immediately after
+`pd.read_csv(ENTROPY_PATH)`, and eleven lines later — before the merge — the notebook applies
+its own `retained_m_distinct` filter:
+
+    ROW-COUNT RECEIPT armed at 1,135,264 rows
+    retained_m_distinct filter | rows 1,135,264 -> 1,020,784
+    Merged entropy rows: 1,020,784
+
+That filter is Amendment 3's distinct-m denominator working exactly as designed. The merge was
+clean — 1,020,784 in, 1,020,784 out — so the notebook's own invariant `len(merged) == len(ent)`
+**held exactly**. Only the comparison was wrong. A receipt written to stop job 33347 recurring
+destroyed more work than 33347 did.
+
+## The two errors, which are different
+
+1. **Wrong invariant.** `len(ent)` as read is not the population the merge governs. The
+   binding relation is against `ent` *as it stands at the merge*. Asserting an invariant
+   without verifying it IS the invariant is the same error as the hand-picked cell list.
+2. **Wrong place for the cost.** The relationship between the two counts was knowable in
+   milliseconds, from a column already in memory, before a single GPU second was spent. It was
+   instead discovered after 5h36m.
+
+## The remedy
+
+11. **A check belongs at the point of use for CORRECTNESS, and at the earliest point the same
+    fact is knowable for COST.** These are two placements of the same check, not a choice
+    between them. This week has been diligent about the first and blind to the second: the
+    preflight added on 2026-09-20 was the first check placed for cost, and it was added only
+    after a wasted allocation taught the lesson.
+
+Applied here: an **early check** after the entropy read computes what the filter will produce
+and prints both counts, failing in seconds if a pre-registered figure disagrees; the **binding
+assertion** stays at the write gate against `len(ent)` at the merge, with a second assertion
+that `ent` has not drifted from what the early check predicted. Verified against 34278's real
+numbers before resubmission: the old comparison fails, the new one passes.
+
