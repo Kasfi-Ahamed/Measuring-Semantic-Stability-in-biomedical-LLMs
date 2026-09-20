@@ -60,15 +60,17 @@ is that nothing grid-complete *on disk* was left out of the re-map. State it tha
 
 ---
 
-## 2. RELEASE 30955
+## 2. DO NOT RELEASE 30955 — the condition changed on 2026-09-21
 
-**Only after step 1 exits 0.** It has been held since before the cut-off precisely so this
-gate is real.
+**This step previously said to release 30955 once step 1 exits 0. That was wrong and the hold
+is longer.** Releasing it rewrites `rq1_validated_perturbations.csv`, whose frozen checksum
+the entropy stage verifies, whose digest is the gate-verdict provenance in the ledger, and
+against which the 141,909 / 127,599 retention figures were recomputed. Once it moves, nothing
+in the submission can be re-derived or re-checked.
 
-    scontrol release 30955
-    squeue -u $USER -o "%.10i %.16j %.9T %.16r" | grep 30955
-
-Confirm from `squeue`, not from the exit code.
+**30955 stays held until the MANUSCRIPT IS SUBMITTED.** The post-cut-off full-corpus run for
+the defence begins after that. See `docs/CUTOFF_RUNBOOK.md`, "30955 stays held until the
+manuscript is SUBMITTED".
 
 ---
 

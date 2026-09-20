@@ -668,3 +668,44 @@ Corollary: **a `.bak` file is not provenance.** It records that something was re
 what it was. `bak_before_encoder_margin` happened to be the right bytes; nothing on disk said
 so until the content check was run.
 
+---
+
+# 30955 stays held until the manuscript is SUBMITTED (2026-09-21)
+
+**This supersedes the weaker condition written elsewhere.** The runbook and
+`docs/CUTOFF_MORNING_21SEP.md` said 30955 is released once `cutoff_verify.py` passes. **That is
+not sufficient and the hold is now longer.**
+
+## Why the condition changed
+
+Releasing `30955_[20-25%1]` completes blocks 20-25, and completing them **rewrites**
+`outputs/rq1/intermediate/rq1_validated_perturbations.csv`. That file is not just an input:
+
+1. **The entropy stage verifies its checksum.** `RQ1_PART2_full_umls_pool.ipynb` cell 11
+   computes its sha256 and compares it to the frozen sidecar, printing
+   `Gate verdicts: ... (MATCHES frozen sidecar)`. Job 34288 recorded
+   `249a735c9d9f5c7f...`. If the file moves, that check can never match again for this
+   submission's corpus.
+2. **Its digest is in the ledger**, as the gate-verdict provenance for every acceptance-filter
+   claim, including the out-of-band receipt for the 24 dropped rows.
+3. **The 141,909 / 127,599 retention figures were recomputed from it on 2026-09-20**, and that
+   recomputation is what gives those numbers their provenance instead of a copied report.
+
+**Once that file moves, nothing in the submission can be re-derived or re-checked.** Not the
+retention figures, not the acceptance-filter receipt, not the entropy stage's own gate check.
+The corpus would still exist, but its relationship to the gate verdicts that produced it
+would be unreproducible.
+
+## The rule
+
+**30955 stays held until the manuscript is submitted** — not until the verification passes.
+The post-cut-off full-corpus run for the defence begins **after** submission.
+
+This is also why an idle slot stays idle. The only queued job that could fill it is the one
+job that would destroy the provenance of everything the cut-off work established. An idle
+slot with every remaining step correctly blocked is the pipeline working, not capacity going
+to waste.
+
+The other three held jobs — `33062`, `32853`, `32769` — are unaffected by this reasoning and
+keep their own conditions.
+
