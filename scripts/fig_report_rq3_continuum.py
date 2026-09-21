@@ -102,13 +102,21 @@ def main() -> int:
     ax.annotate("equivalence is\nbidirectional entailment", (bx + 0.08, ax.get_ylim()[1] * 0.80),
                 ha="left", va="top", fontsize=9, color="#444444", style="italic")
 
-    title = ("RQ3: mean semantic entropy across the four corpora\n"
-             "Concept lane and question-answering lane measure equivalence differently; "
-             "the encoders produce no free-text answer and stop at the boundary")
-    sub = "   ".join(f"{c}: {S.grid_clause(RETAINED.get(c, ns.get(c, 0)), ns.get(c, 0))}"
-                     for c in S.CORPUS_ORDER)
-    S.check_text(title, sub, "Corpus")
-    ax.set_title(title + "\n" + sub, fontsize=11)
+    title = S.title_line("RQ3: mean semantic entropy across corpora", "all four")
+    S.check_text("Corpus")
+    ax.set_title(title, fontsize=12)
+    S.emit_caption(OUT.name, title=title,
+                   n="   ".join(f"{c}: {S.grid_clause(RETAINED.get(c, ns.get(c, 0)), ns.get(c, 0))}"
+                                for c in S.CORPUS_ORDER),
+                   models="8 in the concept lane, 5 in the question-answering lane",
+                   notes=["The vertical divider is the grounding boundary. To its left "
+                          "equivalence is UMLS concept identity; to its right it is "
+                          "bidirectional entailment.",
+                          "The three encoders produce no free-text answer, so their lines "
+                          "END at the boundary. Nothing is imputed across it.",
+                          "Connecting lines are kept because the rise across the boundary "
+                          "is the point, but the axis is a set of four corpora and not a "
+                          "one-dimensional continuum."])
     ax.set_xticks(x)
     ax.set_xticklabels(S.CORPUS_ORDER)
     ax.set_xlim(-0.35, len(S.CORPUS_ORDER) - 0.65)
@@ -119,8 +127,7 @@ def main() -> int:
     ax.legend(loc="center left", bbox_to_anchor=(1.01, 0.5), fontsize=9, frameon=True)
     fig.tight_layout()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT, dpi=300, bbox_inches="tight")
-    fig.savefig(OUT.with_suffix(".pdf"), bbox_inches="tight")
+    S.save_png(fig, OUT)
     plt.close(fig)
     agg[models].to_csv(OUT.with_suffix(".csv"))
     print(f"\nwrote {OUT}\nwrote {OUT.with_suffix('.pdf')}\nwrote {OUT.with_suffix('.csv')}")

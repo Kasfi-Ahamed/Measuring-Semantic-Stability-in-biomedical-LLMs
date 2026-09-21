@@ -172,34 +172,30 @@ def main() -> int:
                     (i, pair_top), textcoords="offset points", xytext=(0, 15),
                     ha="center", fontsize=8, color="#333333")
 
-    # The title is derived, not asserted. The pilot figure's claim was that the bars do not
-    # separate for any model; on the current artefacts that is false for the encoders, so a
-    # fixed title would have been a figure contradicting its own bars.
     sep = R[R["rank_biserial"].abs() >= PREREG_R]["model"].tolist()
     nosep = [m for m in models if m not in sep]
-    if not sep:
-        title = ("RQ2: entropy does not separate accurate from inaccurate instances\n"
-                 "If entropy tracked accuracy the green and red bars would separate. "
-                 "They do not, for any model.")
-    else:
-        title = ("RQ2: entropy separates accurate from inaccurate instances "
-                 f"in {len(sep)} of {len(models)} models\n"
-                 "Bars would separate if entropy tracked accuracy. They do for "
-                 + ", ".join(sep) + f"; they do not for the remaining {len(nosep)}.")
-    sub = (f"{c['corpus']}: {S.grid_clause(n_retained, n_defined)}, {len(models)} models. "
-           f"Starred values clear the pre-registered 0.30.\n"
-           "SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), as reported in "
-           "the manuscript table, so higher entropy with more error is POSITIVE. "
-           "r(rb) contrasts the correct stratum against the incorrect one, so the same "
-           "relationship is NEGATIVE. Both describe entropy rising with error.\n"
-           "Split: the 25th and 75th percentile cut was attempted and is degenerate, "
-           "q25 = q75 = 0 for 4 of the 8 CADEC models, so the split drawn is instances with "
-           "at least one correct variant against instances with none.")
-    S.check_text(title, sub)
-    W = 118
-    wrapped = "\n".join("\n".join(textwrap.wrap(ln, W)) if ln.strip() else ln
-                        for ln in (title + "\n" + sub).split("\n"))
-    ax.set_title(wrapped, fontsize=9.5)
+    title = S.title_line("RQ2: entropy by accuracy split", c["corpus"])
+    wrapped = title
+    ax.set_title(wrapped, fontsize=12)
+    S.emit_caption(c["out"].name, title=title,
+                   n=S.grid_clause(n_retained, n_defined),
+                   models=f"{len(models)} models, roster order",
+                   notes=[("Bars separate for " + ", ".join(sep) + f"; they do not for the "
+                           f"remaining {len(nosep)}.") if sep else
+                          "Bars do not separate for any model.",
+                          "SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), "
+                          "the same statistic and column the manuscript table reports, so "
+                          "higher entropy with more error is positive. r(rb) contrasts the "
+                          "correct stratum against the incorrect one, so the same "
+                          "relationship is negative. Both describe entropy rising with "
+                          "error. A star marks a value clearing the pre-registered 0.30.",
+                          "SPLIT. The 25th and 75th percentile cut was attempted and is "
+                          "degenerate: q25 = q75 = 0 for 4 of the 8 CADEC models, and no "
+                          "top quarter exists when three quarters are tied at the floor. "
+                          "The split drawn is instances with at least one correct variant "
+                          "against instances with none.",
+                          "The producer aborts if any model's rho differs from "
+                          "rq2_dissociation_summary.csv by more than 5e-6."])
     ax.set_xticks(x)
     ax.set_xticklabels(models, rotation=20, ha="right", fontsize=9)
     ax.set_xlabel("Model")
@@ -209,8 +205,7 @@ def main() -> int:
     ax.legend(loc="upper left", fontsize=9, framealpha=0.95)
     fig.tight_layout()
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
-    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
+    S.save_png(fig, c["out"])
     plt.close(fig)
     R.to_csv(c["out"].with_suffix(".csv"), index=False)
     print(f"\nwrote {c['out']}\nwrote {c['out'].with_suffix('.pdf')}\n"

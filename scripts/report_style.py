@@ -176,3 +176,55 @@ def grid_clause(n_grid: int, n_defined: int) -> str:
     d = n_grid - n_defined
     return (f"n = {n_grid:,} grid rows, {n_defined:,} with defined entropy "
             f"({d:,} {'row has' if d == 1 else 'rows have'} none)")
+
+
+# ---------------------------------------------------------------------------------------
+# Caption registry.
+#
+# Figure titles are ONE LINE naming the measure and the corpus. Everything a reader needs
+# that used to sit on the image goes here instead and is written out to
+# figures_for_report/captions.md. Nothing that was on the image may be lost, so a producer
+# that strips its title must call emit_caption in the same edit.
+# ---------------------------------------------------------------------------------------
+import json as _json
+from pathlib import Path as _Path
+
+_ROOT = _Path(__file__).resolve().parents[1]
+CAPTION_STORE = _ROOT / "figures_for_report" / "_captions.json"
+
+
+def title_line(measure: str, corpus: str) -> str:
+    """The only string that goes on a figure: measure, comma, corpus. Nothing else."""
+    t = f"{measure}, {corpus}"
+    check_text(t)
+    return t
+
+
+def emit_caption(filename, *, title, n=None, models=None, notes=None, group=None):
+    """Record what the one-line title no longer says.
+
+    filename  the delivered .png name, which is the key
+    title     the one-line title as drawn
+    n         the grid-versus-defined-entropy disclosure, already worded
+    models    the model set drawn
+    notes     list of anything a reader needs: shared scales, omitted signals, degenerate
+              splits, sign conventions
+    group     set for per-model files so they are listed as a group, not one entry each
+    """
+    CAPTION_STORE.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        store = _json.loads(CAPTION_STORE.read_text())
+    except Exception:
+        store = {}
+    store[str(filename)] = dict(title=title, n=n, models=models,
+                                notes=list(notes or []), group=group)
+    CAPTION_STORE.write_text(_json.dumps(store, indent=1, sort_keys=True))
+    return title
+
+
+def save_png(fig, path, *, dpi=300):
+    """PNG only, 300 dpi. No PDF is emitted anywhere in this family."""
+    path = _Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=dpi, bbox_inches="tight")
+    return path

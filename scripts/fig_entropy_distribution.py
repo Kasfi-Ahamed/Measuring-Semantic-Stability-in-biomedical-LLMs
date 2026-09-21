@@ -154,15 +154,21 @@ def main() -> int:
     axL.invert_yaxis()                    # roster order reads top to bottom
     S.assert_row_order(drawn, context=f"entropy distribution rows/{c['label']}")
 
-    title = (f"{c['label']}: normalised entropy per model\n"
-             f"{S.grid_clause(n_grid, len(df))}, {len(models)} models")
-    S.check_text(title, axL.get_xlabel(), axR.get_xlabel(),
-                 axL.get_title(), axR.get_title())
-    fig.suptitle(title, fontsize=11)
+    title = S.title_line("RQ1: normalised entropy per model", c["label"])
+    S.check_text(axL.get_xlabel(), axR.get_xlabel(), axL.get_title(), axR.get_title())
+    fig.suptitle(title, fontsize=12)
+    S.emit_caption(c["out"].name, title=title, n=S.grid_clause(n_grid, len(df)),
+                   models=f"{len(models)} models, roster order",
+                   notes=["Two panels share the model rows. Left is the proportion of rows "
+                          "at exactly zero entropy, on a proportion axis, with the "
+                          "percentage printed at each bar end. Right is the distribution of "
+                          "the non-zero values only, on an entropy axis, with a tick at the "
+                          "median.",
+                          "The two quantities are on separate axes because a proportion and "
+                          "an entropy do not share a scale."])
     fig.tight_layout(rect=(0, 0, 1, 0.97))
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
-    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
+    S.save_png(fig, c["out"])
     plt.close(fig)
     print(f"\nwrote {c['out']}")
     return 0

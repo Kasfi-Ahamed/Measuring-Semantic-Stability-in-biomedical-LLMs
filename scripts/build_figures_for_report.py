@@ -199,14 +199,9 @@ def main() -> int:
         if not src.is_file():
             L += [f"- **NOT PRODUCED**: `{src}` does not exist.", ""]
             continue
-        for ext in (".pdf", ".png"):
-            s = src.with_suffix(ext)
-            if s.is_file():
-                shutil.copy2(s, DEST / f"{stem}{ext}")
-        have_pdf = (DEST / f"{stem}.pdf").is_file()
+        shutil.copy2(src, DEST / f"{stem}.png")
         png = DEST / f"{stem}.png"
-        L += [f"- filename: `{stem}.png`" + (f" and `{stem}.pdf`" if have_pdf
-                                             else "  (PNG only: producer emits no PDF)"),
+        L += [f"- filename: `{stem}.png`  (PNG, 300 dpi. This family emits no PDF.)",
               f"- producer: `{producer}`",
               f"- model set: {models}",
               f"- corpus: {corpus}"]

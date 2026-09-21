@@ -1,7 +1,7 @@
 {
   "figure": "fig_signal_independence_medmentions.png",
   "dataset": "MedMentions",
-  "generated_utc": "2026-09-21T04:46:36.169855+00:00",
+  "generated_utc": "2026-09-21T05:25:20.896731+00:00",
   "source": "outputs/rq1/umls_candidate_margin_medmentions.csv",
   "source_sha256": "1397266faccbaa08d46013a002560d54aa655fb75392bf0f11ebd65d0659760d",
   "signal_pairs": [

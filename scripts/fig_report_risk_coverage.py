@@ -153,22 +153,25 @@ def main() -> int:
     for cc in range(ncol):
         axes[nrow - 1][cc].set_xlabel("Coverage")
 
-    note = ""
+    title = S.title_line("RQ4: selective risk against coverage", c["corpus"])
+    fig.suptitle(title, fontsize=12, y=0.995)
+    _notes = ["Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not "
+              "defined below 0.10 and the axis does not extend there.",
+              "Four signals plus a dashed grey random-ordering baseline, one legend for the "
+              "whole figure."]
     if omitted_any:
-        note = (f" Margin omitted for {', '.join(omitted_any)}: these emit a concept "
-                f"identifier directly, so no retrieval occurs and no runner-up exists.")
-    title = (f"RQ4 selective risk against coverage: {c['corpus']}\n"
-             f"n = {n_rows:,} analysed rows, {len(models)} models. "
-             f"Coverage is the pre-registered domain [0.10, 1.00].{note}")
-    S.check_text(title)
-    fig.suptitle(title, fontsize=11, y=0.995)
+        _notes.append("Concept margin omitted for " + ", ".join(omitted_any) +
+                      ": these emit a concept identifier directly, so no retrieval occurs "
+                      "and there is no runner-up to measure. Those panels draw combined(2) "
+                      "in place of combined(3), and say so in the panel subtitle.")
+    S.emit_caption(c["out"].name, title=title, n=f"n = {n_rows:,} analysed rows",
+                   models=f"{len(models)} models, roster order", notes=_notes)
     fig.legend(handles.values(), handles.keys(), loc="lower center",
                ncol=min(6, len(handles)), fontsize=9, frameon=True,
                bbox_to_anchor=(0.5, -0.02))
     fig.tight_layout(rect=(0, 0.035, 1, 0.97))
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
-    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
+    S.save_png(fig, c["out"])
     plt.close(fig)
     print(f"wrote {c['out']}\nwrote {c['out'].with_suffix('.pdf')}")
     return 0

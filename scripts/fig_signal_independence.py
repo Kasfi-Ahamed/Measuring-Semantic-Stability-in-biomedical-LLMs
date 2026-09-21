@@ -208,11 +208,20 @@ def main() -> int:
                 ax.text(j, i, f"{grid[i, j]:+.2f}", ha="center", va="center", fontsize=8,
                         color="white" if abs(grid[i, j]) > 0.55 else "black")
     fig.colorbar(im, ax=ax, label="Spearman rho")
-    ax.set_title(f"{c['label']}: signal independence, total n = {len(df):,} rows")
+    _t = S.title_line("RQ4: signal independence", c["label"])
+    ax.set_title(_t, fontsize=12)
+    S.emit_caption(c["out"].name, title=_t, n=f"n = {len(df):,} analysed rows",
+                   models=f"{len(models)} models, roster order",
+                   notes=(["Models omitted: " + ", ".join(_omit) + ". " + c["omit_reason"]]
+                          if _omit else [])
+                         + ["Cells are Spearman rho between the two named signals, computed "
+                            "per model over that model's analysed rows.",
+                            "Every rho and n is also written to the .notes.json sidecar "
+                            "beside the figure, so a caption can quote a cell without "
+                            "reading it off the image."])
     fig.tight_layout()
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
-    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
+    S.save_png(fig, c["out"])
     print(f"\nwrote {c['out']}")
 
     # CAPTION SOURCE. A PNG cannot be interrogated: a reader who wonders why a model is
