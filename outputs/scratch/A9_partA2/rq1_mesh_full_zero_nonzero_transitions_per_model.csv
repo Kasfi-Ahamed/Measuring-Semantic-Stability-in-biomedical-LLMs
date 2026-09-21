@@ -1,0 +1,4 @@
+model_name,n,zero_to_zero,zero_to_nonzero,nonzero_to_zero,nonzero_to_nonzero
+BERT-base,107,31,36,13,27
+BioBERT,107,32,30,24,21
+PubMedBERT,107,53,22,15,17

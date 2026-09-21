@@ -1,7 +1,7 @@
 {
   "figure": "fig_signal_independence_medmentions.png",
   "dataset": "MedMentions",
-  "generated_utc": "2026-09-21T00:52:18.196673+00:00",
+  "generated_utc": "2026-09-21T04:34:55.134004+00:00",
   "source": "outputs/rq1/umls_candidate_margin_medmentions.csv",
   "source_sha256": "1397266faccbaa08d46013a002560d54aa655fb75392bf0f11ebd65d0659760d",
   "signal_pairs": [
@@ -10,11 +10,11 @@
     "entropy vs margin"
   ],
   "models_shown": [
-    "BioMistral-7B",
     "FLAN-T5-base",
-    "Llama3-OpenBioLLM-8B",
+    "Mistral-7B-Instruct-v0.1",
+    "BioMistral-7B",
     "Meta-Llama-3-8B-Instruct",
-    "Mistral-7B-Instruct-v0.1"
+    "Llama3-OpenBioLLM-8B"
   ],
   "models_omitted": [
     "BERT-base",
@@ -24,57 +24,57 @@
   "omission_reason": "MedMentions encoders (BERT-base, BioBERT, PubMedBERT) are omitted: they are direct-CUI, so mapping confidence is constant 1.0 and the correlation is undefined, and their UMLS margins are the input-mention-span gap rather than a model-uncertainty axis and were excluded from the margin benchmark. The panel shows the five generative models.",
   "total_rows": 1020784,
   "rho": {
-    "BioMistral-7B": {
-      "confidence vs entropy": -0.0848,
-      "confidence vs margin": 0.2739,
-      "entropy vs margin": -0.0014
-    },
     "FLAN-T5-base": {
       "confidence vs entropy": -0.0982,
       "confidence vs margin": 0.269,
       "entropy vs margin": -0.0261
     },
-    "Llama3-OpenBioLLM-8B": {
-      "confidence vs entropy": -0.1077,
-      "confidence vs margin": 0.3127,
-      "entropy vs margin": -0.0491
+    "Mistral-7B-Instruct-v0.1": {
+      "confidence vs entropy": -0.1426,
+      "confidence vs margin": 0.2761,
+      "entropy vs margin": -0.0466
+    },
+    "BioMistral-7B": {
+      "confidence vs entropy": -0.0848,
+      "confidence vs margin": 0.2739,
+      "entropy vs margin": -0.0014
     },
     "Meta-Llama-3-8B-Instruct": {
       "confidence vs entropy": -0.106,
       "confidence vs margin": 0.3118,
       "entropy vs margin": -0.0219
     },
-    "Mistral-7B-Instruct-v0.1": {
-      "confidence vs entropy": -0.1426,
-      "confidence vs margin": 0.2761,
-      "entropy vs margin": -0.0466
+    "Llama3-OpenBioLLM-8B": {
+      "confidence vs entropy": -0.1077,
+      "confidence vs margin": 0.3127,
+      "entropy vs margin": -0.0491
     }
   },
   "n_pairwise_complete": {
-    "BioMistral-7B": {
-      "confidence vs entropy": 127394,
-      "confidence vs margin": 127394,
-      "entropy vs margin": 127394
-    },
     "FLAN-T5-base": {
       "confidence vs entropy": 127496,
       "confidence vs margin": 127496,
       "entropy vs margin": 127496
     },
-    "Llama3-OpenBioLLM-8B": {
-      "confidence vs entropy": 127349,
-      "confidence vs margin": 127349,
-      "entropy vs margin": 127349
+    "Mistral-7B-Instruct-v0.1": {
+      "confidence vs entropy": 127369,
+      "confidence vs margin": 127369,
+      "entropy vs margin": 127369
+    },
+    "BioMistral-7B": {
+      "confidence vs entropy": 127394,
+      "confidence vs margin": 127394,
+      "entropy vs margin": 127394
     },
     "Meta-Llama-3-8B-Instruct": {
       "confidence vs entropy": 127408,
       "confidence vs margin": 127408,
       "entropy vs margin": 127408
     },
-    "Mistral-7B-Instruct-v0.1": {
-      "confidence vs entropy": 127369,
-      "confidence vs margin": 127369,
-      "entropy vs margin": 127369
+    "Llama3-OpenBioLLM-8B": {
+      "confidence vs entropy": 127349,
+      "confidence vs margin": 127349,
+      "entropy vs margin": 127349
     }
   }
 }

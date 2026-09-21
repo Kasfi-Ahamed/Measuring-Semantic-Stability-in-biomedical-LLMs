@@ -186,7 +186,7 @@ def main() -> int:
                  f"in {len(sep)} of {len(models)} models\n"
                  "Bars would separate if entropy tracked accuracy. They do for "
                  + ", ".join(sep) + f"; they do not for the remaining {len(nosep)}.")
-    sub = (f"{c['corpus']}: {S.n_clause(n_retained, n_defined)}, {len(models)} models. "
+    sub = (f"{c['corpus']}: {S.grid_clause(n_retained, n_defined)}, {len(models)} models. "
            f"Starred values clear the pre-registered 0.30.\n"
            "SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), as reported in "
            "the manuscript table, so higher entropy with more error is POSITIVE. "

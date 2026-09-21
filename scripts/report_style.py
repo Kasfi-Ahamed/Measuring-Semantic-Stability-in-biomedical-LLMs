@@ -74,6 +74,7 @@ QA_LANE = ["BioASQ", "SQuAD 2.0"]
 COVERAGE_MIN, COVERAGE_MAX = 0.10, 1.00
 
 _EM_DASH = "—"
+_EN_DASH = "\u2013"
 
 
 def normalise_models(names):
@@ -111,11 +112,13 @@ def ordered(models):
 
 
 def check_text(*strings):
-    """No em dashes, no 'clinical'. Applied to every title, label and annotation."""
+    """No em dashes, no en dashes, no 'clinical'. Every title, label and annotation."""
     for s in strings:
         s = str(s)
         if _EM_DASH in s:
             raise SystemExit(f"em dash in figure text: {s!r}")
+        if _EN_DASH in s:
+            raise SystemExit(f"en dash in figure text: {s!r}")
         if "clinical" in s.lower():
             raise SystemExit(
                 f"the word 'clinical' appears in figure text: {s!r}. These are biomedical "
@@ -143,3 +146,33 @@ def n_clause(n_analysed: int, n_plotted: int | None = None) -> str:
         return f"n = {n_analysed:,} analysed rows"
     return (f"n = {n_analysed:,} analysed rows, {n_plotted:,} drawn "
             f"({n_analysed - n_plotted:,} have no defined entropy)")
+
+
+def assert_row_order(drawn, *, context="", allow_subset=True):
+    """The drawn model axis must BE the roster order, not merely contain the same models.
+
+    Every figure with a model axis is read against every other one. Alphabetical here and
+    reverse-alphabetical there makes two figures of the same eight models unreadable side by
+    side, and it silently breaks the CADEC/MedMentions dissociation comparison, where the
+    reversal between corpora is the finding.
+    """
+    drawn = normalise_models(list(drawn))
+    want = ordered(drawn) if allow_subset else MODEL_ORDER
+    if list(drawn) != list(want):
+        raise SystemExit(
+            f"{context}: model row order is not the roster order.\n"
+            f"  drawn : {list(drawn)}\n  roster: {list(want)}")
+    return list(drawn)
+
+
+def grid_clause(n_grid: int, n_defined: int) -> str:
+    """Header wording for a figure reporting both counts.
+
+    Table 1 uses the larger number for the GRID and the smaller for the analysed set, so a
+    figure calling the larger one 'analysed rows' inverts the manuscript's own convention.
+    """
+    if n_grid == n_defined:
+        return f"n = {n_grid:,} rows"
+    d = n_grid - n_defined
+    return (f"n = {n_grid:,} grid rows, {n_defined:,} with defined entropy "
+            f"({d:,} {'row has' if d == 1 else 'rows have'} none)")

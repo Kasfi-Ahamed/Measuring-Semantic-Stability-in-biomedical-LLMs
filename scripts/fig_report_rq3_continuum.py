@@ -105,7 +105,7 @@ def main() -> int:
     title = ("RQ3: mean semantic entropy across the four corpora\n"
              "Concept lane and question-answering lane measure equivalence differently; "
              "the encoders produce no free-text answer and stop at the boundary")
-    sub = "   ".join(f"{c}: {S.n_clause(RETAINED.get(c, ns.get(c, 0)), ns.get(c, 0))}"
+    sub = "   ".join(f"{c}: {S.grid_clause(RETAINED.get(c, ns.get(c, 0)), ns.get(c, 0))}"
                      for c in S.CORPUS_ORDER)
     S.check_text(title, sub, "Corpus")
     ax.set_title(title + "\n" + sub, fontsize=11)

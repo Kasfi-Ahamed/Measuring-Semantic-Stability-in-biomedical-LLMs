@@ -1,0 +1,9 @@
+,cells_surviving
+BERT-base,24
+BioBERT,24
+PubMedBERT,24
+FLAN-T5-base,24
+Mistral-7B-Instruct-v0.1,24
+BioMistral-7B,24
+Meta-Llama-3-8B-Instruct,24
+Llama3-OpenBioLLM-8B,24

@@ -1,7 +1,7 @@
 {
   "figure": "fig_signal_independence_qa.png",
   "dataset": "QA (BioASQ and SQuAD 2.0)",
-  "generated_utc": "2026-09-21T01:57:29.104474+00:00",
+  "generated_utc": "2026-09-21T04:34:58.147801+00:00",
   "source": "outputs/qa/qa_results_combined_identity_filtered.csv",
   "source_sha256": "711fed36562bcc575c04c63d86654e343909dff5df0c1773542bbea9a398897f",
   "signal_pairs": [
@@ -10,54 +10,44 @@
     "entropy vs margin"
   ],
   "models_shown": [
-    "BioMistral-7B",
     "FLAN-T5-base",
-    "Meta-Llama-3-8B-Instruct",
     "Mistral-7B-Instruct-v0.1",
-    "OpenBioLLM-8B"
+    "BioMistral-7B",
+    "Meta-Llama-3-8B-Instruct",
+    "Llama3-OpenBioLLM-8B"
   ],
   "models_omitted": [],
   "omission_reason": null,
   "total_rows": 10600,
   "rho": {
-    "BioMistral-7B": {
-      "confidence vs entropy": -0.3483,
-      "confidence vs margin": -0.0444,
-      "entropy vs margin": 0.0011
-    },
     "FLAN-T5-base": {
       "confidence vs entropy": -0.556,
       "confidence vs margin": -0.0835,
       "entropy vs margin": 0.0765
-    },
-    "Meta-Llama-3-8B-Instruct": {
-      "confidence vs entropy": -0.3893,
-      "confidence vs margin": 0.013,
-      "entropy vs margin": -0.035
     },
     "Mistral-7B-Instruct-v0.1": {
       "confidence vs entropy": -0.3945,
       "confidence vs margin": -0.0466,
       "entropy vs margin": -0.0286
     },
-    "OpenBioLLM-8B": {
+    "BioMistral-7B": {
+      "confidence vs entropy": -0.3483,
+      "confidence vs margin": -0.0444,
+      "entropy vs margin": 0.0011
+    },
+    "Meta-Llama-3-8B-Instruct": {
+      "confidence vs entropy": -0.3893,
+      "confidence vs margin": 0.013,
+      "entropy vs margin": -0.035
+    },
+    "Llama3-OpenBioLLM-8B": {
       "confidence vs entropy": -0.4186,
       "confidence vs margin": -0.066,
       "entropy vs margin": 0.0177
     }
   },
   "n_pairwise_complete": {
-    "BioMistral-7B": {
-      "confidence vs entropy": 2120,
-      "confidence vs margin": 2120,
-      "entropy vs margin": 2120
-    },
     "FLAN-T5-base": {
-      "confidence vs entropy": 2120,
-      "confidence vs margin": 2120,
-      "entropy vs margin": 2120
-    },
-    "Meta-Llama-3-8B-Instruct": {
       "confidence vs entropy": 2120,
       "confidence vs margin": 2120,
       "entropy vs margin": 2120
@@ -67,7 +57,17 @@
       "confidence vs margin": 2120,
       "entropy vs margin": 2120
     },
-    "OpenBioLLM-8B": {
+    "BioMistral-7B": {
+      "confidence vs entropy": 2120,
+      "confidence vs margin": 2120,
+      "entropy vs margin": 2120
+    },
+    "Meta-Llama-3-8B-Instruct": {
+      "confidence vs entropy": 2120,
+      "confidence vs margin": 2120,
+      "entropy vs margin": 2120
+    },
+    "Llama3-OpenBioLLM-8B": {
       "confidence vs entropy": 2120,
       "confidence vs margin": 2120,
       "entropy vs margin": 2120

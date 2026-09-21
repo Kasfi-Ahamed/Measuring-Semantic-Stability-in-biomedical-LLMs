@@ -1,0 +1,8 @@
+gate_name,pass_count,fail_count,fail_rate
+G5_lexical_divergence,40979,23021,0.359703125
+G1_embedding_similarity,61037,2963,0.046296875
+G6_entity_preservation,61363,2637,0.041203125
+G3_negation_preservation,62972,1028,0.0160625
+G2_bidirectional_entailment,63425,575,0.008984375
+Fallback_noop_rejection,63688,312,0.004875
+G4_grammaticality,63971,29,0.000453125

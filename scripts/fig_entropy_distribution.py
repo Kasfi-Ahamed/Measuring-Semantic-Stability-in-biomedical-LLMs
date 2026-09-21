@@ -21,6 +21,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import report_style as S
+
 ROOT = Path(os.path.expanduser("~/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"))
 
 
@@ -81,20 +84,25 @@ def main() -> int:
         if col not in df.columns:
             raise SystemExit(f"{c['path'].name} has no column {col!r}")
 
-    n_all = len(df)
+    n_file = len(df)
     df = df[df[c["keep"]].astype(bool)].copy()
+    # The grid is rows passing the retention rule, which is what Table 1 calls the grid.
+    # len(df) before the filter is the raw emitted file and is a third, larger number that
+    # appears nowhere in the manuscript.
+    n_grid = len(df)
     df["H"] = pd.to_numeric(df[c["h"]], errors="coerce")
     df = df.dropna(subset=["H"])
-    models = sorted(df[mcol].unique())
+    df[mcol] = S.normalise_models(df[mcol])
+    S.assert_model_map(df[mcol], allow_subset=True, context=f"entropy distribution/{c['label']}")
+    models = S.ordered(df[mcol])
+    S.assert_row_order(models, context=f"entropy distribution/{c['label']}")
     print(f"dataset      : {c['label']}")
     print(f"input        : {c['path'].name}  ({ts(c['path'])})")
     print(f"filter       : {c['keep']} is True, finite {c['h']}")
-    print(f"rows plotted : {len(df):,} of {n_all:,}")
+    print(f"rows plotted : {len(df):,} of {n_grid:,} retained ({n_file:,} in the file)")
     print(f"models       : {len(models)}")
     print("\nper model, n and zero mass:")
 
-    fig, ax = plt.subplots(figsize=(9, 0.62 * len(models) + 2.2))
-    ypos = np.arange(len(models))
     zero_frac, rows = [], []
     for m in models:
         h = df.loc[df[mcol] == m, "H"].to_numpy()
@@ -104,28 +112,58 @@ def main() -> int:
         print(f"  {m:<28} n={len(h):>7,}  zero={100*z:5.1f}%  "
               f"mean={np.mean(h):.4f}  median={np.median(h):.4f}")
 
-    # Zero mass as an explicit bar, non-zero values as a violin beside it.
-    ax.barh(ypos, zero_frac, height=0.55, color="#BBBBBB", edgecolor="#666666",
-            label="proportion at exactly zero")
+    # TWO PANELS SHARING THE MODEL ROWS. The previous single axis ran 0 to 1 and carried a
+    # PROPORTION (the grey zero-mass bar) and an ENTROPY (the violin) on the same scale.
+    # Those are different quantities and sharing an axis asserts a comparison that does not
+    # exist, the same class of error as a correlation threshold drawn on an entropy axis.
+    ypos = np.arange(len(models))
+    fig, (axL, axR) = plt.subplots(
+        1, 2, figsize=(12.6, 0.62 * len(models) + 3.0), sharey=True,
+        gridspec_kw=dict(width_ratios=[1.0, 1.55], wspace=0.06))
+
+    axL.barh(ypos, zero_frac, height=0.58, color="#BBBBBB", edgecolor="#666666")
+    for i, z in enumerate(zero_frac):
+        axL.annotate(f"{100 * z:.1f}%", (z, i), xytext=(4, 0),
+                     textcoords="offset points", va="center", fontsize=8.5)
+    axL.set_xlim(0, min(1.0, max(zero_frac) * 1.22 + 0.05))
+    axL.set_xlabel("Proportion of rows at exactly zero entropy")
+    axL.set_title("Zero mass", fontsize=10)
+    axL.grid(axis="x", alpha=0.25)
+    axL.set_axisbelow(True)
+
+    drawn = []
     for i, m in enumerate(models):
         h = df.loc[df[mcol] == m, "H"].to_numpy()
         nz = h[h > 1e-12]
         if nz.size > 10:
-            v = ax.violinplot([nz], positions=[i], vert=False, widths=0.75,
-                              showmeans=False, showextrema=False)
+            v = axR.violinplot([nz], positions=[i], vert=False, widths=0.78,
+                               showmeans=False, showextrema=False)
             for b in v["bodies"]:
-                b.set_facecolor("#4477AA")
-                b.set_alpha(0.55)
-    ax.set_yticks(ypos)
-    ax.set_yticklabels(models)
-    ax.set_xlim(0, 1)
-    ax.set_xlabel("Normalised entropy (grey bar: proportion at exactly zero)")
-    ax.set_title(f"{c['label']}: normalised entropy per model, n = {len(df):,} scored rows")
-    ax.legend(loc="lower right", frameon=False)
-    ax.grid(axis="x", alpha=0.25)
-    fig.tight_layout()
+                b.set_facecolor(S.MODEL_COLOURS[m])
+                b.set_alpha(0.62)
+            axR.plot([float(np.median(nz))], [i], marker="|", color="#222222", ms=11, mew=1.6)
+        drawn.append(m)
+    axR.set_xlim(0, 1)
+    axR.set_xlabel(r"Normalised semantic entropy $\hat{H}$, non-zero rows only")
+    axR.set_title("Distribution of non-zero entropy (tick: median)", fontsize=10)
+    axR.grid(axis="x", alpha=0.25)
+    axR.set_axisbelow(True)
+
+    axL.set_yticks(ypos)
+    axL.set_yticklabels(models, fontsize=9)
+    axL.invert_yaxis()                    # roster order reads top to bottom
+    S.assert_row_order(drawn, context=f"entropy distribution rows/{c['label']}")
+
+    title = (f"{c['label']}: normalised entropy per model\n"
+             f"{S.grid_clause(n_grid, len(df))}, {len(models)} models")
+    S.check_text(title, axL.get_xlabel(), axR.get_xlabel(),
+                 axL.get_title(), axR.get_title())
+    fig.suptitle(title, fontsize=11)
+    fig.tight_layout(rect=(0, 0, 1, 0.97))
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(c["out"], dpi=200, bbox_inches="tight")
+    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
+    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
+    plt.close(fig)
     print(f"\nwrote {c['out']}")
     return 0
 

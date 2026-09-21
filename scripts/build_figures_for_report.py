@@ -47,6 +47,11 @@ FIGS = [
      "scripts/fig_report_rq1.py heatmap",
      [ROOT/"outputs/rq1/entropy_full_umls.csv", ROOT/"outputs/rq1/intermediate/rq1_linguistic_features.csv"],
      "8 models", "MedMentions only: CADEC has no linguistic_category"),
+    ("Figure 2b (THESIS ONLY, not a manuscript figure)", "rq1_entropy_heatmap_by_model_medmentions",
+     ROOT/"outputs/rq1/figures/rq1_entropy_heatmap_by_model_medmentions.png",
+     "scripts/fig_report_rq1.py heatmap-by-model",
+     [ROOT/"outputs/rq1/entropy_full_umls.csv", ROOT/"outputs/rq1/intermediate/rq1_linguistic_features.csv"],
+     "8 models, one panel each, one shared colour scale", "MedMentions"),
     ("Figure 3a", "fig_rq2_accuracy_split_entropy_cadec",
      ROOT/"outputs/rq3/figures/fig_rq2_accuracy_split_entropy_cadec.png",
      "scripts/fig_rq2_accuracy_split.py cadec",
@@ -209,7 +214,66 @@ def main() -> int:
           "entropy against ERROR, so the relationship is positive. `r(rb)` contrasts the "
           "correct stratum against the incorrect one, so the same relationship is negative. "
           "Both describe entropy rising with error.", "",
-          "## Overwrites, recorded so the resolution is auditable", ""]
+          "## Text gate", "",
+          "`report_style.check_text()` rejects an em dash, an en dash, or the word "
+          "\"clinical\" in any figure title, axis label or annotation, and every producer in "
+          "this family calls it before writing. A violation aborts the run rather than "
+          "producing a figure. Source sweep of the producers at assembly time:", ""]
+    import ast as _ast
+    import re as _re
+    prods = sorted({t[3].split()[0] for t in FIGS if ".py" in t[3]} |
+                   {"scripts/fig_report_rq1.py", "scripts/fig_report_risk_coverage.py",
+                    "scripts/fig_rq2_accuracy_split.py", "scripts/fig_report_rq3_continuum.py",
+                    "scripts/fig_entropy_distribution.py", "scripts/fig_signal_independence.py"})
+
+    def _literals(tree):
+        """Every string constant that is not a module, class or function docstring.
+
+        Docstrings and comments explain the rule and legitimately quote what the rule
+        forbids. Only literals that can reach a title, label or annotation are swept.
+        report_style.py is excluded outright: it DEFINES the gate.
+        """
+        doc = set()
+        for n in _ast.walk(tree):
+            if isinstance(n, (_ast.Module, _ast.FunctionDef, _ast.AsyncFunctionDef,
+                              _ast.ClassDef)):
+                body = getattr(n, "body", [])
+                if body and isinstance(body[0], _ast.Expr) and \
+                        isinstance(body[0].value, _ast.Constant) and \
+                        isinstance(body[0].value.value, str):
+                    doc.add(id(body[0].value))
+        for n in _ast.walk(tree):
+            if isinstance(n, _ast.Constant) and isinstance(n.value, str) \
+                    and id(n) not in doc:
+                yield n.value
+
+    bad = []
+    for f in prods:
+        fp = ROOT / f
+        if not fp.is_file():
+            continue
+        try:
+            tree = _ast.parse(fp.read_text(encoding="utf-8"))
+        except SyntaxError as exc:
+            bad.append(f"`{f}`: could not parse ({exc})")
+            continue
+        for lit in _literals(tree):
+            if "\u2014" in lit:
+                bad.append(f"`{f}`: em dash in a string literal")
+            if "\u2013" in lit:
+                bad.append(f"`{f}`: en dash in a string literal")
+            if _re.search(r"clinical", lit, _re.I) and "Clinical-LLMs" not in lit:
+                bad.append(f"`{f}`: the word clinical in a string literal")
+    if bad:
+        for b in sorted(set(bad)):
+            L.append(f"- **VIOLATION** {b}")
+    else:
+        L.append(f"- Clean. {len(prods)} producers swept by AST over every non-docstring "
+                 f"string literal: no em dash, no en dash, no occurrence of \"clinical\". "
+                 f"`scripts/report_style.py` is excluded because it defines the gate, and "
+                 f"docstrings are excluded because they quote the forbidden wording in order "
+                 f"to explain why it was removed.")
+    L += ["", "## Overwrites, recorded so the resolution is auditable", ""]
     for path, old_d, old_t, new_d, new_t, why in OVERWRITES:
         L += [f"- `{path}`",
               f"  - before: sha256 `{old_d}`  mtime {old_t}",

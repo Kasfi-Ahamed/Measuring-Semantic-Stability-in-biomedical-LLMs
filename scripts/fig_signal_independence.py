@@ -24,6 +24,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import report_style as S
 from scipy import stats
 
 ROOT = Path(os.path.expanduser("~/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"))
@@ -131,7 +134,7 @@ def _apply_join(df, c):
     print(f"joined {j['path'].name}: {j['cols']} matched on {got:.2%} of the "
           f"{len(df):,} rows being plotted")
     assert got > 0.99, (
-        f"only {got:.2%} of plotted rows got {j['cols']} from {j['path'].name} — the join "
+        f"only {got:.2%} of plotted rows got {j['cols']} from {j['path'].name}: the join "
         f"keys {j['on']} do not line up; refusing to plot a signal defined on a subset"
     )
     return df
@@ -158,7 +161,11 @@ def main() -> int:
     if len(present) < 2:
         raise SystemExit("need at least two signals to show independence")
     pairs = list(itertools.combinations(sorted(present), 2))
-    models = sorted(df[mcol].unique())
+    # Roster order, not alphabetical: every figure with a model axis in this family reads
+    # top to bottom in the same order, so two figures can be compared row by row.
+    df[mcol] = S.normalise_models(df[mcol])
+    S.assert_model_map(df[mcol], allow_subset=True, context=f"signal independence/{c['label']}")
+    models = S.ordered(df[mcol])
     _omit = [m for m in (c.get("omit_models") or []) if m in models]
     if _omit:
         # Declared in CFG with a reason, never inferred from emptiness: a model dropped
@@ -167,6 +174,7 @@ def main() -> int:
         print(f"OMITTED (declared in CFG): {_omit}")
         print(f"  reason: {c['omit_reason']}")
     assert models, "every model was omitted"
+    S.assert_row_order(models, context=f"signal independence rows/{c['label']}")
 
     print(f"dataset      : {c['label']}")
     print(f"input        : {c['path'].name}  ({ts(c['path'])})")

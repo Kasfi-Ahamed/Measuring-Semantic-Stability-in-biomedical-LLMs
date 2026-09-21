@@ -1,0 +1,34 @@
+{
+  "experiment": "E1",
+  "question": "does the mapped-file route reproduce the shard-CSV route, row for row",
+  "pass": true,
+  "reference": "outputs/scratch/E1/shards/rq1_all_outputs_mapped_VALIDATE_b6.csv",
+  "candidate": "outputs/scratch/E1/mapped/rq1_all_outputs_mapped_VALIDATE_b6.csv",
+  "rows_reference": 370428,
+  "rows_candidate": 370428,
+  "rows_joined": 370428,
+  "only_in_reference": 0,
+  "only_in_candidate": 0,
+  "columns_compared": [
+    "predicted_cui",
+    "confidence",
+    "assign_rule_path"
+  ],
+  "differing_rows": {
+    "predicted_cui": 0,
+    "confidence": 0,
+    "assign_rule_path": 0
+  },
+  "confidence_tolerance": 1e-09,
+  "failures": [],
+  "slurm_job_id": null,
+  "written_utc": "2026-09-17T04:28:58.075838+00:00",
+  "code_identity": {
+    "arm_reference": "43b70f2597c84bfe952134ecad74ad8a170d53e8f48379cf4145baa01e3ed5ea",
+    "arm_candidate": "4b27db70cb6a04d04994d8fc7b83b8243f6661237cba47101da4634e2c2dd75f",
+    "notebook_snapshot": null,
+    "provenance": "INFERRED from git history, not measured at run time: job 33345 started 10:57:14 with the tree at 68cf968; commit ae791c4 landed 11:53 between the two arms; exec_notebook.py re-reads the notebook at each of E1's two invocations. Corroborated behaviourally: the shards arm left no amendment9_receipt.json and the mapped arm did, and that write exists only in ae791c4."
+  },
+  "arms_same_source": false,
+  "arms_same_source_accepted": "Accepted 2026-09-17. The diff between the two notebook versions is the MM_OUT_MAPPED destination override and the Amendment 9 receipt-JSON write; neither touches the assign path. The experiment itself demonstrates the change was inert: had it reached assignment, the arms would have differed, and they agree on 370,428 rows across predicted_cui, confidence and assign_rule_path. Re-running costs ~2h40 of a 2-job-capped slot with job B waiting, to re-establish what the result already shows. Future E1 runs execute both arms from one snapshot (slurm/run_E1_jobb_two_source.sbatch), so this cannot recur."
+}
