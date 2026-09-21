@@ -2635,3 +2635,62 @@ not have, which is worse than mtime merely being noisy.
 that authorised it; those differ here by two days and four artefacts. Separate inputs from
 derived outputs before reporting, or the finding drowns. And after any `git restore` of a
 data artefact, reset its mtime to the commit that produced the content.
+
+---
+
+## 20. The Sunday threshold-band check left no artefact, so its path could not be audited
+
+**2026-09-21, asked how the 2026-09-20 verification was performed.** The honest answer was
+that the artefacts could not tell me, so it was redone.
+
+`scripts/cadec_threshold_band.py` reads the canonical mapped CSV and writes only under
+`logs/cadec_threshold_band/`. **That directory is dated 2026-09-15 20:55** and its
+`summary.json` still carries `nearest_distance = 1.3130e-04` — the manuscript's value. So the
+script was not re-run on the 20th. Yet the 20th's commit reported `2.53e-04`, which appears
+in neither the log nor `outputs/rq3/tables/`. Something was recomputed ad hoc, in session,
+and left nothing behind. **For the other four figures there is no way to tell from the
+repository whether they were recomputed or read off the 2026-09-15 tables.**
+
+Re-run today against the current mapped outputs, writing to a scratch directory so the
+2026-09-15 evidence survives:
+
+| quantity | 2026-09-15 (cited) | recomputed 2026-09-21 |
+|---|---|---|
+| rows | 239,680 | 239,680 |
+| instances | 5,161 | 5,161 |
+| rows_in_band | 26 | 26 |
+| instances_in_band | 16 | 16 |
+| band instances in the primary analysis | 15 of 16 | 15 of 16 |
+| rows they contribute | 120 of 37,696 (0.318%) | 120 of 37,696 (0.318%) |
+| `nearest_distance` | 1.3130e-04 | **2.5303e-04** |
+
+The conclusion reported on the 20th was right, and the one moved figure matches to five
+significant figures. The instance dropped from the primary analysis is
+`cadec_LIPITOR.745_TT2`.
+
+**Remedy 20.** A verification that leaves no artefact cannot be audited later, and "it
+reproduced" then rests on the same memory the verification was supposed to replace. When a
+producer already writes a receipt directory, re-run the producer with its output redirected;
+do not recompute its numbers inline. Redirect with the script's own env var (`BAND_OUT` here)
+so the previous evidence is not overwritten by the check.
+
+---
+
+## 21. rq4_aurc_summary.csv: a false positive in my own audit
+
+Entry 19 listed `outputs/rq3/rq4_aurc_summary.csv` (2026-08-02) as read by the live
+`RQ4_four_dataset_figures.ipynb`. **It is not.** The notebook reads
+`outputs/rq1/rq4_aurc_summary.csv` — a different file with the same basename, MedMentions
+rather than CADEC — and uses it only to supply the MedMentions encoder pilot rows, which the
+panel footnote discloses and an assertion cross-checks to 1e-4.
+
+`scripts/audit_cadec_vintages.py` greps for the **basename**, so two artefacts sharing a name
+in different directories collapse into one finding. The CADEC file is read only by
+`RQ4_Clinical_Utility_Abstention.ipynb`, which is not in the cut-off chain.
+
+No August artefact reaches the QA lane: BioASQ and SQuAD AURC are computed in-notebook from
+`outputs/qa/qa_results_combined.csv`, dated 2026-09-21 01:27.
+
+**Remedy 21.** Match artefacts by path, not by basename. An audit that over-reports is not
+harmlessly conservative — it spends the reader's attention on the wrong file and lends false
+weight to the rest of the list.
