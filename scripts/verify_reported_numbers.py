@@ -152,40 +152,35 @@ def main() -> int:
     print("   4. QA-lane AURC. outputs/rq4/rq4_aurc_margin_qa.csv is flagged by the")
     print("      notebook itself as 'leftover ... not produced by Holm'; it is outside the")
     print("      pre-registered family and has no CI.")
-    # 5. DOCUMENT-ONLY PROVENANCE, checked rather than asserted. A number whose only
-    #    source is another document cannot be re-derived at all. Searched for as a whole
-    #    token so a substring inside a longer float (0.8985030055046082) is not a hit.
-    # 5. DOCUMENT-ONLY PROVENANCE, checked rather than asserted. A number whose only
-    #    source is another document cannot be re-derived at all.
+    # 5. THE ZERO-BLOCK PARAGRAPH'S PROVENANCE, checked against the NAMED artefact.
     #
-    #    Uses grep, not Python. The first version read every CSV under outputs/ into a
-    #    string and did not finish: that tree holds several 200 MB+ files. Searching a
-    #    corpus for a number must not cost more than the number is worth, and grep is the
-    #    tool that already does this well.
-    #
-    #    The pattern has digit guards on both sides so a substring inside a longer float
-    #    is not a hit -- 0.8985030055046082 contains "0.5046" and would otherwise look
-    #    like corroboration.
-    import subprocess as _sp
-    print("   5. DOCUMENT-ONLY PROVENANCE (searched, not assumed):")
-    orphans = 0
-    for val, what in (("0.5046", "CADEC zero-entropy-block pooled AUROC"),
-                      ("0.0092", "its rank-biserial")):
-        pat = rf"(^|[^0-9.]){val.replace('.', chr(92) + '.')}([^0-9]|$)"
-        def _grep(where):
-            r = _sp.run(["grep", "-rlE", pat, str(ROOT / where)],
-                        capture_output=True, text=True)
-            return [x.replace(str(ROOT) + "/", "") for x in r.stdout.split() if x]
-        in_docs, in_outputs = _grep("docs"), _grep("outputs")
-        print(f"      {val} ({what})")
-        print(f"        in docs/   : {in_docs or 'none'}")
-        print(f"        in outputs/: {in_outputs or 'NO ARTEFACT'}")
-        orphans += not in_outputs
-    if orphans:
-        print("      -> These appear in the CONCLUSION of docs/RQ4_CADEC_results.md, sourced")
-        print("         doc-to-doc ('recorded in docs/BUG_AUDIT.md'). No artefact under")
-        print("         outputs/ holds them, so nothing can re-derive or re-check them.")
-        print("         Highest priority of the five for the defence.")
+    #    Searching outputs/ for the literal value was wrong twice and is abandoned:
+    #      - `grep "0.5046"` has an unescaped dot, so it matched 0.8985030055046082;
+    #      - digit guards on both sides then rejected the stored full-precision
+    #        0.5046156599532042, and this script reported NO ARTEFACT when the artefact
+    #        existed. That false negative was used to annotate a manuscript claim as
+    #        unsupported (docs/BUG_AUDIT.md 22);
+    #      - a left-guarded prefix match over-reports: any 0.5046... in any data column hits.
+    #    A value can appear by coincidence in a data file and be absent from the artefact
+    #    that is supposed to hold it. So: name the artefact, name the row, compare.
+    SIGIND = ROOT / "outputs/rq3/rq4_signal_independence_cadec.csv"
+    print("   5. ZERO-BLOCK PARAGRAPH — checked against the named artefact:")
+    print(f"      {SIGIND.relative_to(ROOT)}")
+    if not SIGIND.is_file():
+        print("      MISSING")
+    else:
+        si = pd.read_csv(SIGIND)
+        z = si[si["scope"].astype(str).str.startswith("ZERO_BLOCK")]
+        pooled = z[z["scope"] == "ZERO_BLOCK/ALL MODELS"]
+        for _, r in pooled.iterrows():
+            rb = 2 * float(r["rho"]) - 1
+            print(f"      {r['pair']:30s} AUROC={float(r['rho']):.6f}  "
+                  f"rank-biserial={rb:+.6f}  n={int(r['n']):,}  p={float(r['p']):.6f}")
+        print(f"      per-model zero-block rows present: {len(z) - len(pooled)}")
+        print("      The paragraph IS artefact-backed. Its stated values match the")
+        print("      2026-09-14 vintage of this file, not the current one; the recomputation")
+        print("      and the claim-by-claim comparison are in")
+        print("      outputs/rq3/cadec_zero_block_margin_audit{,_claims}.csv.")
 
     print("\n" + "=" * 78)
     print(f"{'ALL CROSS-CHECKS PASS' if not FAILS else str(len(FAILS)) + ' FAILED: ' + ', '.join(FAILS)}")

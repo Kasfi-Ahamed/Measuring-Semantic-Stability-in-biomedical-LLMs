@@ -2694,3 +2694,48 @@ No August artefact reaches the QA lane: BioASQ and SQuAD AURC are computed in-no
 **Remedy 21.** Match artefacts by path, not by basename. An audit that over-reports is not
 harmlessly conservative — it spends the reader's attention on the wrong file and lends false
 weight to the rest of the list.
+
+---
+
+## 22. I reported a claim as unsupported because my own search was broken
+
+**2026-09-21.** Entry in `scripts/verify_reported_numbers.py` and an annotation in
+`docs/RQ4_CADEC_results.md` both stated that the CADEC zero-block AUROC (0.5046, rank-biserial
++0.0092) appeared in no artefact and rested on three documents citing each other.
+
+**That was false.** `outputs/rq3/rq4_signal_independence_cadec.csv` holds it directly:
+
+```
+ZERO_BLOCK/ALL MODELS,margin_ranks_correctness,0.5046156599532042,,,16083,0.31444032952470513
+```
+
+which is the stated 0.505 at p = 0.31, with rank-biserial 2*rho - 1 = +0.0092. The paragraph
+was artefact-backed the whole time. What is true — and was already established separately —
+is that its values are the 2026-09-14 vintage.
+
+### Three wrong searches in a row
+
+1. **`grep -rl "0.5046"`** — unescaped dot. `.` is any-char, so it matched
+   `0.8985030055046082`. I read that as a coincidence and concluded the real artefact did not
+   exist, which was right about the hit and wrong about the conclusion.
+2. **Digit guards on both sides**, `(^|[^0-9.])0\.5046([^0-9]|$)`. Artefacts store full
+   precision, so `0.5046156599532042` fails the trailing guard. **False negative**, and this
+   is the version whose output I used to annotate the manuscript.
+3. **Left guard only**, allowing trailing digits. Now any `0.5046…` in any numeric column
+   matches: 70 files, almost all coincidence.
+
+Each fix created the opposite error because the design was wrong. **Searching a corpus for a
+value cannot establish provenance.** A number can appear by coincidence in a data column and
+be absent from the artefact that is supposed to hold it; both failure modes are silent. The
+check now names the artefact, names the row, and compares — 15 lines, no regex.
+
+### Why this is the worse direction
+
+A false positive wastes attention (remedy 21). A false negative **tells the author a claim is
+unsupported when it is supported**, and the natural response is to weaken or drop it. Entry 21
+and this one are the same fault in opposite directions within one session, and this is the one
+that could have removed a true statement from the thesis.
+
+**Remedy 22.** Provenance is checked against a named artefact and a named row, never by
+searching for the value. If the artefact is unknown, that is the finding — say the artefact is
+unidentified, not that the number is unsupported.

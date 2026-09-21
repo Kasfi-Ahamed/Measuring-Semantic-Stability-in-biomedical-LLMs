@@ -163,13 +163,15 @@ Taken with the zero-block AUROC of 0.5046 (rank-biserial +0.0092, p = 0.314) rec
 in `docs/BUG_AUDIT.md`, CADEC does not support the candidate margin as a useful
 abstention signal.
 
-> **PROVENANCE GAP, 2026-09-21 — the conclusion above is the only claim in this document
-> that no artefact backs.** `scripts/verify_reported_numbers.py` searches `outputs/` for
-> `0.5046` and `0.0092` with digit guards on both sides, and finds **no artefact**: they
-> appear only in `docs/BUG_AUDIT.md`, `docs/WORKLOG_2026-09-14.md` and this file, each
-> citing the others. (A naive search does hit them as substrings of longer floats such as
-> `0.8985030055046082`; that is not corroboration.) Every other number in R1-R3 is either
-> re-derived from a named artefact or read from one. **Before the defence this should be
-> recomputed into a CSV and cited like everything else**, or the sentence dropped — it is
-> load-bearing for the claim that CADEC does not support the margin, and it currently rests
-> on a number nobody can re-check.
+> **CORRECTED 2026-09-21 — an earlier note here claimed this had no artefact. It does.**
+> `outputs/rq3/rq4_signal_independence_cadec.csv` carries the zero-block rows directly:
+> `ZERO_BLOCK/ALL MODELS, margin_ranks_correctness, rho=0.5046156599532042, n=16083,
+> p=0.31444032952470513` in its 2026-09-14 vintage — which is exactly the stated 0.505 at
+> p=0.31, with rank-biserial 2*rho-1 = +0.0092. The claim of a provenance gap came from a
+> broken search, twice over: first an unescaped `.` in grep, then digit guards that rejected
+> the stored full-precision value (docs/BUG_AUDIT.md 22).
+>
+> **What is true is that the values are one vintage old.** Regenerated from the current
+> chain, the same row reads AUROC 0.503981, n 16,093, p 0.385448, rank-biserial +0.007962.
+> The per-model spread and the direction are unchanged. Claim-by-claim comparison in
+> `outputs/rq3/cadec_zero_block_margin_audit_claims.csv`.
