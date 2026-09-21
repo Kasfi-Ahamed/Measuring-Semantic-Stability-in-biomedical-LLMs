@@ -2409,3 +2409,70 @@ code in the notebook to test and the most expensive place to fail.
 
 **Also recorded:** the launcher's "~66 min at B=20,000", extrapolated linearly from 395s at
 B=2000, was optimistic by ~2x. Measured 2h07m. Replaced with the measurement.
+
+---
+
+## 16. A figure titled "all 8 models" over five models' data
+
+**Job 34427, 2026-09-21, FAILED in 7 seconds** on a bare
+`assert set(MODEL_ORDER_8) <= set(mm_curves["model"])` in
+`RQ4_four_dataset_figures.ipynb` cell 9. No message; the traceback was the line alone.
+
+### What it was really telling us
+
+MedMentions carries **5** models in `rq4_risk_coverage_margin_medmentions.csv` (570 rows) and
+in `rq4_aurc_margin_benchmark.csv`. An older committed version had **8** (912 rows). The three
+encoders left when their margins were shown to be gold-anchored and were quarantined — the
+same decision that makes the Holm family 5 MedMentions cells + 1 CADEC.
+
+Cell 9 never caught up. Beyond the assert it passed `MODEL_ORDER_8` to the MedMentions plot
+and titled the panels **"MedMentions — concept-level risk–coverage (all 8 models)"** and
+**"MedMentions — all 8 models"**. Its own footnote already disclosed that the encoder curves
+were *pilot-vintage, carried forward and NOT regenerated*, mixed into a panel with
+full-scale generative curves — so the title contradicted the footnote directly beneath it.
+
+**The assert is the only reason this did not ship.** Without it the figure would have rendered
+three empty encoder panels under a title claiming eight models, and the caption would have
+described a sample that is not in the data.
+
+### Fixed
+
+* `MODEL_ORDER_MM` derived as `MODEL_ORDER_8` minus the three encoders; CADEC keeps all 8.
+* Titles now read "5 generatives; encoders omitted" and "MedMentions — 5 generatives".
+* The footnote states that encoders are **omitted** and why, and records that the panel is now
+  one vintage throughout rather than carrying pilot curves forward.
+* Both assertions carry messages naming the missing models, plus a new **reverse** assertion:
+  if MedMentions encoder curves ever reappear, that is the quarantined gold-anchored margin
+  returning and the run must stop.
+* The series-count warnings were `n_models == 8 and model in MODEL_ORDER_8[:3] and n_drawn != 6`
+  and `n_models == 5 and n_drawn != 4` — panel shapes that no longer hold. MedMentions is now
+  5 models with 6 signals, which the second branch would have flagged on every model. Both
+  replaced by `n_drawn != len(signals)`. Re-run 34456 printed no warnings.
+
+Cell 7 is a **separate lane and was already correct**: it plots MedMentions with all 8 models
+but restricts encoders to confidence/entropy/random, excludes margin explicitly, and
+cross-checks encoder AURC against `rq4_aurc_summary.csv` to 1.11e-16. Different source,
+different coverage, no contradiction — worth stating because the two panels legitimately show
+different model counts.
+
+**Remedy 16.** A panel title is a claim about the data and ages exactly like an assertion
+constant. When a model, dataset or split is removed upstream, the titles and captions
+downstream are part of the change. And an assertion with no message costs a full diagnosis
+cycle to interpret: `assert cond` should name what it expected and what it found.
+
+### Related, NOT fixed — reported for a decision
+
+`fig_signal_independence_medmentions.png`, **created** by 34424, plots MedMentions with all 8
+models taken from `sorted(df[mcol].unique())`, and the encoders come out empty:
+
+```
+PubMedBERT  confidence vs entropy: rho=+nan (n=127,598)
+            confidence vs margin:  rho=+nan (n=0)
+            entropy vs margin:     rho=+nan (n=0)
+```
+
+`n=0` on the margin pairs is the quarantine; `nan` on confidence-vs-entropy is the constant
+confidence. This is a heatmap with blank rows labelled with model names, in a figure that is
+new this run. It is the same staleness as above in a different producer
+(`scripts/fig_signal_independence.py`), but fixing it changes a second reported figure, so it
+is recorded here rather than changed unilaterally.
