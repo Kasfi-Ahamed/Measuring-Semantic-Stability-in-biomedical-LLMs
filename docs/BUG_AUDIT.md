@@ -2641,6 +2641,14 @@ That rebuild is what exposed remedy 23.
 **All eleven are now resolved: eight regenerated, one repointed, one re-verified by
 recomputation, one a false positive.**
 
+**A twelfth surfaced afterwards.** `docs/rq123_audit.md` — Supplementary S5 — was not in the
+eleven because the eleven were *outputs*, and this is a document. It reads `entropy_cadec.csv`,
+has a producer (`scripts/zero_inflation_audit.py`) and was 15 September. Regenerated 21 Sep
+11:36: zero rows 16,095 → 16,093, zero fraction 42.70% → 42.69%, and the per-model, per-m and
+identical-string tables under it moved in the same two-instance way. The degenerate share is
+still 0.00% and the accuracy gradient by distinct-string count is unchanged. Together with the
+RQ2 results page this became remedy 24.
+
 The three RQ4 files did not need a fresh run. The `--full` calibration that overwrote them at
 10:58 — the incident behind remedy 18 — was itself a correct B = 20,000 run on the current
 margin file; its only fault was that *I* did not intend it. Its output was quarantined intact,
@@ -2820,3 +2828,48 @@ interpolation, plus a `SystemExit` if the RQ1 arms did not load.
 contains `0.0089`. It is a different quantity — the largest cell movement in the Table R3
 regeneration (FLAN-T5-base, confidence, 50% coverage) — and is correct. A global replace of
 `0.0089` would have corrupted it.
+
+---
+
+## 24. Rounding is where a regeneration hides
+
+Regenerating `rq2_dissociation_summary.csv` moved **8 of 48** cells, all in BioBERT and
+PubMedBERT, each by a single instance — about 0.0002 in a fraction. I reported that, correctly,
+as a movement no conclusion depends on, and moved on. That was the wrong place to stop: the
+question is not how far a number moved but whether it moved *across a printing boundary*.
+
+Three documents had drifted by the time the sweep caught them, each by one rounded digit:
+
+| document | cells wrong | the drift |
+|---|---:|---|
+| `docs/RQ2_CADEC_results.md`, per-model table | 4 | BioBERT P(wrong \| unstable) 93.0 → 92.9 and its gap bound −60.1 → −60.0; PubMedBERT SBW 18.5 → 18.4 and P(wrong \| stable) 30.8 → 30.7 |
+| `docs/RQ2_CADEC_results.md`, pooled block | 6 | the stable interval and n, the unstable point, interval and n |
+| `docs/rq123_audit.md` (Supplementary S5) | ~14 | zero rows 16,095 → 16,093, zero fraction 42.70 → 42.69, and the per-model and per-m tables underneath |
+
+The pattern is the same everywhere. BioBERT's P(wrong | stable) moved as much as PubMedBERT's
+and stayed at 30.8 because 30.76 and 30.73 round differently. **Whether a document goes stale
+is decided by the third decimal of a number the document does not print**, so the size of the
+movement predicts nothing and a human skim of the diff predicts less.
+
+`docs/rq123_audit.md` had a producer the whole time (`scripts/zero_inflation_audit.py`) and
+regenerating it took seconds. Nothing stopped that in September except that no step said to.
+
+### What actually found them
+
+Not the staleness sweep, which had flagged both documents for days on mtime and could not say
+whether anything was wrong. Not reading the diff. Recomputing every printed cell from the
+artefact and comparing strings.
+
+**Remedy 24.** After regenerating any artefact, recompute every *printed* value in every
+document that reads it and compare the rendered strings, not the underlying floats. A
+movement of 0.0002 and a movement of 0.02 need the same check. `verify_reported_numbers.py`
+checks 15, 16 and 17 do this for Table R1 (96 numbers), Supplementary S3 (100 numbers, plus
+bolding against the significance flags and the four counts) and the RQ2 results page
+(66 numbers, per-model table and pooled block). Each was negative-tested by changing one digit
+in the fourth decimal and confirming it fails.
+
+**One convention resolved while checking.** The per-model Fisher-z interval on the RQ2 page
+uses the **normal** critical value, not t(7). With the normal value it reproduces
+[+0.194, +0.491] exactly on the regenerated data; with t(7) it would be [+0.160, +0.517]. The
+page was right and my first recomputation was wrong, which is the reason a verifier compares
+against the convention the document uses rather than the one the checker assumes.

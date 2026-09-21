@@ -10,19 +10,19 @@ Source: `outputs/rq3/entropy_cadec.csv` — 41,288 emitted rows, 5,161 instances
 
 | arm                     | rows   | instances | zero rows | zero fraction |
 |-------------------------|--------|-----------|-----------|---------------|
-| PRIMARY (de-duplicated) | 37,695 | 4,712     | 16,095    | 42.70%        |
-| SENSITIVITY (raw)       | 41,286 | 5,161     | 17,947    | 43.47%        |
+| PRIMARY (de-duplicated) | 37,695 | 4,712     | 16,093    | 42.69%        |
+| SENSITIVITY (raw)       | 41,286 | 5,161     | 17,945    | 43.47%        |
 
 | model_name               | n [PRIMARY] | zero% [PRIMARY] | n [SENSITIVITY] | zero% [SENSITIVITY] |
 |--------------------------|-------------|-----------------|-----------------|---------------------|
 | BERT-base                | 4712        | 50.13           | 5161            | 50.32               |
-| BioBERT                  | 4712        | 59.49           | 5161            | 59.58               |
+| BioBERT                  | 4712        | 59.47           | 5161            | 59.56               |
 | BioMistral-7B            | 4711        | 36.49           | 5159            | 37.64               |
 | FLAN-T5-base             | 4712        | 42.23           | 5161            | 43.4                |
 | Llama3-OpenBioLLM-8B     | 4712        | 17.57           | 5161            | 18.47               |
 | Meta-Llama-3-8B-Instruct | 4712        | 34.25           | 5161            | 35.54               |
 | Mistral-7B-Instruct-v0.1 | 4712        | 41.38           | 5161            | 42.69               |
-| PubMedBERT               | 4712        | 60.04           | 5161            | 60.12               |
+| PubMedBERT               | 4712        | 60.02           | 5161            | 60.1                |
 
 ## 2. Is the zero block degenerate? (hypothesis 2)
 
@@ -30,8 +30,8 @@ A zero is **degenerate** if every accepted variant was UNASSIGNED: the cluster d
 
 | arm                     | zero rows | degenerate (all UNASSIGNED) | degenerate % | genuine % | acc, degenerate | acc, genuine | acc, whole arm |
 |-------------------------|-----------|-----------------------------|--------------|-----------|-----------------|--------------|----------------|
-| PRIMARY (de-duplicated) | 16,095    | 0                           | 0.00%        | 100.00%   | n/a             | 43.67%       | 23.47%         |
-| SENSITIVITY (raw)       | 17,947    | 0                           | 0.00%        | 100.00%   | n/a             | 42.78%       | 23.27%         |
+| PRIMARY (de-duplicated) | 16,093    | 0                           | 0.00%        | 100.00%   | n/a             | 43.67%       | 23.48%         |
+| SENSITIVITY (raw)       | 17,945    | 0                           | 0.00%        | 100.00%   | n/a             | 42.78%       | 23.27%         |
 
 **PRIMARY (de-duplicated)** — assigned-variant count inside the zero block (mean 4.66, whole-arm mean 4.72):
 
@@ -40,8 +40,8 @@ A zero is **degenerate** if every accepted variant was UNASSIGNED: the cluster d
 | 1          | 16   | 0.1             |
 | 2          | 8    | 0.05            |
 | 3          | 18   | 0.11            |
-| 4          | 8516 | 52.91           |
-| 5          | 4556 | 28.31           |
+| 4          | 8516 | 52.92           |
+| 5          | 4554 | 28.3            |
 | 6          | 2779 | 17.27           |
 | 7          | 202  | 1.26            |
 
@@ -55,7 +55,7 @@ A zero is **degenerate** if every accepted variant was UNASSIGNED: the cluster d
 | 4          | 1570 | 8.75            |
 | 5          | 8928 | 49.75           |
 | 6          | 1427 | 7.95            |
-| 7          | 5465 | 30.45           |
+| 7          | 5463 | 30.44           |
 | 8          | 262  | 1.46            |
 | 9          | 260  | 1.45            |
 
@@ -68,7 +68,7 @@ Do instances with more variants agree less often? If zeros were an artefact of t
 | m | rows   | zero fraction |
 |---|--------|---------------|
 | 3 | 18,583 | 45.97         |
-| 4 | 11,344 | 40.27         |
+| 4 | 11,344 | 40.25         |
 | 5 | 7,208  | 38.61         |
 | 6 | 560    | 36.07         |
 
@@ -79,7 +79,7 @@ Do instances with more variants agree less often? If zeros were an artefact of t
 | 3 | 3,087  | 50.6          |
 | 4 | 19,415 | 46.13         |
 | 5 | 3,576  | 39.9          |
-| 6 | 13,616 | 40.24         |
+| 6 | 13,616 | 40.22         |
 | 7 | 848    | 31.01         |
 | 8 | 744    | 34.95         |
 
@@ -97,15 +97,15 @@ Strings are compared over the **original plus its accepted variants**, casefolde
 
 | arm                     | zero rows matched | (a) identical output string | (a) share | (a) accuracy | (b) differing strings, one CUI | (b) share | (b) accuracy |
 |-------------------------|-------------------|-----------------------------|-----------|--------------|--------------------------------|-----------|--------------|
-| PRIMARY (de-duplicated) | 16,095            | 13,309                      | 82.69%    | 39.88%       | 2,786                          | 17.31%    | 61.77%       |
-| SENSITIVITY (raw)       | 17,947            | 14,914                      | 83.10%    | 39.06%       | 3,033                          | 16.90%    | 61.06%       |
+| PRIMARY (de-duplicated) | 16,093            | 13,309                      | 82.70%    | 39.89%       | 2,784                          | 17.30%    | 61.75%       |
+| SENSITIVITY (raw)       | 17,945            | 14,914                      | 83.11%    | 39.07%       | 3,031                          | 16.89%    | 61.04%       |
 
 **PRIMARY (de-duplicated)** — accuracy by how many distinct strings collapsed:
 
 | distinct output strings | rows   | accuracy |
 |-------------------------|--------|----------|
-| 1                       | 13,309 | 39.88    |
-| 2                       | 2,084  | 57.82    |
+| 1                       | 13,309 | 39.89    |
+| 2                       | 2,082  | 57.78    |
 | 3                       | 551    | 71.87    |
 | 4                       | 132    | 78.03    |
 | 5                       | 18     | 88.89    |
@@ -115,8 +115,8 @@ Strings are compared over the **original plus its accepted variants**, casefolde
 
 | distinct output strings | rows   | accuracy |
 |-------------------------|--------|----------|
-| 1                       | 14,914 | 39.06    |
-| 2                       | 2,293  | 57.17    |
+| 1                       | 14,914 | 39.07    |
+| 2                       | 2,291  | 57.14    |
 | 3                       | 589    | 71.48    |
 | 4                       | 132    | 78.03    |
 | 5                       | 18     | 88.89    |

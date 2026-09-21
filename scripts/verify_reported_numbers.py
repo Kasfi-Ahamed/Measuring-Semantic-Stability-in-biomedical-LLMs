@@ -243,6 +243,73 @@ def main() -> int:
     check("Supplementary S3 matches rq4_combined3_wintest_cadec.csv (cells, bolding, counts)",
           not bad, f"{n} numbers" if not bad else "; ".join(bad[:3]))
 
+    # ---- 17: the RQ2 results page, per-model table and pooled block --------------------
+    # Three documents drifted from their own artefacts in one session, each by a single
+    # rounded digit, each after a regeneration that moved two instances. Rounding is where
+    # a regeneration hides: the artefact moves in the fourth decimal and the page moves in
+    # the first or not at all, and nothing in the pipeline compares them.
+    print("\n-- 17: docs/RQ2_CADEC_results.md against rq2_dissociation_summary.csv --")
+    from scipy import stats as _st
+
+    _Z = _st.norm.ppf(0.975)
+
+    def _wilson(k, n):
+        p = k / n
+        den = 1 + _Z * _Z / n
+        c = (p + _Z * _Z / (2 * n)) / den
+        h = _Z * ((p * (1 - p) / n + _Z * _Z / (4 * n * n)) ** 0.5) / den
+        return c - h, c + h
+
+    def _newcombe(k1, n1, k2, n2):
+        l1, u1 = _wilson(k1, n1)
+        l2, u2 = _wilson(k2, n2)
+        p1, p2 = k1 / n1, k2 / n2
+        return ((p1 - p2) - ((p1 - l1) ** 2 + (u2 - p2) ** 2) ** 0.5,
+                (p1 - p2) + ((u1 - p1) ** 2 + (p2 - l2) ** 2) ** 0.5)
+
+    RQ2_ART = ROOT / "outputs/rq3/rq2_dissociation_summary.csv"
+    RQ2_DOC = ROOT / "docs/RQ2_CADEC_results.md"
+    r2 = pd.read_csv(RQ2_ART).set_index("model_name")
+    doc = RQ2_DOC.read_text(encoding="utf-8")
+    bad, n = [], 0
+    for line in doc.splitlines():
+        if not line.startswith("| ") or "%" not in line:
+            continue
+        c = [x.strip() for x in line.strip("|").split("|")]
+        if not c or c[0] not in r2.index:
+            continue
+        r = r2.loc[c[0]]
+        ns = int(r.n_stable_correct + r.n_stable_but_wrong)
+        nu = int(r.n_unstable_correct + r.n_unstable_wrong)
+        ks, ku = int(r.n_stable_but_wrong), int(r.n_unstable_wrong)
+        lo, hi = _wilson(ks, ns)
+        glo, ghi = _newcombe(ks, ns, ku, nu)
+        want = [f"{r.frac_stable * 100:.1f}%", f"{r.frac_correct * 100:.1f}%",
+                f"{r.frac_stable_but_wrong * 100:.1f}%", f"{r.p_wrong_given_stable * 100:.1f}%",
+                f"[{lo * 100:.1f}%, {hi * 100:.1f}%]", f"{ku / nu * 100:.1f}%",
+                f"{(r.p_wrong_given_stable - ku / nu) * 100:.1f}%",
+                f"[{glo * 100:.1f}%, {ghi * 100:.1f}%]"]
+        for got, w in zip(c[2:10], want):
+            n += 1
+            if got != w:
+                bad.append(f"{c[0]}: doc={got} artefact={w}")
+    ks, ns = int(r2.n_stable_but_wrong.sum()), int((r2.n_stable_but_wrong + r2.n_stable_correct).sum())
+    ku, nu = int(r2.n_unstable_wrong.sum()), int((r2.n_unstable_wrong + r2.n_unstable_correct).sum())
+    ls, us = _wilson(ks, ns)
+    lu, uu = _wilson(ku, nu)
+    for label, want in [("P(wrong \\| stable)",
+                         f"| **{ks / ns * 100:.2f}%** | [{ls * 100:.2f}%, {us * 100:.2f}%] | {ns:,} |"),
+                        ("P(wrong \\| unstable)",
+                         f"| {ku / nu * 100:.2f}% | [{lu * 100:.2f}%, {uu * 100:.2f}%] | {nu:,} |")]:
+        n += 1
+        row = next((l for l in doc.splitlines() if l.startswith(f"| {label} |")), None)
+        if row is None:
+            bad.append(f"pooled row missing: {label}")
+        elif not row.endswith(want):
+            bad.append(f"pooled {label}: doc='{row[row.index('|', 2):]}' artefact='{want}'")
+    check("docs/RQ2_CADEC_results.md matches rq2_dissociation_summary.csv", not bad,
+          f"{n} numbers" if not bad else "; ".join(bad[:3]))
+
     print("\n" + "=" * 78)
     print(f"{'ALL CROSS-CHECKS PASS' if not FAILS else str(len(FAILS)) + ' FAILED: ' + ', '.join(FAILS)}")
     print("=" * 78)
