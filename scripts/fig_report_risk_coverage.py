@@ -1,0 +1,178 @@
+"""Report risk-coverage figures: CADEC, MedMentions, and the question-answering lane.
+
+This family was never in the pilot style and is redesigned rather than ported.
+
+ 1. Coverage axis is the pre-registered domain [0.10, 1.00] EXACTLY. The previous
+    MedMentions panel drew to zero, where the estimator is not defined, which collapsed
+    every curve to a flat line with a spike at the left edge.
+ 2. Four series plus a dashed grey random baseline. MedMentions previously carried neither
+    the margin nor the combination; the QA lane carried no combination. The combination is
+    the RQ4 headline and now appears in every lane.
+ 3. The concept margin is UNDEFINED for the three encoders on MedMentions: they emit a
+    concept identifier directly, so no retrieval happens and there is no runner-up to
+    measure against. Verified in the artefact: 0 of 127,598 retained rows carry a finite
+    margin_mean for each of BERT-base, BioBERT and PubMedBERT, against 99.8% for the five
+    generatives. Those panels omit the margin and draw combined(2) instead, and say so.
+ 4. One legend for the whole figure.
+ 5. The QA lane keeps five panels. The encoders produce no free-text answer and are not
+    padded in.
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import report_style as S
+
+ROOT = Path(os.path.expanduser("~/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"))
+GRID = np.round(np.arange(S.COVERAGE_MIN, S.COVERAGE_MAX + 1e-9, 0.05), 2)
+
+CFG = {
+    "cadec": dict(
+        corpus="CADEC", path=ROOT / "outputs/rq3/umls_candidate_margin_cadec.csv",
+        model_col="model_name", acc="accuracy", keep="retained_m_distinct",
+        ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
+        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=4,
+    ),
+    "medmentions": dict(
+        corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
+        model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
+        ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
+        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
+    ),
+    "qa": dict(
+        corpus="BioASQ and SQuAD 2.0",
+        path=ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv",
+        model_col="model", acc="correct", keep="included",
+        ent="norm_entropy", conf="confidence", marg="margin_mean",
+        join=dict(path=ROOT / "outputs/qa/umls_candidate_margin_qa.csv",
+                  on=["id", "model", "dataset"], cols=["margin_mean"]),
+        out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=5,
+    ),
+}
+
+
+def rank01(v: np.ndarray, higher_is_safer: bool) -> np.ndarray:
+    """Rank-normalise to [0,1] with 1 = safest. NaN stays NaN."""
+    x = v if higher_is_safer else -v
+    out = np.full(x.shape, np.nan)
+    ok = np.isfinite(x)
+    if ok.sum() == 0:
+        return out
+    r = pd.Series(x[ok]).rank(method="average").to_numpy()
+    out[ok] = (r - 1) / max(len(r) - 1, 1)
+    return out
+
+
+def curve(y: np.ndarray, safe: np.ndarray) -> np.ndarray:
+    """Selective risk on the pre-registered coverage grid, ordered safest first."""
+    order = np.argsort(-safe, kind="mergesort")
+    ry = y[order]
+    n = len(y)
+    return np.array([1.0 - float(np.mean(ry[:max(1, int(np.ceil(c * n)))])) for c in GRID])
+
+
+def main() -> int:
+    if len(sys.argv) != 2 or sys.argv[1] not in CFG:
+        raise SystemExit(f"usage: {sys.argv[0]} {{{'|'.join(CFG)}}}")
+    c = CFG[sys.argv[1]]
+    df = pd.read_csv(c["path"], low_memory=False)
+    if "join" in c:
+        j = c["join"]
+        extra = pd.read_csv(j["path"], low_memory=False)
+        before = len(df)
+        df = df.merge(extra[j["on"] + j["cols"]].drop_duplicates(j["on"]),
+                      on=j["on"], how="left")
+        if len(df) != before:
+            raise SystemExit(f"join changed row count {before:,} -> {len(df):,}")
+    df = df[df[c["keep"]].astype(bool)].copy()
+    df[c["model_col"]] = S.normalise_models(df[c["model_col"]])
+    S.assert_model_map(df[c["model_col"]], allow_subset=True, context=f"risk-coverage/{c['corpus']}")
+    models = S.ordered(df[c["model_col"]])
+    n_rows = len(df)
+    print(f"{c['corpus']}: {n_rows:,} analysed rows, {len(models)} models")
+
+    ncol = c["ncol"]
+    nrow = int(np.ceil(len(models) / ncol))
+    fig, axes = plt.subplots(nrow, ncol, figsize=(3.55 * ncol, 3.25 * nrow),
+                             sharex=True, sharey=True, squeeze=False)
+    handles: dict[str, object] = {}
+    omitted_any = []
+    for i, m in enumerate(models):
+        ax = axes[i // ncol][i % ncol]
+        g = df[df[c["model_col"]] == m]
+        y = (pd.to_numeric(g[c["acc"]], errors="coerce").to_numpy() >= 0.5).astype(float)
+        ent = pd.to_numeric(g[c["ent"]], errors="coerce").to_numpy()
+        conf = pd.to_numeric(g[c["conf"]], errors="coerce").to_numpy()
+        marg = pd.to_numeric(g[c["marg"]], errors="coerce").to_numpy() if c["marg"] in g else \
+            np.full(len(g), np.nan)
+        has_margin = bool(np.isfinite(marg).any())
+
+        series = {"entropy": -ent, "confidence": conf}
+        if has_margin:
+            series["margin"] = marg
+        r_ent, r_conf = rank01(ent, False), rank01(conf, True)
+        if has_margin:
+            r_marg = rank01(marg, True)
+            series["combined_3"] = np.nanmean(np.vstack([r_ent, r_conf, r_marg]), axis=0)
+        else:
+            series["combined_2"] = np.nanmean(np.vstack([r_ent, r_conf]), axis=0)
+            omitted_any.append(m)
+
+        for name, safe in series.items():
+            ok = np.isfinite(safe) & np.isfinite(y)
+            if ok.sum() < 10:
+                continue
+            r = curve(y[ok], safe[ok])
+            ln, = ax.plot(GRID, r, color=S.SIGNAL_COLOURS[name], ls=S.SIGNAL_LINESTYLES[name],
+                          lw=1.9, label=S.SIGNAL_LABELS[name])
+            handles.setdefault(S.SIGNAL_LABELS[name], ln)
+        base = 1.0 - float(np.mean(y))
+        bl = ax.axhline(base, color=S.RANDOM_BASELINE["colour"],
+                        ls=S.RANDOM_BASELINE["linestyle"], lw=1.4,
+                        label=S.RANDOM_BASELINE["label"])
+        handles.setdefault(S.RANDOM_BASELINE["label"], bl)
+
+        sub = "" if has_margin else "\nmargin undefined: no retrieval. combined(2) shown"
+        ax.set_title(f"{m}  (n = {len(g):,}){sub}", fontsize=8.5)
+        ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
+        ax.grid(alpha=0.28)
+        ax.set_axisbelow(True)
+    for k in range(len(models), nrow * ncol):
+        axes[k // ncol][k % ncol].set_axis_off()
+    for r_ in range(nrow):
+        axes[r_][0].set_ylabel("Selective risk")
+    for cc in range(ncol):
+        axes[nrow - 1][cc].set_xlabel("Coverage")
+
+    note = ""
+    if omitted_any:
+        note = (f" Margin omitted for {', '.join(omitted_any)}: these emit a concept "
+                f"identifier directly, so no retrieval occurs and no runner-up exists.")
+    title = (f"RQ4 selective risk against coverage: {c['corpus']}\n"
+             f"n = {n_rows:,} analysed rows, {len(models)} models. "
+             f"Coverage is the pre-registered domain [0.10, 1.00].{note}")
+    S.check_text(title)
+    fig.suptitle(title, fontsize=11, y=0.995)
+    fig.legend(handles.values(), handles.keys(), loc="lower center",
+               ncol=min(6, len(handles)), fontsize=9, frameon=True,
+               bbox_to_anchor=(0.5, -0.02))
+    fig.tight_layout(rect=(0, 0.035, 1, 0.97))
+    c["out"].parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
+    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
+    plt.close(fig)
+    print(f"wrote {c['out']}\nwrote {c['out'].with_suffix('.pdf')}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
