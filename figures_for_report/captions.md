@@ -1,6 +1,6 @@
 # Figure captions
 
-Generated 2026-09-21 15:28 by `scripts/build_captions.py` from the caption registry each producer writes.
+Generated 2026-09-21 15:44 by `scripts/build_captions.py` from the caption registry each producer writes.
 
 Figure titles are one line naming the measure and the corpus. Everything else a reader needs is here, ready to paste into a LaTeX caption. Nothing that used to sit on an image was dropped: it was moved.
 
@@ -133,6 +133,20 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 - Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.
 - Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image.
 
+## `rq1_entropy_heatmap_by_model_cadec.png`
+
+**Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, per model, CADEC
+
+**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)
+
+**Models drawn:** 8 models, roster order, one panel each
+
+- Colour scale runs 0 to 0.60, shared across all panels and with the pooled and per-model figures for this corpus.
+- x tick labels on the bottom row only, category labels on the leftmost column only; axes shared.
+- Hatched no data (n=0) and flat grey n = k, below 3 are different states and are drawn differently.
+- Undrawn cells: BERT-base mixed x synonym_substitution n=1; BioBERT mixed x synonym_substitution n=1; PubMedBERT mixed x synonym_substitution n=1; FLAN-T5-base mixed x synonym_substitution n=1; Mistral-7B-Instruct-v0.1 mixed x synonym_substitution n=1; BioMistral-7B mixed x synonym_substitution n=1; Meta-Llama-3-8B-Instruct mixed x synonym_substitution n=1; Llama3-OpenBioLLM-8B mixed x synonym_substitution n=1
+- THESIS ONLY, not a manuscript figure.
+
 ## `rq1_entropy_heatmap_by_model_medmentions.png`
 
 **Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, per model, MedMentions
@@ -141,10 +155,23 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Models drawn:** 8 models, roster order, one panel each
 
-- Colour scale runs 0 to 0.50 and is shared across all panels and with the pooled figure, so cells are comparable between models.
-- Cells surviving the n < 3 rule per panel: BERT-base 24/24, BioBERT 24/24, PubMedBERT 24/24, FLAN-T5-base 24/24, Mistral-7B-Instruct-v0.1 24/24, BioMistral-7B 24/24, Meta-Llama-3-8B-Instruct 24/24, Llama3-OpenBioLLM-8B 24/24.
-- x tick labels are drawn on the bottom row only and category labels on the leftmost column only; axes are shared.
+- Colour scale runs 0 to 0.50, shared across all panels and with the pooled and per-model figures for this corpus.
+- x tick labels on the bottom row only, category labels on the leftmost column only; axes shared.
+- Hatched no data (n=0) and flat grey n = k, below 3 are different states and are drawn differently.
+- Every cell is drawn in every panel.
 - THESIS ONLY, not a manuscript figure.
+
+## `rq1_entropy_heatmap_cadec.png`
+
+**Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, CADEC
+
+**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)
+
+**Models drawn:** pooled over all 8 models
+
+- Colour scale runs 0 to 0.60 and is shared with the by-model figure and every per-model file for this corpus.
+- Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has no observation at all; a flat grey cell labelled n = k, below 3 has too few to report.
+- Every cell is drawn.
 
 ## `rq1_entropy_heatmap_medmentions.png`
 
@@ -154,9 +181,9 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Models drawn:** pooled over all 8 models
 
-- 0 of 24 cells fall below n = 3 and are greyed as excluded.
-- Colour scale runs 0 to 0.50 and is shared with the by-model figure and every per-model file, so cells are comparable across all of them.
-- CADEC, BioASQ and SQuAD 2.0 are absent: see the missing-input entries below.
+- Colour scale runs 0 to 0.50 and is shared with the by-model figure and every per-model file for this corpus.
+- Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has no observation at all; a flat grey cell labelled n = k, below 3 has too few to report.
+- Every cell is drawn.
 
 ## `rq1_magnitude_vs_entropy_cadec.png`
 
@@ -220,15 +247,23 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 ## Per-model figures
 
-`figures_for_report/per_model/` holds **24** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`. They are listed as a group rather than one entry each.
+`figures_for_report/per_model/` holds **32** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`. They are listed as a group rather than one entry each.
 
 Each carries the same measure as its combined counterpart above, for a single model, drawn in that model's fixed roster colour with the model legend dropped. The heatmap colour scale is shared across every model of a corpus AND with that corpus's pooled and by-model figures, so a cell in one file is comparable with a cell in another. The scatter keeps its two-panel all-instances and non-zero-only split.
 
-- **heatmap**: 8 files
+- **heatmap**: 16 files
 - **scatter**: 16 files
 
 <details><summary>All per-model filenames</summary>
 
+- `per_model/rq1_entropy_heatmap_cadec_BERT-base.png`
+- `per_model/rq1_entropy_heatmap_cadec_BioBERT.png`
+- `per_model/rq1_entropy_heatmap_cadec_BioMistral-7B.png`
+- `per_model/rq1_entropy_heatmap_cadec_FLAN-T5-base.png`
+- `per_model/rq1_entropy_heatmap_cadec_Llama3-OpenBioLLM-8B.png`
+- `per_model/rq1_entropy_heatmap_cadec_Meta-Llama-3-8B-Instruct.png`
+- `per_model/rq1_entropy_heatmap_cadec_Mistral-7B-Instruct-v0.1.png`
+- `per_model/rq1_entropy_heatmap_cadec_PubMedBERT.png`
 - `per_model/rq1_entropy_heatmap_medmentions_BERT-base.png`
 - `per_model/rq1_entropy_heatmap_medmentions_BioBERT.png`
 - `per_model/rq1_entropy_heatmap_medmentions_BioMistral-7B.png`
@@ -262,8 +297,6 @@ Each carries the same measure as its combined counterpart above, for a single mo
 
 - **NOT PRODUCED: RQ1 heatmap, BioASQ**
   - no linguistic_category in the QA perturbation files
-- **NOT PRODUCED: RQ1 heatmap, CADEC**
-  - no linguistic_category: outputs/rq3/intermediate/rq3_cadec_perturbations.csv carries instance_id, perturbation_type, mention_context, perturbation_text, lexical_change_magnitude, gold_mention, gold_cui, accepted_final
 - **NOT PRODUCED: RQ1 heatmap, SQuAD 2.0**
   - no linguistic_category in the QA perturbation files
 - **NOT PRODUCED: RQ1 scatter, BioASQ**

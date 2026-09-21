@@ -42,7 +42,14 @@ SCATTER_OK = {
     "MedMentions": dict(entropy=ROOT / "outputs/rq1/entropy_full_umls.csv",
                         out_dir=ROOT / "outputs/rq1/figures", slug="medmentions"),
 }
-HEATMAP_OK = {"MedMentions"}
+HEATMAP_OK = {
+    "MedMentions": dict(entropy=ROOT / "outputs/rq1/entropy_full_umls.csv",
+                        feats=ROOT / "outputs/rq1/intermediate/rq1_linguistic_features.csv",
+                        out_dir=ROOT / "outputs/rq1/figures", slug="medmentions"),
+    "CADEC": dict(entropy=ROOT / "outputs/rq3/entropy_cadec.csv",
+                  feats=ROOT / "outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv",
+                  out_dir=ROOT / "outputs/rq3/figures", slug="cadec"),
+}
 NO_INPUT = {
     ("scatter", "BioASQ"): "no per-instance lexical change magnitude: "
                            "outputs/qa/intermediate/qa_question_perturbations_bioasq.csv "
@@ -50,11 +57,6 @@ NO_INPUT = {
     ("scatter", "SQuAD 2.0"): "no per-instance lexical change magnitude: "
                               "outputs/qa/intermediate/qa_question_perturbations_squad2.csv "
                               "carries only id, dataset, pert_idx, pert_question, m",
-    ("heatmap", "CADEC"): "no linguistic_category: "
-                          "outputs/rq3/intermediate/rq3_cadec_perturbations.csv carries "
-                          "instance_id, perturbation_type, mention_context, "
-                          "perturbation_text, lexical_change_magnitude, gold_mention, "
-                          "gold_cui, accepted_final",
     ("heatmap", "BioASQ"): "no linguistic_category in the QA perturbation files",
     ("heatmap", "SQuAD 2.0"): "no linguistic_category in the QA perturbation files",
 }
@@ -158,8 +160,9 @@ def scatter(corpus) -> int:
     return 0
 
 
-def _heatmap_frames():
-    ent = pd.read_csv(ROOT / "outputs/rq1/entropy_full_umls.csv", low_memory=False,
+def _heatmap_frames(corpus):
+    c = HEATMAP_OK[corpus]
+    ent = pd.read_csv(c["entropy"], low_memory=False,
                       usecols=["instance_id", "model_name", "normalised_entropy_dedup",
                                "retained_m_distinct"])
     ent = ent[ent["retained_m_distinct"].astype(bool)].copy()
@@ -167,63 +170,94 @@ def _heatmap_frames():
     ent["H"] = pd.to_numeric(ent["normalised_entropy_dedup"], errors="coerce")
     ent = ent.dropna(subset=["H"])
     parts = []
-    for ch in pd.read_csv(ROOT / "outputs/rq1/intermediate/rq1_linguistic_features.csv",
+    for ch in pd.read_csv(c["feats"],
                           usecols=["instance_id", "perturbation_type", "linguistic_category"],
                           chunksize=1_000_000, low_memory=False):
-        parts.append(ch.drop_duplicates(["instance_id", "perturbation_type", "linguistic_category"]))
-    feat = pd.concat(parts).drop_duplicates(["instance_id", "perturbation_type", "linguistic_category"])
+        parts.append(ch.drop_duplicates(["instance_id", "perturbation_type",
+                                         "linguistic_category"]))
+    feat = pd.concat(parts).drop_duplicates(["instance_id", "perturbation_type",
+                                             "linguistic_category"])
+    # GUARD 3: the join is BY KEY, on instance_id, never by row order. Asserted, not assumed.
+    assert "instance_id" in ent.columns and "instance_id" in feat.columns
     df = ent.merge(feat, on="instance_id", how="inner")
     df["model_name"] = S.normalise_models(df["model_name"])
-    return df, n_grid, len(ent)
+    return df, n_grid, len(ent), c
 
 
 def _cells(g, cats, types):
+    """Return the mean matrix AND the count matrix.
+
+    The count matrix is what lets the drawing tell n = 0 from 0 < n < 3. "excluded (n<3)"
+    on its own cannot: an empty cell and a cell with two observations are different facts
+    and were rendered identically.
+    """
     piv = g.groupby(["linguistic_category", "perturbation_type"])["H"].agg(["mean", "size"])
     mat = np.full((len(cats), len(types)), np.nan)
+    cnt = np.zeros((len(cats), len(types)), dtype=int)
     for (ca, ty), r in piv.iterrows():
+        cnt[cats.index(ca), types.index(ty)] = int(r["size"])
         if r["size"] >= MIN_CELL:
             mat[cats.index(ca), types.index(ty)] = r["mean"]
-    return mat
+    return mat, cnt
 
 
-def _draw_cells(ax, mat, cats, types, vmax, fs=8):
+def _draw_cells(ax, mat, cnt, cats, types, vmax, fs=8):
+    """Two undrawn states, rendered differently.
+
+    n = 0        no observation at all: hatched, labelled "no data (n=0)"
+    0 < n < 3    too few to report: flat grey, labelled "n = k, below 3"
+    """
     cmap = plt.get_cmap("YlGnBu").copy()
-    cmap.set_bad("#DDDDDD")
+    cmap.set_bad("#E4E4E4")
     im = ax.imshow(np.ma.masked_invalid(mat), cmap=cmap, vmin=0.0, vmax=vmax, aspect="auto")
     for r_ in range(len(cats)):
         for c_ in range(len(types)):
             if np.isfinite(mat[r_, c_]):
                 ax.text(c_, r_, f"{mat[r_, c_]:.3f}", ha="center", va="center", fontsize=fs,
                         color="white" if mat[r_, c_] > vmax * 0.55 else "#222222")
+            elif cnt[r_, c_] == 0:
+                ax.add_patch(plt.Rectangle((c_ - 0.5, r_ - 0.5), 1, 1, fill=True,
+                                           facecolor="#F7F7F7", edgecolor="#AAAAAA",
+                                           hatch="///", lw=0.6, zorder=2))
+                ax.text(c_, r_, "no data\n(n=0)", ha="center", va="center",
+                        fontsize=fs - 2, color="#555555", zorder=3)
             else:
-                ax.text(c_, r_, f"excluded\n(n<{MIN_CELL})", ha="center", va="center",
-                        fontsize=fs - 2, color="#666666")
+                ax.text(c_, r_, f"n = {int(cnt[r_, c_])}\nbelow {MIN_CELL}", ha="center",
+                        va="center", fontsize=fs - 2, color="#444444")
     return im
 
 
-def heatmap() -> int:
-    corpus = "MedMentions"
-    df, n_grid, n_def = _heatmap_frames()
-    S.assert_model_map(df["model_name"], allow_subset=False, context="rq1 heatmap")
+def heatmap(corpus="MedMentions") -> int:
+    df, n_grid, n_def, c = _heatmap_frames(corpus)
+    S.assert_model_map(df["model_name"], allow_subset=False, context=f"rq1 heatmap/{corpus}")
     models = S.ordered(df["model_name"])
     cats = sorted(df["linguistic_category"].dropna().unique())
     types = sorted(df["perturbation_type"].dropna().unique())
     total = len(cats) * len(types)
 
-    pooled = _cells(df, cats, types)
+    pooled, pooled_n = _cells(df, cats, types)
     per = {m: _cells(df[df["model_name"] == m], cats, types) for m in models}
-    # ONE shared colour scale across the pooled figure, the by-model figure and every
-    # per-model file, so a cell in one file is comparable with a cell in another.
-    vmax = float(np.ceil(max(np.nanmax(pooled), max(np.nanmax(v) for v in per.values()))
-                         * 20) / 20)
-    surv = {m: int(np.isfinite(per[m]).sum()) for m in models}
-    print(f"shared vmax {vmax}; pooled drawn {int(np.isfinite(pooled).sum())}/{total}")
-    for m in models:
-        print(f"  {m:<26} {surv[m]:>2}/{total} cells")
+    vmax = float(np.ceil(max(np.nanmax(pooled),
+                             max(np.nanmax(v[0]) for v in per.values())) * 20) / 20)
+    print(f"{corpus}: shared vmax {vmax}; {len(cats)} categories x {len(types)} types")
 
-    # pooled, single panel
+    def _undrawn(mat, cnt, who):
+        out = []
+        for i, ca in enumerate(cats):
+            for j, ty in enumerate(types):
+                if not np.isfinite(mat[i, j]):
+                    out.append((who, ca, ty, int(cnt[i, j])))
+        return out
+    undrawn = _undrawn(pooled, pooled_n, "pooled")
+    for m in models:
+        undrawn += _undrawn(per[m][0], per[m][1], m)
+    print(f"  undrawn cells, exact n: {len(undrawn)}")
+    for who, ca, ty, n in undrawn:
+        print(f"    {who:<26} {ca:<14} x {ty:<22} n = {n}"
+              f"  {'EMPTY' if n == 0 else 'below 3'}")
+
     fig, ax = plt.subplots(figsize=(1.9 * len(types) + 4.0, 1.0 * len(cats) + 2.6))
-    im = _draw_cells(ax, pooled, cats, types, vmax, fs=9)
+    im = _draw_cells(ax, pooled, pooled_n, cats, types, vmax, fs=9)
     ax.set_xticks(range(len(types))); ax.set_xticklabels(types, rotation=25, ha="right", fontsize=9)
     ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=9)
     ax.set_xlabel("Perturbation type"); ax.set_ylabel("Linguistic category")
@@ -232,56 +266,57 @@ def heatmap() -> int:
     fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02,
                  label=r"Mean normalised entropy $\hat{H}$")
     fig.tight_layout(rect=(0, 0, 1, 0.94))
-    S.save_png(fig, ROOT / "outputs/rq1/figures/rq1_entropy_heatmap_medmentions.png")
-    plt.close(fig)
-    S.emit_caption("rq1_entropy_heatmap_medmentions.png", title=t,
-                   n=S.grid_clause(n_grid, n_def),
+    name = f"rq1_entropy_heatmap_{c['slug']}.png"
+    S.save_png(fig, c["out_dir"] / name); plt.close(fig)
+    _pool_undrawn = [u for u in undrawn if u[0] == "pooled"]
+    S.emit_caption(name, title=t, n=S.grid_clause(n_grid, n_def),
                    models=f"pooled over all {len(models)} models",
-                   notes=[f"{total - int(np.isfinite(pooled).sum())} of {total} cells fall "
-                          f"below n = {MIN_CELL} and are greyed as excluded.",
-                          f"Colour scale runs 0 to {vmax:.2f} and is shared with the "
-                          f"by-model figure and every per-model file, so cells are "
-                          f"comparable across all of them.",
-                          "CADEC, BioASQ and SQuAD 2.0 are absent: see the missing-input "
-                          "entries below."])
+                   notes=[f"Colour scale runs 0 to {vmax:.2f} and is shared with the "
+                          f"by-model figure and every per-model file for this corpus.",
+                          "Two undrawn states are rendered differently: a hatched cell "
+                          "labelled no data (n=0) has no observation at all; a flat grey "
+                          "cell labelled n = k, below 3 has too few to report."]
+                         + ([f"Undrawn: " + "; ".join(f"{ca} x {ty} n={n}"
+                                                      for _, ca, ty, n in _pool_undrawn)]
+                            if _pool_undrawn else ["Every cell is drawn."]))
 
-    # by model, 2 x 4, shared axes so tick labels do not run into the row below
     nrow, ncol = 2, 4
     fig, axes = plt.subplots(nrow, ncol, figsize=(4.4 * ncol, 4.3 * nrow), squeeze=False,
                              sharex="col", sharey="row",
                              gridspec_kw=dict(hspace=0.62, wspace=0.10))
     for i, m in enumerate(models):
         ax = axes[i // ncol][i % ncol]
-        im = _draw_cells(ax, per[m], cats, types, vmax, fs=7)
+        im = _draw_cells(ax, per[m][0], per[m][1], cats, types, vmax, fs=7)
         ax.set_title(m, fontsize=9)
         if i // ncol == nrow - 1:
             ax.set_xticks(range(len(types)))
             ax.set_xticklabels(types, rotation=30, ha="right", fontsize=7)
         if i % ncol == 0:
-            ax.set_yticks(range(len(cats)))
-            ax.set_yticklabels(cats, fontsize=7)
+            ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=7)
     t2 = S.title_line("RQ1: mean entropy by perturbation type and linguistic category, "
                       "per model", corpus)
     fig.suptitle(t2, fontsize=12)
     fig.colorbar(im, ax=axes, fraction=0.016, pad=0.02,
                  label=r"Mean normalised entropy $\hat{H}$")
-    S.save_png(fig, ROOT / "outputs/rq1/figures/rq1_entropy_heatmap_by_model_medmentions.png")
-    plt.close(fig)
-    S.emit_caption("rq1_entropy_heatmap_by_model_medmentions.png", title=t2,
-                   n=S.grid_clause(n_grid, n_def),
+    name2 = f"rq1_entropy_heatmap_by_model_{c['slug']}.png"
+    S.save_png(fig, c["out_dir"] / name2); plt.close(fig)
+    _bm = [u for u in undrawn if u[0] != "pooled"]
+    S.emit_caption(name2, title=t2, n=S.grid_clause(n_grid, n_def),
                    models=f"{len(models)} models, roster order, one panel each",
-                   notes=[f"Colour scale runs 0 to {vmax:.2f} and is shared across all "
-                          f"panels and with the pooled figure, so cells are comparable "
-                          f"between models.",
-                          "Cells surviving the n < 3 rule per panel: "
-                          + ", ".join(f"{m} {surv[m]}/{total}" for m in models) + ".",
-                          "x tick labels are drawn on the bottom row only and category "
-                          "labels on the leftmost column only; axes are shared.",
+                   notes=[f"Colour scale runs 0 to {vmax:.2f}, shared across all panels and "
+                          f"with the pooled and per-model figures for this corpus.",
+                          "x tick labels on the bottom row only, category labels on the "
+                          "leftmost column only; axes shared.",
+                          "Hatched no data (n=0) and flat grey n = k, below 3 are "
+                          "different states and are drawn differently.",
+                          ("Undrawn cells: " + "; ".join(f"{w} {ca} x {ty} n={n}"
+                                                         for w, ca, ty, n in _bm))
+                          if _bm else "Every cell is drawn in every panel.",
                           "THESIS ONLY, not a manuscript figure."])
 
     for m in models:
         f2, a2 = plt.subplots(figsize=(1.9 * len(types) + 3.4, 1.0 * len(cats) + 2.4))
-        im2 = _draw_cells(a2, per[m], cats, types, vmax, fs=9)
+        im2 = _draw_cells(a2, per[m][0], per[m][1], cats, types, vmax, fs=9)
         a2.set_xticks(range(len(types))); a2.set_xticklabels(types, rotation=25, ha="right", fontsize=9)
         a2.set_yticks(range(len(cats))); a2.set_yticklabels(cats, fontsize=9)
         a2.set_xlabel("Perturbation type"); a2.set_ylabel("Linguistic category")
@@ -291,7 +326,7 @@ def heatmap() -> int:
         f2.colorbar(im2, ax=a2, fraction=0.035, pad=0.02,
                     label=r"Mean normalised entropy $\hat{H}$")
         f2.tight_layout(rect=(0, 0, 1, 0.93))
-        S.save_png(f2, PER_MODEL / f"rq1_entropy_heatmap_medmentions_{_slug(m)}.png")
+        S.save_png(f2, PER_MODEL / f"rq1_entropy_heatmap_{c['slug']}_{_slug(m)}.png")
         plt.close(f2)
     print(f"  wrote pooled, by-model and {len(models)} per-model heatmaps")
     return 0
@@ -311,9 +346,11 @@ if __name__ == "__main__":
         raise SystemExit(scatter("CADEC"))
     if a == "scatter-medmentions":
         raise SystemExit(scatter("MedMentions"))
-    if a == "heatmap":
-        raise SystemExit(heatmap())
+    if a == "heatmap-medmentions":
+        raise SystemExit(heatmap("MedMentions"))
+    if a == "heatmap-cadec":
+        raise SystemExit(heatmap("CADEC"))
     if a == "absences":
         raise SystemExit(record_absences())
     raise SystemExit(f"usage: {sys.argv[0]} "
-                     "{scatter-cadec|scatter-medmentions|heatmap|absences}")
+                     "{scatter-cadec|scatter-medmentions|heatmap-medmentions|heatmap-cadec|absences}")

@@ -8,15 +8,6 @@
   ],
   "title": "NOT PRODUCED: RQ1 heatmap, BioASQ"
  },
- "__missing__heatmap_CADEC": {
-  "group": "missing input",
-  "models": null,
-  "n": null,
-  "notes": [
-   "no linguistic_category: outputs/rq3/intermediate/rq3_cadec_perturbations.csv carries instance_id, perturbation_type, mention_context, perturbation_text, lexical_change_magnitude, gold_mention, gold_cui, accepted_final"
-  ],
-  "title": "NOT PRODUCED: RQ1 heatmap, CADEC"
- },
  "__missing__heatmap_SQuAD 2.0": {
   "group": "missing input",
   "models": null,
@@ -160,26 +151,51 @@
   ],
   "title": "RQ4: signal independence, QA (BioASQ and SQuAD 2.0)"
  },
+ "rq1_entropy_heatmap_by_model_cadec.png": {
+  "group": null,
+  "models": "8 models, roster order, one panel each",
+  "n": "n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)",
+  "notes": [
+   "Colour scale runs 0 to 0.60, shared across all panels and with the pooled and per-model figures for this corpus.",
+   "x tick labels on the bottom row only, category labels on the leftmost column only; axes shared.",
+   "Hatched no data (n=0) and flat grey n = k, below 3 are different states and are drawn differently.",
+   "Undrawn cells: BERT-base mixed x synonym_substitution n=1; BioBERT mixed x synonym_substitution n=1; PubMedBERT mixed x synonym_substitution n=1; FLAN-T5-base mixed x synonym_substitution n=1; Mistral-7B-Instruct-v0.1 mixed x synonym_substitution n=1; BioMistral-7B mixed x synonym_substitution n=1; Meta-Llama-3-8B-Instruct mixed x synonym_substitution n=1; Llama3-OpenBioLLM-8B mixed x synonym_substitution n=1",
+   "THESIS ONLY, not a manuscript figure."
+  ],
+  "title": "RQ1: mean entropy by perturbation type and linguistic category, per model, CADEC"
+ },
  "rq1_entropy_heatmap_by_model_medmentions.png": {
   "group": null,
   "models": "8 models, roster order, one panel each",
   "n": "n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)",
   "notes": [
-   "Colour scale runs 0 to 0.50 and is shared across all panels and with the pooled figure, so cells are comparable between models.",
-   "Cells surviving the n < 3 rule per panel: BERT-base 24/24, BioBERT 24/24, PubMedBERT 24/24, FLAN-T5-base 24/24, Mistral-7B-Instruct-v0.1 24/24, BioMistral-7B 24/24, Meta-Llama-3-8B-Instruct 24/24, Llama3-OpenBioLLM-8B 24/24.",
-   "x tick labels are drawn on the bottom row only and category labels on the leftmost column only; axes are shared.",
+   "Colour scale runs 0 to 0.50, shared across all panels and with the pooled and per-model figures for this corpus.",
+   "x tick labels on the bottom row only, category labels on the leftmost column only; axes shared.",
+   "Hatched no data (n=0) and flat grey n = k, below 3 are different states and are drawn differently.",
+   "Every cell is drawn in every panel.",
    "THESIS ONLY, not a manuscript figure."
   ],
   "title": "RQ1: mean entropy by perturbation type and linguistic category, per model, MedMentions"
+ },
+ "rq1_entropy_heatmap_cadec.png": {
+  "group": null,
+  "models": "pooled over all 8 models",
+  "n": "n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)",
+  "notes": [
+   "Colour scale runs 0 to 0.60 and is shared with the by-model figure and every per-model file for this corpus.",
+   "Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has no observation at all; a flat grey cell labelled n = k, below 3 has too few to report.",
+   "Every cell is drawn."
+  ],
+  "title": "RQ1: mean entropy by perturbation type and linguistic category, CADEC"
  },
  "rq1_entropy_heatmap_medmentions.png": {
   "group": null,
   "models": "pooled over all 8 models",
   "n": "n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)",
   "notes": [
-   "0 of 24 cells fall below n = 3 and are greyed as excluded.",
-   "Colour scale runs 0 to 0.50 and is shared with the by-model figure and every per-model file, so cells are comparable across all of them.",
-   "CADEC, BioASQ and SQuAD 2.0 are absent: see the missing-input entries below."
+   "Colour scale runs 0 to 0.50 and is shared with the by-model figure and every per-model file for this corpus.",
+   "Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has no observation at all; a flat grey cell labelled n = k, below 3 has too few to report.",
+   "Every cell is drawn."
   ],
   "title": "RQ1: mean entropy by perturbation type and linguistic category, MedMentions"
  },

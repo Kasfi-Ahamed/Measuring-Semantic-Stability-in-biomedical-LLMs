@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 15:26 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 15:44 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -51,27 +51,49 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - output sha256: `78eb1f3c5bef13aeab0ec1df1ff9ab86722850526c4691799726c03602c0cbf0`
 - output mtime: 2026-09-21 15:24
 
-### Figure 2
+### Figure 2a
 
 - filename: `rq1_entropy_heatmap_medmentions.png`  (PNG, 300 dpi. This family emits no PDF.)
-- producer: `scripts/fig_report_rq1.py heatmap`
-- model set: 8 models
-- corpus: MedMentions only: CADEC has no linguistic_category
+- producer: `scripts/fig_report_rq1.py heatmap-medmentions`
+- model set: pooled over 8 models
+- corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `1c95ce541da312eaa5e3e66873d8a14d654cf83b6b5aa2f67c90f6b59b1e7791`
-- output mtime: 2026-09-21 15:24
+- output mtime: 2026-09-21 15:42
+
+### Figure 2c
+
+- filename: `rq1_entropy_heatmap_cadec.png`  (PNG, 300 dpi. This family emits no PDF.)
+- producer: `scripts/fig_report_rq1.py heatmap-cadec`
+- model set: pooled over 8 models
+- corpus: CADEC
+- source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
+- source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
+- output sha256: `9f8c42cda6754df40f0a10534a46c809940eebe75a45b3aa523e0eebe24f5b9b`
+- output mtime: 2026-09-21 15:41
+
+### Figure 2d (THESIS ONLY, not a manuscript figure)
+
+- filename: `rq1_entropy_heatmap_by_model_cadec.png`  (PNG, 300 dpi. This family emits no PDF.)
+- producer: `scripts/fig_report_rq1.py heatmap-cadec`
+- model set: 8 models, one panel each
+- corpus: CADEC
+- source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
+- source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
+- output sha256: `9cbe1ea9f294e1cd89ad851f530a62b730cf560153c467693ac8c5eb919dff5c`
+- output mtime: 2026-09-21 15:41
 
 ### Figure 2b (THESIS ONLY, not a manuscript figure)
 
 - filename: `rq1_entropy_heatmap_by_model_medmentions.png`  (PNG, 300 dpi. This family emits no PDF.)
-- producer: `scripts/fig_report_rq1.py heatmap-by-model`
+- producer: `scripts/fig_report_rq1.py heatmap-medmentions`
 - model set: 8 models, one panel each, one shared colour scale
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `b6ba2d0f03e96c9edb3bd45647135f2b36539a693cc5b22a13ab349d0dae7ede`
-- output mtime: 2026-09-21 15:24
+- output mtime: 2026-09-21 15:42
 
 ### Figure 3a
 
@@ -232,6 +254,23 @@ An earlier draft annotated Spearman(entropy, CONTINUOUS mean accuracy over varia
 
 - Clean. 7 producers swept by AST over every non-docstring string literal, `scripts/report_style.py` INCLUDED: no em dash, no en dash, no occurrence of "clinical". Only two things are exempt, and both are named rather than whole files: the values of `_EM_DASH` and `_EN_DASH`, and the string literals inside `check_text` itself, which necessarily contain what they forbid. Docstrings are exempt because they quote the forbidden wording in order to explain its removal.
 
+## Part-of-speech provenance for linguistic_category
+
+`linguistic_category` is assigned by `changed_tokens` then `pos_tags` then `map_linguistic_category`, lifted verbatim from cell 19 of `notebooks/01_perturbations/RQ1_semantic_entropy_linguistic_predictors.ipynb`. The notebook has three POS tiers and only the first is sound: tier 2 (`nltk.pos_tag`) raises LookupError in this environment, and tier 3 tags every token NOUN.
+
+| corpus | tagger | version | how established |
+|---|---|---|---|
+| MedMentions | spaCy `en_core_web_sm` | **inferred, not recorded** | The build logged only the model NAME, 21 times, never a version. The tier is PROVEN from the data: `changed_pos_tags` contains 12 UPOS tags the tier-2 fallback cannot emit. The version is an INFERENCE: one version, v3.7.1, is installed, dated 2026-07-13, predating the 2026-09-10 build. An inference is not a receipt. |
+| CADEC | spaCy `en_core_web_sm` | **v3.7.1, recorded** | Printed and written to `outputs/rq3/intermediate/rq3_cadec_linguistic_features.receipt.json` by `scripts/build_cadec_linguistic_features.py`, which loads spaCy with no try/except and asserts after the run that the output carries tags outside the tier-3 vocabulary. |
+
+The CADEC receipt also records rows in equals rows out (27,814 both sides), the join key (`instance_id`, not row order), and the exact per-cell triple counts so an empty cell can be told from a low one.
+
+### One artefact, found before either heatmap was drawn
+
+`mixed` x `synonym_substitution` is non-zero on MedMentions and near-zero on CADEC. Neither of the two candidate explanations is right. `pos_tags` joins the changed tokens into one string and runs spaCy over it, and spaCy's contraction splitter turns a SINGLE token into two with different tags: `wont` becomes wo + nt (AUX, PART), `wed` becomes we + d (PRON, PROPN), `cant` becomes ca + nt (AUX, PART). One changed token, two POS groups, therefore `mixed`.
+
+Scale: **11 rows of 758,969** on MedMentions, three distinct tokens, all synonym_substitution. `mixed` at 62.1% is otherwise legitimate, its changed-token count peaking at 4 to 5. **But those 11 rows are the entire content of the MedMentions `mixed` x `synonym_substitution` cell**, which passes the n >= 3 rule and is drawn. On CADEC the same artefact appears exactly once, `wed` again, so the cell is n = 1 and is greyed as below 3. The axis label is accurate everywhere except that one cell, on both corpora.
+
 ## Design changes, recorded so a digest move is not read as a data revision
 
 - `rq1_entropy_heatmap_medmentions`  (now `54a3fd2cbdaa`)
@@ -250,6 +289,6 @@ An earlier draft annotated Spearman(entropy, CONTINUOUS mean accuracy over varia
 
 - **Figure 4 (pilot rq2_figure4_dissociation_summary)**: DROPPED by decision: merged into Figure 3, which now prints each model's own rank-biserial r and |Spearman rho| above its bar pair.
 - **Figure 6 (pilot rq3_figure3_pair2_largescale)**: DROPPED by decision: a two-model subset of Figure 5, and its r was computed over two points, which the house rule forbids. Figure 5 with CADEC supersedes it.
-- **RQ1 entropy heatmap for CADEC**: NOT PRODUCED: outputs/rq3/intermediate/rq3_cadec_perturbations.csv carries no linguistic_category column, so the heatmap's y axis does not exist for CADEC. Nothing was imputed. Stated in the Figure 2 caption.
+- **RQ1 entropy heatmap for BioASQ and SQuAD 2.0**: NOT PRODUCED: the QA perturbation files carry neither linguistic_category nor a per-instance lexical change magnitude. Nothing imputed.
 - **architecture_diagram**: NOT FOUND anywhere under outputs/. The only near match is outputs_archive/outputs_pre_rerun_20260731/rq2/figures/rq2_figure3_architecture_comparison.png, a 31 July pre-rerun archive that MANIFEST.md marks keep-offline. If the manuscript includes an architecture diagram it is authored outside this repository.
 

@@ -35,6 +35,13 @@ so the limitation is discoverable rather than encountered.
 The join's digest is the Amendment 6 grid-complete verification digest recorded in
 `docs/ANALYSIS_PRECOMMIT.md`; it was re-verified on 2026-09-21 and matches.
 
+| `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv` | 11 MB | 27,814 | produced 2026-09-21 by `scripts/build_cadec_linguistic_features.py` from `rq3_cadec_perturbations.csv`, spaCy `en_core_web_sm` v3.7.1, receipt beside it at `.receipt.json` | `.gitignore:44`, `outputs/**/intermediate/` |
+
+That file is the CADEC counterpart of `rq1_linguistic_features.csv` and is excluded by the
+same rule, so both RQ1 heatmap inputs are regenerable rather than carried. The CADEC one
+takes 157 s to rebuild; its receipt records the tagger version, the row-in equals row-out
+check, the join key and the exact per-cell counts.
+
 **To verify without regenerating:** every check in `scripts/verify_reported_numbers.py` that
 does not touch MedMentions runs from committed files alone, as do
 `scripts/make_table_r3.py --check` and `scripts/staleness_sweep_cadec_qa.py`.
