@@ -86,6 +86,25 @@ GRAPH: dict[str, list[str]] = {
 }
 
 
+
+# Artefacts whose mtime flag is EXPECTED and whose content has been resolved another way.
+# mtime detects candidates; only content resolves them (docs/BUG_AUDIT.md 19). An entry here
+# is a claim that someone checked the content and recorded how -- not permission to ignore it.
+# Removing an entry is how you re-open the question.
+EXPECTED_STALE = {
+    "docs/AMENDMENT7_BEFORE_AFTER.md":
+        "Superseded historical record of a comparison made between Amendments 7 and 8. It is "
+        "NOT regenerated: its successor docs/AMENDMENT7_8_BEFORE_AFTER.md is pinned to "
+        "*_PRETIEBREAK and *_A78AFTER snapshots for the same reason (BUG_AUDIT 23). Pointing "
+        "either at the live files would silently restate a different comparison.",
+    "outputs/rq3/tables/threshold_band_rows.csv":
+        "Re-verified 2026-09-21 by recomputing the band from the mapped outputs, not by "
+        "reading the file: all five figures reproduce, nearest_distance 1.3130e-04 -> "
+        "2.5303e-04 (BUG_AUDIT 20). Content current, mtime 2026-09-15.",
+    "outputs/rq3/tables/threshold_band_summary.json":
+        "Same recomputation as threshold_band_rows.csv.",
+}
+
 def mt(p: Path):
     return p.stat().st_mtime if p.exists() else None
 
@@ -96,6 +115,7 @@ def fmt(ts):
 
 def main() -> int:
     rows, stale, missing = [], [], []
+    expected, unexplained = [], []
     for art, ins in GRAPH.items():
         ap = ROOT / art
         a_t = mt(ap)
@@ -133,11 +153,25 @@ def main() -> int:
     print(f"CURRENT           : {sum(1 for r in rows if r[1] == 'CURRENT')}")
     print(f"STALE             : {len(stale)}")
     print(f"MISSING / no input: {sum(1 for r in rows if r[1] in ('MISSING', 'INPUT MISSING'))}")
-    if stale:
-        print("\nSTALE ARTEFACTS:")
-        for art, src, lag in stale:
+    for art, src, lag in stale:
+        (expected if art in EXPECTED_STALE else unexplained).append((art, src, lag))
+
+    if expected:
+        print("\nSTALE BY DESIGN — flagged on mtime, resolved on content:")
+        for art, src, lag in expected:
+            print(f"  {art}\n      newer input: {src}  (by {lag/60:.1f} min)"
+                  f"\n      WHY: {EXPECTED_STALE[art]}")
+    if unexplained:
+        print("\nSTALE, UNEXPLAINED:")
+        for art, src, lag in unexplained:
             print(f"  {art}\n      newer input: {src}  (by {lag/60:.1f} min)")
+        print(f"\n{len(unexplained)} unexplained. Resolve each on CONTENT, then either "
+              f"regenerate it or add it to EXPECTED_STALE with the reason.")
         return 1
+    if expected:
+        print(f"\nNo unexplained staleness. {len(expected)} artefact(s) stale by design, "
+              f"each with a recorded reason above.")
+        return 0
     print("\nNo stale CADEC or QA artefact.")
     return 0
 
