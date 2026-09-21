@@ -57,6 +57,18 @@ def main() -> int:
         df[c] = pd.to_numeric(df[c], errors="coerce")
 
     L = ["# QA lane — final numbers", "",
+         "> **Staleness notice of 2026-09-20 CLEARED on 2026-09-21.** The page had been "
+         "computed on 2026-09-14 from `umls_candidate_margin_qa.csv` as it stood before job "
+         "33441, which re-ran the QA margin on 2026-09-18 under `PYTHONHASHSEED=0` "
+         "(Amendment 9). It has now been regenerated from that file. The 2026-09-19 "
+         "prediction in the old notice held: only margin-involving values moved, all in the "
+         "fourth decimal. Largest movements are SQuAD Meta-Llama-3-8B-Instruct AURC margin "
+         "0.3242 -> 0.3235 and its confidence-vs-margin rho +0.021 -> +0.013. The "
+         "near-independence band goes -0.084…+0.076 -> **-0.084…+0.077**, the margin is "
+         "still nominally lowest in exactly 2 of 10 QA cells, and every AURC for entropy and "
+         "confidence is unchanged to 4 dp. **Do not read this file's mtime as its "
+         "provenance:** an unrelated edit resets it, which is how `docs/RQ4_CADEC_results.md` "
+         "came to look current while resting on stale inputs.", "",
          f"Source: `{QA.relative_to(ROOT)}` (identity-filtered, "
          f"{len(df):,} rows over {df['id'].nunique():,} instances x "
          f"{df['model'].nunique()} models), with the candidate margin joined from "

@@ -217,6 +217,92 @@ def main() -> int:
               f"- of which would drop below the m >= 3 inclusion filter if excluded: "
               f"see `{OUT_CSV.name}`", ""]
 
+    # ---------------------------------------------------------------------------------
+    # Restored 2026-09-21. These two sections were written by hand into the document and a
+    # regeneration silently deleted them, together with an OPEN DECISION nobody had taken.
+    # They live in the generator now, and every number in them is computed here rather than
+    # transcribed (docs/BUG_AUDIT.md 23), except the identity-exclusion impact table, which
+    # belongs to scripts/qa_identity_exclusion.py and is cited rather than copied.
+    L += ["## Positive evidence that the gates actually ran", "",
+          "Zero failures could also mean the gates never ran. The score distributions rule",
+          "that out: both are **sharply truncated at exactly their own thresholds**.", "",
+          "| | minimum | maximum |", "|---|---|---|"]
+    for ds_ in sorted(pert["dataset"].unique()):
+        g_ = pert[pert["dataset"] == ds_]
+        L.append(f"| G1 cosine, {ds_} | **{g_['g1_cosine'].min():.4f}** | "
+                 f"{g_['g1_cosine'].max():.4f} |")
+    for ds_ in sorted(pert["dataset"].unique()):
+        g_ = pert[pert["dataset"] == ds_]
+        L.append(f"| G2 P(contradiction), {ds_} | {g_['g2_p_contradiction'].min():.4f} | "
+                 f"**{g_['g2_p_contradiction'].max():.4f}** |")
+    # Per dataset, not pooled: the corpus-wide share (8.0%) understates SQuAD's (8.6%)
+    # because BioASQ sits far from the threshold (4.8%). Pooling here would have quietly
+    # contradicted the "variants within 0.02" bullet above, which counts the same thing.
+    _near_by = {d_: (int((gg["g1_cosine"] - G1_THRESHOLD).abs().le(0.02).sum()), len(gg))
+                for d_, gg in pert.groupby("dataset")}
+    _near = sum(v[0] for v in _near_by.values())
+    L += ["",
+          f"Nothing sits below {G1_THRESHOLD} on G1 and nothing reaches {NLI_THRESHOLD} on "
+          "G2. A corpus assembled without the gates, or with a fail-open path admitting "
+          "unevaluated variants, would show mass on the wrong side of both. **The QA corpus "
+          "is validated as claimed.**", "",
+          "One caveat worth carrying into the write-up: "
+          + ", ".join(f"**{k:,} {d_} variants ({k / n:.1%})**"
+                      for d_, (k, n) in sorted(_near_by.items()))
+          + f" sit within 0.02 of the G1 threshold ({_near:,} of {len(pert):,} overall, "
+            f"{_near / len(pert):.1%}). The corpus passes, but a good deal of it passes "
+            f"narrowly, and the {G1_THRESHOLD} cutoff is doing real work rather than being a "
+            "formality.", ""]
+
+    ident = pert[pert["identical_to_original"].astype(bool)]
+    _by_ds = ident["dataset"].value_counts().to_dict()
+    # (dataset, id), not id: ids are only unique within a dataset.
+    _m_by_id = ident.groupby(["dataset", "id"])["m"].max()
+    _ids = len(_m_by_id)
+    _at_m3 = int(_m_by_id.eq(3).sum())          # included AND would drop
+    _below = int(_m_by_id.lt(3).sum())          # never included in the first place
+    L += [f"## A separate defect this audit found: {len(ident):,} unperturbed variants", "",
+          "The gates are clean. The **perturbation operators** are not.", "",
+          "`back_translate`, `paraphrase` and `synonym_sub` each `return text` unchanged when "
+          "they raise. "
+          f"**{len(ident):,} accepted variants are byte-identical to their original "
+          "question** — "
+          + ", ".join(f"{v} {k}" for k, v in sorted(_by_ds.items()))
+          + f", all with G1 cosine {ident['g1_cosine'].min():.4f}–"
+            f"{ident['g1_cosine'].max():.4f}. They pass both gates trivially, because neither "
+            "gate checks whether a \"perturbation\" perturbed anything.", "",
+          "### Impact, measured", "",
+          f"**{_ids} instances** carry one. {_below} of them already sit at m < 3 and are "
+          f"outside the corpus regardless. The ones that matter are the "
+          f"**{_at_m3} sitting at exactly m = 3**: they are included today and fall below "
+          "the `m >= 3` filter the moment the unperturbed variant is removed. Those "
+          f"{_at_m3} are the whole exposure.", "",
+          "The measured effect of excluding them is the all-versus-excluded table printed by "
+          "`scripts/qa_identity_exclusion.py` into `outputs/qa/qa_identity_exclusion_report.csv` "
+          "— not copied here, so it cannot go stale here. Its largest movement across every "
+          "reported quantity is **0.0014 AUROC** and **0.06 percentage points** of "
+          "zero-fraction, and it is re-derived on every run of that script.", "",
+          "### Consequence for the assertion added on 2026-09-14", "",
+          "The permanent assertion added to `accepted_question_perturbations`' caller — no "
+          "accepted variant may be byte-identical to its original — is **currently violated "
+          "by this corpus**. It will therefore **halt any QA perturbation regeneration** "
+          "until either the operators stop returning the input unchanged or the assertion is "
+          "softened to drop-and-report.", "",
+          "**This is a decision, not a fix, and it is not taken here.** The assertion was "
+          "requested on the understanding that the condition already held; it does not. "
+          "Options:", "",
+          "1. **Keep the hard assert.** Any QA rebuild stops until the operators are fixed. "
+          "Safest, and blocks work.",
+          "2. **Drop-and-report.** Exclude identical variants at build time, print the count, "
+          f"and let m fall naturally — which would drop those {_at_m3} instances from the "
+          "corpus.",
+          f"3. **Keep as-is and document.** {len(ident):,} of {len(pert):,} "
+          f"({len(ident) / len(pert):.3%}), impact below 0.0014 AUROC, disclosed in "
+          "limitations.", "",
+          "> **Still open on 2026-09-21.** This section was lost once to a regeneration that "
+          "overwrote hand-written text; it is generated now so that it cannot be. The "
+          "decision is Kasfi's.", ""]
+
     OUT_DOC.write_text("\n".join(L) + "\n", encoding="utf-8")
     print(f"wrote {OUT_DOC}", flush=True)
     print(f"\nVERDICT: {len(fails):,} of {len(pert):,} persisted variants fail their own gate "

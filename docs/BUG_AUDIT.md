@@ -2873,3 +2873,65 @@ uses the **normal** critical value, not t(7). With the normal value it reproduce
 [+0.194, +0.491] exactly on the regenerated data; with t(7) it would be [+0.160, +0.517]. The
 page was right and my first recomputation was wrong, which is the reason a verifier compares
 against the convention the document uses rather than the one the checker assumes.
+
+---
+
+## 25. Regenerating a document deleted an open decision
+
+Applying remedy 24 to the QA lane, I re-ran `scripts/qa_gate_failopen_audit.py`. One
+percentile moved in the fourth decimal — and **two whole sections disappeared**, about 45
+lines, including:
+
+- *Positive evidence that the gates actually ran* — the argument that zero gate failures is
+  not vacuous, resting on both score distributions being sharply truncated at their own
+  thresholds. Without it, "0 of 20,956 fail" is equally consistent with the gates never
+  having run.
+- *A separate defect this audit found: 26 unperturbed variants* — and inside it, an
+  **open decision** on whether the 2026-09-14 assertion should stay hard, become
+  drop-and-report, or be documented as a limitation. That assertion currently **halts any QA
+  perturbation regeneration**.
+
+Both were written into the document by hand. The generator has always rewritten the file
+whole. Every run since would have deleted them; this was simply the first run since they were
+added. Nothing warned, because from the generator's point of view nothing was lost — it wrote
+exactly what it has always written.
+
+This is the fourth shape of the same underlying fault in one session, and the one with real
+consequences: 23 was prose the generator would not refresh, 24 was prose the regeneration
+made stale, and this is prose the regeneration **removed**. A stale number misleads a reader.
+A deleted open decision means nobody is ever reminded to take it.
+
+### What the restoration turned up
+
+Both sections are now generated, with every number computed (`docs/BUG_AUDIT.md` 23), and
+that immediately caught two things the hand-written version had right and my first
+computation did not:
+
+- **"1,542 SQuAD 2.0 variants (8.6%)"** is per dataset. Pooled it is 1,685 of 20,956 (8.0%),
+  because BioASQ sits far from the threshold (143, 4.8%). Printing the pooled figure would
+  have contradicted the *"variants within 0.02 of the G1 threshold: 1,542"* bullet three
+  lines above it, which counts the same thing on the SQuAD frame. It now prints both.
+- **"8 of 2,128 included instances"** is not the number of instances carrying an unperturbed
+  variant. 26 ids carry one; 18 of those are already at m < 3 and outside the corpus. The 8 at
+  exactly m = 3 are the ones that are included today and would drop. The hand-written figure
+  was right and my `nunique()` was wrong.
+
+The identity-exclusion impact table is **cited, not copied** — it belongs to
+`scripts/qa_identity_exclusion.py` and is re-derived on every run of that script, so it cannot
+go stale inside this document.
+
+**Remedy 25.** Before regenerating any document, diff the current file against what the
+generator produces and look for *deletions*, not only changed numbers. Hand-written content
+found that way goes into the generator, never back into the file. An open decision is
+load-bearing content: it must be generated, dated, and carry who owns it.
+
+### Unrelated, resolved on the way
+
+`outputs/qa/qa_identity_exclusion_report.csv` and
+`outputs/qa/qa_results_combined_identity_filtered.csv` regenerate **byte-identical**. Their
+staleness flag was pure mtime noise. `docs/QA_results.md` did move, exactly as its own
+2026-09-19 notice predicted: margin-involving values only, all in the fourth decimal, largest
+SQuAD Meta-Llama-3-8B-Instruct AURC margin 0.3242 → 0.3235. Near-independence band
+−0.084…+0.076 → −0.084…+0.077; margin still nominally lowest in exactly 2 of 10 QA cells;
+every entropy and confidence AURC unchanged to 4 dp. That notice is now cleared inside the
+generator rather than hand-added to the page it describes.
