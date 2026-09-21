@@ -224,7 +224,22 @@ def main() -> int:
                 L.append(f"- source artefact: `{a}` **MISSING**")
         L += [f"- output sha256: `{sha(png)}`", f"- output mtime: {ts(png)}", ""]
 
-    L += ["## Statistics on the figures, and how they relate to the manuscript tables", "",
+    pm = sorted((DEST / "per_model").glob("*.png"))
+    _fam = {}
+    for f in pm:
+        _fam.setdefault("magnitude-against-entropy scatter" if "magnitude_vs_entropy" in f.name
+                        else "entropy heatmap", []).append(f.name)
+    L += ["## Per-model figures", "",
+          f"`figures_for_report/per_model/` holds **{len(pm)}** standalone files, one per "
+          f"corpus and model, named `<figure>_<corpus>_<model>.png`, listed as a group "
+          f"rather than one entry each. Each is drawn in that model's fixed roster colour "
+          f"with the model legend dropped. The heatmap colour scale is shared across every "
+          f"model of a corpus and with that corpus's pooled and by-model figures.", ""]
+    for k, v in sorted(_fam.items()):
+        L.append(f"- **{k}**: {len(v)} files")
+    L += ["", "Captions for the whole family, including this group, are in "
+          "`figures_for_report/captions.md`.", "",
+          "## Statistics on the figures, and how they relate to the manuscript tables", "",
           "**Figure 3 carries the manuscript table's own statistic, verbatim.** `|rho|` is "
           "Spearman(entropy, BINARY error), where error = 1 when the instance-level accuracy "
           "is below 0.5, read from the same `spearman_entropy_vs_error` column the table "

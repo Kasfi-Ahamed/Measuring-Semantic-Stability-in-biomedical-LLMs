@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 15:44 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 15:46 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -239,6 +239,15 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - output sha256: `5c8e1b55b6a3178e645490bdc348297c9edcb93d6b21bd9b0a35aa028e806914`
 - output mtime: 2026-09-21 15:25
+
+## Per-model figures
+
+`figures_for_report/per_model/` holds **32** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`, listed as a group rather than one entry each. Each is drawn in that model's fixed roster colour with the model legend dropped. The heatmap colour scale is shared across every model of a corpus and with that corpus's pooled and by-model figures.
+
+- **entropy heatmap**: 16 files
+- **magnitude-against-entropy scatter**: 16 files
+
+Captions for the whole family, including this group, are in `figures_for_report/captions.md`.
 
 ## Statistics on the figures, and how they relate to the manuscript tables
 
