@@ -1,0 +1,109 @@
+{
+  "figure": "fig_signal_independence_cadec.png",
+  "dataset": "CADEC",
+  "generated_utc": "2026-09-21T00:52:09.699502+00:00",
+  "source": "outputs/rq3/umls_candidate_margin_cadec.csv",
+  "source_sha256": "534c64929f7996aca30b4b7c0091184839fd1f5263008bf352ca10dbb008d23d",
+  "signal_pairs": [
+    "confidence vs entropy",
+    "confidence vs margin",
+    "entropy vs margin"
+  ],
+  "models_shown": [
+    "BERT-base",
+    "BioBERT",
+    "BioMistral-7B",
+    "FLAN-T5-base",
+    "Llama3-OpenBioLLM-8B",
+    "Meta-Llama-3-8B-Instruct",
+    "Mistral-7B-Instruct-v0.1",
+    "PubMedBERT"
+  ],
+  "models_omitted": [],
+  "omission_reason": null,
+  "total_rows": 37696,
+  "rho": {
+    "BERT-base": {
+      "confidence vs entropy": -0.4989,
+      "confidence vs margin": -0.1891,
+      "entropy vs margin": 0.3125
+    },
+    "BioBERT": {
+      "confidence vs entropy": -0.524,
+      "confidence vs margin": -0.3003,
+      "entropy vs margin": 0.3488
+    },
+    "BioMistral-7B": {
+      "confidence vs entropy": -0.058,
+      "confidence vs margin": 0.0683,
+      "entropy vs margin": -0.0832
+    },
+    "FLAN-T5-base": {
+      "confidence vs entropy": -0.1971,
+      "confidence vs margin": 0.1217,
+      "entropy vs margin": 0.0045
+    },
+    "Llama3-OpenBioLLM-8B": {
+      "confidence vs entropy": -0.0869,
+      "confidence vs margin": 0.0054,
+      "entropy vs margin": 0.0289
+    },
+    "Meta-Llama-3-8B-Instruct": {
+      "confidence vs entropy": -0.092,
+      "confidence vs margin": 0.0303,
+      "entropy vs margin": 0.0553
+    },
+    "Mistral-7B-Instruct-v0.1": {
+      "confidence vs entropy": -0.0537,
+      "confidence vs margin": 0.059,
+      "entropy vs margin": -0.0434
+    },
+    "PubMedBERT": {
+      "confidence vs entropy": -0.5828,
+      "confidence vs margin": -0.3597,
+      "entropy vs margin": 0.341
+    }
+  },
+  "n_pairwise_complete": {
+    "BERT-base": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    },
+    "BioBERT": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    },
+    "BioMistral-7B": {
+      "confidence vs entropy": 4711,
+      "confidence vs margin": 4711,
+      "entropy vs margin": 4711
+    },
+    "FLAN-T5-base": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    },
+    "Llama3-OpenBioLLM-8B": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    },
+    "Meta-Llama-3-8B-Instruct": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    },
+    "Mistral-7B-Instruct-v0.1": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    },
+    "PubMedBERT": {
+      "confidence vs entropy": 4712,
+      "confidence vs margin": 4712,
+      "entropy vs margin": 4712
+    }
+  }
+}
