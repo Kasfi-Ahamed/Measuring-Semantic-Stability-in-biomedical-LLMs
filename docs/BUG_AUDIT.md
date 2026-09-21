@@ -2562,3 +2562,76 @@ to hold, but the flag's help was one line away and I did not look.
 the help of every flag you pass, not the summary at the top. And a tool that can overwrite a
 reported artefact needs a dry run that names the files — the safety belongs in the tool, not
 in the care of the person invoking it.
+
+---
+
+## 19. The zero-block paragraph was one vintage old, and it is not alone
+
+**2026-09-21.** The CADEC zero-entropy-block paragraph — the evidence that the margin does not
+rank where entropy cannot, and the load-bearing half of Contribution 3 — was written from
+`outputs/rq3/umls_candidate_margin_cadec_PREEMPTYFIX.csv`, dated **2026-09-14**, before
+Amendment 7 was enforced in code.
+
+**Twelve of its fourteen stated values reproduce on that vintage and not on the current one.**
+Block rows 16,083 against 16,093; confidence distinct values 274 against 277; pooled AUROC
+0.5046 against 0.5040; its p 0.3144 against 0.3854. Nothing flagged it for a week **because
+the numbers barely moved** — a 0.0006 change in a pooled AUROC is invisible.
+
+Two reproduce on neither vintage: the margin's distinct-value count, stated as 4,194 when
+every artefact and both block definitions give 4,210-4,230, and the minimum encoder
+confidence AUROC, stated as 0.577 against 0.5792 current / 0.5764 pre-fix.
+
+Recomputed by `scripts/recompute_zero_block_cadec.py` into
+`outputs/rq3/cadec_zero_block_margin_audit{,_claims}.csv`.
+
+### The generalisation: the boundary is the rebuild, not the amendment
+
+Amendment 7 was **recorded** 2026-09-15 but was a patched artefact until commit `48cc10d`
+(2026-09-17 12:30) enforced it in CADEC's assign path. The chain was then rebuilt: mapped
+outputs 14:37, entropy 14:38, margin 2026-09-18 02:06. **Dating staleness from the
+amendment's recording date instead of the rebuild clears four artefacts that are in fact
+pre-fix.**
+
+`scripts/audit_cadec_vintages.py` enumerates them. Of 102 CADEC/rq3 artefacts, 71 predate the
+rebuild. Most are legitimately older — the instance list, the perturbations and the raw
+per-model generations are *inputs* to the assign path, and the script excludes them by name
+rather than reporting a 47-item list nobody reads. `ARTEFACT_INVENTORY.csv` is likewise
+excluded as a citation, since an inventory is supposed to name everything.
+
+**What remains: eleven CADEC analysis outputs older than the entropy they derive from.**
+
+| artefact | mtime | reached by |
+|---|---|---|
+| `rq2_dissociation_summary.csv` | 2026-09-15 18:09 | **a primary reported result**; CUTOFF_RUNBOOK, RQ2 notebook |
+| `rq2_dissociation_summary_rawm.csv` | 2026-09-15 18:10 | SUPPLEMENTARY S1 |
+| `rq1_linguistic_predictors_summary_rawm.csv` | 2026-09-15 19:26 | SUPPLEMENTARY S1 |
+| `rq4_signal_independence_cadec.csv` | 2026-09-14 09:48 | `signal_independence_stats.py` |
+| `tables/threshold_band_rows.csv` | 2026-09-15 20:55 | SUPPLEMENTARY, WORKLOG |
+| `tables/threshold_band_summary.json` | 2026-09-15 20:55 | SUPPLEMENTARY, WORKLOG |
+| `tables/threshold_band_closest50.csv` | 2026-09-15 20:55 | SUPPLEMENTARY |
+| `rq3_matched_pair_statistics.csv` (unsuffixed) | 2026-09-13 22:20 | ANALYSIS_PRECOMMIT, BUG_AUDIT, RQ3_Report — superseded by the `_cadec` file (09-17 18:52) but still cited |
+| `rq4_aurc_summary.csv` | 2026-08-02 10:57 | **read by the live `RQ4_four_dataset_figures.ipynb`** |
+| `rq4_aurc_bootstrap_ci_cadec.csv` | 2026-09-15 18:24 | see below |
+| `rq4_combined3_wintest_cadec.csv` | 2026-09-15 18:24 | see below |
+| `rq4_risk_coverage_operating_points_cadec.csv` | 2026-09-15 18:24 | SUPPLEMENTARY S8 until repointed today |
+
+Clean: RQ1 predictors (primary) and RQ3 matched pairs (CADEC) were both rebuilt 2026-09-17
+evening, and the whole new RQ4 chain is 2026-09-21.
+
+### A trap I created while fixing 18
+
+The last three rows above were the files the calibration script overwrote and I restored with
+`git restore --source=HEAD`. **That restores content and sets mtime to now.** For two hours
+those three files had an mtime of 2026-09-21 10:58 and content from 2026-09-15 — so the first
+run of this very audit reported them as `ok`, and an mtime-based sweep would have cleared
+them permanently. Their mtimes are reset to the commit that last changed their content
+(2026-09-15 18:24) with `touch -t`.
+
+This is the runbook's own rule arriving from the other direction: mtime detects candidates and
+only content resolves them — but a *recovery* can make mtime claim freshness that content does
+not have, which is worse than mtime merely being noisy.
+
+**Remedy 19.** Date staleness from the rebuild that changed the data, not from the amendment
+that authorised it; those differ here by two days and four artefacts. Separate inputs from
+derived outputs before reporting, or the finding drowns. And after any `git restore` of a
+data artefact, reset its mtime to the commit that produced the content.
