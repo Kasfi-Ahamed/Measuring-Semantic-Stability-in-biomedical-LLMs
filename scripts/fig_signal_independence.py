@@ -146,8 +146,11 @@ def main() -> int:
     c = CFG[sys.argv[1]]
     assert_fresh(c["chain"])
     df = pd.read_csv(c["path"], low_memory=False)
+    n_file = len(df)
     if c.get("keep"):
         df = df[df[c["keep"]].astype(bool)].copy()
+    # The GRID is rows passing the retention rule, which is what Table 1 calls the grid.
+    n_grid = len(df)
     # Join AFTER the inclusion filter, so the reported match rate is over the rows actually
     # plotted. Joining first reported 15.79% -- which was simply the included fraction of the
     # file, not a join failure, and read like one.
@@ -176,10 +179,17 @@ def main() -> int:
     assert models, "every model was omitted"
     S.assert_row_order(models, context=f"signal independence rows/{c['label']}")
 
+    # THE FRAME IS NARROWED TO THE MODELS ACTUALLY DRAWN. Previously only the `models`
+    # LIST was narrowed and `df` still held all eight, so the header counted rows that no
+    # panel plotted: 1,020,784 against roughly 638,000 drawn on the five generatives.
+    df = df[df[mcol].isin(models)].copy()
+    n_plotted = len(df)
+
     print(f"dataset      : {c['label']}")
     print(f"input        : {c['path'].name}  ({ts(c['path'])})")
     print(f"signals      : {sorted(present)}")
-    print(f"rows         : {len(df):,}   models: {len(models)}")
+    print(f"rows         : {n_file:,} in file, {n_grid:,} grid, {n_plotted:,} plotted "
+          f"across {len(models)} model(s)")
     print("\nSpearman rho per model and signal pair (n is pairwise complete):")
 
     grid = np.full((len(models), len(pairs)), np.nan)
@@ -210,11 +220,22 @@ def main() -> int:
     fig.colorbar(im, ax=ax, label="Spearman rho")
     _t = S.title_line("RQ4: signal independence", c["label"])
     ax.set_title(_t, fontsize=12)
-    S.emit_caption(c["out"].name, title=_t, n=f"n = {len(df):,} analysed rows",
+    # HEADER ASSERTION. The count the caption states must BE the rows the panels plotted.
+    # This is the check I said was in place two rounds ago and had not in fact been added.
+    _drawn = int(sum((df[mcol] == m).sum() for m in models))
+    if _drawn != n_plotted:
+        raise SystemExit(
+            f"header count {n_plotted:,} is not the rows plotted {_drawn:,}; the frame and "
+            f"the drawn model list disagree")
+    _reason = ("drawn, after omitting " + ", ".join(_omit)) if _omit else "drawn"
+    S.emit_caption(c["out"].name, title=_t, n=S.grid_clause(n_grid, n_plotted, _reason),
                    models=f"{len(models)} models, roster order",
                    notes=(["Models omitted: " + ", ".join(_omit) + ". " + c["omit_reason"]]
                           if _omit else [])
-                         + ["Cells are Spearman rho between the two named signals, computed "
+                         + [f"Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; "
+                            f"the maximum over cells is {int(ns.max()):,}. Every cell's n is "
+                            f"in the .notes.json sidecar.",
+                            "Cells are Spearman rho between the two named signals, computed "
                             "per model over that model's analysed rows.",
                             "Every rho and n is also written to the .notes.json sidecar "
                             "beside the figure, so a caption can quote a cell without "
@@ -239,7 +260,9 @@ def main() -> int:
         "models_shown": models,
         "models_omitted": _omit,
         "omission_reason": c.get("omit_reason") if _omit else None,
-        "total_rows": int(len(df)),
+        "rows_in_file": int(n_file),
+        "rows_grid": int(n_grid),
+        "rows_plotted": int(n_plotted),
         "rho": {m: {f"{a} vs {b}": (None if not np.isfinite(grid[i, j]) else round(float(grid[i, j]), 4))
                     for j, (a, b) in enumerate(pairs)}
                 for i, m in enumerate(models)},

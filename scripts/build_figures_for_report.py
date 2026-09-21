@@ -37,6 +37,12 @@ FIGS = [
      "scripts/fig_report_rq1.py scatter-cadec",
      [ROOT/"outputs/rq3/entropy_cadec.csv", ROOT/"outputs/rq3/intermediate/rq3_cadec_perturbations.csv"],
      "8 models", "CADEC"),
+    ("Figure 1c", "rq1_magnitude_vs_entropy_qa",
+     ROOT/"outputs/qa/figures/rq1_magnitude_vs_entropy_qa.png",
+     "scripts/fig_report_rq1.py scatter-qa",
+     [ROOT/"outputs/qa/qa_results_combined_identity_filtered.csv",
+      ROOT/"outputs/qa/qa_gate_recheck.csv"],
+     "5 models", "BioASQ and SQuAD 2.0"),
     ("Figure 1b", "rq1_magnitude_vs_entropy_medmentions",
      ROOT/"outputs/rq1/figures/rq1_magnitude_vs_entropy_medmentions.png",
      "scripts/fig_report_rq1.py scatter-medmentions",
@@ -169,6 +175,15 @@ NOT_DONE = [
     ("Figure 6 (pilot rq3_figure3_pair2_largescale)",
      "DROPPED by decision: a two-model subset of Figure 5, and its r was computed over two "
      "points, which the house rule forbids. Figure 5 with CADEC supersedes it."),
+    ("RQ1 magnitude scatter for BioASQ and SQuAD 2.0",
+     "NOW PRODUCED. The magnitude was never persisted by the QA gate, which computed it "
+     "inline and discarded it, so it is RECOMPUTED. The recomputation is exact, not "
+     "approximate: the QA notebook's levenshtein_norm and the concept lane's "
+     "norm_levenshtein agree to 0.00e+00 on the same inputs, and the concept lane's stored "
+     "g5_edit_distance matches Levenshtein.distance / max(len) to 9.71e-17, so both lanes "
+     "are character-level Levenshtein over raw strings with denominator max(len(a), "
+     "len(b)), no lowercasing and no whitespace normalisation. Drawn on the same axes as "
+     "the other two."),
     ("RQ1 entropy heatmap for BioASQ and SQuAD 2.0",
      "NOT PRODUCED: the QA perturbation files carry neither linguistic_category nor a "
      "per-instance lexical change magnitude. Nothing imputed."),

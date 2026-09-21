@@ -1,7 +1,7 @@
 {
   "figure": "fig_signal_independence_medmentions.png",
   "dataset": "MedMentions",
-  "generated_utc": "2026-09-21T05:25:20.896731+00:00",
+  "generated_utc": "2026-09-21T05:52:20.871942+00:00",
   "source": "outputs/rq1/umls_candidate_margin_medmentions.csv",
   "source_sha256": "1397266faccbaa08d46013a002560d54aa655fb75392bf0f11ebd65d0659760d",
   "signal_pairs": [
@@ -22,7 +22,9 @@
     "PubMedBERT"
   ],
   "omission_reason": "MedMentions encoders (BERT-base, BioBERT, PubMedBERT) are omitted: they are direct-CUI, so mapping confidence is constant 1.0 and the correlation is undefined, and their UMLS margins are the input-mention-span gap rather than a model-uncertainty axis and were excluded from the margin benchmark. The panel shows the five generative models.",
-  "total_rows": 1020784,
+  "rows_in_file": 1020784,
+  "rows_grid": 1020784,
+  "rows_plotted": 637990,
   "rho": {
     "FLAN-T5-base": {
       "confidence vs entropy": -0.0982,

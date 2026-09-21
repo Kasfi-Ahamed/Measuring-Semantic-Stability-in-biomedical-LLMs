@@ -37,6 +37,7 @@ PER_MODEL = DEST / "per_model"
 MIN_CELL = 3
 
 SCATTER_OK = {
+    "BioASQ and SQuAD 2.0": dict(qa=True, out_dir=ROOT / "outputs/qa/figures", slug="qa"),
     "CADEC": dict(entropy=ROOT / "outputs/rq3/entropy_cadec.csv",
                   out_dir=ROOT / "outputs/rq3/figures", slug="cadec"),
     "MedMentions": dict(entropy=ROOT / "outputs/rq1/entropy_full_umls.csv",
@@ -51,12 +52,6 @@ HEATMAP_OK = {
                   out_dir=ROOT / "outputs/rq3/figures", slug="cadec"),
 }
 NO_INPUT = {
-    ("scatter", "BioASQ"): "no per-instance lexical change magnitude: "
-                           "outputs/qa/intermediate/qa_question_perturbations_bioasq.csv "
-                           "carries only id, dataset, pert_idx, pert_question, m",
-    ("scatter", "SQuAD 2.0"): "no per-instance lexical change magnitude: "
-                              "outputs/qa/intermediate/qa_question_perturbations_squad2.csv "
-                              "carries only id, dataset, pert_idx, pert_question, m",
     ("heatmap", "BioASQ"): "no linguistic_category in the QA perturbation files",
     ("heatmap", "SQuAD 2.0"): "no linguistic_category in the QA perturbation files",
 }
@@ -66,8 +61,41 @@ def _slug(m):
     return m.replace("/", "-").replace(" ", "-")
 
 
+def _qa_scatter_frame():
+    """QA magnitude, RECOMPUTED with the definition proven identical to the concept lane.
+
+    The QA gate computed G5 inline in accepted_question_perturbations and never persisted
+    it, so there is no stored value to read. Recomputation is EXACT, not approximate: the
+    QA notebook's levenshtein_norm and the concept lane's norm_levenshtein agree to
+    0.00e+00 on the same inputs, and the concept lane's stored g5_edit_distance matches
+    Levenshtein.distance / max(len) to 9.71e-17, so both lanes are character-level
+    Levenshtein over the raw strings with denominator max(len(a), len(b)), no lowercasing
+    and no whitespace normalisation.
+    """
+    import Levenshtein
+    g = pd.read_csv(ROOT / "outputs/qa/qa_gate_recheck.csv", low_memory=False,
+                    usecols=["dataset", "id", "orig_question", "pert_question"])
+    g["mag"] = [Levenshtein.distance(str(a), str(b)) / max(len(str(a)), len(str(b)), 1)
+                for a, b in zip(g["orig_question"], g["pert_question"])]
+    feat = (g.groupby(["dataset", "id"])["mag"].mean()
+            .rename("lexical_change_magnitude").reset_index())
+    q = pd.read_csv(ROOT / "outputs/qa/qa_results_combined_identity_filtered.csv",
+                    low_memory=False)
+    q = q[q["included"].astype(bool)].copy()
+    n_grid = len(q)
+    q["H"] = pd.to_numeric(q["norm_entropy"], errors="coerce")
+    q = q.dropna(subset=["H"]).rename(columns={"model": "model_name"})
+    df = q.merge(feat, on=["dataset", "id"], how="inner")
+    assert len(df) == len(q), f"QA join dropped rows: {len(q):,} -> {len(df):,}"
+    df["model_name"] = S.normalise_models(df["model_name"])
+    return df, n_grid
+
+
 def load_scatter(corpus):
     c = SCATTER_OK[corpus]
+    if c.get("qa"):
+        df, n_grid = _qa_scatter_frame()
+        return df, n_grid, c
     ent = pd.read_csv(c["entropy"], low_memory=False,
                       usecols=["instance_id", "model_name", "normalised_entropy_dedup",
                                "retained_m_distinct"])
@@ -121,7 +149,7 @@ def _scatter_axes(axes, sub_all, sub_nz, colour_of, models):
 
 def scatter(corpus) -> int:
     df, n_grid, c = load_scatter(corpus)
-    S.assert_model_map(df["model_name"], allow_subset=False, context=f"rq1 scatter/{corpus}")
+    S.assert_model_map(df["model_name"], allow_subset=True, context=f"rq1 scatter/{corpus}")
     models = S.ordered(df["model_name"])
     print(f"{corpus}: {n_grid:,} grid, {len(df):,} drawn, {len(models)} models")
 
@@ -346,6 +374,8 @@ if __name__ == "__main__":
         raise SystemExit(scatter("CADEC"))
     if a == "scatter-medmentions":
         raise SystemExit(scatter("MedMentions"))
+    if a == "scatter-qa":
+        raise SystemExit(scatter("BioASQ and SQuAD 2.0"))
     if a == "heatmap-medmentions":
         raise SystemExit(heatmap("MedMentions"))
     if a == "heatmap-cadec":

@@ -208,7 +208,7 @@ def main() -> int:
     S.save_png(fig, c["out"])
     plt.close(fig)
     R.to_csv(c["out"].with_suffix(".csv"), index=False)
-    print(f"\nwrote {c['out']}\nwrote {c['out'].with_suffix('.pdf')}\n"
+    print(f"\nwrote {c['out']}\n"
           f"wrote {c['out'].with_suffix('.csv')}")
     return 0
 

@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 15:46 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 15:54 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -39,6 +39,17 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_perturbations.csv`  sha256 `2f20fd0c9663dffe`  rows 55,976  mtime 2026-09-03 02:24
 - output sha256: `4beec95c8c44434045d626b1406e8eb7daea8872d057a14eeedb0fff12a4e258`
 - output mtime: 2026-09-21 15:23
+
+### Figure 1c
+
+- filename: `rq1_magnitude_vs_entropy_qa.png`  (PNG, 300 dpi. This family emits no PDF.)
+- producer: `scripts/fig_report_rq1.py scatter-qa`
+- model set: 5 models
+- corpus: BioASQ and SQuAD 2.0
+- source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
+- source artefact: `outputs/qa/qa_gate_recheck.csv`  sha256 `eff80f9c02c09113`  rows 20,956  mtime 2026-09-21 11:56
+- output sha256: `333d790e1974e6b1c6bc4bbd98f863255e58b29c95d5b995fb3434debb27a08b`
+- output mtime: 2026-09-21 15:53
 
 ### Figure 1b
 
@@ -104,7 +115,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_mapped_outputs.csv`  sha256 `c488fbf8ae56a721`  rows 239,680  mtime 2026-09-17 14:37
 - output sha256: `4f2d9a2ac851edcd22472576e8dd81b56e6186157a6b45f12e8c870b7743eff0`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:54
 
 ### Figure 3b
 
@@ -127,7 +138,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - output sha256: `a1d6fa13472bf9b3dbfbd87bd20566bc671bad806ad12405604b742303ac4799`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:54
 
 ### RQ4 risk-coverage, CADEC
 
@@ -137,7 +148,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
 - output sha256: `aa19aba2ef9df53ace0d657a402401f2f2aa7f397087249de9a4bc5b58c2f78f`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:54
 
 ### RQ4 risk-coverage, MedMentions
 
@@ -147,7 +158,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
 - output sha256: `5bbd1f55ebda4d2c4c16120fb86067a468f68c266792375abba22bfad30e2edf`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:52
 
 ### RQ4 risk-coverage, QA
 
@@ -158,7 +169,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/umls_candidate_margin_qa.csv`  sha256 `fd286f193e894733`  rows 10,640  mtime 2026-09-21 01:27
 - output sha256: `33ada410531652cebb8b7e17566246bf4534f93b536fd4c2a717a6b91f1ae922`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:54
 
 ### RQ2 dissociation, CADEC
 
@@ -188,7 +199,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
 - output sha256: `a1b14b39d84729462a791619070ac28b0690f2af1cdb057c1337340bd76ab7ac`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:52
 
 ### Signal independence, MedMentions
 
@@ -198,7 +209,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
 - output sha256: `948ce168d7c23ca1c3381afc7f4b71d6c3156f85bb195f8ec3213eff45fe46a2`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:52
 
 ### Signal independence, QA
 
@@ -208,7 +219,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - output sha256: `e97384e7c84d5a26465bcd8b33685fa20127c64e941672f389c06c28b705be08`
-- output mtime: 2026-09-21 15:25
+- output mtime: 2026-09-21 15:52
 
 ### Entropy distribution, CADEC
 
@@ -242,10 +253,10 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ## Per-model figures
 
-`figures_for_report/per_model/` holds **32** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`, listed as a group rather than one entry each. Each is drawn in that model's fixed roster colour with the model legend dropped. The heatmap colour scale is shared across every model of a corpus and with that corpus's pooled and by-model figures.
+`figures_for_report/per_model/` holds **37** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`, listed as a group rather than one entry each. Each is drawn in that model's fixed roster colour with the model legend dropped. The heatmap colour scale is shared across every model of a corpus and with that corpus's pooled and by-model figures.
 
 - **entropy heatmap**: 16 files
-- **magnitude-against-entropy scatter**: 16 files
+- **magnitude-against-entropy scatter**: 21 files
 
 Captions for the whole family, including this group, are in `figures_for_report/captions.md`.
 
@@ -298,6 +309,7 @@ Scale: **11 rows of 758,969** on MedMentions, three distinct tokens, all synonym
 
 - **Figure 4 (pilot rq2_figure4_dissociation_summary)**: DROPPED by decision: merged into Figure 3, which now prints each model's own rank-biserial r and |Spearman rho| above its bar pair.
 - **Figure 6 (pilot rq3_figure3_pair2_largescale)**: DROPPED by decision: a two-model subset of Figure 5, and its r was computed over two points, which the house rule forbids. Figure 5 with CADEC supersedes it.
+- **RQ1 magnitude scatter for BioASQ and SQuAD 2.0**: NOW PRODUCED. The magnitude was never persisted by the QA gate, which computed it inline and discarded it, so it is RECOMPUTED. The recomputation is exact, not approximate: the QA notebook's levenshtein_norm and the concept lane's norm_levenshtein agree to 0.00e+00 on the same inputs, and the concept lane's stored g5_edit_distance matches Levenshtein.distance / max(len) to 9.71e-17, so both lanes are character-level Levenshtein over raw strings with denominator max(len(a), len(b)), no lowercasing and no whitespace normalisation. Drawn on the same axes as the other two.
 - **RQ1 entropy heatmap for BioASQ and SQuAD 2.0**: NOT PRODUCED: the QA perturbation files carry neither linguistic_category nor a per-instance lexical change magnitude. Nothing imputed.
 - **architecture_diagram**: NOT FOUND anywhere under outputs/. The only near match is outputs_archive/outputs_pre_rerun_20260731/rq2/figures/rq2_figure3_architecture_comparison.png, a 31 July pre-rerun archive that MANIFEST.md marks keep-offline. If the manuscript includes an architecture diagram it is authored outside this repository.
 

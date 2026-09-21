@@ -17,24 +17,6 @@
   ],
   "title": "NOT PRODUCED: RQ1 heatmap, SQuAD 2.0"
  },
- "__missing__scatter_BioASQ": {
-  "group": "missing input",
-  "models": null,
-  "n": null,
-  "notes": [
-   "no per-instance lexical change magnitude: outputs/qa/intermediate/qa_question_perturbations_bioasq.csv carries only id, dataset, pert_idx, pert_question, m"
-  ],
-  "title": "NOT PRODUCED: RQ1 scatter, BioASQ"
- },
- "__missing__scatter_SQuAD 2.0": {
-  "group": "missing input",
-  "models": null,
-  "n": null,
-  "notes": [
-   "no per-instance lexical change magnitude: outputs/qa/intermediate/qa_question_perturbations_squad2.csv carries only id, dataset, pert_idx, pert_question, m"
-  ],
-  "title": "NOT PRODUCED: RQ1 scatter, SQuAD 2.0"
- },
  "fig_entropy_distribution_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
@@ -68,7 +50,7 @@
  "fig_risk_coverage_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 37,696 analysed rows",
+  "n": "n = 37,696 grid rows, all drawn",
   "notes": [
    "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
    "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
@@ -78,7 +60,7 @@
  "fig_risk_coverage_medmentions.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 1,020,784 analysed rows",
+  "n": "n = 1,020,784 grid rows, all drawn",
   "notes": [
    "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
    "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure.",
@@ -89,7 +71,7 @@
  "fig_risk_coverage_qa.png": {
   "group": null,
   "models": "5 models, roster order",
-  "n": "n = 10,600 analysed rows",
+  "n": "n = 10,600 grid rows, all drawn",
   "notes": [
    "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
    "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
@@ -99,7 +81,7 @@
  "fig_rq2_accuracy_split_entropy_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)",
+  "n": "n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)",
   "notes": [
    "Bars separate for BERT-base, BioBERT, PubMedBERT; they do not for the remaining 5.",
    "SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), the same statistic and column the manuscript table reports, so higher entropy with more error is positive. r(rb) contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error. A star marks a value clearing the pre-registered 0.30.",
@@ -123,8 +105,9 @@
  "fig_signal_independence_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 37,696 analysed rows",
+  "n": "n = 37,696 grid rows, all drawn",
   "notes": [
+   "Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; the maximum over cells is 4,712. Every cell's n is in the .notes.json sidecar.",
    "Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.",
    "Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image."
   ],
@@ -133,9 +116,10 @@
  "fig_signal_independence_medmentions.png": {
   "group": null,
   "models": "5 models, roster order",
-  "n": "n = 1,020,784 analysed rows",
+  "n": "n = 1,020,784 grid rows, 637,990 drawn, after omitting BERT-base, BioBERT, PubMedBERT (382,794 rows not drawn)",
   "notes": [
    "Models omitted: BERT-base, BioBERT, PubMedBERT. MedMentions encoders (BERT-base, BioBERT, PubMedBERT) are omitted: they are direct-CUI, so mapping confidence is constant 1.0 and the correlation is undefined, and their UMLS margins are the input-mention-span gap rather than a model-uncertainty axis and were excluded from the margin benchmark. The panel shows the five generative models.",
+   "Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; the maximum over cells is 127,496. Every cell's n is in the .notes.json sidecar.",
    "Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.",
    "Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image."
   ],
@@ -144,8 +128,9 @@
  "fig_signal_independence_qa.png": {
   "group": null,
   "models": "5 models, roster order",
-  "n": "n = 10,600 analysed rows",
+  "n": "n = 10,600 grid rows, all drawn",
   "notes": [
+   "Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; the maximum over cells is 2,120. Every cell's n is in the .notes.json sidecar.",
    "Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.",
    "Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image."
   ],
@@ -221,6 +206,17 @@
   ],
   "title": "RQ1: lexical change magnitude against semantic entropy, MedMentions"
  },
+ "rq1_magnitude_vs_entropy_qa.png": {
+  "group": null,
+  "models": "5 models, roster order",
+  "n": "n = 10,600 grid rows, all drawn",
+  "notes": [
+   "Left panel is every analysed instance; right panel is the non-zero-entropy subset only.",
+   "Intermediate entropy bands between 0.60 and 0.95 are instances where a model assigned three or more distinct concepts across variants.",
+   "The boxed Spearman rho is computed over the points drawn in that panel, and its n is stated beside it."
+  ],
+  "title": "RQ1: lexical change magnitude against semantic entropy, BioASQ and SQuAD 2.0"
+ },
  "rq2_dissociation_stable_but_wrong_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
@@ -244,7 +240,7 @@
  "rq3_entropy_across_corpora.png": {
   "group": null,
   "models": "8 in the concept lane, 5 in the question-answering lane",
-  "n": "CADEC: n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)   MedMentions: n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)   BioASQ: n = 1,950 rows   SQuAD 2.0: n = 8,650 rows",
+  "n": "CADEC: n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)   MedMentions: n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)   BioASQ: n = 1,950 grid rows, all drawn   SQuAD 2.0: n = 8,650 grid rows, all drawn",
   "notes": [
    "The vertical divider is the grounding boundary. To its left equivalence is UMLS concept identity; to its right it is bidirectional entailment.",
    "The three encoders produce no free-text answer, so their lines END at the boundary. Nothing is imputed across it.",

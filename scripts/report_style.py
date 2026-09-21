@@ -165,17 +165,22 @@ def assert_row_order(drawn, *, context="", allow_subset=True):
     return list(drawn)
 
 
-def grid_clause(n_grid: int, n_defined: int) -> str:
+def grid_clause(n_grid: int, n_defined: int, reason: str = "with defined entropy") -> str:
     """Header wording for a figure reporting both counts.
 
     Table 1 uses the larger number for the GRID and the smaller for the analysed set, so a
     figure calling the larger one 'analysed rows' inverts the manuscript's own convention.
+
+    `reason` names WHY the smaller number is smaller. It defaults to undefined entropy, but
+    a figure that drops rows for a different reason, such as omitting three models, must say
+    that reason instead: a shortfall labelled with the wrong cause is as misleading as the
+    wrong number.
     """
     if n_grid == n_defined:
-        return f"n = {n_grid:,} rows"
+        return f"n = {n_grid:,} grid rows, all drawn"
     d = n_grid - n_defined
-    return (f"n = {n_grid:,} grid rows, {n_defined:,} with defined entropy "
-            f"({d:,} {'row has' if d == 1 else 'rows have'} none)")
+    return (f"n = {n_grid:,} grid rows, {n_defined:,} {reason} "
+            f"({d:,} {'row' if d == 1 else 'rows'} not drawn)")
 
 
 # ---------------------------------------------------------------------------------------

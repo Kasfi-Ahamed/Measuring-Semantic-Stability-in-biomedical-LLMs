@@ -1,6 +1,6 @@
 # Figure captions
 
-Generated 2026-09-21 15:44 by `scripts/build_captions.py` from the caption registry each producer writes.
+Generated 2026-09-21 15:56 by `scripts/build_captions.py` from the caption registry each producer writes.
 
 Figure titles are one line naming the measure and the corpus. Everything else a reader needs is here, ready to paste into a LaTeX caption. Nothing that used to sit on an image was dropped: it was moved.
 
@@ -43,7 +43,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ4: selective risk against coverage, CADEC
 
-**n:** n = 37,696 analysed rows
+**n:** n = 37,696 grid rows, all drawn
 
 **Models drawn:** 8 models, roster order
 
@@ -54,7 +54,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ4: selective risk against coverage, MedMentions
 
-**n:** n = 1,020,784 analysed rows
+**n:** n = 1,020,784 grid rows, all drawn
 
 **Models drawn:** 8 models, roster order
 
@@ -66,7 +66,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ4: selective risk against coverage, BioASQ and SQuAD 2.0
 
-**n:** n = 10,600 analysed rows
+**n:** n = 10,600 grid rows, all drawn
 
 **Models drawn:** 5 models, roster order
 
@@ -77,7 +77,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ2: entropy by accuracy split, CADEC
 
-**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)
+**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)
 
 **Models drawn:** 8 models, roster order
 
@@ -103,10 +103,11 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ4: signal independence, CADEC
 
-**n:** n = 37,696 analysed rows
+**n:** n = 37,696 grid rows, all drawn
 
 **Models drawn:** 8 models, roster order
 
+- Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; the maximum over cells is 4,712. Every cell's n is in the .notes.json sidecar.
 - Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.
 - Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image.
 
@@ -114,11 +115,12 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ4: signal independence, MedMentions
 
-**n:** n = 1,020,784 analysed rows
+**n:** n = 1,020,784 grid rows, 637,990 drawn, after omitting BERT-base, BioBERT, PubMedBERT (382,794 rows not drawn)
 
 **Models drawn:** 5 models, roster order
 
 - Models omitted: BERT-base, BioBERT, PubMedBERT. MedMentions encoders (BERT-base, BioBERT, PubMedBERT) are omitted: they are direct-CUI, so mapping confidence is constant 1.0 and the correlation is undefined, and their UMLS margins are the input-mention-span gap rather than a model-uncertainty axis and were excluded from the margin benchmark. The panel shows the five generative models.
+- Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; the maximum over cells is 127,496. Every cell's n is in the .notes.json sidecar.
 - Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.
 - Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image.
 
@@ -126,10 +128,11 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ4: signal independence, QA (BioASQ and SQuAD 2.0)
 
-**n:** n = 10,600 analysed rows
+**n:** n = 10,600 grid rows, all drawn
 
 **Models drawn:** 5 models, roster order
 
+- Per-cell n is PAIRWISE COMPLETE and therefore varies by cell; the maximum over cells is 2,120. Every cell's n is in the .notes.json sidecar.
 - Cells are Spearman rho between the two named signals, computed per model over that model's analysed rows.
 - Every rho and n is also written to the .notes.json sidecar beside the figure, so a caption can quote a cell without reading it off the image.
 
@@ -209,6 +212,18 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 - Intermediate entropy bands between 0.60 and 0.95 are instances where a model assigned three or more distinct concepts across variants.
 - The boxed Spearman rho is computed over the points drawn in that panel, and its n is stated beside it.
 
+## `rq1_magnitude_vs_entropy_qa.png`
+
+**Title as drawn:** RQ1: lexical change magnitude against semantic entropy, BioASQ and SQuAD 2.0
+
+**n:** n = 10,600 grid rows, all drawn
+
+**Models drawn:** 5 models, roster order
+
+- Left panel is every analysed instance; right panel is the non-zero-entropy subset only.
+- Intermediate entropy bands between 0.60 and 0.95 are instances where a model assigned three or more distinct concepts across variants.
+- The boxed Spearman rho is computed over the points drawn in that panel, and its n is stated beside it.
+
 ## `rq2_dissociation_stable_but_wrong_cadec.png`
 
 **Title as drawn:** RQ2: accuracy and stability dissociation, CADEC (patient-generated health text)
@@ -235,7 +250,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ3: mean semantic entropy across corpora, all four
 
-**n:** CADEC: n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)   MedMentions: n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)   BioASQ: n = 1,950 rows   SQuAD 2.0: n = 8,650 rows
+**n:** CADEC: n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)   MedMentions: n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)   BioASQ: n = 1,950 grid rows, all drawn   SQuAD 2.0: n = 8,650 grid rows, all drawn
 
 **Models drawn:** 8 in the concept lane, 5 in the question-answering lane
 
@@ -247,12 +262,12 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 ## Per-model figures
 
-`figures_for_report/per_model/` holds **32** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`. They are listed as a group rather than one entry each.
+`figures_for_report/per_model/` holds **37** standalone files, one per corpus and model, named `<figure>_<corpus>_<model>.png`. They are listed as a group rather than one entry each.
 
 Each carries the same measure as its combined counterpart above, for a single model, drawn in that model's fixed roster colour with the model legend dropped. The heatmap colour scale is shared across every model of a corpus AND with that corpus's pooled and by-model figures, so a cell in one file is comparable with a cell in another. The scatter keeps its two-panel all-instances and non-zero-only split.
 
 - **heatmap**: 16 files
-- **scatter**: 16 files
+- **scatter**: 21 files
 
 <details><summary>All per-model filenames</summary>
 
@@ -288,6 +303,11 @@ Each carries the same measure as its combined counterpart above, for a single mo
 - `per_model/rq1_magnitude_vs_entropy_medmentions_Meta-Llama-3-8B-Instruct.png`
 - `per_model/rq1_magnitude_vs_entropy_medmentions_Mistral-7B-Instruct-v0.1.png`
 - `per_model/rq1_magnitude_vs_entropy_medmentions_PubMedBERT.png`
+- `per_model/rq1_magnitude_vs_entropy_qa_BioMistral-7B.png`
+- `per_model/rq1_magnitude_vs_entropy_qa_FLAN-T5-base.png`
+- `per_model/rq1_magnitude_vs_entropy_qa_Llama3-OpenBioLLM-8B.png`
+- `per_model/rq1_magnitude_vs_entropy_qa_Meta-Llama-3-8B-Instruct.png`
+- `per_model/rq1_magnitude_vs_entropy_qa_Mistral-7B-Instruct-v0.1.png`
 
 </details>
 
@@ -299,8 +319,4 @@ Each carries the same measure as its combined counterpart above, for a single mo
   - no linguistic_category in the QA perturbation files
 - **NOT PRODUCED: RQ1 heatmap, SQuAD 2.0**
   - no linguistic_category in the QA perturbation files
-- **NOT PRODUCED: RQ1 scatter, BioASQ**
-  - no per-instance lexical change magnitude: outputs/qa/intermediate/qa_question_perturbations_bioasq.csv carries only id, dataset, pert_idx, pert_question, m
-- **NOT PRODUCED: RQ1 scatter, SQuAD 2.0**
-  - no per-instance lexical change magnitude: outputs/qa/intermediate/qa_question_perturbations_squad2.csv carries only id, dataset, pert_idx, pert_question, m
 

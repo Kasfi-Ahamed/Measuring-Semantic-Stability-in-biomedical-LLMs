@@ -1,7 +1,7 @@
 {
   "figure": "fig_signal_independence_qa.png",
   "dataset": "QA (BioASQ and SQuAD 2.0)",
-  "generated_utc": "2026-09-21T05:25:24.150923+00:00",
+  "generated_utc": "2026-09-21T05:52:24.186647+00:00",
   "source": "outputs/qa/qa_results_combined_identity_filtered.csv",
   "source_sha256": "711fed36562bcc575c04c63d86654e343909dff5df0c1773542bbea9a398897f",
   "signal_pairs": [
@@ -18,7 +18,9 @@
   ],
   "models_omitted": [],
   "omission_reason": null,
-  "total_rows": 10600,
+  "rows_in_file": 67365,
+  "rows_grid": 10600,
+  "rows_plotted": 10600,
   "rho": {
     "FLAN-T5-base": {
       "confidence vs entropy": -0.556,

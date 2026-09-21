@@ -93,7 +93,9 @@ def main() -> int:
                       on=j["on"], how="left")
         if len(df) != before:
             raise SystemExit(f"join changed row count {before:,} -> {len(df):,}")
+    n_file = len(df)
     df = df[df[c["keep"]].astype(bool)].copy()
+    n_grid = len(df)
     df[c["model_col"]] = S.normalise_models(df[c["model_col"]])
     S.assert_model_map(df[c["model_col"]], allow_subset=True, context=f"risk-coverage/{c['corpus']}")
     models = S.ordered(df[c["model_col"]])
@@ -164,7 +166,10 @@ def main() -> int:
                       ": these emit a concept identifier directly, so no retrieval occurs "
                       "and there is no runner-up to measure. Those panels draw combined(2) "
                       "in place of combined(3), and say so in the panel subtitle.")
-    S.emit_caption(c["out"].name, title=title, n=f"n = {n_rows:,} analysed rows",
+    _drawn = int(sum((df[c["model_col"]] == m).sum() for m in models))
+    if _drawn != n_grid:
+        raise SystemExit(f"header count {n_grid:,} is not the rows plotted {_drawn:,}")
+    S.emit_caption(c["out"].name, title=title, n=S.grid_clause(n_grid, _drawn, "drawn"),
                    models=f"{len(models)} models, roster order", notes=_notes)
     fig.legend(handles.values(), handles.keys(), loc="lower center",
                ncol=min(6, len(handles)), fontsize=9, frameon=True,
@@ -173,7 +178,7 @@ def main() -> int:
     c["out"].parent.mkdir(parents=True, exist_ok=True)
     S.save_png(fig, c["out"])
     plt.close(fig)
-    print(f"wrote {c['out']}\nwrote {c['out'].with_suffix('.pdf')}")
+    print(f"wrote {c['out']}")
     return 0
 
 

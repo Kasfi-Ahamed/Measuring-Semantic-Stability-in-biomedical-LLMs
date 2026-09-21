@@ -130,7 +130,7 @@ def main() -> int:
     S.save_png(fig, OUT)
     plt.close(fig)
     agg[models].to_csv(OUT.with_suffix(".csv"))
-    print(f"\nwrote {OUT}\nwrote {OUT.with_suffix('.pdf')}\nwrote {OUT.with_suffix('.csv')}")
+    print(f"\nwrote {OUT}\nwrote {OUT.with_suffix('.csv')}")
     return 0
 
 
