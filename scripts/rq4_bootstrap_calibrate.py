@@ -3,7 +3,18 @@
 Reuses RQ4_margin_benchmark.ipynb's OWN functions rather than reimplementing AURC: it execs
 code cells 1-3 (setup and selective_curve / aurc_from_curve, side-effect free apart from
 mkdir) and then the definition prologue of cell 8, stopping at the line where cell 8 starts
-doing work. Nothing is written to any production path.
+doing work.
+
+WRITES. In the DEFAULT mode nothing is written to any production path. With --full it writes
+THREE TRACKED PRODUCTION ARTEFACTS under outputs/rq3/:
+    rq4_aurc_bootstrap_ci_cadec.csv
+    rq4_combined3_wintest_cadec.csv
+    rq4_risk_coverage_operating_points_cadec.csv
+The last of these is the source for Table R3 in docs/RQ4_CADEC_results.md and for S8 in
+docs/SUPPLEMENTARY.md. This paragraph exists because on 2026-09-21 the line above read
+"Nothing is written to any production path" full stop, with the writes disclosed only in
+--full's argparse help; it was run with --full as a read-only cross-check and silently
+overwrote all three (docs/BUG_AUDIT.md 18). Pass --dry-run to get the numbers without them.
 
 Reports:
   - measured seconds per bootstrap iteration, and the extrapolation to B = 20,000
@@ -59,6 +70,9 @@ def main() -> int:
     ap.add_argument("--full", action="store_true",
                     help="after calibrating, run the full paired bootstrap at --target-b for "
                          "EVERY model of --dataset and write CADEC-suffixed CSVs")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="with --full: compute and print everything, write NOTHING, and name "
+                         "the production files that would have been overwritten")
     ap.add_argument("--all-models", action="store_true",
                     help="report the point AURC table for every model of --dataset")
     args = ap.parse_args()
@@ -294,11 +308,21 @@ def _report_all_models(ns, frames, args):
 
     out = ROOT / "outputs" / ("rq3" if args.dataset == "CADEC" else "rq1")
     suffix = args.dataset.lower()
-    for name, rows in (("rq4_aurc_bootstrap_ci", ci_rows), ("rq4_combined3_wintest", win_rows),
-                       ("rq4_risk_coverage_operating_points", rc_rows)):
-        p = out / f"{name}_{suffix}.csv"
-        pd.DataFrame(rows).to_csv(p, index=False)
-        print(f"  wrote {p}")
+    targets = [(out / f"{name}_{suffix}.csv", rows) for name, rows in (
+        ("rq4_aurc_bootstrap_ci", ci_rows), ("rq4_combined3_wintest", win_rows),
+        ("rq4_risk_coverage_operating_points", rc_rows))]
+    if args.dry_run:
+        # SAY WHAT WOULD BE CLOBBERED, BY NAME. The point of --dry-run is to make this
+        # script usable as a cross-check against the notebook without touching the
+        # artefacts the notebook and the manuscript share.
+        print("\n  --dry-run: NOTHING WRITTEN. Would have overwritten:")
+        for p_out, rows in targets:
+            state = "EXISTS, would be overwritten" if p_out.is_file() else "would be created"
+            print(f"    {p_out.relative_to(ROOT)}  ({len(rows)} rows; {state})")
+        return 0
+    for p_out, rows in targets:
+        pd.DataFrame(rows).to_csv(p_out, index=False)
+        print(f"  wrote {p_out}")
 
 
 if __name__ == "__main__":

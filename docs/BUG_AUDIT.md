@@ -2509,3 +2509,56 @@ file `[same]`, which also confirms the producers are deterministic.
 
 **Remedy 17.** A diff against a missing key is not a change. When a summary counts things,
 the count and the per-item labels must come from the same partition.
+
+---
+
+## 18. A read-only cross-check that overwrote three production artefacts
+
+**2026-09-21. My error, and the most direct one in this catalogue: I ran a write.**
+
+`scripts/rq4_bootstrap_calibrate.py` was run with `--full --target-b 20000` to cross-check the
+notebook's CADEC cell. Its docstring opens:
+
+> Reuses RQ4_margin_benchmark.ipynb's OWN functions rather than reimplementing AURC ...
+> **Nothing is written to any production path.**
+
+That sentence is true of the default mode only. `--full`'s argparse help — which I did not
+read, having read the docstring — says it will "write CADEC-suffixed CSVs". It wrote three,
+all tracked in git:
+
+* `outputs/rq3/rq4_aurc_bootstrap_ci_cadec.csv`
+* `outputs/rq3/rq4_combined3_wintest_cadec.csv`
+* `outputs/rq3/rq4_risk_coverage_operating_points_cadec.csv`
+
+The third is the source for **Table R3** in `docs/RQ4_CADEC_results.md` and **S8** in
+`docs/SUPPLEMENTARY.md`. I had flagged it as stale (2026-09-15) one step earlier in the same
+session, and then overwrote it while believing I was running a read.
+
+**Recovered.** All three were tracked and unmodified before the run, so the new content was
+copied to the session quarantine and the files restored with
+`git restore --source=HEAD`. Verified clean against HEAD; only mtimes moved.
+
+**No harm to any number, and one useful by-product.** Before restoring, the overwritten
+operating points were compared against the Table R3 values derived independently from
+`outputs/rq4/rq4_risk_coverage_margin_cadec.csv`: **identical to 0.000000** at all three
+coverage levels for all 8 models and both signals. Two code paths, one answer.
+
+**Why it is worth a numbered entry.** Every prior entry here is about a check that could not
+see a problem. This one is about *me* not reading the flag I passed, on the morning of the
+cut-off, against an artefact I had just called stale. The docstring made the wrong belief easy
+to hold, but the flag's help was one line away and I did not look.
+
+**Fixed in the script, not only in the ledger:**
+
+* The docstring now has a **WRITES** paragraph naming all three paths and saying which
+  manuscript table depends on the third, with the reason the paragraph exists.
+* `--dry-run` added: with `--full` it computes and prints everything, writes nothing, and
+  names each production file it *would* have overwritten and whether it already exists. The
+  cross-check this entry describes is now runnable without touching anything.
+* Writing the `--dry-run` sentence into the docstring before implementing it briefly made the
+  docstring false in a second way. It was implemented in the same change.
+
+**Remedy 18.** A guarantee in a docstring is scoped to the mode the docstring describes. Read
+the help of every flag you pass, not the summary at the top. And a tool that can overwrite a
+reported artefact needs a dry run that names the files — the safety belongs in the tool, not
+in the care of the person invoking it.
