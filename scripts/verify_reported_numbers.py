@@ -182,6 +182,67 @@ def main() -> int:
         print("      and the claim-by-claim comparison are in")
         print("      outputs/rq3/cadec_zero_block_margin_audit{,_claims}.csv.")
 
+    # ---- 15/16: the two CADEC tables regenerated on 21 Sep, checked cell by cell -------
+    # Both were rewritten from artefacts on 21 September. Without a check here they are
+    # exactly the class of quantity this script exists to catch: correct today, and silently
+    # wrong the next time their artefact is regenerated and the markdown is not.
+    print("\n-- 15/16: the two regenerated CADEC tables against their artefacts --")
+    import re as _re
+
+    def _nums(cell: str):
+        return [float(x.replace("\u2212", "-")) for x in
+                _re.findall(r"[+\u2212-]?\d+\.\d+", cell)]
+
+    R1_ART = ROOT / "outputs/rq3/rq4_aurc_bootstrap_ci_cadec.csv"
+    R1_DOC = ROOT / "docs/RQ4_CADEC_results.md"
+    d1 = pd.read_csv(R1_ART)
+    art = {(r.model, r.signal): (r.aurc_point, r.ci_low, r.ci_high) for r in d1.itertuples()}
+    body = R1_DOC.read_text(encoding="utf-8")
+    seg = body[body.index("### Table R1"):body.index("### Table R2")]
+    bad, n = [], 0
+    for line in seg.splitlines():
+        if not line.startswith("| ") or line.startswith("| model") or set(line) <= set("|- :"):
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        model = cells[0]
+        for sig, cell in zip(("entropy", "confidence", "margin", "combined_3"), cells[2:6]):
+            if (model, sig) not in art:
+                bad.append(f"{model}/{sig} absent from artefact"); continue
+            got, want = _nums(cell), art[(model, sig)]
+            n += 3
+            if len(got) != 3 or any(abs(g - w) > 5e-5 for g, w in zip(got, want)):
+                bad.append(f"{model}/{sig} doc={got} artefact={[round(x, 4) for x in want]}")
+    check("Table R1 matches rq4_aurc_bootstrap_ci_cadec.csv", not bad,
+          f"{n} numbers" if not bad else "; ".join(bad[:3]))
+
+    S3_ART = ROOT / "outputs/rq3/rq4_combined3_wintest_cadec.csv"
+    S3_DOC = ROOT / "docs/SUPPLEMENTARY.md"
+    d3 = pd.read_csv(S3_ART).set_index("model")
+    sup = S3_DOC.read_text(encoding="utf-8")
+    seg = sup[sup.index("## Supplementary Table S3"):sup.index("## Supplementary Table S4")]
+    bad, n = [], 0
+    for line in seg.splitlines():
+        cells = [c.strip() for c in line.strip("|").split("|")] if line.startswith("| ") else []
+        if len(cells) != 5 or cells[0] not in d3.index:
+            continue
+        r = d3.loc[cells[0]]
+        for comp, cell in zip(("entropy", "confidence", "margin", "combined2"), cells[1:5]):
+            got = _nums(cell)
+            want = [float(r[f"delta_vs_{comp}"]), float(r[f"delta_vs_{comp}_ci_low"]),
+                    float(r[f"delta_vs_{comp}_ci_high"])]
+            n += 3
+            if len(got) != 3 or any(abs(g - w) > 5e-5 for g, w in zip(got, want)):
+                bad.append(f"{cells[0]}/vs {comp} doc={got} artefact={[round(x, 4) for x in want]}")
+            if bool(r[f"combined3_better_than_{comp}"]) != ("**" in cell):
+                bad.append(f"{cells[0]}/vs {comp} bolding disagrees with the significance flag")
+    for comp, stated in (("entropy", 0), ("confidence", 5), ("margin", 8), ("combined2", 0)):
+        got = int(d3[f"combined3_better_than_{comp}"].sum())
+        n += 1
+        if got != stated:
+            bad.append(f"count vs {comp}: artefact {got}, S3 prints {stated}")
+    check("Supplementary S3 matches rq4_combined3_wintest_cadec.csv (cells, bolding, counts)",
+          not bad, f"{n} numbers" if not bad else "; ".join(bad[:3]))
+
     print("\n" + "=" * 78)
     print(f"{'ALL CROSS-CHECKS PASS' if not FAILS else str(len(FAILS)) + ' FAILED: ' + ', '.join(FAILS)}")
     print("=" * 78)

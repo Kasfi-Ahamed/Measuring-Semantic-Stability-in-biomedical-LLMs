@@ -763,7 +763,7 @@ definition retains **4,712**, and the entropy-level CADEC duplicate share of 17.
 
 | Artefact | How |
 |---|---|
-| `outputs/rq3/rq3_matched_pair_statistics.csv` | CADEC rows filtered on `retained_m_distinct` and scored on `normalised_entropy_dedup` |
+| `outputs/rq3/rq3_matched_pair_statistics_cadec.csv` | CADEC rows filtered on `retained_m_distinct` and scored on `normalised_entropy_dedup`. *(Repointed 2026-09-21 from the unsuffixed combined-dataset file, which is the 2026-09-13 run and is superseded.)* |
 | `outputs/rq3/umls_candidate_margin_cadec.csv` | regenerated 2026-09-13 21:29 under the `retained_m_distinct` filter (40,176 rows = 5,022 x 8) |
 | POOLED rows of the RQ3 statistics | mix affected CADEC with sound MedMentions |
 | Any RQ1/RQ2/RQ4 output regenerated after commit `805dca8` | the switchover points them at the dedup columns |
@@ -2618,6 +2618,36 @@ excluded as a citation, since an inventory is supposed to name everything.
 Clean: RQ1 predictors (primary) and RQ3 matched pairs (CADEC) were both rebuilt 2026-09-17
 evening, and the whole new RQ4 chain is 2026-09-21.
 
+#### Resolution of the eleven (running log, 21 Sep)
+
+| artefact | status |
+|---|---|
+| `rq2_dissociation_summary.csv` | **regenerated** 21 Sep 11:20. 8 of 48 cells moved, BioBERT and PubMedBERT only, all by one instance; every headline selection unchanged. |
+| `rq4_signal_independence_cadec.csv` | **regenerated** 21 Sep 11:23. 44 of 47 rows moved; all-models entropy–confidence −0.2132→−0.2092, entropy–margin +0.0807→+0.0812, confidence–margin −0.1637→−0.1586. Signs and the qualitative claim unchanged; no individual correlation from this file is quoted in the manuscript. |
+| `rq4_aurc_summary.csv` | **false positive** — the live notebook reads `outputs/rq1/`, not this `outputs/rq3/` file. See remedy 21. |
+| `tables/threshold_band_rows.csv` | **re-verified** 21 Sep by recomputation from the mapped outputs; all five figures reproduce, `nearest_distance` 1.3130e-04 → 2.5303e-04. See remedy 20. |
+| `tables/threshold_band_summary.json` | as above. |
+| `tables/threshold_band_closest50.csv` | as above. |
+| `rq1_linguistic_predictors_summary_rawm.csv` | **regenerated** 21 Sep 11:27 (`RQ_DATASETS=CADEC RQ_ENTROPY_ARM=raw`). All 28 coefficients moved, max \|Δcoef\| 0.0014; no significance flip, no sign flip, estimator strings identical. |
+| `rq2_dissociation_summary_rawm.csv` | **regenerated** 21 Sep 11:28. Same signature as the primary arm: 2 of 8 models moved (BioBERT, PubMedBERT), one instance each, max Δ 0.0002. |
+| `rq3_matched_pair_statistics.csv` (unsuffixed) | **repointed** 21 Sep, not regenerated. `RQ3_Report.md` (3 sites — it also named a `tables/` directory that does not exist), `ANALYSIS_PRECOMMIT.md` (1) and this file's downstream-artefact table (1) now name the per-dataset `_cadec` / `_medmentions` files. Two further mentions here are left alone on purpose: entry at *nbconvert-era launchers* records what was true when it was written, and the Amendment 4 warning already names the `_cadec` file as the live artefact and the unsuffixed one as stale — that contrast is the point of the entry. |
+| `rq4_aurc_bootstrap_ci_cadec.csv` | **regenerated** 21 Sep 10:58 at B = 20,000 on the cut-off corpus. 98 of 200 cells moved, max 0.0038 (a CI bound); no signal ordering changes. Table R1 of `RQ4_CADEC_results.md` rewritten from it. |
+| `rq4_combined3_wintest_cadec.csv` | **regenerated** 21 Sep 10:58, not repointed — job 34433's file lacks `delta_vs_entropy` and `delta_vs_margin`, two of the four columns Supplementary S3 prints. 205 of 304 cells moved, max 0.0263 (a p-value); all four significance counts unchanged at 0, 5, 8 and 0 of 8. S3 rewritten from it. |
+| `rq4_risk_coverage_operating_points_cadec.csv` | S8 and Table R3 **repointed** 21 Sep at the 34433 curve artefact; the file itself is no longer cited by a reported number. |
+
+`docs/S1_SENSITIVITY.md` was rebuilt from the two regenerated `_rawm` arms at 21 Sep 11:29.
+That rebuild is what exposed remedy 23.
+
+**All eleven are now resolved: eight regenerated, one repointed, one re-verified by
+recomputation, one a false positive.**
+
+The three RQ4 files did not need a fresh run. The `--full` calibration that overwrote them at
+10:58 — the incident behind remedy 18 — was itself a correct B = 20,000 run on the current
+margin file; its only fault was that *I* did not intend it. Its output was quarantined intact,
+and promoting that output is what closed these three. The restore-and-`touch -t` of remedy 19
+was still right: it put the files back to a known vintage instead of leaving them in a state
+nobody had chosen.
+
 ### A trap I created while fixing 18
 
 The last three rows above were the files the calibration script overwrote and I restored with
@@ -2739,3 +2769,54 @@ that could have removed a true statement from the thesis.
 **Remedy 22.** Provenance is checked against a named artefact and a named row, never by
 searching for the value. If the artefact is unknown, that is the finding — say the artefact is
 unidentified, not that the number is unsupported.
+
+---
+
+## 23. A generator that hand-types numbers it has already computed
+
+Regenerating the S1 sensitivity arm on the cut-off corpus (21 Sep) updated every table in
+`docs/S1_SENSITIVITY.md` and left the Verdict paragraph directly beneath them **byte for
+byte unchanged** — still quoting `0.0089` where the table two lines above now printed
+`0.0090`, and `(+0.6694 primary, -0.3289 raw)` where the RQ1 table now printed `+0.6691` and
+`-0.3249`.
+
+`scripts/s1_sensitivity_delta.py` builds its tables from `pandas` frames and then writes its
+prose as plain string literals. Five numbers were typed by hand into output the script was
+otherwise deriving: the largest AURC movement, the two flipped coefficients, the extra-instance
+count, and the raw-only cell count in the margin caveat.
+
+### The one that was wrong from the start
+
+The margin caveat read **"0 of the 3,592 raw-only cells have a margin"**. The correct count is
+**3,591** — and the script's own sample table, one section above, had been printing
+`+3,591` correctly since 15 September. The document therefore disagreed with itself in two
+places at once, and `docs/SUPPLEMENTARY.md` had transcribed the wrong one (`41,287` rows,
+`+3,592`) along with two rounding drifts in the RQ2 line.
+
+Recomputed directly: primary 37,695 cells, raw 41,286, raw-only 3,591, primary-only 0. The
+margin file covers 37,696 — the complete grid, the same 37,695/37,696 distinction resolved
+earlier. The substantive claim survives exactly: **0** of those 3,591 cells appear in the
+margin file at all, so the cross-arm margin delta is 0.0000 by construction.
+
+### Why this is distinct from 14 and 22
+
+Remedy 14 was a value that resolved cleanly and was the wrong *quantity*. Remedy 22 was a
+correct value that a broken search declared absent. This one is a **correct value the program
+computed and then declined to use**. No provenance check catches it, because the number has
+impeccable provenance three paragraphs away; only a diff of a regenerated file against its own
+tables reveals it, and only if someone reads the prose as carefully as the tables.
+
+It is also the only one of the three that *worsens under regeneration*: every re-run refreshes
+the tables and freezes the prose further out of step with them.
+
+**Remedy 23.** A generator may not restate in prose any number it computed for a table. If the
+prose needs the number, it interpolates the same variable. Where the prose makes a claim that
+depends on a value the generator did not bind — `s1_sensitivity_delta.py`'s Verdict naming RQ1
+coefficients — the generator binds it explicitly and **aborts rather than writing the sentence
+without it**. Applied to `scripts/s1_sensitivity_delta.py`, 21 Sep: five literals replaced by
+interpolation, plus a `SystemExit` if the RQ1 arms did not load.
+
+**Near-collision, recorded so it is not "fixed" later.** `docs/RQ4_CADEC_results.md` also
+contains `0.0089`. It is a different quantity — the largest cell movement in the Table R3
+regeneration (FLAN-T5-base, confidence, 50% coverage) — and is correct. A global replace of
+`0.0089` would have corrupted it.

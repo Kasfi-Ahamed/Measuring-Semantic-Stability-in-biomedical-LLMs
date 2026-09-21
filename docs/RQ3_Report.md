@@ -2,10 +2,20 @@
 
 **Status:** this file no longer tracks `RQ3_Domain_Adaptation_Semantic_Stability.ipynb` (moved to `notebooks/_legacy/`). That notebook mixed BioASQ/SQuAD into RQ3 and is not in `RUN_ORDER.md`.
 
-**Live writer:** `notebooks/05_analysis/RQ3_matched_pairs.ipynb`  
-**Live table:** `outputs/rq3/tables/rq3_matched_pair_statistics.csv`
+**Live writer:** `notebooks/05_analysis/RQ3_matched_pairs.ipynb` (script form: `scripts/rq3_matched_pairs.py`)  
+**Live tables (one per dataset):**
+- `outputs/rq3/rq3_matched_pair_statistics_cadec.csv` (2026-09-17 18:52, post-Amendments 7 and 9)
+- `outputs/rq3/rq3_matched_pair_statistics_medmentions.csv` (2026-09-20 01:36)
 
-The statistics CSV is produced **after** the true-full concept rerun (step 14). Until that file exists, numbers below are not populated: do not copy figures from the legacy Domain_Adaptation report.
+**Repointed 2026-09-21.** This file previously named
+`outputs/rq3/tables/rq3_matched_pair_statistics.csv`, which was wrong twice: there is no
+`outputs/rq3/tables/` copy, and the unsuffixed `outputs/rq3/rq3_matched_pair_statistics.csv`
+that does exist is the **2026-09-13 combined-dataset run**, superseded by the two per-dataset
+files above and predating the Amendment 7 empty-generation fix. It is retained as a record
+and is not cited by any reported number.
+
+The statistics CSVs are produced **after** the true-full concept rerun (step 14); both now
+exist. Do not copy figures from the legacy Domain_Adaptation report.
 
 ## Research question
 
@@ -28,12 +38,12 @@ QA (BioASQ / SQuAD) is a **separate lane**, not part of this table.
 - Bootstrap mean difference, B from `config.yaml` (`statistics.bootstrap_B`, seed 42)
 - BH-FDR across the pair×dataset tests in the written table
 
-## Schema of `rq3_matched_pair_statistics.csv`
+## Schema of `rq3_matched_pair_statistics_{cadec,medmentions}.csv`
 
 `pair, dataset, model_biomedical, model_general, n_bio, n_gen, mean_H_bio, mean_H_gen, mean_diff_bio_minus_gen, mannwhitney_U, mannwhitney_p_onetail, rank_biserial_r, boot_mean_diff, boot_ci95_low, boot_ci95_high, p_bh_fdr`
 
 ## Results
 
-_Pending `outputs/rq3/tables/rq3_matched_pair_statistics.csv` from step 14 of `RUN_ORDER.md`._
+_The two per-dataset CSVs named above are populated. The written RQ3 tables are in_ `docs/RQ3_CADEC_results.md` _and_ `docs/SUPPLEMENTARY.md` _S10; this file is the specification of the test and the schema, not a second copy of the numbers._
 
 Regenerate this section by reading that CSV after the matched-pairs notebook runs. Do not resurrect Domain_Adaptation outputs (`rq3_statistics.csv`, `rq3_all_entropy.csv`, `rq2_all_entropy.csv`).

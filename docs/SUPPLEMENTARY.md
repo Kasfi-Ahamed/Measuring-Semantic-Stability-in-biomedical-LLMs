@@ -36,7 +36,7 @@ MedMentions counterparts of S1, S3 and S4 are generated on the day (`docs/CUTOFF
 
 | ref | status |
 |---|---|
-| S1 | **final** — regenerated 15 Sep under Amendments 7 and 8, both arms OLS |
+| S1 | **final** — regenerated **21 Sep** on the cut-off corpus (both arms re-run: `RQ_ENTROPY_ARM=raw` for RQ1 and RQ2, then `scripts/s1_sensitivity_delta.py`). Both arms still OLS under Amendment 8; the headline is unchanged at **6 of 28**, the same six terms. |
 | S2 | **PROVISIONAL.** Threshold band is final and its numbers are **unchanged by Amendment 7** (verified: 26 rows / 16 instances / nearest 1.313e-4 before and after — the 82 patched rows sit at distance 0.29 pre and 0.70 post, never inside a 5.95e-4 band). The promoted CSVs carry a pre-Amendment-7 mtime and are mechanically stale but substantively correct. The **tie-break case count is still pre-remap**: job `32853` is HELD, released on the 19th, must not run on cutoff day; if it never runs the Limitations sentence quotes the threshold band only (`docs/CUTOFF_RUNBOOK.md` section 4a). |
 | S3 | **final** — regenerated 15 Sep at B = 20,000 on the corrected margin file |
 | S4 | **final** — regenerated 15 Sep under **Amendment 8**, OLS on logit(H) enforced, 14 terms |
@@ -57,9 +57,21 @@ named in `docs/WORKLOG_2026-09-15.md` and **none of them backs a supplementary t
 ## Supplementary Table S1 — All-accepted-variants sensitivity analysis
 
 **Promised in:** Limitations, the de-duplication paragraph.
-**Artefact:** `docs/S1_SENSITIVITY.md` (regenerated 15 Sep 20:36)
+**Artefact:** `docs/S1_SENSITIVITY.md` (regenerated 21 Sep 11:29)
 **Backing data:** `outputs/rq3/rq1_linguistic_predictors_summary_rawm.csv`,
 `outputs/rq3/rq2_dissociation_summary_rawm.csv`, `docs/RQ1_CADEC_results_rawm.md`
+(all three regenerated 21 Sep on the cut-off corpus)
+
+> **Two corrections made on 21 Sep, both transcription rather than analysis.** The summary
+> block below had drifted from `docs/S1_SENSITIVITY.md`: it gave the raw arm 41,287 rows and
+> +3,592, where the artefact has said 41,286 and +3,591 since 15 Sep, and it rounded
+> P(wrong | stable) and the Spearman rho one digit away from the table it was copied from.
+> `scripts/s1_sensitivity_delta.py` carried the *same* +3,592 as a hardcoded literal inside
+> the margin caveat, one paragraph below the sample table that computed +3,591 correctly —
+> so regenerating the artefact could not repair it. That literal, the largest-AURC figure and
+> the two `share_back_translation` coefficients in the Verdict are now computed from the same
+> frames as the tables above them, and the script refuses to write a Verdict whose RQ1
+> numbers did not load.
 
 > **Both arms are OLS on logit(H)** under Amendment 8, and were OLS before it — MixedLM did not
 > converge on either arm on 14 September. The arm comparison is therefore like-for-like, and the
@@ -75,24 +87,24 @@ the same producer pass, so neither arm re-runs inference or mapping.
 
 | | primary | raw | delta |
 |---|---:|---:|---:|
-| rows | 37,695 | 41,287 | +3,592 |
+| rows | 37,695 | 41,286 | +3,591 |
 | instances | 4,712 | 5,161 | +449 |
 
 **The headline result of S1 is that the arms do not agree everywhere.**
 
 - **RQ2 is robust.** Every quantity moves under one percentage point:
-  P(wrong \| stable) 56.31% → 57.19% (**+0.89%**), Spearman rho +0.4039 → +0.3975
+  P(wrong \| stable) 56.33% → 57.22% (**+0.89%**), Spearman rho +0.4037 → +0.3972
   (**−0.0065**).
-- **RQ4 is robust.** Largest AURC movement across all models and signals: **0.0089**.
+- **RQ4 is robust.** Largest AURC movement across all models and signals: **0.0090**.
 - **RQ1 is NOT robust.** **6 of 28** hurdle coefficients change significance or sign.
-  `share_back_translation` in the magnitude half **flips sign** (+0.6694 → −0.3289) and is one
+  `share_back_translation` in the magnitude half **flips sign** (+0.6691 → −0.3249) and is one
   of the four effects Results 4.1 leads with. This belongs in Limitations as a stated
   sensitivity, not as a footnote.
 
 ### Known gap, deliberately left open
 
 The margin rows of the RQ4 comparison in S1 are **not** a real sensitivity comparison.
-`umls_candidate_margin_cadec.csv` covers the primary arm only — **0 of the 3,592 raw-only
+`umls_candidate_margin_cadec.csv` covers the primary arm only — **0 of the 3,591 raw-only
 cells have a margin** — so the finite-margin mask drops exactly the rows that distinguish the
 arms, and the delta is **0.0000 by construction, not by robustness**. The S1 table says so at
 the point of use.
@@ -103,7 +115,7 @@ arm is a sensitivity analysis rather than the primary, and slots are worth more 
 MedMentions blocks accumulating toward the 21st. Revisit after the cutoff.
 
 If the paper cites S1 for RQ4 robustness, cite it for **entropy and confidence only** — those
-are genuinely compared across arms, and move by at most 0.0089.
+are genuinely compared across arms, and move by at most 0.0090.
 
 ---
 
@@ -177,22 +189,32 @@ fallback wording.
 
 **Promised in:** `docs/ANALYSIS_PRECOMMIT.md` section 4 — *"a supplementary table reports
 `combined_3` against each of the three signals separately"*.
-**Artefact:** `outputs/rq3/rq4_combined3_wintest_cadec.csv`
+**Artefact:** `outputs/rq3/rq4_combined3_wintest_cadec.csv` (regenerated 2026-09-21 10:58 on
+the cut-off corpus; 37,695 of 37,696 CADEC cells have a defined margin)
 **Producer:** `scripts/rq4_bootstrap_calibrate.py --full`, paired bootstrap B = 20,000,
 seed `default_rng(42)`
+
+> **Why this table is not repointed at job 34433 like S8 and Table R3.** 34433's
+> `outputs/rq4/rq4_combined3_wintest.csv` carries `delta_vs_confidence` and
+> `delta_vs_combined2` but **not** `delta_vs_entropy` or `delta_vs_margin`, so two of the four
+> columns here exist only in the calibrator's output. The file was therefore regenerated rather
+> than repointed. 205 of 304 cells moved against the 15 Sep version; the largest movement is
+> 0.0263, in a p-value. **All four counts below are unchanged** — 0, 5, 8 and 0 of 8 — and
+> PubMedBERT's interval against entropy still includes zero, which is the claim the closing
+> paragraph rests on.
 
 Delta is `AURC(combined_3) − AURC(comparator)`; negative favours combined_3.
 
 | model | vs entropy | vs confidence | vs margin | vs combined(2) |
 |---|---:|---:|---:|---:|
-| BERT-base | +0.0754 [+0.0649, +0.0846] | +0.0702 [+0.0617, +0.0780] | **−0.1963** [−0.2066, −0.1857] | +0.0920 [+0.0852, +0.0998] |
-| BioBERT | +0.0137 [+0.0004, +0.0204] | +0.0078 [+0.0002, +0.0164] | **−0.2739** [−0.2838, −0.2633] | +0.0394 [+0.0321, +0.0479] |
-| PubMedBERT | +0.0131 [−0.0013, +0.0184] | +0.0154 [+0.0055, +0.0225] | **−0.2784** [−0.2891, −0.2685] | +0.0375 [+0.0295, +0.0453] |
-| FLAN-T5-base | +0.0157 [+0.0041, +0.0202] | **−0.0375** [−0.0455, −0.0320] | **−0.0159** [−0.0241, −0.0074] | +0.0084 [+0.0031, +0.0138] |
-| BioMistral-7B | +0.0216 [+0.0152, +0.0316] | **−0.0269** [−0.0338, −0.0185] | **−0.0303** [−0.0374, −0.0224] | +0.0228 [+0.0166, +0.0292] |
-| Mistral-7B-Instruct-v0.1 | +0.0254 [+0.0169, +0.0319] | **−0.0151** [−0.0225, −0.0090] | **−0.0209** [−0.0275, −0.0140] | +0.0229 [+0.0173, +0.0276] |
-| Llama3-OpenBioLLM-8B | +0.0228 [+0.0166, +0.0284] | **−0.0105** [−0.0164, −0.0053] | **−0.0277** [−0.0334, −0.0225] | +0.0231 [+0.0175, +0.0285] |
-| Meta-Llama-3-8B-Instruct | +0.0106 [+0.0035, +0.0173] | **−0.0201** [−0.0267, −0.0144] | **−0.0323** [−0.0384, −0.0262] | +0.0110 [+0.0063, +0.0166] |
+| BERT-base | +0.0758 [+0.0652, +0.0848] | +0.0709 [+0.0626, +0.0791] | **−0.1959** [−0.2065, −0.1855] | +0.0925 [+0.0861, +0.1006] |
+| BioBERT | +0.0143 [+0.0008, +0.0208] | +0.0092 [+0.0016, +0.0177] | **−0.2736** [−0.2838, −0.2632] | +0.0413 [+0.0336, +0.0493] |
+| PubMedBERT | +0.0128 [−0.0018, +0.0178] | +0.0168 [+0.0066, +0.0235] | **−0.2790** [−0.2899, −0.2692] | +0.0380 [+0.0295, +0.0452] |
+| FLAN-T5-base | +0.0146 [+0.0031, +0.0191] | **−0.0353** [−0.0429, −0.0296] | **−0.0171** [−0.0252, −0.0086] | +0.0082 [+0.0027, +0.0133] |
+| BioMistral-7B | +0.0194 [+0.0132, +0.0295] | **−0.0248** [−0.0317, −0.0166] | **−0.0320** [−0.0391, −0.0239] | +0.0223 [+0.0163, +0.0289] |
+| Mistral-7B-Instruct-v0.1 | +0.0235 [+0.0153, +0.0304] | **−0.0143** [−0.0217, −0.0081] | **−0.0227** [−0.0291, −0.0157] | +0.0224 [+0.0168, +0.0271] |
+| Llama3-OpenBioLLM-8B | +0.0235 [+0.0174, +0.0292] | **−0.0111** [−0.0173, −0.0060] | **−0.0270** [−0.0325, −0.0218] | +0.0239 [+0.0182, +0.0292] |
+| Meta-Llama-3-8B-Instruct | +0.0112 [+0.0041, +0.0177] | **−0.0218** [−0.0286, −0.0161] | **−0.0318** [−0.0379, −0.0256] | +0.0116 [+0.0068, +0.0170] |
 
 **combined_3 is significantly better than:**
 

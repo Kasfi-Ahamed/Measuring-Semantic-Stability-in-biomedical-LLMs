@@ -370,8 +370,10 @@ result was generated**: Amendment 3 was committed (`d5d4471`) before
 
 **(e) Impact: none.** This is a computed result, not an assertion.
 `scripts/rq3_matched_pairs.py` now writes **both** corrected columns — `wilcoxon_p_holm` and
-`mwu_p_bh_fdr` — to `outputs/rq3/rq3_matched_pair_statistics.csv`, and compares the
-classification each would produce. **All six cells of the pair x dataset family receive the
+`mwu_p_bh_fdr` — to `outputs/rq3/rq3_matched_pair_statistics_cadec.csv` and
+`outputs/rq3/rq3_matched_pair_statistics_medmentions.csv` (repointed 2026-09-21; the
+unsuffixed combined-dataset file of the same name is the 2026-09-13 run and is superseded),
+and compares the classification each would produce. **All six cells of the pair x dataset family receive the
 same classification under BH-FDR on Mann–Whitney p-values as under Holm on Wilcoxon
 p-values:**
 

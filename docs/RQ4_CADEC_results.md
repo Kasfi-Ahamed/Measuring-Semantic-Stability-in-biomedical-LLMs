@@ -1,24 +1,31 @@
 # RQ4 — CADEC, final tables for the manuscript
 
-> **STALENESS NOTICE (added 2026-09-20).** The tables on this page were produced on
-> **2026-09-15** by `scripts/rq4_bootstrap_calibrate.py --full`, from
-> `outputs/rq3/rq4_aurc_bootstrap_ci_cadec.csv`, `rq4_combined3_wintest_cadec.csv` and
-> `rq4_risk_coverage_operating_points_cadec.csv` — **all three dated 2026-09-15 18:22**.
-> Job `33411` regenerated their input, `outputs/rq3/umls_candidate_margin_cadec.csv`, on
-> **2026-09-18 02:06** under `PYTHONHASHSEED=0`, and none of the three has been re-run since.
-> They are stale by ~2.3 days and this page inherits that.
+> **STALENESS NOTICE — CLEARED 2026-09-21.** All three inputs have been regenerated against
+> the current margin file and every table on this page now derives from them:
 >
-> **This page's own mtime does not show it.** It reads as current only because it was edited
-> on 2026-09-18 to add the B = 20,000 note below, which reset its timestamp past its own
-> inputs. A mechanical staleness sweep keyed on mtime therefore passes it. That is the
-> failure this notice exists to prevent, and it is the same shape as a document asserting
-> B = 20,000 while the code ran 2,000.
+> | input | regenerated | this page |
+> |---|---|---|
+> | `outputs/rq3/rq4_aurc_bootstrap_ci_cadec.csv` | 21 Sep 10:58 | Table R1, rewritten |
+> | `outputs/rq3/rq4_combined3_wintest_cadec.csv` | 21 Sep 10:58 | Table R2, superseded by the 13-cell table |
+> | `outputs/rq3/rq4_risk_coverage_operating_points_cadec.csv` | 21 Sep 10:58 | no longer cited — Table R3 reads job 34433's curve artefact |
 >
-> The numbers have **not** been recomputed and are **not** corrected here. Whether to re-run
-> the three CADEC RQ4 artefacts against the 33411 margin is an open decision.
+> The open decision recorded here on 2026-09-20 — whether to re-run the three CADEC RQ4
+> artefacts against the 33411 margin — is closed: they were re-run, at B = 20,000 with
+> `default_rng(42)`, in 783 s.
+>
+> **The original notice is kept below because the failure it describes is still real.** This
+> page's mtime never showed the staleness: it read as current only because it had been edited
+> on 2026-09-18 to add the B = 20,000 note, which pushed its timestamp past its own inputs. A
+> mechanical sweep keyed on mtime passed it. That is the same shape as a document asserting
+> B = 20,000 while the code ran 2,000, and nothing about clearing the notice fixes the sweep.
+>
+> **Cross-check.** `scripts/s1_sensitivity_delta.py` recomputes CADEC AURC independently, on
+> its own 19-point coverage grid, for the primary arm. All **24** of its entropy, confidence
+> and margin values agree with the regenerated artefact to 4 decimal places. Against the
+> 15 Sep artefact they did not.
 
 
-CADEC is frozen. **Regenerated 2026-09-15 under Amendments 7 and 8.** Produced by `scripts/rq4_bootstrap_calibrate.py --full` on the remapped
+CADEC is frozen. **Regenerated 2026-09-21 10:58 under Amendments 7, 8 and 9.** Produced by `scripts/rq4_bootstrap_calibrate.py --full` on the remapped
 data (rule-1 gold leak removed, positional de-duplication key), paired bootstrap at the
 pre-committed **B = 20,000**, seed `default_rng(42)`.
 
@@ -49,16 +56,21 @@ AURC integrates over coverages nobody operates at and is the supporting statisti
 
 ### Table R1 — AURC per signal, CADEC, with 95% bootstrap CIs (B = 20,000)
 
+**Source: `outputs/rq3/rq4_aurc_bootstrap_ci_cadec.csv`, regenerated 2026-09-21 10:58**
+by `scripts/rq4_bootstrap_calibrate.py --full` on the cut-off corpus. 98 of 200 cells
+moved against the 15 Sep version; the largest movement is 0.0038, in a CI bound.
+No signal ordering changes in any row.
+
 | model | n | entropy | confidence | margin | combined_3 |
 |---|---:|---:|---:|---:|---:|
-| BERT-base | 4,712 | 0.4596 [0.4438, 0.4772] | 0.4648 [0.4487, 0.4822] | 0.7313 [0.7197, 0.7426] | 0.5351 [0.5188, 0.5516] |
-| BioBERT | 4,712 | 0.3291 [0.3167, 0.3486] | 0.3350 [0.3192, 0.3507] | 0.6167 [0.6021, 0.6312] | 0.3428 [0.3273, 0.3591] |
-| PubMedBERT | 4,712 | 0.3289 [0.3175, 0.3490] | 0.3266 [0.3121, 0.3433] | 0.6204 [0.6057, 0.6348] | 0.3420 [0.3257, 0.3579] |
-| FLAN-T5-base | 4,712 | 0.6887 [0.6784, 0.7069] | 0.7420 [0.7311, 0.7559] | 0.7203 [0.7072, 0.7338] | 0.7044 [0.6907, 0.7191] |
-| BioMistral-7B | 4,711 | 0.6899 [0.6737, 0.7028] | 0.7378 [0.7244, 0.7502] | 0.7412 [0.7288, 0.7536] | 0.7110 [0.6976, 0.7250] |
-| Mistral-7B-Instruct-v0.1 | 4,712 | 0.7425 [0.7301, 0.7561] | 0.7830 [0.7722, 0.7946] | 0.7888 [0.7774, 0.7992] | 0.7679 [0.7557, 0.7796] |
-| Llama3-OpenBioLLM-8B | 4,712 | 0.7920 [0.7802, 0.8039] | 0.8254 [0.8163, 0.8345] | 0.8425 [0.8346, 0.8502] | 0.8148 [0.8045, 0.8247] |
-| Meta-Llama-3-8B-Instruct | 4,712 | 0.7661 [0.7538, 0.7791] | 0.7968 [0.7864, 0.8082] | 0.8091 [0.7991, 0.8190] | 0.7768 [0.7644, 0.7889] |
+| BERT-base | 4,712 | 0.4596 [0.4438, 0.4772] | 0.4645 [0.4479, 0.4815] | 0.7313 [0.7197, 0.7426] | 0.5354 [0.5187, 0.5519] |
+| BioBERT | 4,712 | 0.3289 [0.3165, 0.3484] | 0.3340 [0.3179, 0.3494] | 0.6168 [0.6022, 0.6313] | 0.3432 [0.3275, 0.3592] |
+| PubMedBERT | 4,712 | 0.3286 [0.3172, 0.3488] | 0.3247 [0.3104, 0.3416] | 0.6204 [0.6057, 0.6349] | 0.3414 [0.3250, 0.3571] |
+| FLAN-T5-base | 4,712 | 0.6887 [0.6784, 0.7069] | 0.7386 [0.7274, 0.7525] | 0.7203 [0.7072, 0.7338] | 0.7033 [0.6897, 0.7180] |
+| BioMistral-7B | 4,711 | 0.6899 [0.6737, 0.7028] | 0.7341 [0.7206, 0.7468] | 0.7413 [0.7288, 0.7537] | 0.7093 [0.6957, 0.7233] |
+| Mistral-7B-Instruct-v0.1 | 4,712 | 0.7425 [0.7301, 0.7561] | 0.7804 [0.7695, 0.7924] | 0.7888 [0.7775, 0.7992] | 0.7661 [0.7539, 0.7780] |
+| Llama3-OpenBioLLM-8B | 4,712 | 0.7920 [0.7802, 0.8039] | 0.8267 [0.8180, 0.8360] | 0.8425 [0.8346, 0.8502] | 0.8155 [0.8053, 0.8253] |
+| Meta-Llama-3-8B-Instruct | 4,712 | 0.7661 [0.7538, 0.7791] | 0.7991 [0.7889, 0.8102] | 0.8091 [0.7991, 0.8190] | 0.7773 [0.7650, 0.7894] |
 
 ### Table R2 — combined_3 against best_single
 

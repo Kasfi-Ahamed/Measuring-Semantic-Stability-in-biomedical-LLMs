@@ -73,9 +73,10 @@ def main() -> int:
           f"| instances | {P.instance_id.nunique():,} | {R.instance_id.nunique():,} | "
           f"{R.instance_id.nunique()-P.instance_id.nunique():+,} |",
           f"| mean m | {P.m.mean():.3f} | {R.m.mean():.3f} | {R.m.mean()-P.m.mean():+.3f} |", ""]
-    L += ["The raw arm is **larger**: de-duplication removes variants, which pushes some "
-          "instances below the `m >= 3` inclusion rule. The 449 extra instances are ones "
-          "whose accepted variants were not all distinct.", ""]
+    _extra_inst = R.instance_id.nunique() - P.instance_id.nunique()
+    L += [f"The raw arm is **larger**: de-duplication removes variants, which pushes some "
+          f"instances below the `m >= 3` inclusion rule. The {_extra_inst:,} extra instances "
+          f"are ones whose accepted variants were not all distinct.", ""]
 
     # ---- RQ2 ---------------------------------------------------------------------------
     L += ["## RQ2 — stability / correctness dissociation", "",
@@ -114,6 +115,10 @@ def main() -> int:
         L.append("")
 
     # ---- RQ1 ---------------------------------------------------------------------------
+    # The Verdict quotes RQ1 numbers unconditionally, so they are bound here and the run is
+    # aborted below if the block did not populate them. A Verdict that keeps its sentence and
+    # loses its arithmetic is the failure this file is meant to make impossible.
+    flips, m1, _bt = 0, pd.DataFrame(), {}
     if RQ1_P.is_file() and RQ1_R.is_file():
         a1, b1 = pd.read_csv(RQ1_P), pd.read_csv(RQ1_R)
         k = ["part", "term"]
@@ -122,12 +127,15 @@ def main() -> int:
               "| part | term | coef primary | coef raw | delta | sig primary | sig raw | flips? |",
               "|---|---|---:|---:|---:|:--:|:--:|:--:|"]
         flips = 0
+        _bt = {}                      # coefficients the Verdict names, read off the same merge
         for r in m1.itertuples(index=False):
             sp, sr = bool(r.significant_p), bool(r.significant_r)
             sign_flip = np.sign(r.coef_p) != np.sign(r.coef_r)
             flip = "**SIG**" if sp != sr else ("**SIGN**" if sign_flip else "")
             if flip:
                 flips += 1
+            if (r.part, r.term) == ("magnitude_nonzero", "share_back_translation"):
+                _bt = {"p": float(r.coef_p), "r": float(r.coef_r)}
             L.append(f"| {r.part.replace('_',' ')} | `{r.term}` | {r.coef_p:+.4f} | "
                      f"{r.coef_r:+.4f} | {r.coef_r-r.coef_p:+.4f} | "
                      f"{'yes' if sp else 'no'} | {'yes' if sr else 'no'} | {flip} |")
@@ -164,25 +172,41 @@ def main() -> int:
     L.append(f"Largest AURC movement between the arms: **{big:.4f}** — and see the caveat "
              f"below before reading the margin rows.")
     L.append("")
-    L += ["> **The margin rows are not a sensitivity comparison.** "
-          "`umls_candidate_margin_cadec.csv` was generated over the PRIMARY arm only: it "
-          "covers 37,696 (instance, model) cells, and **0 of the 3,592 raw-only cells have a "
-          "margin**. The finite-margin mask therefore drops exactly the rows that distinguish "
-          "the arms, so both columns are computed over identical rows and the delta is "
-          "0.0000 by construction, not by robustness. Producing a real margin sensitivity "
-          "arm means re-running `RQ4_umls_candidate_margin.ipynb` over the raw-arm row set.",
+    _mg_cells = mg.drop_duplicates(mcols[:2])
+    _have = set(map(tuple, _mg_cells[mcols[:2]].to_numpy()))
+    _raw_only = set(map(tuple, R[mcols[:2]].to_numpy())) - set(map(tuple, P[mcols[:2]].to_numpy()))
+    _ro_with_margin = sum(
+        1 for _k in _raw_only & _have
+        if np.isfinite(pd.to_numeric(
+            _mg_cells.set_index(mcols[:2]).loc[[_k], "margin_mean"], errors="coerce").iloc[0])
+    )
+    L += [f"> **The margin rows are not a sensitivity comparison.** "
+          f"`umls_candidate_margin_cadec.csv` was generated over the PRIMARY arm only: it "
+          f"covers {len(_mg_cells):,} (instance, model) cells, and **{_ro_with_margin} of the "
+          f"{len(_raw_only):,} raw-only cells have a margin**. The finite-margin mask "
+          f"therefore drops exactly the rows that distinguish "
+          f"the arms, so both columns are computed over identical rows and the delta is "
+          f"0.0000 by construction, not by robustness. Producing a real margin sensitivity "
+          f"arm means re-running `RQ4_umls_candidate_margin.ipynb` over the raw-arm row set.",
           ""]
 
+    if m1.empty or not _bt:
+        raise SystemExit(
+            "S1: the RQ1 arms did not both load, but the Verdict names RQ1 coefficients. "
+            f"Refusing to write {OUT.name} with an unbacked Verdict. "
+            f"primary={RQ1_P} exists={RQ1_P.is_file()} raw={RQ1_R} exists={RQ1_R.is_file()}")
+    _bt_txt = (f"({_bt['p']:+.4f} primary, {_bt['r']:+.4f} raw)" if _bt
+               else "(coefficients unavailable: the RQ1 arms were not both present)")
     L += ["## Verdict", "",
-          "**RQ2 and RQ4 are robust to the denominator; RQ1 is not.** Entropy and confidence "
-          "AURCs move by at most 0.0089, and every RQ2 quantity by under one percentage "
-          "point. But 6 of 28 RQ1 hurdle coefficients change significance or sign, including "
-          "`share_back_translation` in the magnitude half, which **flips sign** "
-          "(+0.6694 primary, -0.3289 raw) and is one of the four effects Results 4.1 leads "
-          "with. That is a real limitation of RQ1 and should be stated as one rather than "
-          "buried: the linguistic-predictor coefficients are sensitive to whether "
-          "byte-identical variants are counted once or many times, which is exactly the "
-          "quantity de-duplication was introduced to control.", "",
+          f"**RQ2 and RQ4 are robust to the denominator; RQ1 is not.** Entropy and confidence "
+          f"AURCs move by at most {big:.4f}, and every RQ2 quantity by under one percentage "
+          f"point. But {flips} of {len(m1)} RQ1 hurdle coefficients change significance or "
+          f"sign, including `share_back_translation` in the magnitude half, which "
+          f"**flips sign** {_bt_txt} and is one of the four effects Results 4.1 leads "
+          f"with. That is a real limitation of RQ1 and should be stated as one rather than "
+          f"buried: the linguistic-predictor coefficients are sensitive to whether "
+          f"byte-identical variants are counted once or many times, which is exactly the "
+          f"quantity de-duplication was introduced to control.", "",
           f"The sensitivity arm carries **{len(R)-len(P):+,} rows** and "
           f"**{R.instance_id.nunique()-P.instance_id.nunique():+,} instances**, and moves the "
           f"headline dissociation statistic P(wrong | stable) by "

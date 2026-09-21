@@ -7,6 +7,13 @@ AFTER  = current: empty generations UNASSIGNED (Amendment 7), RQ1 part 2 OLS enf
 Both sides of the RQ1 comparison are OLS on logit(H) with 14 terms, so the table is
 like-for-like -- the MixedLM detour that appeared briefly on 15 September is not in either
 column. Supersedes docs/AMENDMENT7_BEFORE_AFTER.md.
+
+PINNED 2026-09-21. The "after" side reads the *_A78AFTER.csv snapshots, not the live
+rq4_*_cadec.csv files. The live files were regenerated on 2026-09-21 at B = 20,000 against
+the cut-off corpus; reading them here would silently turn this document's Amendment 7/8
+before-and-after into a before-and-after of the September re-run, which is a different
+comparison with the same shape. The snapshots are byte-identical to the 2026-09-15 18:24
+files this document was built from.
 """
 from __future__ import annotations
 
@@ -60,7 +67,19 @@ def main() -> int:
              "Amendment 8 reversed. That file is retained, marked superseded, as the record of "
              "what was handed over.")
     L.append("")
-    L.append("**BEFORE** = 14 September state (`*_PREEMPTYFIX`). **AFTER** = current.")
+    L.append("**BEFORE** = 14 September state (`*_PREEMPTYFIX`). **AFTER** = the 15 September "
+             "state, pinned: `*_PRETIEBREAK` for entropy, RQ2, RQ3 and RQ1, and `*_A78AFTER` "
+             "for the three RQ4 files.")
+    L.append("")
+    L.append("> **Pinned 2026-09-21. The AFTER side is a snapshot, not the live files.** Every "
+             "AFTER input was regenerated after this comparison was written — RQ1, RQ2, RQ3 and "
+             "the entropy file by Amendment 9's tie-break on 17 September, and the three RQ4 "
+             "files by the B = 20,000 re-run on 21 September. Reading the live files here would "
+             "silently turn an Amendment 7/8 before-and-after into a before-and-after of every "
+             "change since, wearing this document's title. The pinned inputs isolate Amendments "
+             "7 and 8, which is the only thing this page claims to measure. A staleness sweep "
+             "keyed on mtime flags this page; that flag is expected and must not be cleared by "
+             "repointing it at the live files.")
     L.append("")
     L.append("- **Amendment 7**: empty or whitespace-only generation is UNASSIGNED at "
              "confidence 0, row retained. 82 CADEC rows.")
@@ -71,10 +90,26 @@ def main() -> int:
              "comparison is like-for-like and isolates the *data* change. MixedLM appears in "
              "neither column.")
     L.append("")
+    _live = rd(O3 / "rq1_linguistic_predictors_summary.csv")
+    _live = _live[_live.part == "magnitude_nonzero"].set_index("term").coef
+    _q = {t: float(_live[t]) for t in ("n_accepted_perts_z", "share_back_translation",
+                                       "mean_lexical_change_magnitude_z")}
+    L.append("> **Provenance.** The manuscript was refreshed from the enforced-OLS table, not "
+             "from the superseded document; nothing wrong reached the paper. The three RQ1 "
+             "part-2 coefficients Results 4.1 quotes are **not** read from the AFTER column "
+             "here — that column is pinned at 15 September — but from the live "
+             "`rq1_linguistic_predictors_summary.csv`, which Amendment 9's tie-break moved on "
+             "17 September. Their current values are "
+             + ", ".join(f"`{t}` **{v:+.3f}**" for t, v in _q.items()) + ". "
+             "Before Amendment 9 `share_back_translation` rounded to +0.668; it now rounds to "
+             f"**{_q['share_back_translation']:+.3f}**. Check Results 4.1 against these, not "
+             "against the table below.")
+    L.append("")
     L.append("| section | quantity | before | after | delta |")
     L.append("|---|---|---:|---:|---:|")
 
-    ea, eb = rd(O3 / "entropy_cadec_PREEMPTYFIX.csv"), rd(O3 / "entropy_cadec.csv")
+    ea, eb = (rd(O3 / "entropy_cadec_PREEMPTYFIX.csv"),
+              rd(O3 / "entropy_cadec_PRETIEBREAK.csv"))
     pa, pb = ea[ea.retained_m_distinct.astype(bool)], eb[eb.retained_m_distinct.astype(bool)]
     ha = pd.to_numeric(pa.normalised_entropy_dedup, errors="coerce")
     hb = pd.to_numeric(pb.normalised_entropy_dedup, errors="coerce")
@@ -92,7 +127,7 @@ def main() -> int:
     row("4.2 RQ2", "Spearman rho, H vs error", qa_["rho"], qb_["rho"])
 
     A = rd(O3 / "rq3_matched_pair_statistics_cadec_PREEMPTYFIX.csv")
-    B = rd(O3 / "rq3_matched_pair_statistics_cadec.csv")
+    B = rd(O3 / "rq3_matched_pair_statistics_cadec_PRETIEBREAK.csv")
     A, B = A[A.dataset == "CADEC"], B[B.dataset == "CADEC"]
     for p in A.pair.unique():
         ra, rb = A[A.pair == p].iloc[0], B[B.pair == p].iloc[0]
@@ -100,22 +135,23 @@ def main() -> int:
         row("4.3 RQ3", f"{p} n_ties", int(ra.n_ties_zero_diff), int(rb.n_ties_zero_diff), "{:,}")
 
     A = rd(O3 / "rq4_aurc_bootstrap_ci_cadec_PREEMPTYFIX.csv")
-    B = rd(O3 / "rq4_aurc_bootstrap_ci_cadec.csv")
+    B = rd(O3 / "rq4_aurc_bootstrap_ci_cadec_A78AFTER.csv")
     for sig in ("entropy", "confidence", "margin", "combined_3"):
         row("4.4 RQ4", f"AURC {sig} (mean over 8 models)",
             float(A[A.signal == sig].aurc_point.mean()),
             float(B[B.signal == sig].aurc_point.mean()))
     A = rd(O3 / "rq4_combined3_wintest_cadec_PREEMPTYFIX.csv")
-    B = rd(O3 / "rq4_combined3_wintest_cadec.csv")
+    B = rd(O3 / "rq4_combined3_wintest_cadec_A78AFTER.csv")
+    _wins = {}
     for k in ("entropy", "confidence", "margin"):
-        row("4.4 RQ4", f"combined_3 beats {k} (of 8)",
-            int(A[f"combined3_better_than_{k}"].sum()),
-            int(B[f"combined3_better_than_{k}"].sum()), "{:d}")
-    row("4.4 RQ4", "combined_3 beats best_single (of 8)",
-        int(A.significant.sum()), int(B.significant.sum()), "{:d}")
+        _wins[k] = (int(A[f"combined3_better_than_{k}"].sum()),
+                    int(B[f"combined3_better_than_{k}"].sum()))
+        row("4.4 RQ4", f"combined_3 beats {k} (of 8)", *_wins[k], "{:d}")
+    _wins["best_single"] = (int(A.significant.sum()), int(B.significant.sum()))
+    row("4.4 RQ4", "combined_3 beats best_single (of 8)", *_wins["best_single"], "{:d}")
 
     A = rd(O3 / "rq1_linguistic_predictors_summary_PREEMPTYFIX.csv")
-    B = rd(O3 / "rq1_linguistic_predictors_summary.csv")
+    B = rd(O3 / "rq1_linguistic_predictors_summary_PRETIEBREAK.csv")
     m = A.merge(B, on=["part", "term"], suffixes=("_a", "_b"))
     ling = m[~m.term.str.startswith("C(model_name)") & (m.term != "Intercept")]
     for r in ling.itertuples(index=False):
@@ -130,13 +166,24 @@ def main() -> int:
              "already predicted != gold, so the 82 corrected rows were counted incorrect before "
              "and remain so.")
     L.append("")
-    L.append("RQ1 part 2 coefficients move in the third decimal — e.g. "
-             "`share_back_translation` **+0.6694 -> +0.6684**, `n_accepted_perts_z` "
-             "**-0.3302 -> -0.3261**. These are the values Results 4.1 now quotes "
-             "(-0.326, +0.668, +0.144).")
+    def _mag(term):
+        r = m[(m.part == "magnitude_nonzero") & (m.term == term)].iloc[0]
+        return float(r.coef_a), float(r.coef_b)
+    _bt_a, _bt_b = _mag("share_back_translation")
+    _np_a, _np_b = _mag("n_accepted_perts_z")
+    _mx = ling.assign(d=(ling.coef_b - ling.coef_a).abs()).sort_values("d").iloc[-1]
+    L.append(f"RQ1 part 2 coefficients move in the third decimal — e.g. "
+             f"`share_back_translation` **{_bt_a:+.4f} -> {_bt_b:+.4f}**, "
+             f"`n_accepted_perts_z` **{_np_a:+.4f} -> {_np_b:+.4f}**. The largest linguistic "
+             f"movement in either part is `{_mx.term}` in {_mx.part.replace('_',' ')}, "
+             f"{_mx.coef_a:+.4f} -> {_mx.coef_b:+.4f}.")
     L.append("")
-    L.append("RQ4's win counts are unchanged: combined_3 beats entropy 0 of 8, confidence 5 of "
-             "8, margin 8 of 8, best_single 0 of 8.")
+    L.append("RQ4's win counts are unchanged: combined_3 beats entropy "
+             f"{_wins['entropy'][1]} of 8, confidence {_wins['confidence'][1]} of 8, margin "
+             f"{_wins['margin'][1]} of 8, best_single {_wins['best_single'][1]} of 8."
+             + ("" if all(a == b for a, b in _wins.values())
+                else "  **NOT unchanged — before/after differ; this sentence is wrong and the "
+                     "table above is authoritative.**"))
     L.append("")
     L.append("The largest single movement anywhere is RQ3 pair 2's rank-biserial, "
              "**+0.1654 -> +0.1575**, driven by 4 tied pairs resolving. Its interpretation is "

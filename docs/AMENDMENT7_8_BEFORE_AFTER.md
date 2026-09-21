@@ -2,16 +2,16 @@
 
 **Supersedes `docs/AMENDMENT7_BEFORE_AFTER.md`**, which was generated between the two amendments and whose RQ1 part 2 rows reported a MixedLM switch that Amendment 8 reversed. That file is retained, marked superseded, as the record of what was handed over.
 
-**BEFORE** = 14 September state (`*_PREEMPTYFIX`). **AFTER** = current.
+**BEFORE** = 14 September state (`*_PREEMPTYFIX`). **AFTER** = the 15 September state, pinned: `*_PRETIEBREAK` for entropy, RQ2, RQ3 and RQ1, and `*_A78AFTER` for the three RQ4 files.
+
+> **Pinned 2026-09-21. The AFTER side is a snapshot, not the live files.** Every AFTER input was regenerated after this comparison was written — RQ1, RQ2, RQ3 and the entropy file by Amendment 9's tie-break on 17 September, and the three RQ4 files by the B = 20,000 re-run on 21 September. Reading the live files here would silently turn an Amendment 7/8 before-and-after into a before-and-after of every change since, wearing this document's title. The pinned inputs isolate Amendments 7 and 8, which is the only thing this page claims to measure. A staleness sweep keyed on mtime flags this page; that flag is expected and must not be cleared by repointing it at the live files.
 
 - **Amendment 7**: empty or whitespace-only generation is UNASSIGNED at confidence 0, row retained. 82 CADEC rows.
 - **Amendment 8**: RQ1 part 2 is OLS on logit(H) with cluster-robust SE, enforced. MixedLM is a sensitivity analysis.
 
 **Both sides of the RQ1 table below are OLS on logit(H) with 14 terms**, so the comparison is like-for-like and isolates the *data* change. MixedLM appears in neither column.
 
-> **Provenance.** The manuscript was refreshed from the enforced-OLS table, not from the
-> superseded document. Results 4.1 currently reads **-0.326**, **+0.668** and **+0.144**,
-> which match the AFTER column below. Nothing wrong reached the paper.
+> **Provenance.** The manuscript was refreshed from the enforced-OLS table, not from the superseded document; nothing wrong reached the paper. The three RQ1 part-2 coefficients Results 4.1 quotes are **not** read from the AFTER column here — that column is pinned at 15 September — but from the live `rq1_linguistic_predictors_summary.csv`, which Amendment 9's tie-break moved on 17 September. Their current values are `n_accepted_perts_z` **-0.326**, `share_back_translation` **+0.669**, `mean_lexical_change_magnitude_z` **+0.144**. Before Amendment 9 `share_back_translation` rounded to +0.668; it now rounds to **+0.669**. Check Results 4.1 against these, not against the table below.
 
 | section | quantity | before | after | delta |
 |---|---|---:|---:|---:|
@@ -56,7 +56,7 @@
 
 **No conclusion changes, and accuracy does not move at all.** Every affected row already predicted != gold, so the 82 corrected rows were counted incorrect before and remain so.
 
-RQ1 part 2 coefficients move in the third decimal — e.g. `share_back_translation` **+0.6694 -> +0.6684**, `n_accepted_perts_z` **-0.3302 -> -0.3261**. These are the values Results 4.1 now quotes (-0.326, +0.668, +0.144).
+RQ1 part 2 coefficients move in the third decimal — e.g. `share_back_translation` **+0.6694 -> +0.6684**, `n_accepted_perts_z` **-0.3302 -> -0.3261**. The largest linguistic movement in either part is `share_synonym_substitution` in magnitude nonzero, +0.1309 -> +0.1646.
 
 RQ4's win counts are unchanged: combined_3 beats entropy 0 of 8, confidence 5 of 8, margin 8 of 8, best_single 0 of 8.
 
