@@ -164,15 +164,32 @@ def scatter(corpus) -> int:
     name = f"rq1_magnitude_vs_entropy_{c['slug']}.png"
     S.save_png(fig, c["out_dir"] / name)
     plt.close(fig)
+    _is_qa = bool(c.get("qa"))
+    _notes = ["Left panel is every analysed instance; right panel is the non-zero-entropy "
+              "subset only.",
+              ("Intermediate entropy bands are instances where a model produced three or "
+               "more distinct answer clusters across variants, clusters being equivalence "
+               "classes under bidirectional entailment."
+               if _is_qa else
+               "Intermediate entropy bands between 0.60 and 0.95 are instances where a "
+               "model assigned three or more distinct concepts across variants."),
+              "The boxed Spearman rho is computed over the points drawn in that panel, and "
+              "its n is stated beside it."]
+    if _is_qa:
+        _notes.append(
+            "MAGNITUDE IS RECOMPUTED, NOT READ. The QA gate computed G5 inline in "
+            "accepted_question_perturbations and discarded it; no QA artefact carries a G5 "
+            "column. The recomputation is EXACT, not approximate: the QA notebook's "
+            "levenshtein_norm agrees with Levenshtein.distance / max(len) to 0.00e+00, the "
+            "concept lane's stored g5_edit_distance matches the same expression to "
+            "9.71e-17 and differs from the difflib fallback by up to 4.17e-01, so the "
+            "concept lane took the Levenshtein branch and both lanes are character-level "
+            "Levenshtein over raw strings with denominator max(len(a), len(b)), no "
+            "lowercasing and no whitespace normalisation. The strings recomputed from are "
+            "the strings the gate saw: all 20,956 pert_question values in "
+            "qa_gate_recheck.csv are identical to the source perturbation files.")
     S.emit_caption(name, title=title, n=S.grid_clause(n_grid, len(df)),
-                   models=f"{len(models)} models, roster order",
-                   notes=["Left panel is every analysed instance; right panel is the "
-                          "non-zero-entropy subset only.",
-                          "Intermediate entropy bands between 0.60 and 0.95 are instances "
-                          "where a model assigned three or more distinct concepts across "
-                          "variants.",
-                          "The boxed Spearman rho is computed over the points drawn in that "
-                          "panel, and its n is stated beside it."])
+                   models=f"{len(models)} models, roster order", notes=_notes)
 
     for m in models:
         g = df[df["model_name"] == m]

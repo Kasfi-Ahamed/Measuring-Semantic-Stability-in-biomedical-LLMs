@@ -2935,3 +2935,65 @@ SQuAD Meta-Llama-3-8B-Instruct AURC margin 0.3242 → 0.3235. Near-independence 
 −0.084…+0.076 → −0.084…+0.077; margin still nominally lowest in exactly 2 of 10 QA cells;
 every entropy and confidence AURC unchanged to 4 dp. That notice is now cleared inside the
 generator rather than hand-added to the page it describes.
+
+---
+
+## 26. A description of a fix is not a fix, and a log line is not evidence
+
+Three instances in one session, all the same shape: **a statement about the work stood in
+for the work, and the reader downstream took the statement as the receipt.** In each case
+the reader was the supervisor, and in each case the statement was mine.
+
+### The three
+
+**One. The assertion described but never added.** Asked why the CADEC signal-independence
+header read 37,696 when the analysed sample is 37,695, I wrote: *"The fix is in
+`scripts/fig_signal_independence.py`, which computes `total_rows` before the join rather
+than after."* That sentence names a file, names the cause and reads as a completed action.
+It was a description of where a fix should go. No assertion was added. Two rounds later the
+MedMentions panel was still reporting 1,020,784 rows while drawing 637,990, and the
+supervisor found it, not me. There was a second cause underneath that only surfaced when
+the assertion was finally written: the omission narrowed the `models` list but not the
+frame, so even a correctly placed count would have read all eight models.
+
+**Two. The repair recorded against the wrong artefact.** I reported that the delivered
+entropy-distribution headers "were calling the raw emitted file the grid" and fixed them.
+They were not. The delivered titles read `n = 37,695 scored rows` and `n = 1,019,810 scored
+rows`, both analysed counts, correct as far as they went. The count 41,288 existed only in
+an undelivered intermediate I had rendered, inspected and corrected minutes earlier inside
+the same pass. The manifest then recorded a repair against a version nobody had ever seen.
+A receipt that answers a different question is worse than no receipt: it consumes the
+reader's trust and leaves the real state undescribed.
+
+**Three. The log line for a file that was not written.** After PDF output was removed from
+the family, three producers still printed `wrote <file>.pdf`. No PDF was created. The
+console said one was. Caught only because a background log was read closely enough to
+notice the claim contradicted a directory listing taken a minute earlier.
+
+### Why they are one class and not three coincidences
+
+Each is cheap to produce and expensive to detect. Writing "the fix is in X" costs one
+sentence; discovering it was never applied costs a supervisor two rounds. Printing a
+filename costs nothing; discovering the file is absent requires someone to look. And all
+three survive every check this project already runs, because the checks verify
+**artefacts** and these are claims **about** artefacts, which no artefact contradicts.
+
+They are also the mirror of remedy 23. There a generator refused to use a number it had
+computed. Here a human refused to perform an action they had described. The same gap, in
+opposite directions: computation without statement, and statement without computation.
+
+**Remedy 26.** State an intended change in the **future tense** until a check confirms it,
+then **quote the check**. "The fix goes in `fig_signal_independence.py`" while it is
+intended; "added, and the run now prints `637,990 plotted across 5 model(s)`" once it is
+done. Never a past-tense claim whose evidence is the sentence itself. Concretely:
+
+- a fix is reported by quoting the command and the output line that proves it
+- a repair is recorded against the artefact digest that carried the defect, named, not
+  against whichever copy was in hand
+- a producer prints only paths it has actually written, and the assembly step verifies
+  each printed path exists
+
+The third of those is now enforced: `scripts/build_figures_for_report.py` copies only files
+it can stat, and `scripts/build_captions.py` exits non-zero when a delivered figure is
+absent from the caption registry. The first two are discipline, not code, which is why they
+are written down here.

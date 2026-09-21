@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 15:54 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 15:59 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -38,7 +38,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_perturbations.csv`  sha256 `2f20fd0c9663dffe`  rows 55,976  mtime 2026-09-03 02:24
 - output sha256: `4beec95c8c44434045d626b1406e8eb7daea8872d057a14eeedb0fff12a4e258`
-- output mtime: 2026-09-21 15:23
+- output mtime: 2026-09-21 15:58
 
 ### Figure 1c
 
@@ -49,7 +49,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/qa_gate_recheck.csv`  sha256 `eff80f9c02c09113`  rows 20,956  mtime 2026-09-21 11:56
 - output sha256: `333d790e1974e6b1c6bc4bbd98f863255e58b29c95d5b995fb3434debb27a08b`
-- output mtime: 2026-09-21 15:53
+- output mtime: 2026-09-21 15:58
 
 ### Figure 1b
 
@@ -60,7 +60,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `78eb1f3c5bef13aeab0ec1df1ff9ab86722850526c4691799726c03602c0cbf0`
-- output mtime: 2026-09-21 15:24
+- output mtime: 2026-09-21 15:58
 
 ### Figure 2a
 

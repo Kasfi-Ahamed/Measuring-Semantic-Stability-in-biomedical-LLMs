@@ -1,6 +1,6 @@
 # Figure captions
 
-Generated 2026-09-21 15:56 by `scripts/build_captions.py` from the caption registry each producer writes.
+Generated 2026-09-21 16:00 by `scripts/build_captions.py` from the caption registry each producer writes.
 
 Figure titles are one line naming the measure and the corpus. Everything else a reader needs is here, ready to paste into a LaTeX caption. Nothing that used to sit on an image was dropped: it was moved.
 
@@ -192,7 +192,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ1: lexical change magnitude against semantic entropy, CADEC
 
-**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)
+**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)
 
 **Models drawn:** 8 models, roster order
 
@@ -204,7 +204,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ1: lexical change magnitude against semantic entropy, MedMentions
 
-**n:** n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)
+**n:** n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)
 
 **Models drawn:** 8 models, roster order
 
@@ -221,8 +221,9 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 **Models drawn:** 5 models, roster order
 
 - Left panel is every analysed instance; right panel is the non-zero-entropy subset only.
-- Intermediate entropy bands between 0.60 and 0.95 are instances where a model assigned three or more distinct concepts across variants.
+- Intermediate entropy bands are instances where a model produced three or more distinct answer clusters across variants, clusters being equivalence classes under bidirectional entailment.
 - The boxed Spearman rho is computed over the points drawn in that panel, and its n is stated beside it.
+- MAGNITUDE IS RECOMPUTED, NOT READ. The QA gate computed G5 inline in accepted_question_perturbations and discarded it; no QA artefact carries a G5 column. The recomputation is EXACT, not approximate: the QA notebook's levenshtein_norm agrees with Levenshtein.distance / max(len) to 0.00e+00, the concept lane's stored g5_edit_distance matches the same expression to 9.71e-17 and differs from the difflib fallback by up to 4.17e-01, so the concept lane took the Levenshtein branch and both lanes are character-level Levenshtein over raw strings with denominator max(len(a), len(b)), no lowercasing and no whitespace normalisation. The strings recomputed from are the strings the gate saw: all 20,956 pert_question values in qa_gate_recheck.csv are identical to the source perturbation files.
 
 ## `rq2_dissociation_stable_but_wrong_cadec.png`
 
