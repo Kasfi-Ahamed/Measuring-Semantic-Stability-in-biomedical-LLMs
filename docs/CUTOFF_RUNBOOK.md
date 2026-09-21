@@ -817,3 +817,36 @@ stated terminal key instead of by dictionary iteration order. Reported as capita
 finding invites the response "just normalise case". Reported as measured, it does not.
 
 **Recompute:** `scripts/measure_cadec_tiebreak_shape.py` (added 2026-09-21).
+
+---
+
+# BioASQ x FLAN-T5-base: an argmin that must not be reported (2026-09-21)
+
+**Decision: report the three signals as indistinguishable. Do not name an argmin.**
+
+```
+BioASQ  FLAN-T5-base  n=392   confidence 0.8929   entropy 0.8947   random 0.8927
+```
+
+`random` is the argmin, ahead of `confidence` by **0.0002**, across a total spread of
+**0.0020**. The four peer BioASQ cells span **0.061 to 0.122** — 30x to 60x wider:
+
+| BioASQ cell | confidence | entropy | random | spread |
+|---|---|---|---|---|
+| BioMistral-7B | 0.6104 | 0.5929 | 0.6931 | 0.100 |
+| **FLAN-T5-base** | **0.8929** | **0.8947** | **0.8927** | **0.0020** |
+| Meta-Llama-3-8B-Instruct | 0.5599 | 0.6075 | 0.6815 | 0.122 |
+| Mistral-7B-Instruct-v0.1 | 0.6900 | 0.6729 | 0.7434 | 0.071 |
+| OpenBioLLM-8B | 0.6744 | 0.7067 | 0.7351 | 0.061 |
+
+At AURC ~0.89 with random at 0.8927, no signal discriminates on this cell. Naming `random`
+the winner would be reporting noise with a label on it.
+
+**The value itself is a measurement.** It is computed from the real family at n=392, not
+carried from the 27 August pilot. What is not a measurement is the *ordering*.
+
+**No confidence interval was computed, deliberately.** The QA lane is outside the Holm family
+(5 MedMentions + 1 CADEC). Computing a CI for this cell now — outside the pre-registered
+family, on the morning of the cut-off, after seeing the point estimates — is exactly what the
+pre-commitment exists to prevent. The absence of a CI is the reason the ordering cannot be
+claimed; it is not a gap to be filled on the day.

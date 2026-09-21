@@ -12,6 +12,9 @@ from __future__ import annotations
 
 import datetime as _dt
 import itertools
+import hashlib
+import json
+from datetime import datetime, timezone
 import os
 import sys
 from pathlib import Path
@@ -64,6 +67,23 @@ CFG = {
         signals={"entropy": "normalised_entropy_dedup",
                  "confidence": "mapping_confidence",
                  "margin": "margin_mean"},
+        # MedMentions encoders are OMITTED from this panel. They are direct-CUI: mapping
+        # confidence is constant 1.0, so rho(confidence, *) is undefined and comes out NaN;
+        # and their UMLS margins were quarantined as gold-anchored, so the margin pairs have
+        # n=0. Plotted, they were three blank heatmap rows labelled with model names, which
+        # reads as a failed computation rather than as a quantity that does not exist
+        # (docs/BUG_AUDIT.md 16). The risk-coverage and AURC panels already carry only the
+        # five generatives; this makes the independence panel agree with them.
+        #
+        # PRESENTATION ONLY. No number changes: the omitted cells had no value to change.
+        omit_models=["BERT-base", "BioBERT", "PubMedBERT"],
+        omit_reason=(
+            "MedMentions encoders (BERT-base, BioBERT, PubMedBERT) are omitted: they are "
+            "direct-CUI, so mapping confidence is constant 1.0 and the correlation is "
+            "undefined, and their UMLS margins are the input-mention-span gap rather than a "
+            "model-uncertainty axis and were excluded from the margin benchmark. The panel "
+            "shows the five generative models."
+        ),
         out=ROOT / "outputs/rq1/figures/fig_signal_independence_medmentions.png",
     ),
     "qa": dict(
@@ -81,6 +101,15 @@ CFG = {
     ),
 }
 
+
+
+def _sha256(path: Path) -> str:
+    """Digest the artefact the figure was drawn from, so a caption can be dated to bytes."""
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def _apply_join(df, c):
@@ -130,6 +159,14 @@ def main() -> int:
         raise SystemExit("need at least two signals to show independence")
     pairs = list(itertools.combinations(sorted(present), 2))
     models = sorted(df[mcol].unique())
+    _omit = [m for m in (c.get("omit_models") or []) if m in models]
+    if _omit:
+        # Declared in CFG with a reason, never inferred from emptiness: a model dropped
+        # because it happens to be all-NaN today would silently return when the data changed.
+        models = [m for m in models if m not in _omit]
+        print(f"OMITTED (declared in CFG): {_omit}")
+        print(f"  reason: {c['omit_reason']}")
+    assert models, "every model was omitted"
 
     print(f"dataset      : {c['label']}")
     print(f"input        : {c['path'].name}  ({ts(c['path'])})")
@@ -168,6 +205,32 @@ def main() -> int:
     c["out"].parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(c["out"], dpi=200, bbox_inches="tight")
     print(f"\nwrote {c['out']}")
+
+    # CAPTION SOURCE. A PNG cannot be interrogated: a reader who wonders why a model is
+    # absent has nowhere to look, and a reader who sees a blank row assumes the computation
+    # failed. The omission, its reason, and the per-cell n go in a sidecar next to the figure
+    # so the manuscript caption is WRITTEN FROM a file rather than from memory, and so the
+    # claim "encoders omitted because the quantity does not exist" can be checked.
+    notes = {
+        "figure": c["out"].name,
+        "dataset": c["label"],
+        "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "source": str(c["path"].relative_to(ROOT)),
+        "source_sha256": _sha256(c["path"]),
+        "signal_pairs": [f"{a} vs {b}" for a, b in pairs],
+        "models_shown": models,
+        "models_omitted": _omit,
+        "omission_reason": c.get("omit_reason") if _omit else None,
+        "total_rows": int(len(df)),
+        "rho": {m: {f"{a} vs {b}": (None if not np.isfinite(grid[i, j]) else round(float(grid[i, j]), 4))
+                    for j, (a, b) in enumerate(pairs)}
+                for i, m in enumerate(models)},
+        "n_pairwise_complete": {m: {f"{a} vs {b}": int(ns[i, j]) for j, (a, b) in enumerate(pairs)}
+                                for i, m in enumerate(models)},
+    }
+    notes_path = c["out"].with_suffix(".notes.json")
+    notes_path.write_text(json.dumps(notes, indent=2) + "\n")
+    print(f"wrote {notes_path}  (caption source)")
     return 0
 
 

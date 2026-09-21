@@ -1,7 +1,7 @@
 """Regenerate the result-dependent figures on the cut-off corpus and record their digests.
 
 WHICH FIGURES CHANGED IS MEASURED, NOT ASSERTED. Every output's sha256 is taken BEFORE and
-AFTER, so "changed" is a comparison of bytes rather than a claim about what should have moved.
+AFTER, so "modified" is a comparison of bytes rather than a claim about what should have moved.
 Digests are written to disk, not only printed, so the record survives the session.
 
 assert_fresh IS NOT CAUGHT. Each producer refuses to plot when an input is older than the
@@ -80,22 +80,36 @@ def main() -> int:
                          "stderr_tail": (r.stderr or "").strip()[-600:]})
 
     after = snapshot()
-    changed = sorted(k for k in after if before.get(k) != after[k])
-    new = sorted(k for k in after if k not in before)
+    # CREATED IS NOT MODIFIED. `changed` used to be
+    #     sorted(k for k in after if before.get(k) != after[k])
+    # which counts a file that did not exist before, because before.get(k) is None. On
+    # 2026-09-21 that reported "changed: 3" when the bytes of every pre-existing figure were
+    # identical and three MedMentions figures had simply been created. "3 figures changed" is
+    # what a reader takes from that, and it is the opposite of what happened
+    # (docs/BUG_AUDIT.md 17). The three sets are now disjoint by construction and named for
+    # the operation rather than for the diff that produced them.
+    created = sorted(k for k in after if k not in before)
+    modified = sorted(k for k in after if k in before and before[k] != after[k])
     gone = sorted(k for k in before if k not in after)
+    assert not (set(created) & set(modified)), "created and modified must be disjoint"
     failed = [x for x in runs if x["returncode"] != 0]
 
     print("\n" + "=" * 78)
     print("FIGURE REGENERATION")
     print("=" * 78)
     print(f"  producers run : {len(runs)}   failed: {len(failed)}")
-    print(f"  figures after : {len(after)}   changed: {len(changed)}   new: {len(new)}   "
-          f"removed: {len(gone)}")
-    for k in changed:
-        mark = "NEW" if k in new else "CHANGED"
-        print(f"    [{mark:7s}] {k}")
-        print(f"              {before.get(k, '-')[:16]} -> {after[k][:16]}")
-    unchanged = sorted(k for k in after if k not in changed)
+    print(f"  figures       : {len(before)} before -> {len(after)} after")
+    print(f"  created       : {len(created)}   (absent before this run)")
+    print(f"  modified      : {len(modified)}  (existed before, bytes differ)")
+    print(f"  removed       : {len(gone)}")
+    if not modified:
+        print("  NOTE: no pre-existing figure changed content.")
+    for k in created:
+        print(f"    [created ] {k}  -> {after[k][:16]}")
+    for k in modified:
+        print(f"    [modified] {k}")
+        print(f"              {before[k][:16]} -> {after[k][:16]}")
+    unchanged = sorted(k for k in after if k not in created and k not in modified)
     for k in unchanged:
         print(f"    [same   ] {k}  {after[k][:16]}")
     if failed:
@@ -107,7 +121,10 @@ def main() -> int:
 
     rec = {"generated_utc": datetime.now(timezone.utc).isoformat(),
            "n_producers": len(runs), "n_failed": len(failed),
-           "changed": changed, "new": new, "removed": gone,
+           # Keys renamed 2026-09-21: "changed" conflated created with modified. A reader
+           # of an old ledger should get a KeyError rather than a wrong number, so the old
+           # key is NOT kept as an alias.
+           "created": created, "modified": modified, "removed": gone,
            "digests_before": before, "digests_after": after, "runs": runs}
     a.ledger.parent.mkdir(parents=True, exist_ok=True)
     tmp = a.ledger.with_suffix(a.ledger.suffix + ".tmp")

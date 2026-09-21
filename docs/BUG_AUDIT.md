@@ -2476,3 +2476,36 @@ confidence. This is a heatmap with blank rows labelled with model names, in a fi
 new this run. It is the same staleness as above in a different producer
 (`scripts/fig_signal_independence.py`), but fixing it changes a second reported figure, so it
 is recorded here rather than changed unilaterally.
+
+---
+
+## 17. "3 changed" when nothing changed
+
+**2026-09-21, reading job 34424's own ledger.** `scripts/regen_figures.py` reported
+`changed: 3`. The bytes of every pre-existing figure were **identical**; three MedMentions
+figures had been **created**. The three names appeared under both `changed` and `new`.
+
+```python
+changed = sorted(k for k in after if before.get(k) != after[k])   # before.get(k) is None
+new     = sorted(k for k in after if k not in before)             # for a created file
+```
+
+A created file satisfies both. The per-file lines below it did print `NEW` correctly, but the
+summary count and the JSON key did not, and the summary is what gets read — by us, next week.
+"3 figures changed" and "no figure changed, 3 were created" are opposite statements about
+whether a result moved.
+
+Same family as **14**: a label that disagrees with the operation underneath it, where every
+other safeguard is fine. The digests were right the whole time; only the word was wrong.
+
+**Fixed.** `created` (absent before), `modified` (present before, bytes differ) and `removed`,
+disjoint by construction and asserted so. The summary prints all three and adds an explicit
+`NOTE: no pre-existing figure changed content.` when `modified` is empty. The JSON keys are
+renamed rather than aliased — an old ledger should raise `KeyError` rather than answer with a
+number that means something else.
+
+Verified by re-running: 9 producers, 0 failed, 52 figures, `created: 0  modified: 0`, every
+file `[same]`, which also confirms the producers are deterministic.
+
+**Remedy 17.** A diff against a missing key is not a change. When a summary counts things,
+the count and the per-item labels must come from the same partition.
