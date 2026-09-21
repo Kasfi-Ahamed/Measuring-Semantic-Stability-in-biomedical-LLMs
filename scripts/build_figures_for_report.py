@@ -117,6 +117,27 @@ FIGS = [
      [ROOT/"outputs/qa/qa_results_combined_identity_filtered.csv"], "5 models", "BioASQ and SQuAD 2.0"),
 ]
 
+DESIGN_CHANGES = [
+    ("rq1_entropy_heatmap_medmentions",
+     "54a3fd2cbdaa", "7f3969ef130e is the NEW by-model figure, not this one",
+     "**Panel count changed, data did not.** This figure was eight panels, one per model. "
+     "It is now a SINGLE panel pooled over all eight models, as the pilot drew it, and the "
+     "per-model version moved to `rq1_entropy_heatmap_by_model_medmentions`. Its digest "
+     "therefore moved for a layout reason. Both source artefacts are unchanged: "
+     "`entropy_full_umls.csv` at `ed98865dc4e887ca` and `rq1_linguistic_features.csv` at "
+     "`b916fd2fee71f819`, the same digests as the previous delivery. A reader comparing "
+     "digests should not look for a data revision, because there was none."),
+    ("fig_entropy_distribution_{cadec,medmentions,qa}",
+     "see the Figures section", "",
+     "**Axis split, and the header count corrected.** Two panels replace one. The delivered "
+     "pre-change titles read `CADEC: normalised entropy per model, n = 37,695 scored rows` "
+     "and `MedMentions: normalised entropy per model, n = 1,019,810 scored rows`, both "
+     "ANALYSED counts and both correct as far as they went; they simply did not disclose "
+     "the grid. The count 41,288 never appeared in a delivered figure: it existed only in "
+     "an undelivered intermediate during the 21 September pass and was corrected before "
+     "assembly. This entry records the repair against the version that carried it."),
+]
+
 OVERWRITES = [
     ("outputs/rq1/figures/rq2_dissociation_stable_but_wrong.png",
      "90f678ca4c58cb70", "2026-09-14 02:03",
@@ -224,16 +245,30 @@ def main() -> int:
     prods = sorted({t[3].split()[0] for t in FIGS if ".py" in t[3]} |
                    {"scripts/fig_report_rq1.py", "scripts/fig_report_risk_coverage.py",
                     "scripts/fig_rq2_accuracy_split.py", "scripts/fig_report_rq3_continuum.py",
-                    "scripts/fig_entropy_distribution.py", "scripts/fig_signal_independence.py"})
+                    "scripts/fig_entropy_distribution.py", "scripts/fig_signal_independence.py",
+                    "scripts/report_style.py"})
 
     def _literals(tree):
-        """Every string constant that is not a module, class or function docstring.
+        """Every string constant that is not a docstring and not the gate's own pattern.
 
-        Docstrings and comments explain the rule and legitimately quote what the rule
-        forbids. Only literals that can reach a title, label or annotation are swept.
-        report_style.py is excluded outright: it DEFINES the gate.
+        Docstrings quote the forbidden wording in order to explain its removal. The gate's
+        OWN pattern literals, the values of _EM_DASH and _EN_DASH and the strings inside
+        check_text, necessarily contain what they forbid. Everything else in every producer
+        INCLUDING report_style.py is swept, so a future em dash elsewhere in that file is
+        caught rather than waved through by a whole-file exclusion.
         """
         doc = set()
+        for n in _ast.walk(tree):
+            # the gate's own pattern definitions
+            if isinstance(n, _ast.Assign):
+                for t in n.targets:
+                    if isinstance(t, _ast.Name) and t.id in ("_EM_DASH", "_EN_DASH"):
+                        doc.add(id(n.value))
+            # the gate's own body
+            if isinstance(n, _ast.FunctionDef) and n.name == "check_text":
+                for sub in _ast.walk(n):
+                    if isinstance(sub, _ast.Constant) and isinstance(sub.value, str):
+                        doc.add(id(sub))
         for n in _ast.walk(tree):
             if isinstance(n, (_ast.Module, _ast.FunctionDef, _ast.AsyncFunctionDef,
                               _ast.ClassDef)):
@@ -269,10 +304,16 @@ def main() -> int:
             L.append(f"- **VIOLATION** {b}")
     else:
         L.append(f"- Clean. {len(prods)} producers swept by AST over every non-docstring "
-                 f"string literal: no em dash, no en dash, no occurrence of \"clinical\". "
-                 f"`scripts/report_style.py` is excluded because it defines the gate, and "
-                 f"docstrings are excluded because they quote the forbidden wording in order "
-                 f"to explain why it was removed.")
+                 f"string literal, `scripts/report_style.py` INCLUDED: no em dash, no en "
+                 f"dash, no occurrence of \"clinical\". Only two things are exempt, and both "
+                 f"are named rather than whole files: the values of `_EM_DASH` and "
+                 f"`_EN_DASH`, and the string literals inside `check_text` itself, which "
+                 f"necessarily contain what they forbid. Docstrings are exempt because they "
+                 f"quote the forbidden wording in order to explain its removal.")
+    L += ["", "## Design changes, recorded so a digest move is not read as a data revision",
+          ""]
+    for name, dig, note2, why in DESIGN_CHANGES:
+        L += [f"- `{name}`  (now `{dig}`)", f"  - {why}"]
     L += ["", "## Overwrites, recorded so the resolution is auditable", ""]
     for path, old_d, old_t, new_d, new_t, why in OVERWRITES:
         L += [f"- `{path}`",

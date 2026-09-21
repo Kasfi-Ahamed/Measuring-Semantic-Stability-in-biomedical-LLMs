@@ -211,7 +211,8 @@ def main() -> int:
     ax.set_title(f"{c['label']}: signal independence, total n = {len(df):,} rows")
     fig.tight_layout()
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(c["out"], dpi=200, bbox_inches="tight")
+    fig.savefig(c["out"], dpi=300, bbox_inches="tight")
+    fig.savefig(c["out"].with_suffix(".pdf"), bbox_inches="tight")
     print(f"\nwrote {c['out']}")
 
     # CAPTION SOURCE. A PNG cannot be interrogated: a reader who wonders why a model is

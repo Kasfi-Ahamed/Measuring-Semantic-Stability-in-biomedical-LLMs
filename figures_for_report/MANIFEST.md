@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 14:42 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 14:46 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -160,33 +160,33 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### Signal independence, CADEC
 
-- filename: `fig_signal_independence_cadec.png`  (PNG only: producer emits no PDF)
+- filename: `fig_signal_independence_cadec.png` and `fig_signal_independence_cadec.pdf`
 - producer: `scripts/fig_signal_independence.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
-- output sha256: `c131ec4ee229a51290140398d4e7e1d070c99b0b07aee29f67b121335ae071c2`
-- output mtime: 2026-09-21 14:42
+- output sha256: `31f61658e3c6326cf1abd21d4f5f6045808e5e80421d5d9d2032ab597fa9745a`
+- output mtime: 2026-09-21 14:46
 
 ### Signal independence, MedMentions
 
-- filename: `fig_signal_independence_medmentions.png`  (PNG only: producer emits no PDF)
+- filename: `fig_signal_independence_medmentions.png` and `fig_signal_independence_medmentions.pdf`
 - producer: `scripts/fig_signal_independence.py medmentions`
 - model set: 5 generatives, encoders omitted
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
-- output sha256: `1b29975863040ec546491a0cc6abfffad25db6c15372ccec89cd8d1a8718e588`
-- output mtime: 2026-09-21 14:34
+- output sha256: `1ce4b27203b58300c0d9153dbea98ac2913ee418493a32706b3e0ffce2c041db`
+- output mtime: 2026-09-21 14:46
 
 ### Signal independence, QA
 
-- filename: `fig_signal_independence_qa.png`  (PNG only: producer emits no PDF)
+- filename: `fig_signal_independence_qa.png` and `fig_signal_independence_qa.pdf`
 - producer: `scripts/fig_signal_independence.py qa`
 - model set: 5 models
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
-- output sha256: `3cd256517433c96f7ea35c0f3a6e4cbdb151457a6c43162c6e5d9d6455f4d951`
-- output mtime: 2026-09-21 14:34
+- output sha256: `357fdd180192111dce94655477d115fe687a21b11809cc81d6fb9d951b8475a1`
+- output mtime: 2026-09-21 14:46
 
 ### Entropy distribution, CADEC
 
@@ -230,7 +230,14 @@ An earlier draft annotated Spearman(entropy, CONTINUOUS mean accuracy over varia
 
 `report_style.check_text()` rejects an em dash, an en dash, or the word "clinical" in any figure title, axis label or annotation, and every producer in this family calls it before writing. A violation aborts the run rather than producing a figure. Source sweep of the producers at assembly time:
 
-- Clean. 6 producers swept by AST over every non-docstring string literal: no em dash, no en dash, no occurrence of "clinical". `scripts/report_style.py` is excluded because it defines the gate, and docstrings are excluded because they quote the forbidden wording in order to explain why it was removed.
+- Clean. 7 producers swept by AST over every non-docstring string literal, `scripts/report_style.py` INCLUDED: no em dash, no en dash, no occurrence of "clinical". Only two things are exempt, and both are named rather than whole files: the values of `_EM_DASH` and `_EN_DASH`, and the string literals inside `check_text` itself, which necessarily contain what they forbid. Docstrings are exempt because they quote the forbidden wording in order to explain its removal.
+
+## Design changes, recorded so a digest move is not read as a data revision
+
+- `rq1_entropy_heatmap_medmentions`  (now `54a3fd2cbdaa`)
+  - **Panel count changed, data did not.** This figure was eight panels, one per model. It is now a SINGLE panel pooled over all eight models, as the pilot drew it, and the per-model version moved to `rq1_entropy_heatmap_by_model_medmentions`. Its digest therefore moved for a layout reason. Both source artefacts are unchanged: `entropy_full_umls.csv` at `ed98865dc4e887ca` and `rq1_linguistic_features.csv` at `b916fd2fee71f819`, the same digests as the previous delivery. A reader comparing digests should not look for a data revision, because there was none.
+- `fig_entropy_distribution_{cadec,medmentions,qa}`  (now `see the Figures section`)
+  - **Axis split, and the header count corrected.** Two panels replace one. The delivered pre-change titles read `CADEC: normalised entropy per model, n = 37,695 scored rows` and `MedMentions: normalised entropy per model, n = 1,019,810 scored rows`, both ANALYSED counts and both correct as far as they went; they simply did not disclose the grid. The count 41,288 never appeared in a delivered figure: it existed only in an undelivered intermediate during the 21 September pass and was corrected before assembly. This entry records the repair against the version that carried it.
 
 ## Overwrites, recorded so the resolution is auditable
 
