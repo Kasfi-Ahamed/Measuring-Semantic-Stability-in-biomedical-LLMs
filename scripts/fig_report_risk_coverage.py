@@ -55,7 +55,11 @@ CFG = {
         ent="norm_entropy", conf="confidence", marg="margin_mean",
         join=dict(path=ROOT / "outputs/qa/umls_candidate_margin_qa.csv",
                   on=["id", "model", "dataset"], cols=["margin_mean"]),
-        out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=5,
+        # THREE COLUMNS, NOT FIVE. One row of five short panels on a shared 0 to 1 axis
+        # left four of them illegible: the curves occupy a narrow band and the panel is
+        # wider than it is tall. The shared axis stays, because that is what makes the
+        # panels comparable; the panels get room instead.
+        out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=3,
     ),
 }
 
@@ -104,7 +108,7 @@ def main() -> int:
 
     ncol = c["ncol"]
     nrow = int(np.ceil(len(models) / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(3.55 * ncol, 3.25 * nrow),
+    fig, axes = plt.subplots(nrow, ncol, figsize=(3.9 * ncol, 4.3 * nrow),
                              sharex=True, sharey=True, squeeze=False)
     handles: dict[str, object] = {}
     omitted_any = []
@@ -150,10 +154,21 @@ def main() -> int:
         ax.set_axisbelow(True)
     for k in range(len(models), nrow * ncol):
         axes[k // ncol][k % ncol].set_axis_off()
+    # RAGGED GRID + sharex. matplotlib hides x tick labels on every axis that is not in the
+    # last ROW, but with 5 panels in a 2 x 3 grid the last row has no third column, so the
+    # top-right panel ended up with no x axis at all. Re-enable labels on the bottom-most
+    # VISIBLE axis of each column.
+    for cc in range(ncol):
+        last_visible = max((rr for rr in range(nrow)
+                            if rr * ncol + cc < len(models)), default=None)
+        if last_visible is None:
+            continue
+        ax_b = axes[last_visible][cc]
+        ax_b.xaxis.set_tick_params(labelbottom=True)
+        ax_b.set_xlabel("Coverage")
     for r_ in range(nrow):
         axes[r_][0].set_ylabel("Selective risk")
-    for cc in range(ncol):
-        axes[nrow - 1][cc].set_xlabel("Coverage")
+
 
     title = S.title_line("RQ4: selective risk against coverage", c["corpus"])
     fig.suptitle(title, fontsize=12, y=0.995)

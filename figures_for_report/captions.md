@@ -1,6 +1,6 @@
 # Figure captions
 
-Generated 2026-09-21 16:00 by `scripts/build_captions.py` from the caption registry each producer writes.
+Generated 2026-09-21 16:07 by `scripts/build_captions.py` from the caption registry each producer writes.
 
 Figure titles are one line naming the measure and the corpus. Everything else a reader needs is here, ready to paste into a LaTeX caption. Nothing that used to sit on an image was dropped: it was moved.
 
@@ -140,27 +140,27 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, per model, CADEC
 
-**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)
+**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)
 
 **Models drawn:** 8 models, roster order, one panel each
 
 - Colour scale runs 0 to 0.60, shared across all panels and with the pooled and per-model figures for this corpus.
 - x tick labels on the bottom row only, category labels on the leftmost column only; axes shared.
-- Hatched no data (n=0) and flat grey n = k, below 3 are different states and are drawn differently.
-- Undrawn cells: BERT-base mixed x synonym_substitution n=1; BioBERT mixed x synonym_substitution n=1; PubMedBERT mixed x synonym_substitution n=1; FLAN-T5-base mixed x synonym_substitution n=1; Mistral-7B-Instruct-v0.1 mixed x synonym_substitution n=1; BioMistral-7B mixed x synonym_substitution n=1; Meta-Llama-3-8B-Instruct mixed x synonym_substitution n=1; Llama3-OpenBioLLM-8B mixed x synonym_substitution n=1
+- A cell is drawn only when min(rows, distinct instances) >= 3. Hatched no data (n=0) and flat grey below-3 are different states and the grey label names the limiting count.
+- Undrawn cells: BERT-base mixed x synonym_substitution rows=1 instances=1; BioBERT mixed x synonym_substitution rows=1 instances=1; PubMedBERT mixed x synonym_substitution rows=1 instances=1; FLAN-T5-base mixed x synonym_substitution rows=1 instances=1; Mistral-7B-Instruct-v0.1 mixed x synonym_substitution rows=1 instances=1; BioMistral-7B mixed x synonym_substitution rows=1 instances=1; Meta-Llama-3-8B-Instruct mixed x synonym_substitution rows=1 instances=1; Llama3-OpenBioLLM-8B mixed x synonym_substitution rows=1 instances=1
 - THESIS ONLY, not a manuscript figure.
 
 ## `rq1_entropy_heatmap_by_model_medmentions.png`
 
 **Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, per model, MedMentions
 
-**n:** n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)
+**n:** n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)
 
 **Models drawn:** 8 models, roster order, one panel each
 
 - Colour scale runs 0 to 0.50, shared across all panels and with the pooled and per-model figures for this corpus.
 - x tick labels on the bottom row only, category labels on the leftmost column only; axes shared.
-- Hatched no data (n=0) and flat grey n = k, below 3 are different states and are drawn differently.
+- A cell is drawn only when min(rows, distinct instances) >= 3. Hatched no data (n=0) and flat grey below-3 are different states and the grey label names the limiting count.
 - Every cell is drawn in every panel.
 - THESIS ONLY, not a manuscript figure.
 
@@ -168,24 +168,26 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 **Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, CADEC
 
-**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)
+**n:** n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)
 
 **Models drawn:** pooled over all 8 models
 
 - Colour scale runs 0 to 0.60 and is shared with the by-model figure and every per-model file for this corpus.
-- Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has no observation at all; a flat grey cell labelled n = k, below 3 has too few to report.
-- Every cell is drawn.
+- A cell is drawn only when min(rows, distinct instances) >= 3. A row is an (instance, model) pair, so counting rows alone let one instance present itself as eight observations.
+- Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has nothing observed; a flat grey cell names whichever count fell short, rows or instances.
+- Undrawn: mixed x synonym_substitution rows=8 instances=1
 
 ## `rq1_entropy_heatmap_medmentions.png`
 
 **Title as drawn:** RQ1: mean entropy by perturbation type and linguistic category, MedMentions
 
-**n:** n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)
+**n:** n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)
 
 **Models drawn:** pooled over all 8 models
 
 - Colour scale runs 0 to 0.50 and is shared with the by-model figure and every per-model file for this corpus.
-- Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has no observation at all; a flat grey cell labelled n = k, below 3 has too few to report.
+- A cell is drawn only when min(rows, distinct instances) >= 3. A row is an (instance, model) pair, so counting rows alone let one instance present itself as eight observations.
+- Two undrawn states are rendered differently: a hatched cell labelled no data (n=0) has nothing observed; a flat grey cell names whichever count fell short, rows or instances.
 - Every cell is drawn.
 
 ## `rq1_magnitude_vs_entropy_cadec.png`

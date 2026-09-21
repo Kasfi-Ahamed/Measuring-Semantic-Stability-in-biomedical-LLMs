@@ -230,27 +230,34 @@ def _heatmap_frames(corpus):
 
 
 def _cells(g, cats, types):
-    """Return the mean matrix AND the count matrix.
+    """Mean, row count AND distinct-instance count, greying on whichever count is smaller.
 
-    The count matrix is what lets the drawing tell n = 0 from 0 < n < 3. "excluded (n<3)"
-    on its own cannot: an empty cell and a cell with two observations are different facts
-    and were rendered identically.
+    A row is an (instance, model) pair, so one instance contributes as many rows as there
+    are models drawn. Counting rows alone let a single instance present itself as eight
+    observations: the CADEC mixed x synonym_substitution cell drew 0.188, the lightest value
+    in a grid otherwise spanning 0.263 to 0.382, from one instance. Eight rows from one
+    instance is not an estimate. The threshold is now applied to
+    min(rows, distinct instances).
     """
-    piv = g.groupby(["linguistic_category", "perturbation_type"])["H"].agg(["mean", "size"])
+    piv = g.groupby(["linguistic_category", "perturbation_type"]).agg(
+        mean=("H", "mean"), rows=("H", "size"), insts=("instance_id", "nunique"))
     mat = np.full((len(cats), len(types)), np.nan)
-    cnt = np.zeros((len(cats), len(types)), dtype=int)
+    rows = np.zeros((len(cats), len(types)), dtype=int)
+    insts = np.zeros((len(cats), len(types)), dtype=int)
     for (ca, ty), r in piv.iterrows():
-        cnt[cats.index(ca), types.index(ty)] = int(r["size"])
-        if r["size"] >= MIN_CELL:
-            mat[cats.index(ca), types.index(ty)] = r["mean"]
-    return mat, cnt
+        i, j = cats.index(ca), types.index(ty)
+        rows[i, j] = int(r["rows"])
+        insts[i, j] = int(r["insts"])
+        if min(int(r["rows"]), int(r["insts"])) >= MIN_CELL:
+            mat[i, j] = r["mean"]
+    return mat, rows, insts
 
 
-def _draw_cells(ax, mat, cnt, cats, types, vmax, fs=8):
-    """Two undrawn states, rendered differently.
+def _draw_cells(ax, mat, cnt, insts, cats, types, vmax, fs=8):
+    """Two undrawn states, rendered differently, and the limiting count is named.
 
-    n = 0        no observation at all: hatched, labelled "no data (n=0)"
-    0 < n < 3    too few to report: flat grey, labelled "n = k, below 3"
+    nothing observed   hatched, "no data (n=0)"
+    too few            flat grey, naming WHICH count fell short, rows or instances
     """
     cmap = plt.get_cmap("YlGnBu").copy()
     cmap.set_bad("#E4E4E4")
@@ -260,15 +267,19 @@ def _draw_cells(ax, mat, cnt, cats, types, vmax, fs=8):
             if np.isfinite(mat[r_, c_]):
                 ax.text(c_, r_, f"{mat[r_, c_]:.3f}", ha="center", va="center", fontsize=fs,
                         color="white" if mat[r_, c_] > vmax * 0.55 else "#222222")
-            elif cnt[r_, c_] == 0:
+            elif cnt[r_, c_] == 0 or insts[r_, c_] == 0:
                 ax.add_patch(plt.Rectangle((c_ - 0.5, r_ - 0.5), 1, 1, fill=True,
                                            facecolor="#F7F7F7", edgecolor="#AAAAAA",
                                            hatch="///", lw=0.6, zorder=2))
                 ax.text(c_, r_, "no data\n(n=0)", ha="center", va="center",
                         fontsize=fs - 2, color="#555555", zorder=3)
             else:
-                ax.text(c_, r_, f"n = {int(cnt[r_, c_])}\nbelow {MIN_CELL}", ha="center",
-                        va="center", fontsize=fs - 2, color="#444444")
+                _r, _i = int(cnt[r_, c_]), int(insts[r_, c_])
+                lab = (f"{_i} instance{'' if _i == 1 else 's'}\n({_r} rows), below {MIN_CELL}"
+                       if _i <= _r else
+                       f"{_r} row{'' if _r == 1 else 's'}, below {MIN_CELL}")
+                ax.text(c_, r_, lab, ha="center", va="center", fontsize=fs - 2,
+                        color="#444444")
     return im
 
 
@@ -280,29 +291,40 @@ def heatmap(corpus="MedMentions") -> int:
     types = sorted(df["perturbation_type"].dropna().unique())
     total = len(cats) * len(types)
 
-    pooled, pooled_n = _cells(df, cats, types)
+    pooled, pooled_n, pooled_i = _cells(df, cats, types)
     per = {m: _cells(df[df["model_name"] == m], cats, types) for m in models}
     vmax = float(np.ceil(max(np.nanmax(pooled),
                              max(np.nanmax(v[0]) for v in per.values())) * 20) / 20)
+    # state-change report against the old rows-only rule
+    changed = []
+    for who, (m_, r_, i_) in [("pooled", (pooled, pooled_n, pooled_i))] + \
+                             [(mm, per[mm]) for mm in models]:
+        for a, ca in enumerate(cats):
+            for b, ty in enumerate(types):
+                old_drawn = r_[a, b] >= MIN_CELL
+                new_drawn = bool(np.isfinite(m_[a, b]))
+                if old_drawn != new_drawn:
+                    changed.append((who, ca, ty, int(r_[a, b]), int(i_[a, b]),
+                                    "drawn -> greyed" if old_drawn else "greyed -> drawn"))
+    print(f"  cells changing state under min(rows, instances): {len(changed)}")
+    for who, ca, ty, rr, ii, how in changed:
+        print(f"    {who:<26} {ca:<14} x {ty:<22} rows={rr:<6} instances={ii:<4} {how}")
     print(f"{corpus}: shared vmax {vmax}; {len(cats)} categories x {len(types)} types")
 
-    def _undrawn(mat, cnt, who):
-        out = []
-        for i, ca in enumerate(cats):
-            for j, ty in enumerate(types):
-                if not np.isfinite(mat[i, j]):
-                    out.append((who, ca, ty, int(cnt[i, j])))
-        return out
-    undrawn = _undrawn(pooled, pooled_n, "pooled")
+    def _undrawn(mat, cnt, ins, who):
+        return [(who, ca, ty, int(cnt[i, j]), int(ins[i, j]))
+                for i, ca in enumerate(cats) for j, ty in enumerate(types)
+                if not np.isfinite(mat[i, j])]
+    undrawn = _undrawn(pooled, pooled_n, pooled_i, "pooled")
     for m in models:
-        undrawn += _undrawn(per[m][0], per[m][1], m)
-    print(f"  undrawn cells, exact n: {len(undrawn)}")
-    for who, ca, ty, n in undrawn:
-        print(f"    {who:<26} {ca:<14} x {ty:<22} n = {n}"
-              f"  {'EMPTY' if n == 0 else 'below 3'}")
+        undrawn += _undrawn(per[m][0], per[m][1], per[m][2], m)
+    print(f"  undrawn cells: {len(undrawn)}")
+    for who, ca, ty, rr, ii in undrawn:
+        print(f"    {who:<26} {ca:<14} x {ty:<22} rows={rr:<6} instances={ii:<4}"
+              f"  {'EMPTY' if rr == 0 else 'below 3'}")
 
     fig, ax = plt.subplots(figsize=(1.9 * len(types) + 4.0, 1.0 * len(cats) + 2.6))
-    im = _draw_cells(ax, pooled, pooled_n, cats, types, vmax, fs=9)
+    im = _draw_cells(ax, pooled, pooled_n, pooled_i, cats, types, vmax, fs=9)
     ax.set_xticks(range(len(types))); ax.set_xticklabels(types, rotation=25, ha="right", fontsize=9)
     ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=9)
     ax.set_xlabel("Perturbation type"); ax.set_ylabel("Linguistic category")
@@ -318,11 +340,15 @@ def heatmap(corpus="MedMentions") -> int:
                    models=f"pooled over all {len(models)} models",
                    notes=[f"Colour scale runs 0 to {vmax:.2f} and is shared with the "
                           f"by-model figure and every per-model file for this corpus.",
+                          "A cell is drawn only when min(rows, distinct instances) >= 3. "
+                          "A row is an (instance, model) pair, so counting rows alone let "
+                          "one instance present itself as eight observations.",
                           "Two undrawn states are rendered differently: a hatched cell "
-                          "labelled no data (n=0) has no observation at all; a flat grey "
-                          "cell labelled n = k, below 3 has too few to report."]
-                         + ([f"Undrawn: " + "; ".join(f"{ca} x {ty} n={n}"
-                                                      for _, ca, ty, n in _pool_undrawn)]
+                          "labelled no data (n=0) has nothing observed; a flat grey cell "
+                          "names whichever count fell short, rows or instances."]
+                         + ([f"Undrawn: " + "; ".join(
+                                 f"{ca} x {ty} rows={rr} instances={ii}"
+                                 for _, ca, ty, rr, ii in _pool_undrawn)]
                             if _pool_undrawn else ["Every cell is drawn."]))
 
     nrow, ncol = 2, 4
@@ -331,7 +357,7 @@ def heatmap(corpus="MedMentions") -> int:
                              gridspec_kw=dict(hspace=0.62, wspace=0.10))
     for i, m in enumerate(models):
         ax = axes[i // ncol][i % ncol]
-        im = _draw_cells(ax, per[m][0], per[m][1], cats, types, vmax, fs=7)
+        im = _draw_cells(ax, per[m][0], per[m][1], per[m][2], cats, types, vmax, fs=7)
         ax.set_title(m, fontsize=9)
         if i // ncol == nrow - 1:
             ax.set_xticks(range(len(types)))
@@ -352,16 +378,18 @@ def heatmap(corpus="MedMentions") -> int:
                           f"with the pooled and per-model figures for this corpus.",
                           "x tick labels on the bottom row only, category labels on the "
                           "leftmost column only; axes shared.",
-                          "Hatched no data (n=0) and flat grey n = k, below 3 are "
-                          "different states and are drawn differently.",
-                          ("Undrawn cells: " + "; ".join(f"{w} {ca} x {ty} n={n}"
-                                                         for w, ca, ty, n in _bm))
+                          "A cell is drawn only when min(rows, distinct instances) >= 3. "
+                          "Hatched no data (n=0) and flat grey below-3 are different states "
+                          "and the grey label names the limiting count.",
+                          ("Undrawn cells: " + "; ".join(
+                              f"{w} {ca} x {ty} rows={rr} instances={ii}"
+                              for w, ca, ty, rr, ii in _bm))
                           if _bm else "Every cell is drawn in every panel.",
                           "THESIS ONLY, not a manuscript figure."])
 
     for m in models:
         f2, a2 = plt.subplots(figsize=(1.9 * len(types) + 3.4, 1.0 * len(cats) + 2.4))
-        im2 = _draw_cells(a2, per[m][0], per[m][1], cats, types, vmax, fs=9)
+        im2 = _draw_cells(a2, per[m][0], per[m][1], per[m][2], cats, types, vmax, fs=9)
         a2.set_xticks(range(len(types))); a2.set_xticklabels(types, rotation=25, ha="right", fontsize=9)
         a2.set_yticks(range(len(cats))); a2.set_yticklabels(cats, fontsize=9)
         a2.set_xlabel("Perturbation type"); a2.set_ylabel("Linguistic category")

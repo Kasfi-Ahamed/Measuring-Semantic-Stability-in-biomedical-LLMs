@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 15:59 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 16:06 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -71,7 +71,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `1c95ce541da312eaa5e3e66873d8a14d654cf83b6b5aa2f67c90f6b59b1e7791`
-- output mtime: 2026-09-21 15:42
+- output mtime: 2026-09-21 16:05
 
 ### Figure 2c
 
@@ -81,8 +81,8 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
-- output sha256: `9f8c42cda6754df40f0a10534a46c809940eebe75a45b3aa523e0eebe24f5b9b`
-- output mtime: 2026-09-21 15:41
+- output sha256: `fe1de80e3ad10e91e4fbdf12d75fdc7650db904bb5e77ba3c3812595cc85992c`
+- output mtime: 2026-09-21 16:04
 
 ### Figure 2d (THESIS ONLY, not a manuscript figure)
 
@@ -92,8 +92,8 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
-- output sha256: `9cbe1ea9f294e1cd89ad851f530a62b730cf560153c467693ac8c5eb919dff5c`
-- output mtime: 2026-09-21 15:41
+- output sha256: `eabbe2e2ece7ba5925b2f5cda1e5c94c8b4bd858b103dd8fb5c896f7d6909644`
+- output mtime: 2026-09-21 16:04
 
 ### Figure 2b (THESIS ONLY, not a manuscript figure)
 
@@ -104,7 +104,7 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `b6ba2d0f03e96c9edb3bd45647135f2b36539a693cc5b22a13ab349d0dae7ede`
-- output mtime: 2026-09-21 15:42
+- output mtime: 2026-09-21 16:05
 
 ### Figure 3a
 
@@ -147,8 +147,8 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
-- output sha256: `aa19aba2ef9df53ace0d657a402401f2f2aa7f397087249de9a4bc5b58c2f78f`
-- output mtime: 2026-09-21 15:54
+- output sha256: `ec41da14d629353de1f3d3054ccc6bc4bf36c1d969c60844832b5d8fe5d84c33`
+- output mtime: 2026-09-21 16:05
 
 ### RQ4 risk-coverage, MedMentions
 
@@ -168,8 +168,8 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/umls_candidate_margin_qa.csv`  sha256 `fd286f193e894733`  rows 10,640  mtime 2026-09-21 01:27
-- output sha256: `33ada410531652cebb8b7e17566246bf4534f93b536fd4c2a717a6b91f1ae922`
-- output mtime: 2026-09-21 15:54
+- output sha256: `580b7b70c355f3ba4941a0245cdf9fea5209d339317518a6b2c00a5dbe490174`
+- output mtime: 2026-09-21 16:05
 
 ### RQ2 dissociation, CADEC
 
