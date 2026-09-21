@@ -1,4 +1,8 @@
-"""Report Figure 3: entropy by accuracy stratum, per model, concept lane.
+"""Report Figure 3: entropy by accuracy split, per model, concept lane.
+
+NAME. Not "quartile". The percentile cut was attempted and is degenerate on the current
+artefacts, so the figure does not draw one and must not be named for a method it could not
+use. See the construct note below.
 
 PORTED from outputs_archive/.../rq2/figures/rq2_figure2_quartile_comparison.png (pilot,
 2026-07-15). Design preserved: paired green/red bars per model, shared y axis Mean
@@ -34,6 +38,8 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import textwrap
+
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -47,15 +53,17 @@ PREREG_R = 0.30
 CFG = {
     "cadec": dict(
         corpus="CADEC",
-        entropy=ROOT / "outputs/rq3/entropy_cadec.csv",
+        entropy=ROOT / "outputs/rq3/entropy_cadec.csv", acc="accuracy",
+        table=ROOT / "outputs/rq3/rq2_dissociation_summary.csv",
         mapped=ROOT / "outputs/rq3/intermediate/rq3_cadec_mapped_outputs.csv",
-        out=ROOT / "outputs/rq3/figures/rq2_entropy_by_accuracy_stratum_cadec.png",
+        out=ROOT / "outputs/rq3/figures/fig_rq2_accuracy_split_entropy_cadec.png",
     ),
     "medmentions": dict(
         corpus="MedMentions",
-        entropy=ROOT / "outputs/rq1/entropy_full_umls.csv",
+        entropy=ROOT / "outputs/rq1/entropy_full_umls.csv", acc="mean_accuracy_full",
+        table=ROOT / "outputs/rq1/rq2_dissociation_summary.csv",
         mapped=ROOT / "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv",
-        out=ROOT / "outputs/rq1/figures/rq2_entropy_by_accuracy_stratum_medmentions.png",
+        out=ROOT / "outputs/rq1/figures/fig_rq2_accuracy_split_entropy_medmentions.png",
     ),
 }
 
@@ -84,9 +92,10 @@ def main() -> int:
 
     ent = pd.read_csv(c["entropy"], low_memory=False,
                       usecols=["instance_id", "model_name", "normalised_entropy_dedup",
-                               "retained_m_distinct"])
+                               "retained_m_distinct", c["acc"]])
     ent = ent[ent["retained_m_distinct"].astype(bool)].copy()
     ent["H"] = pd.to_numeric(ent["normalised_entropy_dedup"], errors="coerce")
+    ent["err"] = 1 - (pd.to_numeric(ent[c["acc"]], errors="coerce") >= 0.5).astype(int)
     n_retained = len(ent)
     ent = ent.dropna(subset=["H"])
     n_defined = len(ent)
@@ -111,13 +120,34 @@ def main() -> int:
             raise SystemExit(f"{m}: one stratum is empty ({len(hit)}, {len(miss)})")
         u = stats.mannwhitneyu(hit, miss, alternative="two-sided").statistic
         rb = 2.0 * (u / (len(hit) * len(miss))) - 1.0          # rank-biserial
-        rho = stats.spearmanr(g["H"], g["mean_accuracy"]).statistic
+        # rho is the TABLE's statistic, verbatim: Spearman(entropy, BINARY error), where
+        # error = 1 when the instance-level accuracy is below 0.5. An earlier draft used
+        # Spearman(entropy, continuous mean accuracy over variants) and produced 0.480,
+        # 0.628, 0.633 against the table's 0.464, 0.615, 0.625: same 4,712 rows, same
+        # entropy column, DIFFERENT SECOND VARIABLE. A figure annotation that sits near a
+        # published number has to be that number.
+        rho = stats.spearmanr(g["H"], g["err"]).statistic
         rows.append(dict(model=m, mean_hit=float(np.mean(hit)), mean_miss=float(np.mean(miss)),
                          n_hit=len(hit), n_miss=len(miss), rank_biserial=float(rb),
                          spearman=float(rho)))
         print(f"  {m:<26} hit n={len(hit):>7,} H={np.mean(hit):.4f} | "
               f"miss n={len(miss):>7,} H={np.mean(miss):.4f} | r_rb={rb:+.3f} rho={rho:+.3f}")
     R = pd.DataFrame(rows)
+
+    # The figure may not drift from the table it exists to make visible.
+    if c["table"].is_file():
+        tab = pd.read_csv(c["table"]).set_index("model_name")["spearman_entropy_vs_error"]
+        bad = [(m, float(R.loc[R.model == m, "spearman"].iloc[0]), float(tab[m]))
+               for m in R["model"] if m in tab.index
+               and abs(float(R.loc[R.model == m, "spearman"].iloc[0]) - float(tab[m])) > 5e-6]
+        if bad:
+            raise SystemExit(
+                f"figure rho disagrees with {c['table'].name}: " +
+                "; ".join(f"{m} figure {a:+.6f} table {b:+.6f}" for m, a, b in bad))
+        print(f"  rho matches {c['table'].name} for all "
+              f"{sum(1 for m in R['model'] if m in tab.index)} models")
+    else:
+        print(f"  NOTE: {c['table']} absent, rho not cross-checked")
 
     x = np.arange(len(models))
     w = 0.38
@@ -157,9 +187,19 @@ def main() -> int:
                  "Bars would separate if entropy tracked accuracy. They do for "
                  + ", ".join(sep) + f"; they do not for the remaining {len(nosep)}.")
     sub = (f"{c['corpus']}: {S.n_clause(n_retained, n_defined)}, {len(models)} models. "
-           f"Starred values clear the pre-registered 0.30.")
+           f"Starred values clear the pre-registered 0.30.\n"
+           "SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), as reported in "
+           "the manuscript table, so higher entropy with more error is POSITIVE. "
+           "r(rb) contrasts the correct stratum against the incorrect one, so the same "
+           "relationship is NEGATIVE. Both describe entropy rising with error.\n"
+           "Split: the 25th and 75th percentile cut was attempted and is degenerate, "
+           "q25 = q75 = 0 for 4 of the 8 CADEC models, so the split drawn is instances with "
+           "at least one correct variant against instances with none.")
     S.check_text(title, sub)
-    ax.set_title(title + "\n" + sub, fontsize=11)
+    W = 118
+    wrapped = "\n".join("\n".join(textwrap.wrap(ln, W)) if ln.strip() else ln
+                        for ln in (title + "\n" + sub).split("\n"))
+    ax.set_title(wrapped, fontsize=9.5)
     ax.set_xticks(x)
     ax.set_xticklabels(models, rotation=20, ha="right", fontsize=9)
     ax.set_xlabel("Model")

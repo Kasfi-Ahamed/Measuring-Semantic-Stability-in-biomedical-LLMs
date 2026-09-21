@@ -47,14 +47,14 @@ FIGS = [
      "scripts/fig_report_rq1.py heatmap",
      [ROOT/"outputs/rq1/entropy_full_umls.csv", ROOT/"outputs/rq1/intermediate/rq1_linguistic_features.csv"],
      "8 models", "MedMentions only: CADEC has no linguistic_category"),
-    ("Figure 3a", "rq2_entropy_by_accuracy_stratum_cadec",
-     ROOT/"outputs/rq3/figures/rq2_entropy_by_accuracy_stratum_cadec.png",
-     "scripts/fig_report_rq2_quartile.py cadec",
+    ("Figure 3a", "fig_rq2_accuracy_split_entropy_cadec",
+     ROOT/"outputs/rq3/figures/fig_rq2_accuracy_split_entropy_cadec.png",
+     "scripts/fig_rq2_accuracy_split.py cadec",
      [ROOT/"outputs/rq3/entropy_cadec.csv", ROOT/"outputs/rq3/intermediate/rq3_cadec_mapped_outputs.csv"],
      "8 models", "CADEC"),
-    ("Figure 3b", "rq2_entropy_by_accuracy_stratum_medmentions",
-     ROOT/"outputs/rq1/figures/rq2_entropy_by_accuracy_stratum_medmentions.png",
-     "scripts/fig_report_rq2_quartile.py medmentions",
+    ("Figure 3b", "fig_rq2_accuracy_split_entropy_medmentions",
+     ROOT/"outputs/rq1/figures/fig_rq2_accuracy_split_entropy_medmentions.png",
+     "scripts/fig_rq2_accuracy_split.py medmentions",
      [ROOT/"outputs/rq1/entropy_full_umls.csv", ROOT/"outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv"],
      "8 models", "MedMentions"),
     ("Figure 5", "rq3_entropy_across_corpora",
@@ -110,6 +110,18 @@ FIGS = [
      ROOT/"outputs/qa/figures/fig_entropy_distribution_qa.png",
      "scripts/fig_entropy_distribution.py qa",
      [ROOT/"outputs/qa/qa_results_combined_identity_filtered.csv"], "5 models", "BioASQ and SQuAD 2.0"),
+]
+
+OVERWRITES = [
+    ("outputs/rq1/figures/rq2_dissociation_stable_but_wrong.png",
+     "90f678ca4c58cb70", "2026-09-14 02:03",
+     "557057e86cfaf277", "2026-09-21 14:01",
+     "Was a stale MedMentions figure sharing a basename with the CADEC one in "
+     "outputs/rq3/figures/, which is the naming trap recorded earlier. Regenerated from "
+     "outputs/rq1/rq2_dissociation_summary.csv on the current corpus. The overwrite "
+     "RESOLVES the duplicate rather than creating one: the two files now hold current "
+     "figures for their two corpora, and the flat collection point disambiguates them by "
+     "filename."),
 ]
 
 NOT_DONE = [
@@ -180,7 +192,30 @@ def main() -> int:
                 L.append(f"- source artefact: `{a}` **MISSING**")
         L += [f"- output sha256: `{sha(png)}`", f"- output mtime: {ts(png)}", ""]
 
-    L += ["## Not delivered, and why", ""]
+    L += ["## Statistics on the figures, and how they relate to the manuscript tables", "",
+          "**Figure 3 carries the manuscript table's own statistic, verbatim.** `|rho|` is "
+          "Spearman(entropy, BINARY error), where error = 1 when the instance-level accuracy "
+          "is below 0.5, read from the same `spearman_entropy_vs_error` column the table "
+          "reports. `scripts/fig_rq2_accuracy_split.py` ABORTS if any model's figure value "
+          "differs from `rq2_dissociation_summary.csv` by more than 5e-6, so the figure "
+          "cannot drift from the table again.", "",
+          "An earlier draft annotated Spearman(entropy, CONTINUOUS mean accuracy over "
+          "variants) and produced 0.480, 0.628, 0.633 for the three encoders against the "
+          "table's 0.464, 0.615, 0.625. Investigated and resolved: **same statistic name, "
+          "different second variable, identical row set** (n = 4,712 in both). Recomputing "
+          "the table's statistic on the joined frame reproduces 0.464088, 0.615499 and "
+          "0.624693 to six decimals, so the row set was never the difference.", "",
+          "**Signs differ by construction and the figure says so on its face.** `rho` is "
+          "entropy against ERROR, so the relationship is positive. `r(rb)` contrasts the "
+          "correct stratum against the incorrect one, so the same relationship is negative. "
+          "Both describe entropy rising with error.", "",
+          "## Overwrites, recorded so the resolution is auditable", ""]
+    for path, old_d, old_t, new_d, new_t, why in OVERWRITES:
+        L += [f"- `{path}`",
+              f"  - before: sha256 `{old_d}`  mtime {old_t}",
+              f"  - after:  sha256 `{new_d}`  mtime {new_t}",
+              f"  - {why}"]
+    L += ["", "## Not delivered, and why", ""]
     for what, why in NOT_DONE:
         L += [f"- **{what}**: {why}"]
     L.append("")

@@ -5,6 +5,28 @@
 ### SIT723 - masters Research Techniques and Applications - Deakin University
 ### Candidate Results Report - Supervisor Review
 
+> **HEADER NOTE ADDED 2026-09-21. READ BEFORE ANY NUMBER BELOW.**
+>
+> **This document's prose and its embedded figures are two different runs, and they
+> disagree cell for cell.** Neither is the basis of any number in the manuscript.
+>
+> The prose describes a vintage whose figure files and execution record are **not in this
+> repository**. Its values survive only here, in this text. Examples, all from the RQ1
+> section: all-instances n = 4,854 with Spearman rho = 0.101, non-zero-only n = 1,007 with
+> rho = -0.401, heatmap darkest cell 0.293 and lightest populated cell 0.045.
+>
+> The images this file embeds are the **2026-07-15 vintage**, preserved under
+> `outputs_archive/outputs_pre_rerun_20260731/`, and they read 4,794, 1,017, 0.100, -0.389,
+> 0.213 and 0.059 for those same six quantities. The executed notebooks beside them, stamped
+> the same minute, agree with the images and not with the prose. No execution record of the
+> prose vintage exists in the repository.
+>
+> **Nothing here feeds the manuscript.** The current figures are in `figures_for_report/`
+> with `MANIFEST.md` recording each one's producer, source artefact, digest and row count.
+> This file is retained as the record of what was handed over in July. Its body is
+> deliberately not edited.
+
+
 ---
 
 ## Contents

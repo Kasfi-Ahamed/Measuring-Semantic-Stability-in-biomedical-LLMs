@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 14:02 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-21 14:10 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -64,25 +64,25 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### Figure 3a
 
-- filename: `rq2_entropy_by_accuracy_stratum_cadec.png` and `rq2_entropy_by_accuracy_stratum_cadec.pdf`
-- producer: `scripts/fig_report_rq2_quartile.py cadec`
+- filename: `fig_rq2_accuracy_split_entropy_cadec.png` and `fig_rq2_accuracy_split_entropy_cadec.pdf`
+- producer: `scripts/fig_rq2_accuracy_split.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_mapped_outputs.csv`  sha256 `c488fbf8ae56a721`  rows 239,680  mtime 2026-09-17 14:37
-- output sha256: `31a5bd68f6f378b4c13112d1eb641ea50dccb88e5297afebbe9042e874034753`
-- output mtime: 2026-09-21 13:59
+- output sha256: `99d96e24e43d9a961c9bbc38ddb59a069015ccb238712f30cc83d4ed28f0ce34`
+- output mtime: 2026-09-21 14:09
 
 ### Figure 3b
 
-- filename: `rq2_entropy_by_accuracy_stratum_medmentions.png` and `rq2_entropy_by_accuracy_stratum_medmentions.pdf`
-- producer: `scripts/fig_report_rq2_quartile.py medmentions`
+- filename: `fig_rq2_accuracy_split_entropy_medmentions.png` and `fig_rq2_accuracy_split_entropy_medmentions.pdf`
+- producer: `scripts/fig_rq2_accuracy_split.py medmentions`
 - model set: 8 models
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv`  sha256 `3774ff8f95317fcf`  rows 7,332,245  mtime 2026-09-19 18:31
-- output sha256: `26324cbb3fbb6a39e77fd4738e467305204c697611fff301c84e3f6a6d9e2642`
-- output mtime: 2026-09-21 14:00
+- output sha256: `9f4f19b6606ab4d3304e078b6f937d30fdbc48a97b078c9c2ce1e3202cf94ab5`
+- output mtime: 2026-09-21 14:10
 
 ### Figure 5
 
@@ -206,6 +206,21 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - output sha256: `46710b595eb1cdd364f82c1bd8a9358bb2be3c9768cacc9da90daedcb13aa348`
 - output mtime: 2026-09-21 11:57
+
+## Statistics on the figures, and how they relate to the manuscript tables
+
+**Figure 3 carries the manuscript table's own statistic, verbatim.** `|rho|` is Spearman(entropy, BINARY error), where error = 1 when the instance-level accuracy is below 0.5, read from the same `spearman_entropy_vs_error` column the table reports. `scripts/fig_rq2_accuracy_split.py` ABORTS if any model's figure value differs from `rq2_dissociation_summary.csv` by more than 5e-6, so the figure cannot drift from the table again.
+
+An earlier draft annotated Spearman(entropy, CONTINUOUS mean accuracy over variants) and produced 0.480, 0.628, 0.633 for the three encoders against the table's 0.464, 0.615, 0.625. Investigated and resolved: **same statistic name, different second variable, identical row set** (n = 4,712 in both). Recomputing the table's statistic on the joined frame reproduces 0.464088, 0.615499 and 0.624693 to six decimals, so the row set was never the difference.
+
+**Signs differ by construction and the figure says so on its face.** `rho` is entropy against ERROR, so the relationship is positive. `r(rb)` contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error.
+
+## Overwrites, recorded so the resolution is auditable
+
+- `outputs/rq1/figures/rq2_dissociation_stable_but_wrong.png`
+  - before: sha256 `90f678ca4c58cb70`  mtime 2026-09-14 02:03
+  - after:  sha256 `557057e86cfaf277`  mtime 2026-09-21 14:01
+  - Was a stale MedMentions figure sharing a basename with the CADEC one in outputs/rq3/figures/, which is the naming trap recorded earlier. Regenerated from outputs/rq1/rq2_dissociation_summary.csv on the current corpus. The overwrite RESOLVES the duplicate rather than creating one: the two files now hold current figures for their two corpora, and the flat collection point disambiguates them by filename.
 
 ## Not delivered, and why
 
