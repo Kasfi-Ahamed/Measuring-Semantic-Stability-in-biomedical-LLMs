@@ -1,0 +1,5 @@
+literal,predicted_cui,confidence,rule_path,assigned_at_0.70,concept,rows_affected
+None,C0456148,0.9999997615814209,exact_match+st21pv+encoder_cosine+freq_tiebreak,True,Null Value,573
+NA,C0037473,0.8206405639648438,no_exact_match+st21pv+encoder_cosine+freq_tiebreak,True,sodium,163
+null,C0456148,0.9999997019767761,exact_match+st21pv+encoder_cosine+freq_tiebreak,True,Null Value,29
+N/A,C1272460,0.9999995827674866,exact_match+st21pv_skip+encoder_cosine+freq_tiebreak,True,Not Applicable,1

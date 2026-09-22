@@ -3104,11 +3104,20 @@ Two further things the earlier fix claimed but did not do:
 
 * Its message says the strict read was applied to "the gold_mention join and
   validated-perturbations read in **both** entropy producers". In
-  `notebooks/03_mapping_entropy/CADEC_entropy.ipynb` the only change that commit made is a
-  **comment line**. Both of the reads it names are still unguarded there today. Nothing is
-  currently wrong in CADEC's numbers, because no CADEC mention is a sentinel token
-  (7,006 instances and 55,976 perturbations, swept, clean), but the code is wrong and a
-  future corpus with an `NA` mention would lose it silently.
+  `notebooks/03_mapping_entropy/CADEC_entropy.ipynb` the only change that commit made was a
+  **comment line**, and both of the reads it names were still unguarded on 2026-09-22.
+  Nothing was wrong in CADEC's numbers, because no CADEC mention is a sentinel token
+  (7,006 instances and 55,976 perturbations, swept, clean), but the code did not do what the
+  record said it did. **Both reads are now guarded** — cell 4's `gold_mention` join from
+  `INST_CSV` and cell 10's `perturbation_text` read from `_VALIDATED_FULL`, each with
+  `keep_default_na=False, na_values=[""]` and a comment naming this entry. No CADEC artefact
+  is regenerated, because the sweep shows no CADEC value changes.
+
+  The lesson is not about CADEC. It is that **a commit message is a claim about code, and
+  nothing checks it.** `eb0f520`'s test asserts that the helper works; no test asserts that
+  the helper is used where the message says it is used. This is remedy 26's class again,
+  one layer up: the fix existed, the description of its scope did not match it, and the
+  gap lived in the record for eight days.
 * It located the defect in the reads. The reads were a symptom. The **write** is where the
   string dies: `scripts/mm_assemble_perts.py` re-reads each completed shard with
   `pd.read_csv(..., low_memory=False)` at lines 44 and 54 and concatenates. The shard files
@@ -3223,22 +3232,81 @@ is not that the wrong branch was taken. **The defect is that the string was dest
 the mapper could take a branch at all**, so the decision was made by `pd.read_csv` and
 recorded as Amendment 7 acting on an empty generation.
 
-### Status: reported, not remediated
+### Status: bounded and deliberately deferred, 2026-09-22
 
-Nothing here is fixed and nothing is regenerated, deliberately. Repairing it means re-reading
-the shards, re-mapping 766 generations, and re-running entropy for 303 analysed instances,
-which is a change to the frozen cut-off corpus twelve days after the cut-off and one day
-before submission. That is not a call to make inside a defect entry. The options, for the
-record:
+**Decided on 2026-09-22 by Kasfi: do not repair before submission. Queue both assembler
+fixes for the post-cut-off defence run, which rebuilds these artefacts from the shards
+anyway.** Repairing now would mean re-mapping 766 generations and re-running entropy for 303
+analysed instances, a change to the frozen cut-off corpus twelve days after the cut-off and
+one day before submission, to move numbers that the bound below shows do not move. The two
+call sites to fix in that run are `scripts/mm_assemble_perts.py` lines 44 and 54 and the
+generation read in `scripts/mm_assemble.py`; all three become
+`scripts.safe_read.read_csv_strict`. The shard files still hold the correct strings, so the
+defence run recovers them with no re-inference.
 
-1. **Leave it and state it.** 0.237% of instances have at least one variant whose answer was
-   destroyed. Quote the number and the direction: they were forced to UNASSIGNED, which
-   inflates `n_unassigned` and can only move entropy by removing a cluster member.
-2. **Repair before the defence run.** The post-cut-off full-corpus run rebuilds these
-   artefacts anyway. Fixing both assemblers first costs nothing extra and the defence run
-   carries correct strings for shards 0 to 25.
-3. **Repair now.** Re-map and re-run entropy for the affected instances against the frozen
-   corpus, with a receipt, as an amendment.
+This deferral is a decision, not an oversight, and it is dated so that a reader can tell the
+difference. Nothing on the submission branch is repaired. Nothing is regenerated.
+
+### The bound
+
+Every MedMentions headline statistic was recomputed with the 303 affected instances excluded,
+after first reproducing the published value exactly from the same inputs, so the leave-out is
+measured against a reproduction and not against a re-derivation.
+
+| statistic | cells | reproduced exactly | largest leave-out shift |
+|---|---|---|---:|
+| RQ2 Spearman rho, entropy vs error | 8 models | 8 / 8 | 0.0002 |
+| RQ3 rank-biserial, matched pairs | 3 pairs | 3 / 3 | 0.0003 |
+| RQ4 AURC `combined_3` | 5 models | 5 / 5 | 0.00008 |
+| RQ4 delta vs best single signal | 5 models | 5 / 5 | 0.00004 |
+
+No sign changes, no significance changes, no change to which single signal is best in any
+RQ4 cell, and `combined_3` still beats the best single signal in all five. The defect cannot
+reach a conclusion at the precision the manuscript prints.
+
+### What the destroyed strings would have mapped to
+
+The assignment is a pure function of the model output string, because rule 1 stopped keying
+on `gold_mention` in `eb0f520`, so **four calls cover all 766 rows**. They were run through
+`assign_with_encoder_scores` itself, sliced verbatim out of the mapping notebook with its own
+`_mean_pool` and `_embed_with_model`, against the same SapBERT encoder, the same 7,653,278
+surface-form pool and the unchanged `CONFIDENCE_THRESHOLD = 0.70` and `TOP_K = 1000`. The
+shortlist was taken by chunked exact inner product over `embeddings.npy` rather than by
+loading the 22.4 GB index; the cached index is `IndexFlatIP` (file magic `IxFI`, size equal to
+the raw vectors), which is exhaustive and exact, so the shortlist is identical by
+construction, and the production loop recomputes each score as an explicit dot product anyway.
+
+| literal | rows | predicted CUI | concept | confidence | rule path | assigned |
+|---|---:|---|---|---:|---|---|
+| `None` | 573 | C0456148 | Null Value | 1.0000 | exact_match+st21pv+encoder_cosine+freq_tiebreak | yes |
+| `NA` | 163 | C0037473 | sodium | 0.8206 | no_exact_match+st21pv+encoder_cosine+freq_tiebreak | yes |
+| `null` | 29 | C0456148 | Null Value | 1.0000 | exact_match+st21pv+encoder_cosine+freq_tiebreak | yes |
+| `N/A` | 1 | C1272460 | Not Applicable | 1.0000 | exact_match+st21pv_skip+encoder_cosine+freq_tiebreak | yes |
+
+**All 766 clear the threshold. None would have been UNASSIGNED, and none match the gold
+concept.** So the branch the defect took is the wrong one in every case, and the branch it
+should have taken is wrong too, in a different way: `NA` in an influenza-segment or
+nuclear-area context resolves to *sodium* at 0.82, which is a confident misassignment rather
+than an abstention. `None` and `null` resolve exactly to *Null Value*, a real UMLS concept for
+the absence of a value, which is the closest thing to a correct answer available and is still
+not the gold CUI.
+
+### Instance-level consequence
+
+311 analysed instance x model cells across the 303 instances. Every affected cell currently
+carries at least one UNASSIGNED variant, as it must.
+
+* **Cluster set: all 311 cells would change, and in the same direction.** In every one of the
+  311, the predicted CUI is *not already present* in that cell's cluster distribution, so the
+  variant does not join an existing cluster, it creates a new one. Repairing the defect can
+  therefore only **raise** `m_distinct` and raise entropy for these cells. The current corpus
+  understates their entropy; it does not overstate it.
+* **Correctness: zero cells would change.** No predicted CUI equals its gold CUI, in any of
+  the 766 rows, so `mean_accuracy_full` is untouched for every affected cell and instance.
+
+That asymmetry is what makes the deferral safe to state rather than merely hope for: the
+defect has no accuracy channel at all, and its only entropy channel is bounded by the
+leave-out table above.
 
 ### The countermeasure that does apply now
 
