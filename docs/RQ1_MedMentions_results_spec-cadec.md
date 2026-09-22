@@ -6,9 +6,9 @@ Entropy column: `normalised_entropy_dedup` (PRIMARY, de-duplicated denominator).
 
 ## Sample and the zero-inflation the hurdle is modelling
 
-- Rows entering the model: **1,019,714** (127,586 instances x 8 models)
-- Zero-entropy rows: **430,035** (**42.17%**) -- this is what part 1 models
-- Non-zero rows entering part 2: **589,679** (**57.83%**)
+- Rows entering the model: **1,019,810** (127,598 instances x 8 models)
+- Zero-entropy rows: **430,064** (**42.17%**) -- this is what part 1 models
+- Non-zero rows entering part 2: **589,746** (**57.83%**)
 - Predictors: `mean_lexical_change_magnitude_z`, `mention_char_len_z`, `n_accepted_perts_z`, `share_back_translation`, `share_controlled_paraphrase`, `share_synonym_substitution`
 - Model fixed effects: `C(model_name)`, 8 levels, reference = `BERT-base`
 - Perturbation shares are a simplex, so the LAST one alphabetically is dropped as the reference: `share_syntactic_reordering`. Every `share_*` coefficient below is therefore read against it, not against zero.
@@ -19,7 +19,7 @@ Computed on `model.exog`, i.e. the design matrix the fit actually used, not a re
 
 **Part 1 — logit, P(H > 0)**
 
-- n = 1,019,714, columns = 14, rank = 14
+- n = 1,019,810, columns = 14, rank = 14
 - condition number, scaled = **23.8** (raw 23.3)
 
 | term | VIF |
@@ -40,7 +40,7 @@ Computed on `model.exog`, i.e. the design matrix the fit actually used, not a re
 
 **Part 2 — magnitude of H given H > 0**
 
-- n = 589,679, columns = 14, rank = 14
+- n = 589,746, columns = 14, rank = 14
 - condition number, scaled = **23.2** (raw 23.3)
 
 | term | VIF |
@@ -67,47 +67,47 @@ Every term, both parts, with 95% confidence intervals and p-values. Model fixed 
 
 Method: GLM-Binomial + cluster-robust SE (cluster=instance_id); model_name as fixed effects (crossed RE not used — did not fit mixed logit)
 
-n = 1,019,714
+n = 1,019,810
 
 | term | coef | 95% CI | p | sig |
 |---|---:|:---:|---:|:--:|
-| `Intercept` | +0.8006 | [+0.7531, +0.8481] | 2.75e-239 | **yes** |
-| `C(model_name)[T.BioBERT]` | -0.4710 | [-0.4865, -0.4554] | 0 | **yes** |
+| `Intercept` | +0.8011 | [+0.7536, +0.8486] | 1.12e-239 | **yes** |
+| `C(model_name)[T.BioBERT]` | -0.4709 | [-0.4864, -0.4553] | 0 | **yes** |
 | `C(model_name)[T.BioMistral-7B]` | -0.4842 | [-0.5003, -0.4682] | 0 | **yes** |
 | `C(model_name)[T.FLAN-T5-base]` | -0.3121 | [-0.3281, -0.2961] | 0 | **yes** |
 | `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.5172 | [+0.5000, +0.5344] | 0 | **yes** |
-| `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.3157 | [-0.3318, -0.2997] | 0 | **yes** |
+| `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.3158 | [-0.3319, -0.2997] | 0 | **yes** |
 | `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.3961 | [-0.4121, -0.3801] | 0 | **yes** |
 | `C(model_name)[T.PubMedBERT]` | -1.0033 | [-1.0189, -0.9877] | 0 | **yes** |
-| `mean_lexical_change_magnitude_z` | +0.2040 | [+0.1980, +0.2101] | 0 | **yes** |
-| `mention_char_len_z` | -0.0163 | [-0.0211, -0.0115] | 3.47e-11 | **yes** |
+| `mean_lexical_change_magnitude_z` | +0.2040 | [+0.1979, +0.2101] | 0 | **yes** |
+| `mention_char_len_z` | -0.0164 | [-0.0212, -0.0115] | 3.06e-11 | **yes** |
 | `n_accepted_perts_z` | +0.1893 | [+0.1838, +0.1948] | 0 | **yes** |
-| `share_back_translation` | -0.3737 | [-0.4257, -0.3216] | 4.89e-45 | **yes** |
-| `share_controlled_paraphrase` | -0.3245 | [-0.3736, -0.2754] | 2.08e-38 | **yes** |
-| `share_synonym_substitution` | +0.1778 | [+0.1175, +0.2382] | 7.68e-09 | **yes** |
+| `share_back_translation` | -0.3745 | [-0.4265, -0.3225] | 2.97e-45 | **yes** |
+| `share_controlled_paraphrase` | -0.3250 | [-0.3740, -0.2759] | 1.65e-38 | **yes** |
+| `share_synonym_substitution` | +0.1775 | [+0.1171, +0.2378] | 8.22e-09 | **yes** |
 
 ### Part 2 — magnitude of H given H > 0
 
 Method: OLS on logit(H) among H>0 + cluster-robust SE (cluster=instance_id); model_name as fixed effects. ENFORCED primary estimator (docs/ANALYSIS_PRECOMMIT.md Amendment 8)
 
-n = 589,679
+n = 589,746
 
 | term | coef | 95% CI | p | sig |
 |---|---:|:---:|---:|:--:|
-| `Intercept` | +0.6584 | [+0.6170, +0.6998] | 3.54e-213 | **yes** |
-| `C(model_name)[T.BioBERT]` | -0.2382 | [-0.2513, -0.2252] | 4.5e-280 | **yes** |
-| `C(model_name)[T.BioMistral-7B]` | -0.1924 | [-0.2064, -0.1784] | 7.07e-160 | **yes** |
-| `C(model_name)[T.FLAN-T5-base]` | -0.1558 | [-0.1696, -0.1420] | 1.71e-108 | **yes** |
-| `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.3364 | [+0.3206, +0.3522] | 0 | **yes** |
-| `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.1540 | [-0.1678, -0.1402] | 1.95e-106 | **yes** |
-| `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.2082 | [-0.2216, -0.1948] | 1.88e-202 | **yes** |
-| `C(model_name)[T.PubMedBERT]` | -0.4078 | [-0.4203, -0.3953] | 0 | **yes** |
-| `mean_lexical_change_magnitude_z` | +0.0913 | [+0.0862, +0.0965] | 2.06e-265 | **yes** |
-| `mention_char_len_z` | -0.0188 | [-0.0226, -0.0150] | 2.73e-22 | **yes** |
-| `n_accepted_perts_z` | -0.2845 | [-0.2892, -0.2799] | 0 | **yes** |
-| `share_back_translation` | -0.2025 | [-0.2484, -0.1567] | 4.7e-18 | **yes** |
-| `share_controlled_paraphrase` | -0.7992 | [-0.8425, -0.7560] | 8.28e-287 | **yes** |
-| `share_synonym_substitution` | -0.6230 | [-0.6780, -0.5680] | 4.04e-109 | **yes** |
+| `Intercept` | +0.6586 | [+0.6171, +0.7000] | 2.39e-213 | **yes** |
+| `C(model_name)[T.BioBERT]` | -0.2383 | [-0.2513, -0.2252] | 3.75e-280 | **yes** |
+| `C(model_name)[T.BioMistral-7B]` | -0.1924 | [-0.2064, -0.1784] | 7.01e-160 | **yes** |
+| `C(model_name)[T.FLAN-T5-base]` | -0.1558 | [-0.1696, -0.1420] | 1.66e-108 | **yes** |
+| `C(model_name)[T.Llama3-OpenBioLLM-8B]` | +0.3365 | [+0.3207, +0.3523] | 0 | **yes** |
+| `C(model_name)[T.Meta-Llama-3-8B-Instruct]` | -0.1540 | [-0.1677, -0.1402] | 1.98e-106 | **yes** |
+| `C(model_name)[T.Mistral-7B-Instruct-v0.1]` | -0.2081 | [-0.2216, -0.1947] | 2.46e-202 | **yes** |
+| `C(model_name)[T.PubMedBERT]` | -0.4077 | [-0.4202, -0.3952] | 0 | **yes** |
+| `mean_lexical_change_magnitude_z` | +0.0913 | [+0.0862, +0.0965] | 1.75e-265 | **yes** |
+| `mention_char_len_z` | -0.0188 | [-0.0226, -0.0150] | 2.74e-22 | **yes** |
+| `n_accepted_perts_z` | -0.2846 | [-0.2892, -0.2799] | 0 | **yes** |
+| `share_back_translation` | -0.2029 | [-0.2487, -0.1571] | 4.02e-18 | **yes** |
+| `share_controlled_paraphrase` | -0.7993 | [-0.8426, -0.7560] | 6.39e-287 | **yes** |
+| `share_synonym_substitution` | -0.6231 | [-0.6781, -0.5681] | 3.38e-109 | **yes** |
 
 Significance threshold alpha = 0.05. No multiplicity correction is applied within this table. Every p-value above is raw and unadjusted.
 

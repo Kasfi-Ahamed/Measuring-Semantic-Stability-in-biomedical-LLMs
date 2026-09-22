@@ -1167,9 +1167,15 @@ digest `3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9`.
 **p-values.** Raw and unadjusted, in both parts of both fits, exactly as for CADEC. No
 multiplicity correction is applied within or across the RQ1 tables.
 
-**Sample.** Reported fit: n = 1,019,714 (part 1, every row), n = 589,679 (part 2, the
-non-zero rows), 127,586 instances x 8 models, 42.17% zero-entropy. The robustness fit uses
-the same two samples; only the term count differs, 21 against 14.
+**Sample.** Reported fit: n = 1,019,810 (part 1, every row), n = 589,746 (part 2, the
+non-zero rows), 127,598 instances x 8 models, 42.17% zero-entropy. This is the whole
+MedMentions cut-off base, with no listwise deletion: the analysed n matches the corpus n
+exactly. An earlier version of this fit reported 127,586 and 1,019,714, twelve instances
+short, because twelve gold mentions are the literal string `NA` and a CSV read with
+pandas' default sentinels had turned them into missing values (docs/BUG_AUDIT.md 28).
+Restoring them changed no coefficient by more than 0.00089 and changed no sign and no
+significance. The robustness fit uses the same two samples; only the term count differs,
+21 against 14.
 
 **What this amendment does not do.** It does not change the CADEC analysis, the entropy
 definition, the retention filter, the alpha, or any pre-committed threshold. It widens the

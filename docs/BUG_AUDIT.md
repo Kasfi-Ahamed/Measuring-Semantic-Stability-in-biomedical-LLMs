@@ -3085,6 +3085,66 @@ read the mention column with those defaults, turned `NA` into `NaN`, and wrote i
 an empty field. From that point the string was gone from the file and no downstream reader
 could tell a missing mention from a mention that is spelled like a null.
 
+### This was already known, and the fix did not reach here
+
+**Correction to the first version of this entry, which read as though the defect were new.**
+It is not. Commit `eb0f520` on 14 September, *Remove the gold mention from rule 1, and stop
+reads destroying 'NA'*, found the same thing from the same instance, `mm_0046685`, and added
+`scripts/safe_read.read_csv_strict` and `scripts/test_safe_read.py` for it. Its own commit
+message states the blast radius as **15 instances**, which is right: 12 whose mention is `NA`
+and 3 whose mention is `null`.
+
+That fix was applied to `scripts/mm_encoder_infer.py` and to the MedMentions mapping
+notebook. It was not applied to the stage that builds the RQ1 predictor table, and
+`rq1_linguistic_features.csv` is dated 10 September, four days before the fix existed, and was
+never rebuilt. So the guarded reads downstream were reading a file in which the string was
+already gone.
+
+Two further things the earlier fix claimed but did not do:
+
+* Its message says the strict read was applied to "the gold_mention join and
+  validated-perturbations read in **both** entropy producers". In
+  `notebooks/03_mapping_entropy/CADEC_entropy.ipynb` the only change that commit made is a
+  **comment line**. Both of the reads it names are still unguarded there today. Nothing is
+  currently wrong in CADEC's numbers, because no CADEC mention is a sentinel token
+  (7,006 instances and 55,976 perturbations, swept, clean), but the code is wrong and a
+  future corpus with an `NA` mention would lose it silently.
+* It located the defect in the reads. The reads were a symptom. The **write** is where the
+  string dies: `scripts/mm_assemble_perts.py` re-reads each completed shard with
+  `pd.read_csv(..., low_memory=False)` at lines 44 and 54 and concatenates. The shard files
+  written by the gate jobs still hold `NA` today, verified directly, all 12 instances and all
+  96 rows. The assembler is what wrote the empty column into
+  `rq1_validated_perturbations.csv` and `rq1_linguistic_features.csv`.
+
+### What the gates and the mapper actually did
+
+Worth recording, because the natural assumption is that everything downstream of an empty
+mention is also wrong, and here it is not.
+
+* **The six gates ran on the correct string.** `entity_preserved` falls through to
+  `unverified` when the mention is missing. Across the 96 perturbations of the twelve, gate 6
+  ran in `mention_exact` mode 91 times and `unverified` 4 times, against a corpus rate of
+  3.85% unverified. A missing mention would have forced all 96 to `unverified`. Gate pass
+  rates for the twelve sit within a few points of the corpus everywhere, and 65 of 96
+  perturbations were accepted, a higher rate than the corpus 59.29%.
+* **The concept mapper had the string.** In `rq1_all_outputs_mapped_A9_CUTOFF.csv` all 616
+  rows for the twelve carry `gold_mention` = `NA`, every row has a `predicted_cui`, and only
+  5 are UNASSIGNED. The `eb0f520` strict read is doing its job there.
+* **The entropy assembly kept them.** All 96 model-instance rows are in
+  `entropy_full_umls.csv`, all with `retained_m_distinct` true and a defined entropy.
+
+So the twelve are sound everywhere except the one table that feeds the RQ1 design, which is
+the only place the string was needed as a *length* rather than as a *lookup key*.
+
+### The three `null` instances are a different story, and not a defect
+
+`mm_0196912`, `mm_0196914` and `mm_0196942` have the mention `null` and appear in no
+perturbation, mapping or entropy artefact at all. They are not excluded by the NA bug. They
+sit at ordinals 196,652 / 196,654 / 196,682, which is **shard 24**, and the cut-off run
+completed shards 0 to 19, covering the first 160,000 of 202,019 sampled instances. They are
+excluded for the same ordinary reason as 42,019 other instances. Had their shard run, they
+would have hit exactly the defect above.
+
 ### Why nothing caught it
 
 Every check in this project is a check on a **count or a digest**, and both were consistent
@@ -3097,6 +3157,12 @@ documents, which is the only kind of check that was ever going to find it.
 The second reason is that the notebook printed neither number. `_prep_design` did its
 `dropna` silently. A one-line print of rows-in versus rows-out would have exposed a 96-row
 deletion the day it first happened.
+
+The third reason is the one that generalises: **a fix for a class was recorded as a fix for
+the class, and it was a fix for four call sites.** `eb0f520` introduced a correct helper and
+a passing test, and both are still correct. Nothing enumerated the call sites the helper had
+not reached, so the defect survived in the places nobody had looked at yet. A helper plus a
+test is not coverage. Coverage is a list of call sites with a tick against each.
 
 ### The countermeasures
 
@@ -3119,3 +3185,65 @@ restored gives n = 1,019,810 and 127,598 instances, matching the corpus base exa
 all 28 coefficients the largest change is **0.00089**, on `share_back_translation` in part 1.
 No sign changes and no significance changes. The defect cost twelve instances out of 127,598,
 0.009%, and it cost an explanation in the manuscript that now does not have to be written.
+
+---
+
+## 29. The same assembler destroyed 766 model answers, and Amendment 7 called them empty
+
+Found by sweeping for remedy 28 rather than by looking for this. It is the same mechanism at
+the sibling assembler, and it is larger and it reaches the entropy corpus.
+
+`scripts/mm_assemble.py` concatenates the completed generation shards with
+`pd.read_csv(p, low_memory=False)`. The generation shards hold **766 model outputs that are a
+pandas NA sentinel as a literal string**:
+
+| token | rows |
+|---|---:|
+| `None` | 573 |
+| `NA` | 163 |
+| `null` | 29 |
+| `N/A` | 1 |
+
+The arithmetic closes exactly. Pre-assembly the shards have **111** empty generations. The
+assembled `rq1_generative_model_outputs.csv` has **877**. 111 + 766 = 877.
+
+### Why this one matters more
+
+Amendment 7 routes an empty generation to **UNASSIGNED**. These 766 were not empty. They were
+answers, and five models produced them: Meta-Llama-3-8B-Instruct 411, BioMistral-7B 288,
+FLAN-T5-base 30, Mistral-7B-Instruct-v0.1 29, Llama3-OpenBioLLM-8B 8. 669 are perturbation
+variants and 97 are the original. They touch **359 instances**, of which **303 are in the
+analysed MedMentions base**, 0.237% of 127,598.
+
+Whether a given one *should* map to UNASSIGNED is a real question and not an obvious one. A
+generative model answering `None` to a concept-identification prompt is plausibly declining,
+and UNASSIGNED may well be right. A model answering `NA` about a neuraminidase gene segment,
+in a corpus where `NA` is a gold mention twelve times over, is plausibly answering. The defect
+is not that the wrong branch was taken. **The defect is that the string was destroyed before
+the mapper could take a branch at all**, so the decision was made by `pd.read_csv` and
+recorded as Amendment 7 acting on an empty generation.
+
+### Status: reported, not remediated
+
+Nothing here is fixed and nothing is regenerated, deliberately. Repairing it means re-reading
+the shards, re-mapping 766 generations, and re-running entropy for 303 analysed instances,
+which is a change to the frozen cut-off corpus twelve days after the cut-off and one day
+before submission. That is not a call to make inside a defect entry. The options, for the
+record:
+
+1. **Leave it and state it.** 0.237% of instances have at least one variant whose answer was
+   destroyed. Quote the number and the direction: they were forced to UNASSIGNED, which
+   inflates `n_unassigned` and can only move entropy by removing a cluster member.
+2. **Repair before the defence run.** The post-cut-off full-corpus run rebuilds these
+   artefacts anyway. Fixing both assemblers first costs nothing extra and the defence run
+   carries correct strings for shards 0 to 25.
+3. **Repair now.** Re-map and re-run entropy for the affected instances against the frozen
+   corpus, with a receipt, as an amendment.
+
+### The countermeasure that does apply now
+
+`scripts/safe_read.read_csv_strict` already exists and is already correct. What is missing is
+an enumeration of where it has to be used. Every `read_csv` in the pipeline that touches a
+mention, a generation, an answer or a perturbation is a call site, and the list is in the
+sweep above, not in anyone's head. Until each is ticked off, remedy 28's closing rule stands:
+a helper plus a test is not coverage.

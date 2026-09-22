@@ -247,8 +247,8 @@ same 14-term specification, entropy from `outputs/rq1/entropy_full_umls.csv`).
 **Producer:** `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb`
 
 All 14 terms, both hurdle parts, coefficients with 95% CIs and p-values, raw and unadjusted.
-CADEC n = 37,695 (part 1), n = 21,602 (part 2); MedMentions n = 1,019,714 (part 1),
-n = 589,679 (part 2). Reference levels: **`BERT-base`** for models, **`share_syntactic_reordering`**
+CADEC n = 37,695 (part 1), n = 21,602 (part 2); MedMentions n = 1,019,810 (part 1),
+n = 589,746 (part 2). Neither corpus loses a row to listwise deletion. Reference levels: **`BERT-base`** for models, **`share_syntactic_reordering`**
 as the dropped simplex reference — every `share_*` coefficient reads against syntactic
 reordering, not against zero. Collinearity diagnostics included: rank 14/14, scaled condition
 number 27.4 and 27.5, maximum VIF 3.69.
