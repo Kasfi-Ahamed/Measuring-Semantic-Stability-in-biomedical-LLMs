@@ -228,7 +228,7 @@
    "Left panel is the full stability by correctness composition; right panel isolates the stable-but-wrong cell, which is where entropy fails as a correctness signal.",
    "Row order is the fixed roster, never sorted by the figure's own data, so the CADEC and MedMentions panels are row aligned and the reversal between them can be read across."
   ],
-  "title": "RQ2: accuracy and stability dissociation, CADEC (patient-generated health text)"
+  "title": "RQ2: accuracy and stability dissociation, CADEC (patient-authored forum posts)"
  },
  "rq2_dissociation_stable_but_wrong_medmentions.png": {
   "group": null,

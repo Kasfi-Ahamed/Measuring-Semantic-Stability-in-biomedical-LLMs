@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-21 16:06 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-22 11:37 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -177,9 +177,9 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - producer: `notebooks/05_analysis/RQ2_Accuracy_Stability_Dissociation.ipynb (RQ_DATASETS=CADEC)`
 - model set: 8 models
 - corpus: CADEC
-- source artefact: `outputs/rq3/rq2_dissociation_summary.csv`  sha256 `c05566c2715f1b20`  rows 8  mtime 2026-09-21 15:26
-- output sha256: `fa9163e9ddf4eae80871959473da4885fcb6e989ec04eaca7dec8f8accf337b0`
-- output mtime: 2026-09-21 15:26
+- source artefact: `outputs/rq3/rq2_dissociation_summary.csv`  sha256 `b0d91504ed483f1c`  rows 8  mtime 2026-09-22 11:37
+- output sha256: `e9cdf1243841b2a86eb22ecdd6fadbc8b9ba8586f23848ec9a19f6f1ca4c16d1`
+- output mtime: 2026-09-22 11:37
 
 ### RQ2 dissociation, MedMentions
 
@@ -187,9 +187,9 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 - producer: `notebooks/05_analysis/RQ2_Accuracy_Stability_Dissociation.ipynb (RQ_DATASETS=MedMentions)`
 - model set: 8 models
 - corpus: MedMentions
-- source artefact: `outputs/rq1/rq2_dissociation_summary.csv`  sha256 `d11830936b4d9dd3`  rows 8  mtime 2026-09-21 15:26
+- source artefact: `outputs/rq1/rq2_dissociation_summary.csv`  sha256 `d11830936b4d9dd3`  rows 8  mtime 2026-09-22 11:37
 - output sha256: `274949af4553f5f27f48e7294de52673eb167ca7b18814a8d3af5800b91cf871`
-- output mtime: 2026-09-21 15:26
+- output mtime: 2026-09-22 11:37
 
 ### Signal independence, CADEC
 

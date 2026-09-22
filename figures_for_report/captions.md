@@ -1,6 +1,6 @@
 # Figure captions
 
-Generated 2026-09-21 16:07 by `scripts/build_captions.py` from the caption registry each producer writes.
+Generated 2026-09-22 11:39 by `scripts/build_captions.py` from the caption registry each producer writes.
 
 Figure titles are one line naming the measure and the corpus. Everything else a reader needs is here, ready to paste into a LaTeX caption. Nothing that used to sit on an image was dropped: it was moved.
 
@@ -229,7 +229,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 
 ## `rq2_dissociation_stable_but_wrong_cadec.png`
 
-**Title as drawn:** RQ2: accuracy and stability dissociation, CADEC (patient-generated health text)
+**Title as drawn:** RQ2: accuracy and stability dissociation, CADEC (patient-authored forum posts)
 
 **n:** n = 37,695 analysed rows
 
