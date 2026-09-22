@@ -2997,3 +2997,59 @@ The third of those is now enforced: `scripts/build_figures_for_report.py` copies
 it can stat, and `scripts/build_captions.py` exits non-zero when a delivered figure is
 absent from the caption registry. The first two are discipline, not code, which is why they
 are written down here.
+
+---
+
+## 27. An output path that names one corpus, in a notebook that loops over corpora
+
+Cell 11 of `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb` opened with
+
+```python
+RQ1_DOC = PROJECT_ROOT / "docs" / f"RQ1_CADEC_results{ARM_SUFFIX}.md"
+```
+
+and then wrote that one file at the end of a loop over `DATASETS`. Every other output in
+the notebook is per-corpus, because the CSV and the figure are built from
+`cfg["out_dir"]`, which differs per dataset. The document alone was a constant.
+
+For as long as the notebook was only ever run on CADEC, or on both corpora at once with
+CADEC last, the name was accidentally right and the file accidentally complete. On
+22 September it was run twice on **MedMentions alone**, under Amendment 10. Both runs wrote
+MedMentions numbers into `docs/RQ1_CADEC_results.md`. The second run left that file holding
+a MedMentions sample of 1,019,714 rows, a MedMentions predictor list of 21 terms, and the
+heading `# RQ1 — MedMentions (biomedical literature)` — under a filename that
+`docs/SUPPLEMENTARY.md` cites as **Supplementary Table S4, the CADEC coefficient table**.
+
+### What made it survivable and what did not
+
+The CADEC document was recovered whole from `git show HEAD:docs/RQ1_CADEC_results.md`,
+because it was tracked and committed. The intermediate that produced it was not re-run and
+did not need to be. Had the file been untracked, as most of this project's large artefacts
+are, the only remaining copy would have been the PDF render.
+
+The rename is not what the failure turned on. A file called `RQ1_CADEC_results.md` whose
+first line is `# RQ1 — MedMentions` is a **self-contradicting artefact**, and the
+contradiction was in the bytes from the moment it was written. Nothing read it. The
+staleness sweep maps that filename to a CADEC input and would have flagged the mismatch in
+timestamps, but it is `staleness_sweep_cadec_qa.py` and was not run in the MedMentions pass.
+
+### The countermeasure
+
+Two lines, both now in the notebook:
+
+```python
+def _rq1_doc_path(ds_key):
+    return PROJECT_ROOT / "docs" / f"RQ1_{ds_key}_results{ARM_SUFFIX}.md"
+...
+    assert _ds_key in _doc.name, f"{_doc.name} does not name the dataset it holds"
+```
+
+plus a post-loop assertion that the number of documents written equals the number of
+datasets **and** the number of distinct filenames, so a future constant path fails loudly
+instead of producing one file with the last corpus in it.
+
+The general rule, and the one worth carrying past this notebook: **inside a loop over
+corpora, every path written must contain the loop variable.** A constant path in a loop is
+not a naming preference, it is a silent overwrite waiting for the corpus order to change.
+An assertion that the artefact's name contains the thing it describes costs one line and
+catches the whole class.

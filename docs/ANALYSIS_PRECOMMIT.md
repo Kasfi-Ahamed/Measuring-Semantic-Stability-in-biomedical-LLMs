@@ -1114,3 +1114,69 @@ have been pushed at all. Kept on disk, recorded by digest in the ledger above, a
 `.gitignore`. This is the rule already applied to the CADEC margin: **digest in the ledger,
 bytes outside the repository**, now extended to every derived artefact over ~50 MB.
 
+
+---
+
+# Amendment 10 — RQ1 is reported on both concept-lane corpora (2026-09-22)
+
+**What was pre-committed.** §4 named RQ1 a CADEC analysis: the hurdle model of normalised
+semantic entropy on linguistic predictors was specified, and scoped, against CADEC alone.
+MedMentions was pre-committed for RQ2 and RQ4 only.
+
+**What is now reported.** RQ1 is reported on **both concept-lane corpora**, CADEC and
+MedMentions. CADEC remains the pre-committed analysis and is unchanged by this amendment;
+MedMentions is added alongside it.
+
+**Why.** Two reasons, both discovered after the pre-commitment was written.
+
+1. The claim RQ1 makes is that linguistic properties of a mention predict entropy. A single
+   corpus cannot separate that claim from a property of patient-authored forum text. With
+   MedMentions fitted under the same specification the two corpora sit in one table and the
+   reader can see which coefficients survive a change of register and which do not.
+2. MedMentions carries predictors CADEC does not have (part-of-speech category shares,
+   changed-token counts, semantic shift). Withholding the corpus entirely would have
+   discarded them; reporting only the richer specification would have made the two corpora
+   incomparable. Both are therefore run, with the roles fixed in advance and stated below.
+
+**Two fits, with the reported one named in advance.**
+
+- **Reported fit.** MedMentions under **exactly the CADEC specification**: the same fourteen
+  terms, the same two parts, the same estimators. The seven MedMentions-only predictors
+  (`mean_changed_tokens_n_z`, `mean_semantic_shift_z` and five estimated `catshare_*`) are
+  dropped. Six `catshare_*` columns leave the design; the sixth, `catshare_verb`, is the
+  dropped simplex reference in the full fit and never had a coefficient of its own.
+  Output: `outputs/rq1/rq1_linguistic_predictors_summary_spec-cadec.csv`,
+  `docs/RQ1_MedMentions_results_spec-cadec.md`. This is what enters the manuscript table.
+- **Robustness check only.** MedMentions under its full specification, all twenty-one terms.
+  Output: `outputs/rq1/rq1_linguistic_predictors_summary.csv`,
+  `docs/RQ1_MedMentions_results.md`. Reported as a **single paragraph** on whether the extra
+  terms move the sign or significance of the shared predictors. It is not a second table and
+  no coefficient from it is quoted as a result.
+
+**Estimators are unchanged from CADEC.** Part 1 is GLM-Binomial with cluster-robust standard
+errors clustered on `instance_id`; part 2 is OLS on logit(H) with the same clustering, the
+estimator enforced by Amendment 8. Nothing was selected by fit quality.
+
+**Inputs.** Entropy from `outputs/rq1/entropy_full_umls.csv` (195,293,231 bytes, written
+2026-09-19 22:29 by job 34288 `mm_cutoff_entropy` from `rq1_all_outputs_mapped_A9_CUTOFF.csv`),
+which is **post Amendment 9**: each of its three corpus parts carries an `amendment: 9`
+receipt with `pythonhashseed: 0`, and the three part row counts
+(2,572,698 + 2,202,290 + 2,557,257 = 7,332,245) reconcile against the Amendment 6 verified
+digest `3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9`.
+
+**p-values.** Raw and unadjusted, in both parts of both fits, exactly as for CADEC. No
+multiplicity correction is applied within or across the RQ1 tables.
+
+**Sample.** Reported fit: n = 1,019,714 (part 1, every row), n = 589,679 (part 2, the
+non-zero rows), 127,586 instances x 8 models, 42.17% zero-entropy. The robustness fit uses
+the same two samples; only the term count differs, 21 against 14.
+
+**What this amendment does not do.** It does not change the CADEC analysis, the entropy
+definition, the retention filter, the alpha, or any pre-committed threshold. It widens the
+corpus scope of one research question and fixes in advance which of two fits is reported.
+
+**Superseded artefact.** `outputs/rq1/rq1_linguistic_predictors_summary.csv` previously held
+a 2026-08-02 MedMentions fit predating Amendments 7, 8 and 9. It was moved to
+`outputs/rq1/rq1_linguistic_predictors_summary_2026-08-02_PREAMENDMENTS.csv`
+(sha256 prefix `4878b5223564360b`) before the re-fit overwrote the path. It is kept for
+provenance and is not reported.

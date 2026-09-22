@@ -276,7 +276,7 @@ The `_GOLDLEAK_prefix` suffix is the convention already used for the CADEC artef
 
 | Results section | consumes | status |
 |---|---|---|
-| 4.1 linguistic predictors | `rq1_linguistic_predictors_summary.csv`, `docs/RQ1_CADEC_results.md` | **CADEC done** / MM pending |
+| 4.1 linguistic predictors | `rq1_linguistic_predictors_summary.csv`, `docs/RQ1_CADEC_results.md`, `docs/RQ1_MedMentions_results_spec-cadec.md` | **CADEC done** / **MM done 22 Sep** (Amendment 10) |
 | 4.2 accuracy-stability dissociation | `rq2_dissociation_summary.csv` | CADEC done / MM pending |
 | 4.3 domain adaptation, matched pairs | `rq3_matched_pair_statistics_cadec.csv` | **CADEC done** / MM pending |
 | 4.4 clinical utility, abstention | `rq4_aurc_summary.csv`, `rq4_risk_coverage_cadec.csv` | CADEC in progress |

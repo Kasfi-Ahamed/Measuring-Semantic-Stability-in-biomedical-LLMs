@@ -12,7 +12,7 @@ Replace the four `[[SUPP_REF]]` placeholders in `main.tex` as follows.
 | the all-accepted-variants sensitivity analysis | **Supplementary Table S1** | `docs/S1_SENSITIVITY.md` |
 | the enumerated tie-break and threshold-band rows | **Supplementary Table S2** | `outputs/rq3/tables/threshold_band_*`, `tiebreak_*` |
 | `combined_3` against each signal separately | **Supplementary Table S3** | `outputs/rq3/rq4_combined3_wintest_cadec.csv` |
-| the full RQ1 coefficient table | **Supplementary Table S4** | `docs/RQ1_CADEC_results.md` |
+| the full RQ1 coefficient table | **Supplementary Table S4** | `docs/RQ1_CADEC_results.md`, `docs/RQ1_MedMentions_results_spec-cadec.md` |
 
 Supporting material not referenced by a `[[SUPP_REF]]`: **S5**–**S10**.
 
@@ -236,21 +236,25 @@ ones' errors.
 ## Supplementary Table S4 — Full RQ1 coefficient table
 
 **Promised in:** Results 4.1.
-**Artefacts:** `docs/RQ1_CADEC_results.md`, `outputs/rq3/rq1_linguistic_predictors_summary.csv`
-(both regenerated 15 Sep 19:25 under Amendment 8)
+**Artefacts:** CADEC — `docs/RQ1_CADEC_results.md`, `outputs/rq3/rq1_linguistic_predictors_summary.csv`
+(both regenerated 15 Sep 19:25 under Amendment 8). MedMentions — `docs/RQ1_MedMentions_results_spec-cadec.md`,
+`outputs/rq1/rq1_linguistic_predictors_summary_spec-cadec.csv` (fitted 22 Sep under Amendment 10,
+same 14-term specification, entropy from `outputs/rq1/entropy_full_umls.csv`).
 
 > Part 2 is **OLS on logit(H) with cluster-robust SE, enforced** — 14 terms. MixedLM is fitted
 > as a sensitivity result and converges on the current data, but is never the reported primary.
 > The `Group Var` row that appeared briefly on 15 September is gone.
 **Producer:** `notebooks/05_analysis/RQ1_linguistic_predictors_hurdle.ipynb`
 
-All 14 terms, both hurdle parts, coefficients with 95% CIs and p-values. n = 37,695 (part 1),
-n = 21,612 (part 2). Reference levels: **`BERT-base`** for models, **`share_syntactic_reordering`**
+All 14 terms, both hurdle parts, coefficients with 95% CIs and p-values, raw and unadjusted.
+CADEC n = 37,695 (part 1), n = 21,602 (part 2); MedMentions n = 1,019,714 (part 1),
+n = 589,679 (part 2). Reference levels: **`BERT-base`** for models, **`share_syntactic_reordering`**
 as the dropped simplex reference — every `share_*` coefficient reads against syntactic
 reordering, not against zero. Collinearity diagnostics included: rank 14/14, scaled condition
 number 27.4 and 27.5, maximum VIF 3.69.
 
-The raw-arm counterpart is `docs/RQ1_CADEC_results_rawm.md` (see S1).
+The raw-arm counterpart is `docs/RQ1_CADEC_results_rawm.md` (see S1). The MedMentions
+full-specification fit, 21 terms, is a robustness check only and is not tabulated: `docs/RQ1_MedMentions_results.md`, per Amendment 10.
 
 ---
 
