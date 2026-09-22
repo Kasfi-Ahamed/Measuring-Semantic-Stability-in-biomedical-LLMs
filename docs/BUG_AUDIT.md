@@ -3053,3 +3053,69 @@ corpora, every path written must contain the loop variable.** A constant path in
 not a naming preference, it is a silent overwrite waiting for the corpus order to change.
 An assertion that the artefact's name contains the thing it describes costs one line and
 catches the whole class.
+
+---
+
+## 28. Twelve mentions were the string `NA`, and a CSV round trip read them as missing
+
+The RQ1 MedMentions base is 127,586 instances and 1,019,714 rows. The corpus base is 127,598
+and 1,019,810. The gap is exactly 12 instances and 96 rows, 12 x 8 models, and it is not a
+sampling rule, a gate, or an entropy definition. It is listwise deletion on a single
+predictor.
+
+`_prep_design` drops any row with a null in the predictor block. `mention_char_len` was null
+for 96 rows, and for nothing else. `mention_char_len` comes from `_mention_len(gold_mention)`,
+and `gold_mention` was empty in `rq1_linguistic_features.csv` for exactly those twelve
+instances. Because pandas `.first()` skips nulls, an instance is only lost if **every** one of
+its accepted-perturbation rows is null, which was true for all twelve: 65 accepted rows in
+total, all empty.
+
+### The mentions were never missing
+
+`rq1_sampled_instances.csv` carries `mention_start` and `mention_end` alongside the string.
+Read with `keep_default_na=False, na_values=[]`, all twelve read back as the literal
+two-character string **`NA`**, and for all twelve `mention_end - mention_start == 2`, so the
+offsets into the source text agree with the string character for character. Four distinct
+CUIs across five PMIDs: `C1269178` (5), `C0001721` (4), `C0017337` (2), `C0243095` (1). In
+context they are ordinary biomedical uses of the abbreviation, neuraminidase in an influenza
+segment list, negative affect in a psychometric abstract, and so on.
+
+`NA` is in pandas' default `na_values`. Whichever stage built the linguistic-features file
+read the mention column with those defaults, turned `NA` into `NaN`, and wrote it back out as
+an empty field. From that point the string was gone from the file and no downstream reader
+could tell a missing mention from a mention that is spelled like a null.
+
+### Why nothing caught it
+
+Every check in this project is a check on a **count or a digest**, and both were consistent
+with themselves. The features file had 758,969 accepted rows before and after. The entropy
+file had 1,019,810 rows. The fit had 1,019,714 and reported it. No stage compared the fit's
+base against the corpus base, because until the fit was carried onto a second corpus nobody
+had a reason to. The discrepancy was found by the supervisor reading two numbers in two
+documents, which is the only kind of check that was ever going to find it.
+
+The second reason is that the notebook printed neither number. `_prep_design` did its
+`dropna` silently. A one-line print of rows-in versus rows-out would have exposed a 96-row
+deletion the day it first happened.
+
+### The countermeasures
+
+1. `_prep_design` now prints rows and instances before and after deletion, names every column
+   that contributed a null with its row and instance count, and counts instances lost
+   entirely. It also prints the mean and sd used for each z-score.
+2. `mention_char_len` is now taken from `rq1_sampled_instances.csv`, the file that owns
+   `gold_mention`, read with the NA sentinels switched off, with the span re-derived from the
+   offsets as a cross-check and an assertion that no analysed instance has a zero-length
+   mention.
+3. The general rule: **a column of free text must never be read with pandas' default
+   `na_values`.** `NA`, `NaN`, `None`, `null`, `N/A` and `nan` are all real strings in
+   biomedical text. Any stage that reads a mention, an answer or a generation reads it with
+   `keep_default_na=False`.
+
+### What it changed
+
+Nothing that matters, which is worth stating rather than assuming. Refitting with the twelve
+restored gives n = 1,019,810 and 127,598 instances, matching the corpus base exactly. Across
+all 28 coefficients the largest change is **0.00089**, on `share_back_translation` in part 1.
+No sign changes and no significance changes. The defect cost twelve instances out of 127,598,
+0.009%, and it cost an explanation in the manuscript that now does not have to be written.

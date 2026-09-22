@@ -109,5 +109,5 @@ n = 21,602
 | `share_controlled_paraphrase` | -0.0011 | [-0.2967, +0.2945] | 0.994 | no |
 | `share_synonym_substitution` | +0.1654 | [-0.4723, +0.8032] | 0.611 | no |
 
-Significance threshold alpha = 0.05. No multiplicity correction is applied within this table.
+Significance threshold alpha = 0.05. No multiplicity correction is applied within this table. Every p-value above is raw and unadjusted.
 
