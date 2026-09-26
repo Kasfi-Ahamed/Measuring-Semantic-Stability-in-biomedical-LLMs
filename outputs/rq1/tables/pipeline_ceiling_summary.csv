@@ -1,0 +1,5 @@
+corpus,scope,n_instances,n_distinct_mentions,accuracy_exact_cui,unassigned_rate,rule_exact_match,rule_no_exact_match,below_threshold
+CADEC,all_sampled,7006,3831,0.545675,0.009135,3930,3076,64
+CADEC,analysed_arm,4712,2567,0.57725,0.005306,2852,1860,25
+MedMentions,all_sampled,202019,65699,0.556987,0.005787,138535,63484,1169
+MedMentions,analysed_arm,127598,45959,0.550965,0.005807,87260,40338,741

@@ -86,3 +86,4 @@ notebooks/*.pdf
 # in docs/ANALYSIS_PRECOMMIT.md instead (2026-09-21).
 outputs/rq1/umls_candidate_margin_medmentions*.csv
 outputs/rq1/umls_candidate_margin_medmentions.csv.bak_before_encoder_margin
+outputs/rq1/tables/pipeline_ceiling_gold_mention.csv

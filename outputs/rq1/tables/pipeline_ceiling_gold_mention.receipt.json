@@ -1,0 +1,11 @@
+{
+  "file": "outputs/rq1/tables/pipeline_ceiling_gold_mention.csv",
+  "sha256": "959e732f758c134cbdf2eb19c9224a8f4def34497967e529942cb8385aefa900",
+  "bytes": 26886256,
+  "rows": 209025,
+  "why_untracked": "carries 7,006 CADEC gold_mention strings; CADEC text is not redistributable",
+  "produced": "2026-09-27",
+  "threshold": 0.7,
+  "top_k": 1000,
+  "method": "gold mention string through SapBERT retrieval + the five-rule assignment, assign_with_encoder_scores sliced verbatim from RQ1_PART2_full_umls_pool.ipynb cell 11"
+}
