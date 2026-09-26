@@ -193,6 +193,7 @@ def grid_clause(n_grid: int, n_defined: int, reason: str = "with defined entropy
 # ---------------------------------------------------------------------------------------
 import json as _json
 from pathlib import Path as _Path
+import matplotlib as _mpl
 
 _ROOT = _Path(__file__).resolve().parents[1]
 CAPTION_STORE = _ROOT / "figures_for_report" / "_captions.json"
@@ -227,9 +228,59 @@ def emit_caption(filename, *, title, n=None, models=None, notes=None, group=None
     return title
 
 
+# Vector PDF companions, added 2026-09-27. Type 42 embeds text as TrueType so it stays
+# selectable in the PDF rather than being converted to outlines or bitmaps.
+_mpl.rcParams["pdf.fonttype"] = 42
+_mpl.rcParams["ps.fonttype"] = 42
+
+RASTERISED = {}          # stem -> [vertex counts of the artists that were rasterised]
+DENSE_VERTICES = 50_000  # above this, an artist is a point cloud, not a drawing
+
+
+def _rasterise_dense(fig, threshold=DENSE_VERTICES):
+    """Mark only the dense data layers as raster; axes, text and legends stay vector.
+
+    A fully vector PDF of a million-point scatter is enormous and slow to open, which is
+    worse than the PNG it replaces. Rasterising the point cloud alone keeps every label
+    crisp and selectable while bounding the file size. The threshold is on vertex count,
+    so it is a property of the data and needs no per-figure list to maintain.
+    """
+    hit = []
+    for ax in fig.get_axes():
+        for coll in ax.collections:
+            try:
+                n = len(coll.get_offsets())
+            except Exception:
+                n = 0
+            if n >= threshold:
+                coll.set_rasterized(True)
+                hit.append(n)
+        for line in ax.lines:
+            try:
+                n = len(line.get_xdata())
+            except Exception:
+                n = 0
+            if n >= threshold:
+                line.set_rasterized(True)
+                hit.append(n)
+    return hit
+
+
 def save_png(fig, path, *, dpi=300):
-    """PNG only, 300 dpi. No PDF is emitted anywhere in this family."""
+    """PNG at 300 dpi, plus a vector PDF sibling with the same figsize and bbox.
+
+    Same figure object, saved twice: this is a format change, not a redesign. The PDF
+    carries no dpi unless a dense layer was rasterised, in which case the dpi applies to
+    that layer only.
+    """
     path = _Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=dpi, bbox_inches="tight")
+    hit = _rasterise_dense(fig)
+    pdf = path.with_suffix(".pdf")
+    if hit:
+        RASTERISED[path.stem] = hit
+        fig.savefig(pdf, dpi=400, bbox_inches="tight")
+    else:
+        fig.savefig(pdf, bbox_inches="tight")
     return path

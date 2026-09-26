@@ -227,7 +227,15 @@ def main() -> int:
             continue
         shutil.copy2(src, DEST / f"{stem}.png")
         png = DEST / f"{stem}.png"
-        L += [f"- filename: `{stem}.png`  (PNG, 300 dpi. This family emits no PDF.)",
+        # The vector PDF sibling the producer wrote beside the PNG, copied under the same
+        # basename so the manuscript picks it up without a LaTeX edit.
+        src_pdf = src.with_suffix(".pdf")
+        pdf_note = "no PDF beside it"
+        if src_pdf.is_file():
+            shutil.copy2(src_pdf, DEST / f"{stem}.pdf")
+            pdf_note = (f"`{stem}.pdf` {(DEST / f'{stem}.pdf').stat().st_size/1024:,.0f} KB, "
+                        f"sha256 `{sha(DEST / f'{stem}.pdf')[:16]}`")
+        L += [f"- filename: `{stem}.png`  (PNG, 300 dpi) and {pdf_note}",
               f"- producer: `{producer}`",
               f"- model set: {models}",
               f"- corpus: {corpus}"]

@@ -1,7 +1,7 @@
 {
   "figure": "fig_signal_independence_cadec.png",
   "dataset": "CADEC",
-  "generated_utc": "2026-09-21T05:52:11.045004+00:00",
+  "generated_utc": "2026-09-26T16:18:58.529611+00:00",
   "source": "outputs/rq3/umls_candidate_margin_cadec.csv",
   "source_sha256": "534c64929f7996aca30b4b7c0091184839fd1f5263008bf352ca10dbb008d23d",
   "signal_pairs": [

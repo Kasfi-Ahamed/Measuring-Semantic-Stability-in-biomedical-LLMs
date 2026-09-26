@@ -20,7 +20,7 @@
  "fig_entropy_distribution_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 37,696 grid rows, 37,695 with defined entropy (1 row has none)",
+  "n": "n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)",
   "notes": [
    "Two panels share the model rows. Left is the proportion of rows at exactly zero entropy, on a proportion axis, with the percentage printed at each bar end. Right is the distribution of the non-zero values only, on an entropy axis, with a tick at the median.",
    "The two quantities are on separate axes because a proportion and an entropy do not share a scale."
@@ -30,7 +30,7 @@
  "fig_entropy_distribution_medmentions.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)",
+  "n": "n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)",
   "notes": [
    "Two panels share the model rows. Left is the proportion of rows at exactly zero entropy, on a proportion axis, with the percentage printed at each bar end. Right is the distribution of the non-zero values only, on an entropy axis, with a tick at the median.",
    "The two quantities are on separate axes because a proportion and an entropy do not share a scale."
@@ -40,7 +40,7 @@
  "fig_entropy_distribution_qa.png": {
   "group": null,
   "models": "5 models, roster order",
-  "n": "n = 10,600 rows",
+  "n": "n = 10,600 grid rows, all drawn",
   "notes": [
    "Two panels share the model rows. Left is the proportion of rows at exactly zero entropy, on a proportion axis, with the percentage printed at each bar end. Right is the distribution of the non-zero values only, on an entropy axis, with a tick at the median.",
    "The two quantities are on separate axes because a proportion and an entropy do not share a scale."
@@ -93,7 +93,7 @@
  "fig_rq2_accuracy_split_entropy_medmentions.png": {
   "group": null,
   "models": "8 models, roster order",
-  "n": "n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows have none)",
+  "n": "n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)",
   "notes": [
    "Bars do not separate for any model.",
    "SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), the same statistic and column the manuscript table reports, so higher entropy with more error is positive. r(rb) contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error. A star marks a value clearing the pre-registered 0.30.",
