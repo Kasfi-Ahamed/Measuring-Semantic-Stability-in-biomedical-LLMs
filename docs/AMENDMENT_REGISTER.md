@@ -101,14 +101,50 @@ row was removed surgically and the two counts recomputed from the file. That a p
 supplementary artefact has no producer is the same defect class as the figure this entry
 deletes, and is left on the record rather than fixed here.
 
-**Three near-identical figures were NOT deleted, because they were not in scope.**
+### 2026-09-27 — `outputs/figures/all_rq_figures/RQ4_aurc_4datasets.png`
 
-| file | md5 | inventory status |
-|---|---|---|
-| `outputs/figures/all_rq_figures/RQ4_aurc_4datasets.png` | `aea21332…` — **byte-identical to the deleted file** | `UNKNOWN(no producer found)` |
-| `outputs/rq4/rq4_riskcoverage_4datasets.png` | `83285638…` | `CURRENT`, 2 inputs resolved |
-| `outputs/figures/all_rq_figures/RQ4_riskcoverage_4datasets.png` | `83285638…` | `CURRENT`, 1 input resolved |
+**Deleted**, extending the entry above. It is **md5-identical** to the file deleted on
+2026-09-26 (`aea21332c92ffa97c0f63956d3007193`) and its inventory row carried the same verdict,
+`UNKNOWN(no producer found)`, with zero resolved inputs. Deleting one copy and keeping its exact
+twin would have achieved nothing.
 
-The first is an exact copy of the deleted file and carries the same "no producer" verdict. The
-risk-coverage pair draws the same cross-lane comparison but the inventory resolves inputs for
-both, so whether they are orphans is a different question. All three remain tracked.
+`docs/ARTEFACT_INVENTORY.csv` loses one further row: **446 artefacts to 445, 126 tracked to
+125**, and the S9 caption is updated again.
+
+**`outputs/rq1/figure_digests.json` records a digest for this path and has deliberately NOT
+been edited.** That file is a dated receipt of one regeneration run (`generated_utc`
+2026-09-21T00:52:33, with `created`, `modified` and `removed` all empty), not a live manifest.
+It correctly records what the digest was on 21 September. Amending a receipt to match a later
+state would be rewriting history, which is the opposite of what the ledger is for.
+
+### The risk-coverage pair: investigated, and NOT deleted
+
+`outputs/rq4/rq4_riskcoverage_4datasets.png` and its byte-identical copy in
+`outputs/figures/all_rq_figures/` were examined on 2026-09-27 on the suspicion that they draw a
+cross-lane comparison. **They do not, and they should not be deleted on that ground.**
+
+The figure's own subtitle reads *"RQ4 risk-coverage · two lanes kept separate"*, and its footer
+reads *"confidence = SapBERT cosine (concept) vs sequence logprob (QA); correctness = CUI match
+vs answer match; curves comparable within a lane, not across lanes."* Every model x dataset is
+its own panel on its own y scale, grouped under four labelled headings that name the entropy
+level and the exclusions per corpus. Nothing is pooled, ranked across lanes, or placed on a
+shared axis. The figure states the incommensurability that the Methods state.
+
+They do, however, share the defect that got the AURC pair deleted: **no producer.** The strings
+`4datasets`, `4_datasets` and `four_datasets` appear in no `.py`, `.ipynb`, `.sh` or `.sbatch`
+file anywhere in the repository, and `git log --all -S"4datasets"` over `*.py` and `*.ipynb`
+returns nothing, so no producer was ever committed. `RQ4_four_dataset_figures.ipynb`, despite
+its name, reads only the CADEC and MedMentions margin curves and writes a different filename.
+
+The inventory's `CURRENT` status and resolved-input counts are not evidence to the contrary.
+The two copies are byte-identical yet carry **different** inferred producers and **different**
+`n_inputs` (1 against 2), which shows that column is a property of the inventory's inference,
+not of the artefact.
+
+Neither figure is cited by any document, caption or supplementary table: the only references
+are `docs/ARTEFACT_INVENTORY.csv`, this register, and `figure_digests.json` for the
+`all_rq_figures` copy. Both are left in place.
+
+**One further figure was NOT deleted, because it was not in scope.**
+
+The risk-coverage pair (`83285638…`) remains tracked, for the reasons set out above.

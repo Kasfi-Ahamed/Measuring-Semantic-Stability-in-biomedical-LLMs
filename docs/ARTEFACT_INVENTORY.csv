@@ -5,7 +5,6 @@ outputs/figures/all_rq_figures/RQ1_predictors_medmentions.png,2026-08-04 15:34,U
 outputs/figures/all_rq_figures/RQ2_dissociation_cadec.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
 outputs/figures/all_rq_figures/RQ2_dissociation_medmentions.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
 outputs/figures/all_rq_figures/RQ3_matched_pairs.png,2026-08-16 10:25,STALE,,3,entropy_cadec.csv(09-11 19:11); entropy_full_umls.csv(09-13 12:29); rq3_matched_pair_statistics.csv(09-13 22:20),CADEC_inference.ipynb; rq3_matched_pairs.py,True
-outputs/figures/all_rq_figures/RQ4_aurc_4datasets.png,2026-08-20 12:07,UNKNOWN(no producer found),,0,,,True
 outputs/figures/all_rq_figures/RQ4_aurc_bioasq_squad2.png,2026-08-20 12:07,UNKNOWN(no producer found),,0,,,True
 outputs/figures/all_rq_figures/RQ4_aurc_concept_medmentions_cadec.png,2026-08-20 12:21,UNKNOWN(no producer found),,0,,,True
 outputs/figures/all_rq_figures/RQ4_aurc_grouped.png,2026-08-04 15:34,UNKNOWN(no producer found),,0,,,True
