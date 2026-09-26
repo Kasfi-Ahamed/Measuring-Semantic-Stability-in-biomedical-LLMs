@@ -17,7 +17,6 @@ outputs/figures/all_rq_figures/RQ4_risk_coverage_margin_cadec.png,2026-08-20 12:
 outputs/figures/all_rq_figures/RQ4_risk_coverage_margin_medmentions.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_margin_benchmark.ipynb,True
 outputs/figures/all_rq_figures/RQ4_risk_coverage_medmentions.png,2026-08-20 12:21,CURRENT,,1,,RQ4_MedMentions_Abstention.ipynb,True
 outputs/figures/all_rq_figures/RQ4_risk_coverage_squad.png,2026-08-20 12:21,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
-outputs/figures/all_rq_figures/RQ4_riskcoverage_4datasets.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
 outputs/figures/all_rq_figures/RQ4_riskcoverage_bioasq.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
 outputs/figures/all_rq_figures/RQ4_riskcoverage_cadec.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
 outputs/figures/all_rq_figures/RQ4_riskcoverage_medmentions.png,2026-08-20 12:07,CURRENT,,1,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_MedMentions_Abstention.ipynb; RQ4_margin_benchmark.ipynb,True
@@ -432,7 +431,6 @@ outputs/rq4/rq4_risk_coverage_margin_medmentions.png,2026-08-20 12:07,UNKNOWN(no
 outputs/rq4/rq4_risk_coverage_margin_qa.csv,2026-08-19 20:32,UNKNOWN(no inputs resolved),"n=139,392",0,,RQ4_four_dataset_figures.ipynb,True
 outputs/rq4/rq4_risk_coverage_medmentions.png,2026-08-20 12:21,CURRENT,,1,,RQ4_MedMentions_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
 outputs/rq4/rq4_risk_coverage_squad.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
-outputs/rq4/rq4_riskcoverage_4datasets.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
 outputs/rq4/rq4_riskcoverage_bioasq.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
 outputs/rq4/rq4_riskcoverage_cadec.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
 outputs/rq4/rq4_riskcoverage_medmentions.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True

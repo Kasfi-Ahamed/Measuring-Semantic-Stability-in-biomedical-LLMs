@@ -117,7 +117,7 @@ been edited.** That file is a dated receipt of one regeneration run (`generated_
 It correctly records what the digest was on 21 September. Amending a receipt to match a later
 state would be rewriting history, which is the opposite of what the ledger is for.
 
-### The risk-coverage pair: investigated, and NOT deleted
+### The risk-coverage pair: investigated, then deleted on a different ground
 
 `outputs/rq4/rq4_riskcoverage_4datasets.png` and its byte-identical copy in
 `outputs/figures/all_rq_figures/` were examined on 2026-09-27 on the suspicion that they draw a
@@ -143,8 +143,32 @@ not of the artefact.
 
 Neither figure is cited by any document, caption or supplementary table: the only references
 are `docs/ARTEFACT_INVENTORY.csv`, this register, and `figure_digests.json` for the
-`all_rq_figures` copy. Both are left in place.
+`all_rq_figures` copy.
+
+**Both were deleted on 2026-09-27**, not for the cross-lane reason, which was investigated and
+dismissed above, but because **their sample sizes reproduce no current arm.** The n printed on
+the plate, against the analysed arm:
+
+| block | plate | current arm |
+|---|---|---|
+| MedMentions | 491 per model (Llama-3 490) | **127,598** |
+| CADEC | 5,669 / 5,668 / 5,658 / 5,633 / 5,193 / 233 | **4,712** (one RQ4 cell 4,711) |
+| BioASQ | 392 per model | **390** |
+| SQuAD 2.0 | 139 per model | **1,730** |
+
+Not one of the four reproduces. Two of the values are named as superseded in this project's own
+pre-commitment: `docs/ANALYSIS_PRECOMMIT.md:292` records "MedMentions n_paired = 491, CADEC
+n_paired = 5,669 — a pre-rewind count" and states those counts are discarded. BioASQ 392 is the
+pre-identity-filter value against the current 390. SQuAD 139 is not even the pre-filter value,
+which is 1,736 against a current 1,730 (`docs/QA_results.md:25`); 139 comes from a far earlier
+and much smaller sample.
+
+**Reason recorded for the deletion:** no producer in any committed history, cited by no caption
+or supplementary table, and sample sizes that do not reproduce the analysed arm.
+
+`docs/ARTEFACT_INVENTORY.csv` loses two further rows: **445 artefacts to 443, 125 tracked to
+123.** `figure_digests.json` is again left alone, for the reason given above.
 
 **One further figure was NOT deleted, because it was not in scope.**
 
-The risk-coverage pair (`83285638…`) remains tracked, for the reasons set out above.
+All four `4datasets` figures are now deleted; no row containing `4datasets` remains in the inventory.
