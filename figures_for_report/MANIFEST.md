@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-27 02:21 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-27 02:38 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -64,47 +64,47 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### Figure 2a
 
-- filename: `rq1_entropy_heatmap_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_medmentions.pdf` 26 KB, sha256 `fc62d2b7b2d72a91`
+- filename: `rq1_entropy_heatmap_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_medmentions.pdf` 26 KB, sha256 `430b95454149a417`
 - producer: `scripts/fig_report_rq1.py heatmap-medmentions`
 - model set: pooled over 8 models
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `1c95ce541da312eaa5e3e66873d8a14d654cf83b6b5aa2f67c90f6b59b1e7791`
-- output mtime: 2026-09-27 02:17
+- output mtime: 2026-09-27 02:37
 
 ### Figure 2c
 
-- filename: `rq1_entropy_heatmap_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_cadec.pdf` 27 KB, sha256 `938f863e3ab5a5e0`
+- filename: `rq1_entropy_heatmap_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_cadec.pdf` 27 KB, sha256 `7ff41f998ebe686a`
 - producer: `scripts/fig_report_rq1.py heatmap-cadec`
 - model set: pooled over 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
 - output sha256: `fe1de80e3ad10e91e4fbdf12d75fdc7650db904bb5e77ba3c3812595cc85992c`
-- output mtime: 2026-09-27 02:16
+- output mtime: 2026-09-27 02:37
 
 ### Figure 2d (THESIS ONLY, not a manuscript figure)
 
-- filename: `rq1_entropy_heatmap_by_model_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_cadec.pdf` 31 KB, sha256 `7e9ebf27e2d48c25`
+- filename: `rq1_entropy_heatmap_by_model_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_cadec.pdf` 31 KB, sha256 `59c70937140b0d6e`
 - producer: `scripts/fig_report_rq1.py heatmap-cadec`
 - model set: 8 models, one panel each
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
-- output sha256: `eabbe2e2ece7ba5925b2f5cda1e5c94c8b4bd858b103dd8fb5c896f7d6909644`
-- output mtime: 2026-09-27 02:16
+- output sha256: `c8ea23ce213ab770e8524204e3908661e14dd68f138554c71fec16fd08a5ea2e`
+- output mtime: 2026-09-27 02:37
 
 ### Figure 2b (THESIS ONLY, not a manuscript figure)
 
-- filename: `rq1_entropy_heatmap_by_model_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_medmentions.pdf` 30 KB, sha256 `0f44c9e4b30a336e`
+- filename: `rq1_entropy_heatmap_by_model_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_medmentions.pdf` 30 KB, sha256 `9299584f1acdefd2`
 - producer: `scripts/fig_report_rq1.py heatmap-medmentions`
 - model set: 8 models, one panel each, one shared colour scale
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
-- output sha256: `b6ba2d0f03e96c9edb3bd45647135f2b36539a693cc5b22a13ab349d0dae7ede`
-- output mtime: 2026-09-27 02:17
+- output sha256: `960b0ddb5120ab5a16f1cd1b839522393f5ab7467848cd3fb5d293e2ae11ecde`
+- output mtime: 2026-09-27 02:38
 
 ### Figure 3a
 
