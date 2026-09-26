@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-27 02:38 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-27 03:10 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming

@@ -113,6 +113,20 @@ They are retained because a per-model breakdown is the natural first question a 
 a pooled heatmap, and having it already rendered costs nothing but disk. The size is recorded
 so that 20M inside the submission tag is a known quantity rather than a discovery.
 
+## Two trees reviewed and confirmed out of scope, 2026-09-27
+
+So the next person does not repeat the work. **Nothing was deleted.**
+
+| tree | files | finding |
+|---|---:|---|
+| `outputs_archive/outputs_pre_rerun_20260731/` | 80 figures | The 31 July pre-rerun archive. Untracked, so not in any tag. Every file predates the cut-off corpus by seven weeks and is superseded by construction. Referenced by no caption, supplementary table or document. |
+| `.claude/worktrees/experiment-monitoring-diagnostics-08da58/` | 91 figures | A snapshot worktree whose last commit is `e3043c6`, "snapshot: working state before reproducible restructure" (1 September). Clean, no commits ahead of the working branch. Not repository material. Referenced by nothing. |
+
+Both were reviewed against the manuscript's figure list and the supplementary index on
+2026-09-27. Neither contains a figure the manuscript uses or could use: the archive because
+every file predates its own inputs, the worktree because it is a copy of a superseded state of
+this same repository.
+
 ## How this list was produced
 
 `git ls-files outputs/` filtered to `.png` and `.csv` gives 245 tracked artefacts. Of those,

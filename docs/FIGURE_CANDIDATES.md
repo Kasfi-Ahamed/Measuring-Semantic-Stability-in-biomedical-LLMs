@@ -33,6 +33,28 @@ appears here only because the enumeration is by filename.
 
 ---
 
+
+> ## Correction, 2026-09-27: three CURRENT ARM rows were wrong
+>
+> `rq4_risk_coverage_bioasq`, `rq4_risk_coverage_squad` and `rq4_aurc_qa_bioasq_squad` were
+> classified **CURRENT ARM** on the strength of cell 3's `read_csv` calls, which name
+> `outputs/qa/qa_results_combined.csv`. That was the wrong cell. The QA panels are drawn in
+> cell 9 from `_qa_rc` and `_qa_aurc`, which resolve to
+> `outputs/rq4/rq4_risk_coverage_margin_qa.csv` and `outputs/rq4/rq4_aurc_margin_qa.csv` —
+> the two files renamed on 2026-09-27 to `_2026-08-19_PREQARETENTION` because they carry
+> **BioASQ 392 and SQuAD 139** against the analysed 390 and 1,730.
+>
+> Checked against the rendered figures, not inferred: every panel of
+> `rq4_risk_coverage_bioasq` is titled `n=392`. All three are **SUPERSEDED ARM** and must not
+> go in the appendix. The error was mine: I read one cell's inputs and generalised to a figure
+> drawn in another.
+>
+> A consequence worth recording: `RQ4_four_dataset_figures.ipynb` no longer runs to completion,
+> because those inputs are deliberately retired. It now raises at the
+> `assert len(saved_paths) == expect_n` check in cell 7 after writing three concept plates. The
+> three it writes reproduce byte-identically, so nothing regressed; the notebook is simply
+> asking for artefacts that were withdrawn on purpose.
+
 ## Parts 1 to 3 — candidates, sorted by research question then by arm
 
 | figure | size | producer (file:line) | inputs, from the code | RQ | what it plots | arm | regenerable as PDF |
@@ -76,8 +98,8 @@ appears here only because the enumeration is by filename.
 
 | classification | distinct figures |
 |---|---:|
-| **CURRENT ARM**, regenerable as PDF with no rerun | **13** |
-| SUPERSEDED ARM | 32 |
+| **CURRENT ARM**, regenerable as PDF with no rerun | **10** (was 13; see the correction above) |
+| SUPERSEDED ARM | 35 |
 | CANNOT DETERMINE | 3 |
 | the two placed figures reached by another path | 2 |
 
