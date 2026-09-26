@@ -113,6 +113,26 @@ They are retained because a per-model breakdown is the natural first question a 
 a pooled heatmap, and having it already rendered costs nothing but disk. The size is recorded
 so that 20M inside the submission tag is a known quantity rather than a discovery.
 
+## `RQ4_four_dataset_figures.ipynb` fails on purpose. Do not "fix" it.
+
+**Do not restore `outputs/rq4/rq4_risk_coverage_margin_qa.csv` or `rq4_aurc_margin_qa.csv`.**
+Those two were renamed to `_2026-08-19_PREQARETENTION` on 2026-09-27 because they carry
+**BioASQ 392 and SQuAD 139** against the analysed **390 and 1,730**.
+
+The notebook's cell 9 sets `HAS_QA_MARGIN_AURC` from those two paths, skips the QA panels when
+they are absent, and then cell 7 raises at `assert len(saved_paths) == expect_n`. That
+assertion firing is the retirement working as intended, not a regression: the three concept
+plates it writes before failing reproduce **byte-identically**, which is the proof that nothing
+else changed.
+
+Three figures depend on the retired inputs and are superseded: `rq4_risk_coverage_bioasq`,
+`rq4_risk_coverage_squad` and `rq4_aurc_qa_bioasq_squad`. Every panel of the first is titled
+`n=392`, checked in the rendered image. The per-dataset question-answering claims are carried by
+**Supplementary Table S7**, which is current, and no figure substitute is to be made.
+
+To make this notebook run again, rebuild the QA margin chain on the current arm and write it to
+the unsuffixed names. Restoring the old files would resurrect the 392/139 sample.
+
 ## Two trees reviewed and confirmed out of scope, 2026-09-27
 
 So the next person does not repeat the work. **Nothing was deleted.**
