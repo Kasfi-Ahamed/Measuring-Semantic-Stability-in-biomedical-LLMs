@@ -266,6 +266,30 @@ def _rasterise_dense(fig, threshold=DENSE_VERTICES):
     return hit
 
 
+OVERLAPS = {}   # stem -> list of colliding text pairs, filled by save_png
+
+
+def _text_overlaps(fig, tol=1.0):
+    """Every pair of text artists compared by rendered bounding box.
+
+    This is the guard that caught the suppression note covering BERT-base's 0.277 and 0.341
+    after a font change, so it runs on every save rather than on request.
+    """
+    import itertools, matplotlib.text as _mt
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    boxes = [(t, t.get_window_extent(renderer=r))
+             for t in fig.findobj(_mt.Text) if t.get_text().strip()]
+    bad = []
+    for (ta, ba), (tb, bb) in itertools.combinations(boxes, 2):
+        if ta.axes is not None and tb.axes is not None and ta.axes is not tb.axes:
+            continue
+        if ba.overlaps(bb) and ba.width > 0 and bb.width > 0:
+            if min(ba.x1, bb.x1) - max(ba.x0, bb.x0) > tol:
+                bad.append((ta.get_text()[:28], tb.get_text()[:28]))
+    return bad
+
+
 def save_png(fig, path, *, dpi=300):
     """PNG at 300 dpi, plus a vector PDF sibling with the same figsize and bbox.
 
@@ -276,6 +300,10 @@ def save_png(fig, path, *, dpi=300):
     path = _Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=dpi, bbox_inches="tight")
+    _ov = _text_overlaps(fig)
+    OVERLAPS[path.stem] = _ov
+    print(f"  overlap guard {path.stem}: {len(_ov)} colliding text pairs"
+          + ("" if not _ov else f"  {_ov[:3]}"), flush=True)
     hit = _rasterise_dense(fig)
     pdf = path.with_suffix(".pdf")
     if hit:

@@ -147,6 +147,70 @@ Both were reviewed against the manuscript's figure list and the supplementary in
 every file predates its own inputs, the worktree because it is a copy of a superseded state of
 this same repository.
 
+## Figure legibility at placement: 21 of 23 below 6pt, deferred to the journal version
+
+**Measured 2026-09-27**, from each PDF's MediaBox and its own `Tf` operators, against the
+thesis geometry (`\linewidth` 345.0pt = 4.7738in, `\textheight` 550.0pt = 7.6104in, TeX points).
+
+**The cause is structural, not per-figure.** The whole set was authored on canvases 9.5 to 15.5
+inches wide for a column that renders at 4.77 to 5.49 inches. Scale therefore lands between
+0.25 and 0.52 and ordinary 8 to 10pt matplotlib type reaches the page at 2 to 5pt. Nothing is
+wrong with any individual figure; they were drawn for a wider page than they are printed on.
+
+| rendered | figure | in-figure min |
+|---:|---|---:|
+| 1.75pt | `fig_rq2_accuracy_split_entropy_cadec` | 6pt |
+| 1.75pt | `fig_rq2_accuracy_split_entropy_medmentions` | 6pt |
+| 2.02pt | `rq1_magnitude_vs_entropy_cadec` | 8pt |
+| 2.02pt | `rq1_magnitude_vs_entropy_medmentions` | 8pt |
+| 2.02pt | `rq1_magnitude_vs_entropy_qa` | 8pt |
+| 2.08pt | `rq1_entropy_heatmap_cadec` | 7pt |
+| 2.67pt | `rq1_entropy_heatmap_medmentions` | 9pt |
+| 3.01pt | `fig_risk_coverage_cadec` | 8pt |
+| 3.01pt | `fig_risk_coverage_medmentions` | 8pt |
+| 3.62pt | `fig_entropy_distribution_cadec` | 8pt |
+| 3.62pt | `fig_entropy_distribution_medmentions` | 8pt |
+| 3.62pt | `fig_entropy_distribution_qa` | 8pt |
+| 3.78pt | `rq1_entropy_heatmap_by_model_cadec` | 8pt |
+| 3.85pt | `fig_signal_independence_qa` | 8pt |
+| 3.86pt | `rq3_entropy_across_corpora` | 9pt |
+| 3.93pt | `fig_signal_independence_medmentions` | 8pt |
+| 3.98pt | `rq2_dissociation_stable_but_wrong_cadec` | 8pt |
+| 3.98pt | `rq2_dissociation_stable_but_wrong_medmentions` | 8pt |
+| 4.02pt | `fig_risk_coverage_qa` | 8pt |
+| 4.17pt | `fig_signal_independence_cadec` | 8pt |
+| 5.68pt | `rq1_entropy_heatmap_by_model_medmentions` | 12pt |
+
+Clearing 6pt: only `rq1_linguistic_predictors_coefs_cadec` (7.05pt) and `_medmentions`
+(7.06pt), which were rebuilt for the purpose.
+
+### The canvas-shrink fix was attempted on the worst nine and did not land
+
+Shrinking the canvas toward the rendered width does raise the rendered type, and on four of the
+nine it cleared 7pt: the two pooled heatmaps reached 8.98pt and the two risk-coverage plates
+7.53 and 8.23pt. **But the text then no longer fits.** The overlap guard in
+`report_style.save_png`, which compares every pair of text artists by rendered bounding box,
+reported collisions on all nine, including cell values overlapping each other and a suppression
+note on the heatmaps, and model names overlapping on the accuracy-split x axis.
+
+Three further facts from that attempt, worth not rediscovering:
+
+* A single unwrapped `suptitle` sets the MediaBox width and defeats the canvas change
+  entirely. On the magnitude scatters the MediaBox stayed at 5.66 to 5.68in whether the canvas
+  was 3.70 or 3.95in wide.
+* Once the suptitle is wrapped, the **legend** becomes the floor. Eight model names at 8pt in
+  three columns cannot be narrower than about 5.7in, and going to two columns adds rows that
+  break the height allowance.
+* Mathtext subscripts render at roughly 0.6 of the base size, so `r$_{rb}$` at 8pt puts a 5pt
+  glyph on the plate. That glyph, not any label, was the binding minimum on the accuracy-split
+  pair.
+
+**The attempt was reverted**; the figures on disk are the committed ones. Fixing this properly
+needs either more page width per figure or less content per figure, and both are decisions
+about the document rather than about the producers. Deferred to the journal version, where the
+same canvas-and-grid change should be applied across the whole set at once, together with the
+placement.
+
 ## How this list was produced
 
 `git ls-files outputs/` filtered to `.png` and `.csv` gives 245 tracked artefacts. Of those,
