@@ -62,3 +62,53 @@ feeds it.** A manuscript sentence saying the tie-break was applied should say wh
 > restored an estimator the Methods section already specified, after a data correction was
 > observed to have changed which estimator the code selected. Every one is dated and
 > attributable to a commit, and the results before and after each are retained.
+
+---
+
+## Artefact deletions
+
+Recorded here because a deletion from a tagged repository changes what a reader can check, and
+the supplementary tables quote counts that move with it.
+
+### 2026-09-26 — `outputs/rq4/rq4_aurc_4datasets.png`
+
+**Deleted.** Two reasons, both established by inspection rather than recollection.
+
+1. **It has no producer.** `docs/ARTEFACT_INVENTORY.csv` attributed it to
+   `RQ4_Clinical_Utility_Abstention.ipynb`, `RQ4_Results_compiled.ipynb` and
+   `RQ4_compute_missing_umls_margin.ipynb`, but the string `4datasets` appears in none of those
+   three notebooks, and the same row's inputs column resolves to `UNKNOWN(no inputs resolved)`.
+   The producer attribution was inferred by directory, not matched. Nothing in the repository
+   writes the file.
+2. **It draws a comparison the manuscript states is never made.** It places AURC for all four
+   corpora on one axis, across the concept and question-answering lanes, which do not share a
+   correctness definition. The manuscript's claim that the two lanes are reported separately and
+   their rankings never compared is correct of every live analysis — a search of all `.py` and
+   `.ipynb` files outside `_legacy` found no analysis joining lane AURC, risk or ranking — so the
+   figure contradicted the text without any analysis standing behind it.
+
+**Consequences, recorded so the numbers reconcile.** `docs/ARTEFACT_INVENTORY.csv`, which is
+**Supplementary Table S9**, loses exactly one row: **447 artefacts to 446, 127 tracked to 126**.
+The S9 caption in `docs/SUPPLEMENTARY.md` is updated to match. `outputs/rq1/figure_digests.json`
+does **not** reference this path and is unaffected. The file remains recoverable from the git
+history and from tags `v1.0-thesis-submission` through `v1.0.2-thesis-submission`, in each of
+which it is still present.
+
+**A note on the inventory.** `docs/ARTEFACT_INVENTORY.csv` has **no generator** in the
+repository; the only two files that mention it, `scripts/fig_entropy_distribution.py:8` and
+`scripts/audit_cadec_vintages.py:49`, read it. It could therefore not be regenerated, and the
+row was removed surgically and the two counts recomputed from the file. That a promised
+supplementary artefact has no producer is the same defect class as the figure this entry
+deletes, and is left on the record rather than fixed here.
+
+**Three near-identical figures were NOT deleted, because they were not in scope.**
+
+| file | md5 | inventory status |
+|---|---|---|
+| `outputs/figures/all_rq_figures/RQ4_aurc_4datasets.png` | `aea21332…` — **byte-identical to the deleted file** | `UNKNOWN(no producer found)` |
+| `outputs/rq4/rq4_riskcoverage_4datasets.png` | `83285638…` | `CURRENT`, 2 inputs resolved |
+| `outputs/figures/all_rq_figures/RQ4_riskcoverage_4datasets.png` | `83285638…` | `CURRENT`, 1 input resolved |
+
+The first is an exact copy of the deleted file and carries the same "no producer" verdict. The
+risk-coverage pair draws the same cross-lane comparison but the inventory resolves inputs for
+both, so whether they are orphans is a different question. All three remain tracked.

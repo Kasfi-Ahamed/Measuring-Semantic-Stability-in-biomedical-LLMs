@@ -415,7 +415,6 @@ outputs/rq4/present/figures/rq4_riskcoverage_medmentions.png,2026-08-20 12:07,CU
 outputs/rq4/present/figures/rq4_riskcoverage_squad2.png,2026-08-20 12:07,CURRENT,,2,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb; RQ4_MedMentions_Abstention.ipynb,True
 outputs/rq4/present/figures/rq4_spearman_independence.png,2026-08-20 14:40,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
 outputs/rq4/present/figures/rq4_spearman_independence_table.png,2026-08-20 14:40,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb; RQ4_four_dataset_figures.ipynb,True
-outputs/rq4/rq4_aurc_4datasets.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Results_compiled.ipynb; RQ4_compute_missing_umls_margin.ipynb,True
 outputs/rq4/rq4_aurc_bioasq_squad2.png,2026-08-20 12:07,UNKNOWN(no inputs resolved),,0,,RQ4_Results_compiled.ipynb,True
 outputs/rq4/rq4_aurc_bootstrap_ci.csv,2026-08-27 12:18,UNKNOWN(no inputs resolved),"n=233,490,491,5193,5633,5658...",0,,RQ4_compute_missing_umls_margin.ipynb; RQ4_margin_benchmark.ipynb,True
 outputs/rq4/rq4_aurc_concept_medmentions_cadec.png,2026-08-20 12:21,UNKNOWN(no inputs resolved),,0,,RQ4_four_dataset_figures.ipynb,True
