@@ -29,7 +29,8 @@ def build(sub, label, fs, figw=11.0):
     ling = sub[sub["is_linguistic"]].copy()
     fig, axes = plt.subplots(2, 1, figsize=(figw, figw * 0.62), sharex=False)
     for ax, part, title in zip(axes, ["logit_P_nonzero", "magnitude_nonzero"],
-                               [r"Part 1: $P(\hat H>0)$ (logit)", r"Part 2: magnitude among $\hat H>0$"]):
+                               [r"Part 1: $P(\hat H>0)$, binomial (logit)",
+                                r"Part 2: magnitude among $\hat H>0$, least squares on logit($\hat H$)"]):
         g = ling[ling["part"] == part].sort_values("coef")
         y = np.arange(len(g))
         colors = ["#2a6f97" if c > 0 else "#9b2226" for c in g["coef"]]
@@ -82,7 +83,7 @@ def overlaps(fig):
     return bad
 
 JOBS = [("cadec", "outputs/rq3/rq1_linguistic_predictors_summary.csv",
-         "CADEC (patient-generated health text)"),
+         "CADEC (consumer-health forum posts)"),
         ("medmentions", "outputs/rq1/rq1_linguistic_predictors_summary_spec-cadec.csv",
          "MedMentions (biomedical literature)")]
 for slug, csv, label in JOBS:
