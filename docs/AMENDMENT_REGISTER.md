@@ -172,3 +172,44 @@ or supplementary table, and sample sizes that do not reproduce the analysed arm.
 **One further figure was NOT deleted, because it was not in scope.**
 
 All four `4datasets` figures are now deleted; no row containing `4datasets` remains in the inventory.
+
+
+### 2026-09-27 — three superseded CSVs renamed, not deleted
+
+`outputs/rq4/rq4_aurc_margin_qa.csv`, `outputs/rq4/rq4_risk_coverage_margin_qa.csv` and
+`outputs/rq4_aurc_summary_both_datasets.csv` each carried a superseded sample under a
+live-looking name, and each was cited by nothing. They are **renamed**, not deleted, so the
+filename carries the warning the way `_PRE*` already does elsewhere:
+
+| before | after |
+|---|---|
+| `rq4_aurc_margin_qa.csv` | `rq4_aurc_margin_qa_2026-08-19_PREQARETENTION.csv` |
+| `rq4_risk_coverage_margin_qa.csv` | `rq4_risk_coverage_margin_qa_2026-08-19_PREQARETENTION.csv` |
+| `rq4_aurc_summary_both_datasets.csv` | `rq4_aurc_summary_both_datasets_2026-08-02_PREAMENDMENTS.csv` |
+
+The first two carry BioASQ 392 and SQuAD 139 against the analysed 390 and 1,730; the third
+carries MedMentions 491 and CADEC 5,212-5,669 against 127,598 and 4,712, and is the same
+2026-08-02 vintage as `rq1_linguistic_predictors_summary_2026-08-02_PREAMENDMENTS.csv`, so it
+takes the same suffix.
+
+The three inventory rows have their paths rewritten. **The counts are unchanged at 443
+artefacts and 123 tracked**, because a rename moves a row rather than removing one.
+
+### 2026-09-27 — `docs/STALE_ARTEFACTS.md` added
+
+Lists the 46 tracked artefacts that are retained but do not describe the analysed arm: the 3
+CSVs above and 43 figures each written before the entropy table it would have to read. None is
+cited by any caption, supplementary table or document. Referenced from the S9 caption.
+
+### Deferred to after submission
+
+Recorded here so they are not forgotten rather than left to memory.
+
+1. **`outputs/scratch/` is tracked.** Thirty-three of the unreferenced CSVs live under
+   `outputs/scratch/` — `test_concat`, `A9_partA1`, `A9_partA2`, `A9_partB`, `E1`,
+   `E1_33221_PREAMENDMENT9`, `validate_map`. A directory named `scratch` inside a submission tag
+   is a separate decision from staleness, and it is deferred until after submission.
+2. **A deletion pass over the 43 date-impossible figures**, if one is still wanted once the
+   manuscript is in. They are listed in `docs/STALE_ARTEFACTS.md`; nothing depends on them.
+
+Neither is actioned on the submission branch.
