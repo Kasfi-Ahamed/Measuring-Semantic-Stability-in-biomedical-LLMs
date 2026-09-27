@@ -333,11 +333,13 @@ def heatmap(corpus="MedMentions") -> int:
         print(f"    {who:<26} {ca:<14} x {ty:<22} rows={rr:<6} instances={ii:<4}"
               f"  {'EMPTY' if rr == 0 else 'below 3'}")
 
-    # LANDSCAPE. Sized for a sidewaysfigure at width=0.98*textheight = 7.458in, one
-    # figure per float. A gentle shrink only: the note is lifted off fs-2 so the
-    # minimum is the 9pt cell size, which lets the canvas stay large and keeps the
-    # collision pressure down.
-    fig, ax = plt.subplots(figsize=(1.55 * len(types) + 3.2, 0.62 * len(cats) + 2.1))
+    # LANDSCAPE, one figure per sidewaysfigure float. The float is bounded at
+    # 7.458in wide (0.98 * textheight) and 3.95in tall: the height is linewidth
+    # LESS the rotated caption, which sits inside the same rotated box. That is a
+    # minimum aspect of 1.89, so the canvas is wide and short, 8.00 x 4.23in, and
+    # the scale at 7.458in is 0.93 rather than 0.81.
+    fig, ax = plt.subplots(figsize=(1.25 * len(types) + 3.18,
+                                   0.355 * len(cats) + 2.07))
     im = _draw_cells(ax, pooled, pooled_n, pooled_i, cats, types, vmax, fs=9,
                      note_fs=9, compact_notes=True)
     ax.set_xticks(range(len(types))); ax.set_xticklabels(types, rotation=25, ha="right", fontsize=9)

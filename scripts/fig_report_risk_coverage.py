@@ -41,15 +41,16 @@ CFG = {
         model_col="model_name", acc="accuracy", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
         out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=4,
-        # LANDSCAPE, sidewaysfigure at 7.458in. Gentle shrink from 3.9 x 4.3.
-        panel=(2.15, 2.36), wrap=58, legend_ncol=3, thin_ticks=True,
+        # LANDSCAPE, sidewaysfigure at 7.458in wide by 3.95in tall: linewidth less
+        # the rotated caption. Minimum aspect 1.89, so 8.00 x 4.23in of canvas.
+        panel=(2.02, 2.00), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
         out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
-        panel=(2.15, 2.36), wrap=58, legend_ncol=3, thin_ticks=True,
+        panel=(2.02, 2.00), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
