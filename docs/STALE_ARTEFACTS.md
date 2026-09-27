@@ -351,6 +351,41 @@ page. **The fix is not a lower floor.** The refusal message says so, for the sam
 written here: the failure mode is invisible in a table of font sizes, which is exactly what one
 would otherwise be looking at.
 
+## Deferred past submission
+
+Collected here because each is a change to production code or to tracked files that nothing
+reported depends on, and none should be made in the days before submission.
+
+**1. Make `scripts/rq3_matched_pairs.py` require an explicit corpus.** Its `OUT_CSV` is the
+unsuffixed `rq3_matched_pair_statistics.csv` and its corpus argument defaults to `"all"`, so an
+argument-free run recreates the superseded file and touches neither of the two the analysis reads.
+`scripts/cutoff_verify.py` already requires `--corpus` for the same class of reason. See the
+*Superseded, NOT renamed* section above for the full argument.
+
+**2. Remove the triplication of the RQ4 risk-coverage figures.** The twelve `riskcoverage` rows
+that `docs/ARTEFACT_INVENTORY.csv` marks `CURRENT` are **four** distinct figures — cadec,
+medmentions, bioasq, squad2 — each held three times, at `outputs/figures/all_rq_figures/`,
+`outputs/rq4/present/figures/` and `outputs/rq4/`. Each triple is byte-identical, verified by md5 on
+2026-09-27. Three copies of one figure is three chances for one of them to be regenerated and the
+other two to be left behind, which is how a date-impossible figure survives in the first place.
+Keep one, under the producer's own output directory.
+
+The two QA plates in the same set of fourteen are **not** triplicated but are duplicated, and the
+two copies differ: `outputs/qa/qa_risk_coverage_{bioasq,squad2}.png` at 2026-09-04 03:17 against
+`outputs/rq4/present/figures/qa_risk_coverage_{bioasq,squad2}.png` at 2026-08-20 11:29, different
+md5. The inventory marks the older copies `STALE` with `qa_summary.csv(09-04 03:17)` resolved as a
+newer input, and the newer copies `CURRENT` with nothing resolved — the same figure, two statuses,
+and the wrong one is the one with the later date.
+
+**3. Make the inventory's status a function of the same date-impossibility rule this document
+applies**, so the two documents cannot disagree. At present they disagree on roughly half the same
+artefacts in both directions: 14 rows this document calls date-impossible are `CURRENT` there, and
+the 3 renamed CSVs it calls superseded are `UNKNOWN(no inputs resolved)` there. A status computed
+from "is this artefact older than any input it must read" would return the same verdict as the
+judgement recorded here, and `docs/SUPPLEMENTARY.md` S9 would not have to disclose the gap.
+
+---
+
 ## How this list was produced
 
 `git ls-files outputs/` filtered to `.png` and `.csv` gives 245 tracked artefacts. Of those,
