@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-27 14:21 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-28 02:22 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -130,46 +130,77 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### Figure 5
 
-- filename: `rq3_entropy_across_corpora.png`  (PNG, 300 dpi) and `rq3_entropy_across_corpora.pdf` 26 KB, sha256 `c864a2efcca5657e`
+- filename: `fig_entropy_across_corpora.png`  (PNG, 300 dpi) and `fig_entropy_across_corpora.pdf` 25 KB, sha256 `64c7fbc4ab4754a7`
 - producer: `scripts/fig_report_rq3_continuum.py`
 - model set: 8 concept lane, 5 question-answering lane
 - corpus: all four
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
-- output sha256: `a1d6fa13472bf9b3dbfbd87bd20566bc671bad806ad12405604b742303ac4799`
-- output mtime: 2026-09-27 02:18
+- output sha256: `d3a5850e58e14c5589f8aeb41018da2cf517e74fc2f14408b34ee999acafd5e6`
+- output mtime: 2026-09-28 02:21
+
+### RQ3 matched pairs, forest
+
+- filename: `fig_rq3_matched_pairs_forest.png`  (PNG, 300 dpi) and `fig_rq3_matched_pairs_forest.pdf` 17 KB, sha256 `fc60ec23fbef2cb7`
+- producer: `scripts/fig_rq3_matched_pairs_forest.py`
+- model set: 3 pairs x 2 corpora
+- corpus: CADEC and MedMentions
+- source artefact: `outputs/rq3/rq3_matched_pair_statistics_cadec.csv`  sha256 `54f7716c8f45e310`  rows 6  mtime 2026-09-21 12:10
+- source artefact: `outputs/rq3/rq3_matched_pair_statistics_medmentions.csv`  sha256 `a913330d00c0c6e8`  rows 6  mtime 2026-09-21 12:16
+- output sha256: `8809c53a9fd0321088e0ddf5542978d38890687c3f53601409802497c2cd7670`
+- output mtime: 2026-09-28 01:44
+
+### RQ4 risk-coverage, BioASQ
+
+- filename: `fig_risk_coverage_bioasq.png`  (PNG, 300 dpi) and `fig_risk_coverage_bioasq.pdf` 18 KB, sha256 `8fd411e65de2953d`
+- producer: `scripts/fig_report_risk_coverage.py bioasq`
+- model set: 5 models
+- corpus: BioASQ
+- source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
+- output sha256: `b2db54929a0fec17b0f4bab99072d7c71bb40baf3964300b998e87b8a0090973`
+- output mtime: 2026-09-28 02:20
+
+### RQ4 risk-coverage, SQuAD 2.0
+
+- filename: `fig_risk_coverage_squad.png`  (PNG, 300 dpi) and `fig_risk_coverage_squad.pdf` 19 KB, sha256 `eca56ece9c049adb`
+- producer: `scripts/fig_report_risk_coverage.py squad`
+- model set: 5 models
+- corpus: SQuAD 2.0
+- source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
+- output sha256: `629c411fdc70e1330e1ace77a35cf57b9a4b6117c919ee44d67c2f7eedb42921`
+- output mtime: 2026-09-28 02:20
 
 ### RQ4 risk-coverage, CADEC
 
-- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 20 KB, sha256 `2bfe259f54b10019`
+- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 21 KB, sha256 `f4c1ba5643e80cd2`
 - producer: `scripts/fig_report_risk_coverage.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
-- output sha256: `9564a9102d2e6f6e63ef3883e9d266a21447a5dcd305f68f775b44a5d406ebea`
-- output mtime: 2026-09-27 14:20
+- output sha256: `ba8bc164a92c48061b3086d4ff8e53d44e0673a39af6b66e733e9729a36d18b2`
+- output mtime: 2026-09-28 02:20
 
 ### RQ4 risk-coverage, MedMentions
 
-- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 20 KB, sha256 `1abd064fc3140220`
+- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 21 KB, sha256 `c3a5db9736b07c9f`
 - producer: `scripts/fig_report_risk_coverage.py medmentions`
 - model set: 8 models, margin omitted for the 3 encoders
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
-- output sha256: `69739df646fbcd0b8a5f57c26e3dd7bbf76d45e3cb6f6d7cca3ad7e8c7ae0adc`
-- output mtime: 2026-09-27 14:20
+- output sha256: `22ac49bb3b1f76cb366daa3b19ff63a5f2de5f68692155fca05a0af5110d374e`
+- output mtime: 2026-09-28 02:20
 
 ### RQ4 risk-coverage, QA
 
-- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 19 KB, sha256 `a0f4d7073967a1ab`
+- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 19 KB, sha256 `8fca193a230f67a7`
 - producer: `scripts/fig_report_risk_coverage.py qa`
 - model set: 5 models
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/umls_candidate_margin_qa.csv`  sha256 `fd286f193e894733`  rows 10,640  mtime 2026-09-21 01:27
-- output sha256: `15ce624478407635f75c0400a90aaf162f8b68d5afdcb42879927a4d6c709658`
-- output mtime: 2026-09-27 14:20
+- output sha256: `08538939463db4af7ad326129ea4c364dc38aeab96e37ac0fad1cad2ef2f5c26`
+- output mtime: 2026-09-28 02:20
 
 ### RQ2 dissociation, CADEC
 
@@ -272,7 +303,7 @@ An earlier draft annotated Spearman(entropy, CONTINUOUS mean accuracy over varia
 
 `report_style.check_text()` rejects an em dash, an en dash, or the word "clinical" in any figure title, axis label or annotation, and every producer in this family calls it before writing. A violation aborts the run rather than producing a figure. Source sweep of the producers at assembly time:
 
-- Clean. 7 producers swept by AST over every non-docstring string literal, `scripts/report_style.py` INCLUDED: no em dash, no en dash, no occurrence of "clinical". Only two things are exempt, and both are named rather than whole files: the values of `_EM_DASH` and `_EN_DASH`, and the string literals inside `check_text` itself, which necessarily contain what they forbid. Docstrings are exempt because they quote the forbidden wording in order to explain its removal.
+- Clean. 8 producers swept by AST over every non-docstring string literal, `scripts/report_style.py` INCLUDED: no em dash, no en dash, no occurrence of "clinical". Only two things are exempt, and both are named rather than whole files: the values of `_EM_DASH` and `_EN_DASH`, and the string literals inside `check_text` itself, which necessarily contain what they forbid. Docstrings are exempt because they quote the forbidden wording in order to explain its removal.
 
 ## Part-of-speech provenance for linguistic_category
 

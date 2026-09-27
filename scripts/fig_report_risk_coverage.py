@@ -40,19 +40,19 @@ CFG = {
         corpus="CADEC", path=ROOT / "outputs/rq3/umls_candidate_margin_cadec.csv",
         model_col="model_name", acc="accuracy", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
-        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=2,
-        # UPRIGHT at width=\linewidth. Eight panels reflowed from 2 rows x 4 columns to
-        # 4 rows x 2 columns, which takes each panel from about 1.2in wide to about 2.39in
-        # and lets the canvas be narrow, about 5.0 x 5.2in, so the scale at 4.7738in is
-        # near 0.95 instead of the 0.30 a 15.8in canvas would have given.
-        panel=(2.50, 1.39), wrap=52, legend_ncol=3, thin_ticks=True,
+        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=4,
+        # 4 COLUMNS x 2 ROWS, sized so the per-panel FRAME (ax.get_window_extent, not the
+        # grid cell) lands between 1.15 and 1.25, matching the question-answering plates.
+        # The cell is wider than the frame because the cell also carries the panel title and,
+        # on the bottom row, the tick labels and axis label.
+        panel=(1.25, 1.64), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
-        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=2,
-        panel=(2.50, 1.39), wrap=52, legend_ncol=3, thin_ticks=True,
+        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
+        panel=(1.25, 1.75), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
@@ -66,8 +66,22 @@ CFG = {
         # wider than it is tall. The shared axis stays, because that is what makes the
         # panels comparable; the panels get room instead.
         out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=3,
+        panel=(1.833, 2.25), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
 }
+
+# The pooled question-answering plate is SUPERSEDED by these two. Nothing in the manuscript
+# argues from the pooled numbers: Section 4.6 quotes entropy AURC per dataset and Supplementary
+# S7 is already per dataset. Verified from the artefact, not assumed: qa_results_combined_
+# identity_filtered.csv carries a `dataset` column of bioasq / squad2, and the retained counts
+# are 390 per model on BioASQ and 1,730 on SQuAD 2.0, which sum to the pooled 2,120.
+for _slug, _ds, _label in (("bioasq", "bioasq", "BioASQ"),
+                           ("squad", "squad2", "SQuAD 2.0")):
+    _c = dict(CFG["qa"])
+    _c["corpus"] = _label
+    _c["dataset_filter"] = _ds
+    _c["out"] = ROOT / f"outputs/qa/figures/fig_risk_coverage_{_slug}.png"
+    CFG[_slug] = _c
 
 
 def rank01(v: np.ndarray, higher_is_safer: bool) -> np.ndarray:
@@ -104,6 +118,12 @@ def main() -> int:
         if len(df) != before:
             raise SystemExit(f"join changed row count {before:,} -> {len(df):,}")
     n_file = len(df)
+    if c.get("dataset_filter"):
+        _before = len(df)
+        df = df[df["dataset"].astype(str) == c["dataset_filter"]].copy()
+        print(f"  dataset filter {c['dataset_filter']!r}: {_before:,} -> {len(df):,} rows")
+        if df.empty:
+            raise SystemExit(f"dataset filter {c['dataset_filter']!r} matched nothing")
     df = df[df[c["keep"]].astype(bool)].copy()
     n_grid = len(df)
     df[c["model_col"]] = S.normalise_models(df[c["model_col"]])
@@ -119,6 +139,7 @@ def main() -> int:
                              sharex=True, sharey=True, squeeze=False)
     handles: dict[str, object] = {}
     omitted_any = []
+    _per_n: list[int] = []
     for i, m in enumerate(models):
         ax = axes[i // ncol][i % ncol]
         g = df[df[c["model_col"]] == m]
@@ -158,31 +179,30 @@ def main() -> int:
         # took the plotting axes down to 0.36in. The panel still states which estimator was
         # drawn, which is what the caption's closing clause promises; the reason it was drawn,
         # and the list of models affected, are already spelled out in the caption note below.
-        _long = "\nmargin undefined: no retrieval. combined(2) shown"
-        sub = "" if has_margin else ("\ncombined(2)" if c.get("thin_ticks") else _long)
+        # The margin note is NOT in the title. It was identical in three MedMentions panels
+        # and took each of those titles to three lines; it is stated once in the suptitle.
+        if not has_margin:
+            ax.annotate("combined(2)", (0.97, 0.04), xycoords="axes fraction",
+                        ha="right", va="bottom", fontsize=8, color="#444444")
         # Same abbreviation rule as the RQ2 accuracy-split plate: drop the vendor prefix, the
         # instruction-tuning suffix and the point release; keep the family, the biomedical
         # qualifier and the parameter count. Unabbreviated, "Meta-Llama-3-8B-Instruct" overflowed
         # its 2.50in panel, which widened the tight box to 5.57in and cost 0.10 of scale.
         _m = (m.replace("Meta-", "").replace("-Instruct", "").replace("-v0.1", "")
-               .replace("FLAN-T5-base", "FLAN-T5").replace("Llama3-OpenBioLLM", "OpenBioLLM")
-              if c.get("thin_ticks") else m)
-        ax.set_title(f"{_m}  (n = {len(g):,}){sub}", fontsize=8.5)
+               .replace("FLAN-T5-base", "FLAN-T5").replace("Llama3-OpenBioLLM", "OpenBioLLM"))
+        # n is NOT in the panel title. It is identical in every panel of a figure, so it is
+        # stated once in the suptitle; repeating it eight times was what forced the wrapping.
+        _per_n.append(len(g))
+        ax.set_title(_m, fontsize=8)
+        # ONE SET OF AXES FOR EVERY FIGURE IN THIS FAMILY, so a reader can compare across
+        # corpora without re-reading the scale. MedMentions' curves compress into a band near
+        # the top under y 0 to 1; that is intended, and its caption already makes the narrow
+        # separation between each curve and its baseline the finding rather than hiding it.
         ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
-        if c.get("thin_ticks"):
-            from matplotlib.ticker import MaxNLocator
-            # 3, not 4: the upright reflow puts each panel at 1.30in, and four 8pt
-            # y labels need more height than the axes has.
-            ax.xaxis.set_major_locator(MaxNLocator(nbins=3, prune="upper"))
-            ax.yaxis.set_major_locator(MaxNLocator(nbins=2, prune="both"))
-            # Wrap each line separately. textwrap.wrap on the whole string collapses the
-            # newline before the combined(2) marker and re-flows it, so a shorter model name
-            # put the marker inline while longer ones kept it on its own line -- the same
-            # figure showed the same fact two ways.
-            _tw_ = __import__("textwrap")
-            ax.set_title("\n".join(
-                "\n".join(_tw_.wrap(_ln, 34)) if _ln.strip() else _ln
-                for _ln in ax.get_title().split("\n")), fontsize=8.5)
+        ax.set_xticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.set_ylim(0.0, 1.0)
+        ax.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.tick_params(labelsize=8)
         ax.grid(alpha=0.28)
         ax.set_axisbelow(True)
     for k in range(len(models), nrow * ncol):
@@ -208,8 +228,16 @@ def main() -> int:
 
     title = S.title_line("RQ4: selective risk against coverage", c["corpus"])
     import textwrap as _tw
-    fig.suptitle("\n".join(_tw.wrap(title, c.get("wrap", 200))),
-                 fontsize=9 if c.get("thin_ticks") else 12, y=0.995)
+    if len(set(_per_n)) != 1:
+        raise SystemExit(f"per-panel n is not uniform: {sorted(set(_per_n))}; the suptitle "
+                         f"states it once and may not stand for several values")
+    _sup = f"{title}\nn = {_per_n[0]:,} per model"
+    if omitted_any:
+        _sup += ("; concept margin undefined for " + ", ".join(
+            mm.replace("Meta-", "").replace("-Instruct", "").replace("-v0.1", "")
+              .replace("FLAN-T5-base", "FLAN-T5").replace("Llama3-OpenBioLLM", "OpenBioLLM")
+            for mm in omitted_any) + ", which draw combined(2)")
+    fig.suptitle("\n".join(_tw.wrap(_sup, c.get("wrap", 200))), fontsize=9, y=0.995)
     _notes = ["Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not "
               "defined below 0.10 and the axis does not extend there.",
               "Four signals plus a dashed grey random-ordering baseline, one legend for the "

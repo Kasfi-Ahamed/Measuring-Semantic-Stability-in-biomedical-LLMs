@@ -233,7 +233,7 @@ wrong with any individual figure; they were drawn for a wider page than they are
 | 3.62pt | `fig_entropy_distribution_qa` | 8pt |
 | 3.78pt | `rq1_entropy_heatmap_by_model_cadec` | 8pt |
 | 3.85pt | `fig_signal_independence_qa` | 8pt |
-| 3.86pt | `rq3_entropy_across_corpora` | 9pt |
+| 3.86pt | `fig_entropy_across_corpora` | 9pt |
 | 3.93pt | `fig_signal_independence_medmentions` | 8pt |
 | 3.98pt | `rq2_dissociation_stable_but_wrong_cadec` | 8pt |
 | 3.98pt | `rq2_dissociation_stable_but_wrong_medmentions` | 8pt |

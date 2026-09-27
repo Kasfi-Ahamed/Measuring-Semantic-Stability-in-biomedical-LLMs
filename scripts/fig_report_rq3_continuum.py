@@ -35,7 +35,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import report_style as S
 
 ROOT = Path(os.path.expanduser("~/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"))
-OUT = ROOT / "outputs/rq3/figures/rq3_entropy_across_corpora.png"
+OUT = ROOT / "outputs/rq3/figures/fig_entropy_across_corpora.png"
 
 
 RETAINED: dict[str, int] = {}
@@ -102,7 +102,14 @@ def main() -> int:
     ax.annotate("equivalence is\nbidirectional entailment", (bx + 0.08, ax.get_ylim()[1] * 0.80),
                 ha="left", va="top", fontsize=9, color="#444444", style="italic")
 
-    title = S.title_line("RQ3: mean semantic entropy across corpora", "all four")
+    # NOT "RQ3:". This figure delimits the method -- it shows mean entropy per model across
+    # all four corpora either side of the grounding boundary -- and is used in the section that
+    # sets out the boundary, not in the section answering RQ3, which is the within-architecture
+    # matched-pair comparison on the two concept corpora. The prefix was left over from an
+    # earlier numbering of the questions. title_line is bypassed because it builds
+    # "measure, corpus" and this title names no single corpus; check_text still runs.
+    title = "The grounding boundary: mean semantic entropy across the four corpora"
+    S.check_text(title)
     S.check_text("Corpus")
     ax.set_title(title, fontsize=12)
     S.emit_caption(OUT.name, title=title,

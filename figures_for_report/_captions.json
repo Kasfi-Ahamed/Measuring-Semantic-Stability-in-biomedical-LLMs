@@ -17,6 +17,17 @@
   ],
   "title": "NOT PRODUCED: RQ1 heatmap, SQuAD 2.0"
  },
+ "fig_entropy_across_corpora.png": {
+  "group": null,
+  "models": "8 in the concept lane, 5 in the question-answering lane",
+  "n": "CADEC: n = 37,696 grid rows, 37,695 with defined entropy (1 row not drawn)   MedMentions: n = 1,020,784 grid rows, 1,019,810 with defined entropy (974 rows not drawn)   BioASQ: n = 1,950 grid rows, all drawn   SQuAD 2.0: n = 8,650 grid rows, all drawn",
+  "notes": [
+   "The vertical divider is the grounding boundary. To its left equivalence is UMLS concept identity; to its right it is bidirectional entailment.",
+   "The three encoders produce no free-text answer, so their lines END at the boundary. Nothing is imputed across it.",
+   "Connecting lines are kept because the rise across the boundary is the point, but the axis is a set of four corpora and not a one-dimensional continuum."
+  ],
+  "title": "The grounding boundary: mean semantic entropy across the four corpora"
+ },
  "fig_entropy_distribution_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
@@ -46,6 +57,16 @@
    "The two quantities are on separate axes because a proportion and an entropy do not share a scale."
   ],
   "title": "RQ1: normalised entropy per model, QA (BioASQ and SQuAD 2.0)"
+ },
+ "fig_risk_coverage_bioasq.png": {
+  "group": null,
+  "models": "5 models, roster order",
+  "n": "n = 1,950 grid rows, all drawn",
+  "notes": [
+   "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
+   "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
+  ],
+  "title": "RQ4: selective risk against coverage, BioASQ"
  },
  "fig_risk_coverage_cadec.png": {
   "group": null,
@@ -78,6 +99,16 @@
   ],
   "title": "RQ4: selective risk against coverage, BioASQ and SQuAD 2.0"
  },
+ "fig_risk_coverage_squad.png": {
+  "group": null,
+  "models": "5 models, roster order",
+  "n": "n = 8,650 grid rows, all drawn",
+  "notes": [
+   "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
+   "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
+  ],
+  "title": "RQ4: selective risk against coverage, SQuAD 2.0"
+ },
  "fig_rq2_accuracy_split_entropy_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
@@ -101,6 +132,18 @@
    "The producer aborts if any model's rho differs from rq2_dissociation_summary.csv by more than 5e-6."
   ],
   "title": "RQ2: entropy by accuracy split, MedMentions"
+ },
+ "fig_rq3_matched_pairs_forest.png": {
+  "group": null,
+  "models": "3 within-architecture pairs on each of the 2 concept-lane corpora",
+  "n": "CADEC BioBERT: n = 4,712   MedMentions BioBERT: n = 127,598   CADEC BioMistral-7B: n = 4,711   MedMentions BioMistral-7B: n = 127,208   CADEC OpenBioLLM-8B: n = 4,712   MedMentions OpenBioLLM-8B: n = 127,187",
+  "notes": [
+   "Every estimate and interval bound is READ from rq3_matched_pair_statistics_{cadec,medmentions}.csv. No estimator is fitted, no test re-run and no interval recomputed by this producer.",
+   "The shaded band is |rank-biserial| < 0.10, the pre-specified minimum effect size worth interpreting. A cell inside the band is not counted as support whatever its p-value.",
+   "A negative correlation means the biomedical model is the more stable of the pair, which is the direction the hypothesis predicts; positive means the general-domain model is.",
+   "Rows are in the order of the manuscript's Table 8, CADEC above MedMentions within each pair. The producer aborts if any of the six estimates disagrees with Table 8 at three decimals."
+  ],
+  "title": "RQ3: within-architecture matched pairs, rank-biserial with 95% intervals"
  },
  "fig_signal_independence_cadec.png": {
   "group": null,

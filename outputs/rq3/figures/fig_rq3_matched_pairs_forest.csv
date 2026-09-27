@@ -1,0 +1,7 @@
+pair,corpus,rb,lo,hi,n,outcome,src
+pair1_biobert_vs_bertbase,CADEC,-0.2708539683906808,-0.3208182386204287,-0.2236637052709006,4712,supports,rq3_matched_pair_statistics_cadec.csv
+pair1_biobert_vs_bertbase,MedMentions,-0.2683349855397786,-0.2751483484226427,-0.2611082209548905,127598,supports,rq3_matched_pair_statistics_medmentions.csv
+pair2_biomistral_vs_mistral,CADEC,0.157470951808867,0.1161443786829956,0.1978087183569442,4711,reversed,rq3_matched_pair_statistics_cadec.csv
+pair2_biomistral_vs_mistral,MedMentions,-0.0478968228444719,-0.0560467771866754,-0.040071463822383,127208,below threshold,rq3_matched_pair_statistics_medmentions.csv
+pair3_openbiollm_vs_llama3,CADEC,0.5298870281694067,0.4992901026092871,0.5605818726057273,4712,reversed,rq3_matched_pair_statistics_cadec.csv
+pair3_openbiollm_vs_llama3,MedMentions,0.466046498691412,0.4599643781436629,0.4723856757063157,127187,reversed,rq3_matched_pair_statistics_medmentions.csv
