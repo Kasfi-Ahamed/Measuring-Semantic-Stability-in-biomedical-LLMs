@@ -27,7 +27,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import FormatStrFormatter, MaxNLocator, MultipleLocator
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -122,9 +122,23 @@ def _legend_y(n_sup_lines: int) -> float:
 
 
 def main() -> int:
-    if len(sys.argv) != 2 or sys.argv[1] not in CFG:
-        raise SystemExit(f"usage: {sys.argv[0]} {{{'|'.join(CFG)}}}")
-    c = CFG[sys.argv[1]]
+    args = [a for a in sys.argv[1:] if a != "--large"]
+    large = "--large" in sys.argv
+    if len(args) != 1 or args[0] not in CFG:
+        raise SystemExit(f"usage: {sys.argv[0]} {{{'|'.join(CFG)}}} [--large]")
+    c = dict(CFG[args[0]])
+    if large:
+        # SCREEN AND SLIDES ONLY, NOT THE THESIS. This is the canvas of the supplied
+        # reference, 2381 x 1086 px at 150 dpi = 15.87 x 7.24in. It reads well at full size
+        # on a screen and cannot be placed in the manuscript: at width=linewidth it scales to
+        # 0.301, which puts 8pt type at 2.41pt, and even a full-page sideways float only
+        # reaches 3.76pt. The canvas is 2.9x wider than the 5.46in that a 7.0pt floor allows.
+        _n = 8 if args[0] in ("cadec", "medmentions") else 5
+        _ncol = c["ncol"]
+        _nrow = -(-_n // _ncol)
+        c["panel"] = (15.87 / _ncol, 7.24 / _nrow)
+        c["out"] = ROOT / "outputs/presentation" / (c["out"].stem + "_large.png")
+    
     df = pd.read_csv(c["path"], low_memory=False)
     if "join" in c:
         j = c["join"]
@@ -231,7 +245,20 @@ def main() -> int:
         ax.set_ylim(max(0.0, _lo - _pad), min(1.0, _hi + _pad))
         _yr[_m if "_m" in dir() else m] = (round(max(0.0, _lo - _pad), 4),
                                            round(min(1.0, _hi + _pad), 4))
-        ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
+        # The reference reads its y axis on the same 0.2 grid as x. A panel whose range
+        # spans at least 0.4 gets that grid; MedMentions cannot, because its risk genuinely
+        # sits in a band about 0.13 wide and a 0.2 grid would leave it one tick, so those
+        # panels keep an adaptive locator.
+        _span = ax.get_ylim()[1] - ax.get_ylim()[0]
+        if _span >= 0.40:
+            ax.yaxis.set_major_locator(MultipleLocator(0.2))
+        else:
+            # Three ticks at two decimals, not four at three. MedMentions' band produced
+            # labels like "0.944", five characters against "0.2" elsewhere, and that width
+            # both reached into the neighbouring panel and pushed the tight box to 5.49in,
+            # past the 5.456in that a 7.0pt floor allows at linewidth.
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
+            ax.yaxis.set_major_formatter(FormatStrFormatter("%.2f"))
         ax.tick_params(labelsize=8, labelbottom=True, labelleft=True)
         ax.set_xlabel("Coverage", fontsize=8)
         ax.set_ylabel("Risk", fontsize=8)
@@ -286,8 +313,14 @@ def main() -> int:
     _H = _H0 + _SUP_LINE_IN * max(0, len(_sup_lines) - 2)
     fig.set_size_inches(_W0, _H, forward=True)
     _top = 1.0 - (_SUP_LINE_IN * len(_sup_lines) + _LEG_IN) / _H
-    fig.subplots_adjust(left=0.085, right=0.985, top=_top, bottom=_BOT_IN / _H,
-                        wspace=c.get("wspace", 0.62), hspace=c.get("hspace", 0.95))
+    # BIGGER FRAMES, but not at any price. The margins and the inter-panel spacing are the
+    # only slack once the type floor fixes the canvas width. Taken to the limit
+    # (0.070/0.992, wspace 0.42, hspace 0.62) the plot area reached 35% and broke two things:
+    # the rightmost panel's "1.0" tick overflowed the canvas, widening the MediaBox to 5.49in
+    # and dropping the concept lanes to 6.96pt; and each row's "Coverage" label met the next
+    # row's panel title. These values keep most of the gain without either.
+    fig.subplots_adjust(left=0.075, right=0.984, top=_top, bottom=_BOT_IN / _H,
+                        wspace=c.get("wspace", 0.52), hspace=c.get("hspace", 0.80))
     import math as _math
     fig.legend(handles.values(), handles.keys(), loc="upper center",
                ncol=_math.ceil(len(handles) / 2), fontsize=8, frameon=False,

@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-28 03:00 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-28 03:14 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -153,54 +153,54 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### RQ4 risk-coverage, BioASQ
 
-- filename: `fig_risk_coverage_bioasq.png`  (PNG, 300 dpi) and `fig_risk_coverage_bioasq.pdf` 29 KB, sha256 `0c2c40fb183c374b`
+- filename: `fig_risk_coverage_bioasq.png`  (PNG, 300 dpi) and `fig_risk_coverage_bioasq.pdf` 28 KB, sha256 `2b46f282b787fe0c`
 - producer: `scripts/fig_report_risk_coverage.py bioasq`
 - model set: 5 models
 - corpus: BioASQ
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
-- output sha256: `131e6a04785e213bcac5cd0ebde825cdf4f010fd54c96181f67f63c6df5a4117`
-- output mtime: 2026-09-28 02:59
+- output sha256: `2ba8c502096654a57dc9ad177bb150a124c70438f83b716c5c2f1864a0ca354b`
+- output mtime: 2026-09-28 03:13
 
 ### RQ4 risk-coverage, SQuAD 2.0
 
-- filename: `fig_risk_coverage_squad.png`  (PNG, 300 dpi) and `fig_risk_coverage_squad.pdf` 29 KB, sha256 `9dbe7d5a5fc008a8`
+- filename: `fig_risk_coverage_squad.png`  (PNG, 300 dpi) and `fig_risk_coverage_squad.pdf` 29 KB, sha256 `b2edb6a38004bb75`
 - producer: `scripts/fig_report_risk_coverage.py squad`
 - model set: 5 models
 - corpus: SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
-- output sha256: `4e4515dec1a5c2019ebeaed2b23d6402f4198fe48dec134ebd544147984ccc5d`
-- output mtime: 2026-09-28 02:59
+- output sha256: `32e109e9db4763b1c761243572d1bf9f1b5a62ca4fa0a82b7b2a8edd23a337fd`
+- output mtime: 2026-09-28 03:13
 
 ### RQ4 risk-coverage, CADEC
 
-- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 38 KB, sha256 `bdb2f9b6394e32a3`
+- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 38 KB, sha256 `8a77eb82c5690930`
 - producer: `scripts/fig_report_risk_coverage.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
-- output sha256: `dee0a0e52dc23b6ff5624468d4dbf27de9a15f92e78f4d1b7b07d4b8914712e2`
-- output mtime: 2026-09-28 02:59
+- output sha256: `835a99d2572b4a0217f483cb4bbaf72469b93efc533192316549053d3cfada17`
+- output mtime: 2026-09-28 03:13
 
 ### RQ4 risk-coverage, MedMentions
 
-- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 36 KB, sha256 `35cb9a6cc673be47`
+- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 36 KB, sha256 `b57b9cdf3daef9dd`
 - producer: `scripts/fig_report_risk_coverage.py medmentions`
 - model set: 8 models, margin omitted for the 3 encoders
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
-- output sha256: `03b0e7960009f2c977b1f51134826535f40109b729b14e55b37163bb3e8b7935`
-- output mtime: 2026-09-28 02:59
+- output sha256: `c2aa7b8fc4579f7576204fdc1748954edf655127e19087d8d94cb8a45c19056c`
+- output mtime: 2026-09-28 03:13
 
 ### RQ4 risk-coverage, QA
 
-- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 29 KB, sha256 `7d3c846db01738aa`
+- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 29 KB, sha256 `b5b3f9875a22eb5a`
 - producer: `scripts/fig_report_risk_coverage.py qa`
 - model set: 5 models
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/umls_candidate_margin_qa.csv`  sha256 `fd286f193e894733`  rows 10,640  mtime 2026-09-21 01:27
-- output sha256: `ad67030b3ebc2a01fbf2cf72a631de60968a29a0b10394288f363dd436d9880c`
-- output mtime: 2026-09-28 02:59
+- output sha256: `5c4549c39a2e102c0684cae860b7fd266a87baba95bd92ca2ff67cf1c5bd0322`
+- output mtime: 2026-09-28 03:13
 
 ### RQ2 dissociation, CADEC
 

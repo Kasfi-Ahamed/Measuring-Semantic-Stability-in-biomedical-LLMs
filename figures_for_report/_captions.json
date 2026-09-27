@@ -68,6 +68,16 @@
   ],
   "title": "RQ4: selective risk against coverage, BioASQ"
  },
+ "fig_risk_coverage_bioasq_large.png": {
+  "group": null,
+  "models": "5 models, roster order",
+  "n": "n = 1,950 grid rows, all drawn",
+  "notes": [
+   "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
+   "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
+  ],
+  "title": "RQ4: selective risk against coverage, BioASQ"
+ },
  "fig_risk_coverage_cadec.png": {
   "group": null,
   "models": "8 models, roster order",
@@ -78,7 +88,28 @@
   ],
   "title": "RQ4: selective risk against coverage, CADEC"
  },
+ "fig_risk_coverage_cadec_large.png": {
+  "group": null,
+  "models": "8 models, roster order",
+  "n": "n = 37,696 grid rows, all drawn",
+  "notes": [
+   "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
+   "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
+  ],
+  "title": "RQ4: selective risk against coverage, CADEC"
+ },
  "fig_risk_coverage_medmentions.png": {
+  "group": null,
+  "models": "8 models, roster order",
+  "n": "n = 1,020,784 grid rows, all drawn",
+  "notes": [
+   "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
+   "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure.",
+   "Concept margin omitted for BERT-base, BioBERT, PubMedBERT: these emit a concept identifier directly, so no retrieval occurs and there is no runner-up to measure. Those panels draw combined(2) in place of combined(3), and say so in the panel subtitle."
+  ],
+  "title": "RQ4: selective risk against coverage, MedMentions"
+ },
+ "fig_risk_coverage_medmentions_large.png": {
   "group": null,
   "models": "8 models, roster order",
   "n": "n = 1,020,784 grid rows, all drawn",
@@ -100,6 +131,16 @@
   "title": "RQ4: selective risk against coverage, BioASQ and SQuAD 2.0"
  },
  "fig_risk_coverage_squad.png": {
+  "group": null,
+  "models": "5 models, roster order",
+  "n": "n = 8,650 grid rows, all drawn",
+  "notes": [
+   "Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not defined below 0.10 and the axis does not extend there.",
+   "Four signals plus a dashed grey random-ordering baseline, one legend for the whole figure."
+  ],
+  "title": "RQ4: selective risk against coverage, SQuAD 2.0"
+ },
+ "fig_risk_coverage_squad_large.png": {
   "group": null,
   "models": "5 models, roster order",
   "n": "n = 8,650 grid rows, all drawn",
