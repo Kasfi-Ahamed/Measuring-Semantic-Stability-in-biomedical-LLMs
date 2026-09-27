@@ -151,7 +151,12 @@ def main() -> int:
 
     x = np.arange(len(models))
     w = 0.38
-    fig, ax = plt.subplots(figsize=(1.55 * len(models) + 3.0, 6.4))
+    # PORTRAIT, one column. Sized so that at a rendered width of 4.7738 in
+    # (\linewidth = 345.0pt) the 8pt in-figure minimum lands at or above 7.0pt,
+    # and the rendered height stays inside the 0.52\textheight = 3.958 in
+    # allowance. Squarer than the landscape original: the width is what is
+    # scarce here, so the eight groups buy room by going taller, not wider.
+    fig, ax = plt.subplots(figsize=(5.40, 4.20))
     b1 = ax.bar(x - w / 2, R["mean_hit"], w, color="#2E7D32", edgecolor="#1B5E20",
                 label="instances with at least one correct variant")
     b2 = ax.bar(x + w / 2, R["mean_miss"], w, color="#B23A32", edgecolor="#7F1D1D",
@@ -159,24 +164,31 @@ def main() -> int:
     for bars in (b1, b2):
         for r in bars:
             ax.annotate(f"{r.get_height():.3f}", (r.get_x() + r.get_width() / 2, r.get_height()),
-                        textcoords="offset points", xytext=(0, 2), ha="center", fontsize=8)
+                        textcoords="offset points", xytext=(0, 2), ha="center",
+                        va="bottom", rotation=90, fontsize=8)
 
     top = float(max(R["mean_hit"].max(), R["mean_miss"].max()))
-    ax.set_ylim(0, min(1.0, top * 1.38 + 0.10))
+    ax.set_ylim(0, min(1.0, top * 2.35 + 0.12))
     for i, r in R.iterrows():
         pair_top = max(r["mean_hit"], r["mean_miss"])
         mark_rb = "*" if abs(r["rank_biserial"]) >= PREREG_R else ""
         mark_rho = "*" if abs(r["spearman"]) >= PREREG_R else ""
-        ax.annotate(f"r$_{{rb}}$ = {r['rank_biserial']:+.3f}{mark_rb}\n"
-                    f"|rho| = {abs(r['spearman']):.3f}{mark_rho}",
-                    (i, pair_top), textcoords="offset points", xytext=(0, 15),
+        # Two decimals, not three: a group is 0.625in wide and 8pt cannot carry
+        # three. Full precision is in rq2_dissociation_summary.csv, which this
+        # producer still cross-checks at 5e-6.
+        ax.annotate(f"rb {r['rank_biserial']:+.2f}{mark_rb}\n"
+                    f"rho {abs(r['spearman']):.2f}{mark_rho}",
+                    # 27pt, not 13: the bar value is upright now and occupies
+                    # about 22pt above the bar top.
+                    (i, pair_top), textcoords="offset points", xytext=(0, 27),
                     ha="center", fontsize=8, color="#333333")
 
     sep = R[R["rank_biserial"].abs() >= PREREG_R]["model"].tolist()
     nosep = [m for m in models if m not in sep]
     title = S.title_line("RQ2: entropy by accuracy split", c["corpus"])
-    wrapped = title
-    ax.set_title(wrapped, fontsize=12)
+    import textwrap as _tw
+    wrapped = "\n".join(_tw.wrap(title, 54))
+    ax.set_title(wrapped, fontsize=10)
     S.emit_caption(c["out"].name, title=title,
                    n=S.grid_clause(n_retained, n_defined),
                    models=f"{len(models)} models, roster order",
@@ -197,13 +209,26 @@ def main() -> int:
                           "The producer aborts if any model's rho differs from "
                           "rq2_dissociation_summary.csv by more than 5e-6."])
     ax.set_xticks(x)
-    ax.set_xticklabels(models, rotation=20, ha="right", fontsize=9)
-    ax.set_xlabel("Model")
-    ax.set_ylabel(r"Mean Normalised Entropy $\hat{H}$")
+    # One abbreviation rule, applied to every name: drop the vendor prefix, the
+    # instruction-tuning suffix and the point release; keep the family, the
+    # biomedical qualifier and the parameter count. Set upright rather than
+    # staggered or raked: a staggered label carries a blank first line, so its
+    # box spans both rows, and the axis-aligned box around 45-degree text is a
+    # large square. Both make the guard report collisions the reader cannot see,
+    # and at 45 degrees some are real. Upright, a label is one glyph-height
+    # wide, so eight of them cannot touch however long the names are.
+    _short = [m.replace("Meta-", "").replace("-Instruct", "")
+               .replace("-v0.1", "").replace("FLAN-T5-base", "FLAN-T5")
+               .replace("Llama3-OpenBioLLM", "OpenBioLLM") for m in models]
+    ax.set_xticklabels(_short, rotation=90, ha="center", va="top", fontsize=8)
+    ax.set_xlabel("Model", fontsize=9)
+    ax.set_ylabel(r"Mean Normalised Entropy $\hat{H}$", fontsize=9)
     ax.grid(axis="y", alpha=0.3)
     ax.set_axisbelow(True)
-    ax.legend(loc="upper left", fontsize=9, framealpha=0.95)
-    fig.tight_layout()
+    # Below the axes: the headroom now carries the statistic blocks.
+    fig.legend(*ax.get_legend_handles_labels(), loc="lower center",
+               bbox_to_anchor=(0.5, -0.005), fontsize=8, ncol=1, framealpha=0.95)
+    fig.tight_layout(rect=(0, 0.105, 1, 1))
     c["out"].parent.mkdir(parents=True, exist_ok=True)
     S.save_png(fig, c["out"])
     plt.close(fig)

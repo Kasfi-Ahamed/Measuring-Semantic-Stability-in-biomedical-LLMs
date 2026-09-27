@@ -41,12 +41,15 @@ CFG = {
         model_col="model_name", acc="accuracy", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
         out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=4,
+        # LANDSCAPE, sidewaysfigure at 7.458in. Gentle shrink from 3.9 x 4.3.
+        panel=(2.15, 2.36), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
         out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
+        panel=(2.15, 2.36), wrap=58, legend_ncol=3, thin_ticks=True,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
@@ -108,7 +111,8 @@ def main() -> int:
 
     ncol = c["ncol"]
     nrow = int(np.ceil(len(models) / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(3.9 * ncol, 4.3 * nrow),
+    _pw, _ph = c.get("panel", (3.9, 4.3))
+    fig, axes = plt.subplots(nrow, ncol, figsize=(_pw * ncol, _ph * nrow),
                              sharex=True, sharey=True, squeeze=False)
     handles: dict[str, object] = {}
     omitted_any = []
@@ -150,6 +154,12 @@ def main() -> int:
         sub = "" if has_margin else "\nmargin undefined: no retrieval. combined(2) shown"
         ax.set_title(f"{m}  (n = {len(g):,}){sub}", fontsize=8.5)
         ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
+        if c.get("thin_ticks"):
+            from matplotlib.ticker import MaxNLocator
+            ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune="upper"))
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=4, prune="both"))
+            ax.set_title("\n".join(__import__("textwrap").wrap(
+                ax.get_title(), 30)), fontsize=8.5)
         ax.grid(alpha=0.28)
         ax.set_axisbelow(True)
     for k in range(len(models), nrow * ncol):
@@ -171,7 +181,8 @@ def main() -> int:
 
 
     title = S.title_line("RQ4: selective risk against coverage", c["corpus"])
-    fig.suptitle(title, fontsize=12, y=0.995)
+    import textwrap as _tw
+    fig.suptitle("\n".join(_tw.wrap(title, c.get("wrap", 200))), fontsize=12, y=0.995)
     _notes = ["Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not "
               "defined below 0.10 and the axis does not extend there.",
               "Four signals plus a dashed grey random-ordering baseline, one legend for the "
@@ -187,9 +198,12 @@ def main() -> int:
     S.emit_caption(c["out"].name, title=title, n=S.grid_clause(n_grid, _drawn, "drawn"),
                    models=f"{len(models)} models, roster order", notes=_notes)
     fig.legend(handles.values(), handles.keys(), loc="lower center",
-               ncol=min(6, len(handles)), fontsize=9, frameon=True,
-               bbox_to_anchor=(0.5, -0.02))
-    fig.tight_layout(rect=(0, 0.035, 1, 0.97))
+               ncol=min(c.get("legend_ncol", 6), len(handles)), fontsize=9,
+               frameon=True,
+               bbox_to_anchor=(0.5, -0.025 if c.get("thin_ticks") else -0.02))
+    _bot = 0.105 if c.get("thin_ticks") else 0.035
+    fig.tight_layout(rect=(0, _bot, 1, 0.97),
+                     w_pad=2.0 if c.get("thin_ticks") else 1.08)
     c["out"].parent.mkdir(parents=True, exist_ok=True)
     S.save_png(fig, c["out"])
     plt.close(fig)

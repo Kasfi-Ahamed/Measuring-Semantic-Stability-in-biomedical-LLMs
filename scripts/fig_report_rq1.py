@@ -24,6 +24,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import textwrap as _tw
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -332,13 +333,18 @@ def heatmap(corpus="MedMentions") -> int:
         print(f"    {who:<26} {ca:<14} x {ty:<22} rows={rr:<6} instances={ii:<4}"
               f"  {'EMPTY' if rr == 0 else 'below 3'}")
 
-    fig, ax = plt.subplots(figsize=(1.9 * len(types) + 4.0, 1.0 * len(cats) + 2.6))
-    im = _draw_cells(ax, pooled, pooled_n, pooled_i, cats, types, vmax, fs=9)
+    # LANDSCAPE. Sized for a sidewaysfigure at width=0.98*textheight = 7.458in, one
+    # figure per float. A gentle shrink only: the note is lifted off fs-2 so the
+    # minimum is the 9pt cell size, which lets the canvas stay large and keeps the
+    # collision pressure down.
+    fig, ax = plt.subplots(figsize=(1.55 * len(types) + 3.2, 0.62 * len(cats) + 2.1))
+    im = _draw_cells(ax, pooled, pooled_n, pooled_i, cats, types, vmax, fs=9,
+                     note_fs=9, compact_notes=True)
     ax.set_xticks(range(len(types))); ax.set_xticklabels(types, rotation=25, ha="right", fontsize=9)
     ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=9)
     ax.set_xlabel("Perturbation type"); ax.set_ylabel("Linguistic category")
     t = S.title_line("RQ1: mean entropy by perturbation type and linguistic category", corpus)
-    fig.suptitle(t, fontsize=12)
+    fig.suptitle("\n".join(_tw.wrap(t, 58)), fontsize=11)
     fig.colorbar(im, ax=ax, fraction=0.035, pad=0.02,
                  label=r"Mean normalised entropy $\hat{H}$")
     fig.tight_layout(rect=(0, 0, 1, 0.94))
