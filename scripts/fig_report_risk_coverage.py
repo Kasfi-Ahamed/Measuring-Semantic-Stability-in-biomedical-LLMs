@@ -27,6 +27,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import MaxNLocator
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -45,14 +46,14 @@ CFG = {
         # grid cell) lands between 1.15 and 1.25, matching the question-answering plates.
         # The cell is wider than the frame because the cell also carries the panel title and,
         # on the bottom row, the tick labels and axis label.
-        panel=(1.25, 1.64), wrap=58, legend_ncol=3, thin_ticks=True,
+        panel=(1.315, 1.69), wrap=66, legend_ncol=3, thin_ticks=True,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
         out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
-        panel=(1.25, 1.75), wrap=58, legend_ncol=3, thin_ticks=True,
+        panel=(1.315, 1.69), wrap=66, legend_ncol=3, thin_ticks=True,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
@@ -66,7 +67,7 @@ CFG = {
         # wider than it is tall. The shared axis stays, because that is what makes the
         # panels comparable; the panels get room instead.
         out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=3,
-        panel=(1.833, 2.25), wrap=58, legend_ncol=3, thin_ticks=True,
+        panel=(1.73, 2.07), wrap=66, legend_ncol=3, thin_ticks=True,
     ),
 }
 
@@ -104,6 +105,22 @@ def curve(y: np.ndarray, safe: np.ndarray) -> np.ndarray:
     return np.array([1.0 - float(np.mean(ry[:max(1, int(np.ceil(c * n)))])) for c in GRID])
 
 
+def _top_rect(n_sup_lines: int) -> float:
+    """Room reserved at the top for the suptitle plus a TWO-ROW legend.
+
+    Two rows, not one. Measured at 8pt, a single horizontal row of the five series names is
+    7.17in wide, and 7.0pt at width=linewidth needs the MediaBox at or under 5.456in, so a
+    one-row legend pins the box and drops the smallest rendered text to 5.31pt. Two rows
+    measure 4.42in and fit. The legend stays at the top, directly under the suptitle.
+    """
+    return 1.0 - (0.055 * n_sup_lines + 0.155)
+
+
+def _legend_y(n_sup_lines: int) -> float:
+    """The legend sits directly under the last suptitle line."""
+    return 1.0 - 0.055 * n_sup_lines
+
+
 def main() -> int:
     if len(sys.argv) != 2 or sys.argv[1] not in CFG:
         raise SystemExit(f"usage: {sys.argv[0]} {{{'|'.join(CFG)}}}")
@@ -135,14 +152,21 @@ def main() -> int:
     ncol = c["ncol"]
     nrow = int(np.ceil(len(models) / ncol))
     _pw, _ph = c.get("panel", (3.9, 4.3))
+    # NO SHARED AXES. Every panel auto-scales its own y to its own data with a small pad and
+    # carries its own tick labels and axis labels. A shared 0 to 1 y range flattened MedMentions
+    # into an unreadable band at the top: its risk genuinely sits at 0.86 to 0.98, so on a 0 to 1
+    # axis every curve and its baseline collapse into the same few pixels. This is also where the
+    # style diverges from the e3043c6 reference, which used sharey=True.
     fig, axes = plt.subplots(nrow, ncol, figsize=(_pw * ncol, _ph * nrow),
-                             sharex=True, sharey=True, squeeze=False)
+                             sharex=False, sharey=False, squeeze=False)
     handles: dict[str, object] = {}
     omitted_any = []
     _per_n: list[int] = []
+    _yr: dict = {}
     for i, m in enumerate(models):
         ax = axes[i // ncol][i % ncol]
         g = df[df[c["model_col"]] == m]
+        _ys: list = []
         y = (pd.to_numeric(g[c["acc"]], errors="coerce").to_numpy() >= 0.5).astype(float)
         ent = pd.to_numeric(g[c["ent"]], errors="coerce").to_numpy()
         conf = pd.to_numeric(g[c["conf"]], errors="coerce").to_numpy()
@@ -167,12 +191,15 @@ def main() -> int:
                 continue
             r = curve(y[ok], safe[ok])
             ln, = ax.plot(GRID, r, color=S.SIGNAL_COLOURS[name], ls=S.SIGNAL_LINESTYLES[name],
-                          lw=1.9, label=S.SIGNAL_LABELS[name])
+                          lw=1.5, marker="o", markersize=2.6, markeredgewidth=0,
+                          label=S.SIGNAL_LABELS[name])
+            _ys.append(np.asarray(r, dtype=float))
             handles.setdefault(S.SIGNAL_LABELS[name], ln)
         base = 1.0 - float(np.mean(y))
         bl = ax.axhline(base, color=S.RANDOM_BASELINE["colour"],
-                        ls=S.RANDOM_BASELINE["linestyle"], lw=1.4,
+                        ls=S.RANDOM_BASELINE["linestyle"], lw=1.3,
                         label=S.RANDOM_BASELINE["label"])
+        _ys.append(np.array([base], dtype=float))
         handles.setdefault(S.RANDOM_BASELINE["label"], bl)
 
         # On the upright 4-row plate the long form wrapped to two lines in a 1.39in panel and
@@ -194,50 +221,40 @@ def main() -> int:
         # stated once in the suptitle; repeating it eight times was what forced the wrapping.
         _per_n.append(len(g))
         ax.set_title(_m, fontsize=8)
-        # ONE SET OF AXES FOR EVERY FIGURE IN THIS FAMILY, so a reader can compare across
-        # corpora without re-reading the scale. MedMentions' curves compress into a band near
-        # the top under y 0 to 1; that is intended, and its caption already makes the narrow
-        # separation between each curve and its baseline the finding rather than hiding it.
+        # x is identical on every panel and stays on the pre-registered domain.
         ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
         ax.set_xticks([0.2, 0.4, 0.6, 0.8, 1.0])
-        ax.set_ylim(0.0, 1.0)
-        ax.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
-        ax.tick_params(labelsize=8)
-        ax.grid(alpha=0.28)
+        # y auto-scales to THIS panel's own curves plus its baseline, with a 6% pad.
+        _all = np.concatenate(_ys) if _ys else np.array([0.0, 1.0])
+        _lo, _hi = float(np.nanmin(_all)), float(np.nanmax(_all))
+        _pad = max(0.06 * (_hi - _lo), 0.004)
+        ax.set_ylim(max(0.0, _lo - _pad), min(1.0, _hi + _pad))
+        _yr[_m if "_m" in dir() else m] = (round(max(0.0, _lo - _pad), 4),
+                                           round(min(1.0, _hi + _pad), 4))
+        ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
+        ax.tick_params(labelsize=8, labelbottom=True, labelleft=True)
+        ax.set_xlabel("Coverage", fontsize=8)
+        ax.set_ylabel("Risk", fontsize=8)
+        ax.grid(True, which="major", alpha=0.30, lw=0.6)
         ax.set_axisbelow(True)
     for k in range(len(models), nrow * ncol):
         axes[k // ncol][k % ncol].set_axis_off()
-    # RAGGED GRID + sharex. matplotlib hides x tick labels on every axis that is not in the
-    # last ROW, but with 5 panels in a 2 x 3 grid the last row has no third column, so the
-    # top-right panel ended up with no x axis at all. Re-enable labels on the bottom-most
-    # VISIBLE axis of each column.
-    for cc in range(ncol):
-        last_visible = max((rr for rr in range(nrow)
-                            if rr * ncol + cc < len(models)), default=None)
-        if last_visible is None:
-            continue
-        ax_b = axes[last_visible][cc]
-        ax_b.xaxis.set_tick_params(labelbottom=True)
-        ax_b.set_xlabel("Coverage")
-    for r_ in range(nrow):
-        # One shared y label, not one per row: at 4 rows x 1.30in the per-row labels
-        # sat on each other. The QA plate keeps the per-row form.
-        if not c.get("thin_ticks"):
-            axes[r_][0].set_ylabel("Selective risk")
-
 
     title = S.title_line("RQ4: selective risk against coverage", c["corpus"])
     import textwrap as _tw
     if len(set(_per_n)) != 1:
         raise SystemExit(f"per-panel n is not uniform: {sorted(set(_per_n))}; the suptitle "
                          f"states it once and may not stand for several values")
-    _sup = f"{title}\nn = {_per_n[0]:,} per model"
+    _sup = (f"{title}\n"
+            f"risk = 1 - selective accuracy; lower is better. n = {_per_n[0]:,} per model")
     if omitted_any:
         _sup += ("; concept margin undefined for " + ", ".join(
             mm.replace("Meta-", "").replace("-Instruct", "").replace("-v0.1", "")
               .replace("FLAN-T5-base", "FLAN-T5").replace("Llama3-OpenBioLLM", "OpenBioLLM")
             for mm in omitted_any) + ", which draw combined(2)")
-    fig.suptitle("\n".join(_tw.wrap(_sup, c.get("wrap", 200))), fontsize=9, y=0.995)
+    _sup_lines = [ln for part in _sup.split("\n")
+                  for ln in _tw.wrap(part, c.get("wrap", 200))]
+    fig.suptitle("\n".join(_sup_lines), fontsize=9, y=0.995)
     _notes = ["Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not "
               "defined below 0.10 and the axis does not extend there.",
               "Four signals plus a dashed grey random-ordering baseline, one legend for the "
@@ -252,15 +269,29 @@ def main() -> int:
         raise SystemExit(f"header count {n_grid:,} is not the rows plotted {_drawn:,}")
     S.emit_caption(c["out"].name, title=title, n=S.grid_clause(n_grid, _drawn, "drawn"),
                    models=f"{len(models)} models, roster order", notes=_notes)
-    fig.legend(handles.values(), handles.keys(), loc="lower center",
-               ncol=min(c.get("legend_ncol", 6), len(handles)), fontsize=9,
-               frameon=True,
-               bbox_to_anchor=(0.5, -0.025 if c.get("thin_ticks") else -0.02))
-    if c.get("thin_ticks"):
-        fig.supylabel("Selective risk", fontsize=9)
-    _bot = 0.075 if c.get("thin_ticks") else 0.035
-    fig.tight_layout(rect=(0, _bot, 1, 0.97),
-                     w_pad=1.2 if c.get("thin_ticks") else 1.08)
+    # ONE HORIZONTAL ROW, at the TOP, directly under the suptitle. All series in a single row:
+    # ncol=len(handles), not a wrapped grid, so the key reads left to right in one pass.
+    # EXPLICIT SPACING, not tight_layout. With per-panel x and y labels on all eight panels
+    # tight_layout allocated about 1.2in of furniture per row where 0.33in is needed, and
+    # collapsed every frame to 0.106 x 0.105 of the figure -- 6.9% plot area, which the
+    # axes-fraction guard refused. subplots_adjust gives the frames the remainder directly,
+    # and wspace/hspace are set so the frame aspect lands in 1.15 to 1.25.
+    # The top reservation is ABSOLUTE INCHES, and the canvas grows to absorb any suptitle line
+    # beyond the first two. As a fraction of a fixed canvas it made the frame aspect depend on
+    # how many lines the suptitle happened to wrap to: MedMentions carries an extra line naming
+    # the three encoders, which shortened its frames and pushed its aspect from 1.29 to 1.43
+    # while every other setting was identical.
+    _SUP_LINE_IN, _LEG_IN, _BOT_IN = 0.135, 0.68, 0.40
+    _W0, _H0 = fig.get_size_inches()
+    _H = _H0 + _SUP_LINE_IN * max(0, len(_sup_lines) - 2)
+    fig.set_size_inches(_W0, _H, forward=True)
+    _top = 1.0 - (_SUP_LINE_IN * len(_sup_lines) + _LEG_IN) / _H
+    fig.subplots_adjust(left=0.085, right=0.985, top=_top, bottom=_BOT_IN / _H,
+                        wspace=c.get("wspace", 0.62), hspace=c.get("hspace", 0.95))
+    import math as _math
+    fig.legend(handles.values(), handles.keys(), loc="upper center",
+               ncol=_math.ceil(len(handles) / 2), fontsize=8, frameon=False,
+               bbox_to_anchor=(0.5, 1.0 - (_SUP_LINE_IN * len(_sup_lines)) / _H))
     c["out"].parent.mkdir(parents=True, exist_ok=True)
     S.save_png(fig, c["out"], pad=0.02)
     plt.close(fig)

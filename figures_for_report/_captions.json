@@ -143,7 +143,7 @@
    "A negative correlation means the biomedical model is the more stable of the pair, which is the direction the hypothesis predicts; positive means the general-domain model is.",
    "Rows are in the order of the manuscript's Table 8, CADEC above MedMentions within each pair. The producer aborts if any of the six estimates disagrees with Table 8 at three decimals."
   ],
-  "title": "RQ3: within-architecture matched pairs, rank-biserial with 95% intervals"
+  "title": "RQ3: within-architecture matched pairs"
  },
  "fig_signal_independence_cadec.png": {
   "group": null,

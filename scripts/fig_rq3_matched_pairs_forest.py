@@ -43,7 +43,9 @@ PAIR_LABEL = {"pair1_biobert_vs_bertbase":   "BioBERT vs BERT-base",
               "pair2_biomistral_vs_mistral": "BioMistral-7B vs Mistral-7B",
               "pair3_openbiollm_vs_llama3":  "OpenBioLLM-8B vs Llama-3-8B"}
 FLOOR = 0.10
-COLOUR = {"supports": "#2E7D32", "below threshold": "#7F7F7F", "reversed": "#B23A32"}
+COLOUR = {"supports": "#0173B2",          # Okabe-Ito blue
+          "below threshold": "#7F7F7F",   # grey, unchanged
+          "reversed": "#DE8F05"}          # Okabe-Ito orange
 
 
 def classify(r):
@@ -88,7 +90,7 @@ def main() -> int:
               f"rb {r['rb']:+.6f}  CI95 [{r['lo']:+.6f}, {r['hi']:+.6f}]  "
               f"n {r['n']:>7,}  {r['outcome']:<16} <- {r['src']}")
 
-    fig, ax = plt.subplots(figsize=(5.00, 3.15))
+    fig, ax = plt.subplots(figsize=(5.00, 3.18))
     y = np.arange(len(rows))[::-1]          # first Table 8 row at the top
 
     ax.axvspan(-FLOOR, FLOOR, color="#BFBFBF", alpha=0.30, zorder=0, lw=0)
@@ -106,7 +108,7 @@ def main() -> int:
                     fontsize=8, color="#222222", zorder=5)
 
     ax.set_yticks(y)
-    ax.set_yticklabels([f"{PAIR_LABEL[r['pair']]}, {r['corpus']}" for r in rows],
+    ax.set_yticklabels([f"{PAIR_LABEL[r['pair']]}\n{r['corpus']}" for r in rows],
                        fontsize=8)
     ax.set_ylim(-0.60, len(rows) - 0.40)
     lo = min(r["lo"] for r in rows); hi = max(r["hi"] for r in rows)
@@ -119,9 +121,9 @@ def main() -> int:
     for sp in ("top", "right", "left"):
         ax.spines[sp].set_visible(False)
 
-    title = "RQ3: within-architecture matched pairs, rank-biserial with 95% intervals"
+    title = "RQ3: within-architecture matched pairs"
     S.check_text(title)
-    ax.set_title("\n".join(_tw.wrap(title, 46)), fontsize=9)
+    ax.set_title(title, fontsize=9)
     handles = [Line2D([], [], color=COLOUR[k], lw=2.2, marker="o", ms=5.0,
                       label=k) for k in ("supports", "below threshold", "reversed")]
     handles.append(Patch(facecolor="#BFBFBF", alpha=0.30,

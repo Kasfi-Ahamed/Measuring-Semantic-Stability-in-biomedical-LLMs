@@ -59,8 +59,15 @@ SIGNAL_COLOURS = {
     "entropy": "#1B7837", "confidence": "#2166AC", "margin": "#B2182B",
     "combined_3": "#762A83", "combined_2": "#9970AB",
 }
+# Five distinct dash patterns drawn from solid, dashed and dash-dot, so an overlapping or
+# greyscale-printed risk-coverage panel stays readable. COLOURS ARE UNCHANGED: which colour
+# belongs to which series is fixed by the signal key and is not a styling decision.
 SIGNAL_LINESTYLES = {
-    "entropy": "-", "confidence": "-", "margin": "-", "combined_3": "-", "combined_2": "--",
+    "entropy": "-",                      # solid
+    "confidence": "-.",                  # dash-dot
+    "margin": (0, (5, 2)),               # dashed, long
+    "combined_3": (0, (3, 1, 1, 1)),     # dash-dot, dense
+    "combined_2": (0, (1, 1.5)),         # dotted
 }
 RANDOM_BASELINE = dict(colour="#999999", linestyle="--", label="random ordering")
 
