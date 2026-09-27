@@ -104,7 +104,8 @@ def main() -> int:
         ax.plot([r["rb"]], [yy], marker="o", ms=5.0, color=c, zorder=4)
         # the value at the OUTER end of the interval, so it never sits over the zero line
         outer, ha, dx = ((r["lo"], "right", -0.015) if r["rb"] < 0 else (r["hi"], "left", 0.015))
-        ax.annotate(f"{r['rb']:+.3f}", (outer + dx, yy), ha=ha, va="center",
+        _val = f"{r['rb']:+.3f}".replace("-", "\u2212")
+        ax.annotate(_val, (outer + dx, yy), ha=ha, va="center",
                     fontsize=8, color="#222222", zorder=5)
 
     ax.set_yticks(y)
@@ -127,7 +128,7 @@ def main() -> int:
     handles = [Line2D([], [], color=COLOUR[k], lw=2.2, marker="o", ms=5.0,
                       label=k) for k in ("supports", "below threshold", "reversed")]
     handles.append(Patch(facecolor="#BFBFBF", alpha=0.30,
-                         label=f"below {FLOOR:.2f}, the pre-specified floor"))
+                         label=f"|r| below {FLOOR:.2f}"))
     # A reserved figure strip, not an axes-anchored legend: anchored to the axes it landed on
     # the two-line x label whatever the offset, and at 4 entries it pinned the MediaBox wider
     # than the canvas.

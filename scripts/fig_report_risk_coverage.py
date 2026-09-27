@@ -46,14 +46,14 @@ CFG = {
         # grid cell) lands between 1.15 and 1.25, matching the question-answering plates.
         # The cell is wider than the frame because the cell also carries the panel title and,
         # on the bottom row, the tick labels and axis label.
-        panel=(1.315, 1.69), wrap=66, legend_ncol=3, thin_ticks=True,
+        panel=(1.315, 1.75), wrap=66, legend_ncol=3, thin_ticks=True, hspace=0.74,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
         out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
-        panel=(1.315, 1.69), wrap=66, legend_ncol=3, thin_ticks=True,
+        panel=(1.315, 1.75), wrap=66, legend_ncol=3, thin_ticks=True, hspace=0.74,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
@@ -238,27 +238,13 @@ def main() -> int:
         # x is identical on every panel and stays on the pre-registered domain.
         ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
         ax.set_xticks([0.2, 0.4, 0.6, 0.8, 1.0])
-        # y auto-scales to THIS panel's own curves plus its baseline, with a 6% pad.
-        _all = np.concatenate(_ys) if _ys else np.array([0.0, 1.0])
-        _lo, _hi = float(np.nanmin(_all)), float(np.nanmax(_all))
-        _pad = max(0.06 * (_hi - _lo), 0.004)
-        ax.set_ylim(max(0.0, _lo - _pad), min(1.0, _hi + _pad))
-        _yr[_m if "_m" in dir() else m] = (round(max(0.0, _lo - _pad), 4),
-                                           round(min(1.0, _hi + _pad), 4))
-        # The reference reads its y axis on the same 0.2 grid as x. A panel whose range
-        # spans at least 0.4 gets that grid; MedMentions cannot, because its risk genuinely
-        # sits in a band about 0.13 wide and a 0.2 grid would leave it one tick, so those
-        # panels keep an adaptive locator.
-        _span = ax.get_ylim()[1] - ax.get_ylim()[0]
-        if _span >= 0.40:
-            ax.yaxis.set_major_locator(MultipleLocator(0.2))
-        else:
-            # Three ticks at two decimals, not four at three. MedMentions' band produced
-            # labels like "0.944", five characters against "0.2" elsewhere, and that width
-            # both reached into the neighbouring panel and pushed the tight box to 5.49in,
-            # past the 5.456in that a 7.0pt floor allows at linewidth.
-            ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
-            ax.yaxis.set_major_formatter(FormatStrFormatter("%.2f"))
+        # IDENTICAL AXES ON EVERY PANEL OF EVERY FIGURE: y 0.2 to 1.0 on the same 0.2 grid
+        # as x. Author's call, made explicitly. Note for the record that MedMentions' risk
+        # runs about 0.86 to 0.99, so its curves sit in the top fifth of each panel; the
+        # per-cell numbers are in Table 10 and Supplementary S8.
+        ax.set_ylim(0.2, 1.0)
+        ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        _yr[m] = (0.2, 1.0)
         ax.tick_params(labelsize=8, labelbottom=True, labelleft=True)
         ax.set_xlabel("Coverage", fontsize=8)
         ax.set_ylabel("Risk", fontsize=8)
@@ -319,8 +305,11 @@ def main() -> int:
     # the rightmost panel's "1.0" tick overflowed the canvas, widening the MediaBox to 5.49in
     # and dropping the concept lanes to 6.96pt; and each row's "Coverage" label met the next
     # row's panel title. These values keep most of the gain without either.
-    fig.subplots_adjust(left=0.075, right=0.984, top=_top, bottom=_BOT_IN / _H,
-                        wspace=c.get("wspace", 0.52), hspace=c.get("hspace", 0.80))
+    # Tighter than before, which a fixed 0.2 to 1.0 axis makes safe: every y label is now
+    # three characters, so none of them reaches into the neighbouring panel the way
+    # MedMentions' five-character adaptive labels did.
+    fig.subplots_adjust(left=0.068, right=0.988, top=_top, bottom=_BOT_IN / _H,
+                        wspace=c.get("wspace", 0.34), hspace=c.get("hspace", 0.52))
     import math as _math
     fig.legend(handles.values(), handles.keys(), loc="upper center",
                ncol=_math.ceil(len(handles) / 2), fontsize=8, frameon=False,

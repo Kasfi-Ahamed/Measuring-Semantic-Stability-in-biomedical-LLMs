@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-28 03:14 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-28 03:23 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -142,65 +142,65 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### RQ3 matched pairs, forest
 
-- filename: `fig_rq3_matched_pairs_forest.png`  (PNG, 300 dpi) and `fig_rq3_matched_pairs_forest.pdf` 16 KB, sha256 `fd5076f1e9ed66c0`
+- filename: `fig_rq3_matched_pairs_forest.png`  (PNG, 300 dpi) and `fig_rq3_matched_pairs_forest.pdf` 16 KB, sha256 `fcd46459535838df`
 - producer: `scripts/fig_rq3_matched_pairs_forest.py`
 - model set: 3 pairs x 2 corpora
 - corpus: CADEC and MedMentions
 - source artefact: `outputs/rq3/rq3_matched_pair_statistics_cadec.csv`  sha256 `54f7716c8f45e310`  rows 6  mtime 2026-09-21 12:10
 - source artefact: `outputs/rq3/rq3_matched_pair_statistics_medmentions.csv`  sha256 `a913330d00c0c6e8`  rows 6  mtime 2026-09-21 12:16
-- output sha256: `fc4922e216b7c15903fe4b54ed9a6c2cd5412a5c0f99717a59ff1727fec589f0`
-- output mtime: 2026-09-28 03:00
+- output sha256: `c4dda3ecd16f1235b070b7da03d764683fa660d1640f2d7a115022bfa03ff42e`
+- output mtime: 2026-09-28 03:22
 
 ### RQ4 risk-coverage, BioASQ
 
-- filename: `fig_risk_coverage_bioasq.png`  (PNG, 300 dpi) and `fig_risk_coverage_bioasq.pdf` 28 KB, sha256 `2b46f282b787fe0c`
+- filename: `fig_risk_coverage_bioasq.png`  (PNG, 300 dpi) and `fig_risk_coverage_bioasq.pdf` 28 KB, sha256 `d20aab0bd0269302`
 - producer: `scripts/fig_report_risk_coverage.py bioasq`
 - model set: 5 models
 - corpus: BioASQ
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
-- output sha256: `2ba8c502096654a57dc9ad177bb150a124c70438f83b716c5c2f1864a0ca354b`
-- output mtime: 2026-09-28 03:13
+- output sha256: `6f50c3d51d15d2f1c529d720d4a9e30f0d59417166c3292c50604e519e5252c5`
+- output mtime: 2026-09-28 03:20
 
 ### RQ4 risk-coverage, SQuAD 2.0
 
-- filename: `fig_risk_coverage_squad.png`  (PNG, 300 dpi) and `fig_risk_coverage_squad.pdf` 29 KB, sha256 `b2edb6a38004bb75`
+- filename: `fig_risk_coverage_squad.png`  (PNG, 300 dpi) and `fig_risk_coverage_squad.pdf` 29 KB, sha256 `2092fd853fc3723b`
 - producer: `scripts/fig_report_risk_coverage.py squad`
 - model set: 5 models
 - corpus: SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
-- output sha256: `32e109e9db4763b1c761243572d1bf9f1b5a62ca4fa0a82b7b2a8edd23a337fd`
-- output mtime: 2026-09-28 03:13
+- output sha256: `1aa287fcf0b606e943c25324473389604939ed8c14c0f2d3e1314d41dc561a9b`
+- output mtime: 2026-09-28 03:20
 
 ### RQ4 risk-coverage, CADEC
 
-- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 38 KB, sha256 `8a77eb82c5690930`
+- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 38 KB, sha256 `a096a58ec49850d2`
 - producer: `scripts/fig_report_risk_coverage.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
-- output sha256: `835a99d2572b4a0217f483cb4bbaf72469b93efc533192316549053d3cfada17`
-- output mtime: 2026-09-28 03:13
+- output sha256: `5578668113345edcd89a6dc70bb55227061d0c2bcd6af37e92cd84627417ba88`
+- output mtime: 2026-09-28 03:20
 
 ### RQ4 risk-coverage, MedMentions
 
-- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 36 KB, sha256 `b57b9cdf3daef9dd`
+- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 35 KB, sha256 `fbc4579469bf4731`
 - producer: `scripts/fig_report_risk_coverage.py medmentions`
 - model set: 8 models, margin omitted for the 3 encoders
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
-- output sha256: `c2aa7b8fc4579f7576204fdc1748954edf655127e19087d8d94cb8a45c19056c`
-- output mtime: 2026-09-28 03:13
+- output sha256: `9605e77075ed2a7009408c4d5a5be553512f7936ecf8e3656e34856bce3150cf`
+- output mtime: 2026-09-28 03:20
 
 ### RQ4 risk-coverage, QA
 
-- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 29 KB, sha256 `b5b3f9875a22eb5a`
+- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 28 KB, sha256 `226c24f1ea88dfea`
 - producer: `scripts/fig_report_risk_coverage.py qa`
 - model set: 5 models
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/umls_candidate_margin_qa.csv`  sha256 `fd286f193e894733`  rows 10,640  mtime 2026-09-21 01:27
-- output sha256: `5c4549c39a2e102c0684cae860b7fd266a87baba95bd92ca2ff67cf1c5bd0322`
-- output mtime: 2026-09-28 03:13
+- output sha256: `91fc8c06e8ab4665077a24213c6c837962a153ed51a201c0adcdaffcd567d073`
+- output mtime: 2026-09-28 03:20
 
 ### RQ2 dissociation, CADEC
 
