@@ -290,6 +290,36 @@ def _text_overlaps(fig, tol=1.0):
     return bad
 
 
+AXES_FRACTION = {}
+AXES_FRACTION_WARN = 0.30
+AXES_FRACTION_FLOOR = 0.15
+
+
+def _axes_fraction(fig, pad):
+    """Share of the rendered figure area that is actually plotting axes.
+
+    Every other guard in this file measures whether TEXT fits. None of them notices when the
+    furniture has squeezed the plot out of existence. A risk-coverage plate once shipped from
+    here with 13.1px of plotting axes per panel: it reported zero colliding text pairs, every
+    font above the floor, and a rendered box inside its cap, and it was not a figure. The
+    fraction is scale invariant, since the axes and the figure scale together at placement.
+
+    Colourbars are excluded. They are axes but they are not a plot.
+    """
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    tb = fig.get_tightbbox(r)
+    _p = 0.1 if pad is None else pad
+    fig_area = (tb.width + 2 * _p) * (tb.height + 2 * _p)
+    ink = 0.0
+    for ax in fig.get_axes():
+        if ax.get_label() == "<colorbar>":
+            continue
+        bb = ax.get_window_extent(renderer=r)
+        ink += (bb.width / fig.dpi) * (bb.height / fig.dpi)
+    return ink / fig_area if fig_area > 0 else 0.0
+
+
 def save_png(fig, path, *, dpi=300, pad=None):
     """PNG at 300 dpi, plus a vector PDF sibling with the same figsize and bbox.
 
@@ -303,6 +333,19 @@ def save_png(fig, path, *, dpi=300, pad=None):
     # whitespace inside the MediaBox. Width-starved figures pass a smaller pad so the
     # scale at placement is not spent on margin LaTeX already provides.
     _pad = {} if pad is None else {"pad_inches": pad}
+    # Plotting-axes fraction, checked BEFORE anything is written: a figure whose plot has been
+    # squeezed to nothing should not reach the delivery directory at all.
+    _frac = _axes_fraction(fig, pad)
+    AXES_FRACTION[path.stem] = _frac
+    print(f"  axes fraction {path.stem}: {100 * _frac:.1f}% of the rendered figure is plot"
+          + ("" if _frac >= AXES_FRACTION_WARN else
+             f"  WARNING: below {100 * AXES_FRACTION_WARN:.0f}%"), flush=True)
+    if _frac < AXES_FRACTION_FLOOR:
+        raise SystemExit(
+            f"REFUSED {path.stem}: plotting axes are {100 * _frac:.1f}% of the rendered figure, "
+            f"below the {100 * AXES_FRACTION_FLOOR:.0f}% floor. The furniture has squeezed out "
+            f"the plot. Reduce titles, labels or padding, or give the figure more of the page; "
+            f"do not lower this floor to make a figure pass.")
     fig.savefig(path, dpi=dpi, bbox_inches="tight", **_pad)
     _ov = _text_overlaps(fig)
     OVERLAPS[path.stem] = _ov

@@ -39,6 +39,66 @@ suffix.
 
 ---
 
+## Superseded, NOT renamed, and still the default output of a live script
+
+`outputs/rq3/rq3_matched_pair_statistics.csv` — the unsuffixed matched-pair file, 2026-09-13
+22:20, recorded here 2026-09-27.
+
+| | unsuffixed file, 13 Sep | live per-corpus files |
+|---|---|---|
+| n_paired, CADEC | 5,022 / 5,021 / 5,016 | **4,712 / 4,711 / 4,712** |
+| n_paired, MedMentions | 44,333 / 43,887 / 43,716 | **127,598 / 127,208 / 127,187** |
+| rank-biserial, BioMistral vs Mistral, CADEC | **+0.123434** | **+0.157471** |
+| rows | 9, three datasets in one file including a cross-corpus POOLED | 6 each, one corpus plus its own POOLED |
+
+**Why this one is more dangerous than the renamed three.** It is not empty, not obviously old and
+not obviously wrong. Every column is the one the live file has, the pair names match, the
+interpretations match, and the effect directions match. Anything still reading it would report
+**+0.123 for BioMistral vs Mistral on CADEC where the answer is +0.157** — a number that clears the
+pre-registered 0.10 floor either way, carries the same sign, supports the same conclusion, and is
+simply not the result. A stale file that produced an absurd number would be caught by reading it.
+This one would not be.
+
+**Nothing reads it.** Checked 2026-09-27 across every tracked file: no script, notebook or
+document opens this path, and no glob matches it, because every glob in the repository is
+`rq3_matched_pair_statistics_*.csv`, which requires the underscore the unsuffixed name does not
+have.
+
+**But a live script still WRITES it, by default.** `scripts/rq3_matched_pairs.py`:
+
+    want = sys.argv[1].lower() if len(sys.argv) > 1 else "all"
+    ...
+    out = (OUT_CSV if want == "all"
+           else OUT_CSV.with_name(OUT_CSV.stem + f"_{want}" + OUT_CSV.suffix))
+
+`OUT_CSV` is the unsuffixed path and `all` is the default, so `python scripts/rq3_matched_pairs.py`
+with no argument regenerates this file and does **not** touch the two files the manuscript reads.
+The per-corpus outputs exist only because the corpus was named explicitly. That is why the file was
+repointed rather than deleted on 21 September, and why renaming it would not help: the script would
+recreate the live-looking name on the next argument-free run.
+
+**The fix, and why it is deferred.** The hazard is the script default, not the file, so the fix is
+to make `scripts/rq3_matched_pairs.py` require an explicit corpus, the way `scripts/cutoff_verify.py`
+already requires `--corpus` (see the *Cut-off verification dry-run* entry of 19 September in
+`docs/ANALYSIS_PRECOMMIT.md`, which records the same class of defect: a required argument with no
+default, because the historical default pointed at a contaminated path and a verification that fell
+back to it would have passed). **Deliberately deferred past submission.** Nothing reads this file,
+so it cannot reach a reported number today, and the change touches a production script on the eve
+of submission. It should be the first change made after submission, before RQ3 is next re-run.
+
+**Two stale references, both corrected 2026-09-27.** `docs/ARTEFACT_INVENTORY.csv` line 386 marked
+this file `CURRENT` — the one place in the repository asserting it was live, in a file that ships as
+Supplementary Item S9, and in direct contradiction of `RUN_ORDER.md` line 59 within the same tag. It
+now reads `SUPERSEDED` and names both per-corpus successors. `README.md` line 38 named it as the RQ3
+output in the run table; it now names the two files the analysis reads. `SUPERSEDED` is a new value
+in that inventory's status vocabulary, which previously held only `CURRENT`, `STALE` and two
+`UNKNOWN` forms.
+
+`notebooks/_legacy` is left alone on purpose: both legacy notebooks write to a `TAB_DIR` that does
+not exist, which `docs/RQ3_Report.md` lines 11-12 already records, so they are inert.
+
+---
+
 ## Date-impossible figures (43)
 
 Each of these was written **before** the entropy table it would have to read in order to depict
@@ -256,6 +316,40 @@ nothing else moves.
 A corollary for anyone measuring these figures: `fig.get_tightbbox()` returns the **unpadded** box,
 so it under-reports the MediaBox by 0.2in in each dimension at the default pad. Two of the rounds
 lost here came from comparing a `get_tightbbox` measurement against a MediaBox allowance.
+
+## The fourth thing: every guard measured text, none measured whether a plot remained
+
+Recorded 2026-09-27, beside the `bbox_inches="tight"` notes above, because it is the same class of
+failure one level up. The three mechanisms there describe how a figure's *size* escaped control.
+This describes how the *checks* did.
+
+By this point the figure set was guarded four ways: minimum rendered font size at the placement
+width, zero colliding text pairs by rendered bounding box, the rendered box inside its float
+allowance, and vector purity. **Every one of them measures text.** Not one of them looks at the
+plot.
+
+So a figure can pass all four and not be a figure. The upright risk-coverage reflow did exactly
+that. Reflowed from 2 rows x 4 columns to 4 rows x 2 columns, each panel carried a two-to-three
+line wrapped title, and on a 5.28in canvas `tight_layout` spent the whole height on furniture and
+shrank each panel to **13.1 pixels** of plotting axes, 0.13in. That plate reported:
+
+    overlap guard fig_risk_coverage_medmentions: 0 colliding text pairs
+    min 8.5pt -> 8.12pt OK   box 4.77x5.05 vs cap 4.77x5.49 FITS
+
+and it was reported as passing, twice, before the panel height was measured directly. The tell was
+not in any of the four checks. It was two y tick labels 6.9px apart, which only looked like a tick
+problem; the cause was that there was no room left to put them in.
+
+`report_style.save_png` now computes the **plotting-axes fraction**: the summed area of every
+non-colourbar axes over the rendered figure area, reported on every save next to the collision
+count. Under 30 per cent it warns. Under 15 per cent it raises and nothing is written, because a
+figure that far gone should not reach `figures_for_report/` for a human to notice. The fraction is
+scale invariant, so it needs no placement width to be meaningful.
+
+If a figure trips the floor, the fix is fewer titles, shorter labels, less padding, or more of the
+page. **The fix is not a lower floor.** The refusal message says so, for the same reason it is
+written here: the failure mode is invisible in a table of font sizes, which is exactly what one
+would otherwise be looking at.
 
 ## How this list was produced
 

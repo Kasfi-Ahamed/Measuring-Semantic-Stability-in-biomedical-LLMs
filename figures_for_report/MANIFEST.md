@@ -1,6 +1,6 @@
 # figures_for_report
 
-Assembled 2026-09-27 13:22 by `scripts/build_figures_for_report.py`.
+Assembled 2026-09-27 14:21 by `scripts/build_figures_for_report.py`.
 Every digest, row count and timestamp below is computed by that script, not typed.
 
 ## Directory naming
@@ -31,102 +31,102 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### Figure 1a
 
-- filename: `rq1_magnitude_vs_entropy_cadec.png`  (PNG, 300 dpi) and `rq1_magnitude_vs_entropy_cadec.pdf` 570 KB, sha256 `301a9a7cb1b00716`
+- filename: `rq1_magnitude_vs_entropy_cadec.png`  (PNG, 300 dpi) and `rq1_magnitude_vs_entropy_cadec.pdf` 570 KB, sha256 `67f98d98dec3a743`
 - producer: `scripts/fig_report_rq1.py scatter-cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_perturbations.csv`  sha256 `2f20fd0c9663dffe`  rows 55,976  mtime 2026-09-03 02:24
 - output sha256: `2948e2acde7c78ba14234714ce75ae2d27c784539593a19820a75ad517a54a78`
-- output mtime: 2026-09-27 13:20
+- output mtime: 2026-09-27 14:18
 
 ### Figure 1c
 
-- filename: `rq1_magnitude_vs_entropy_qa.png`  (PNG, 300 dpi) and `rq1_magnitude_vs_entropy_qa.pdf` 165 KB, sha256 `a99e368c81b0adba`
+- filename: `rq1_magnitude_vs_entropy_qa.png`  (PNG, 300 dpi) and `rq1_magnitude_vs_entropy_qa.pdf` 165 KB, sha256 `c8fd2bb2fe7673b1`
 - producer: `scripts/fig_report_rq1.py scatter-qa`
 - model set: 5 models
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/qa_gate_recheck.csv`  sha256 `eff80f9c02c09113`  rows 20,956  mtime 2026-09-21 11:56
 - output sha256: `a653e4010f382b36e090ade57bad7555fadf44c80495bce25048b30592aeef52`
-- output mtime: 2026-09-27 13:20
+- output mtime: 2026-09-27 14:20
 
 ### Figure 1b
 
-- filename: `rq1_magnitude_vs_entropy_medmentions.png`  (PNG, 300 dpi) and `rq1_magnitude_vs_entropy_medmentions.pdf` 108 KB, sha256 `e3d83f9a6ba11b33`
+- filename: `rq1_magnitude_vs_entropy_medmentions.png`  (PNG, 300 dpi) and `rq1_magnitude_vs_entropy_medmentions.pdf` 108 KB, sha256 `38cb7019d6ba038e`
 - producer: `scripts/fig_report_rq1.py scatter-medmentions`
 - model set: 8 models
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
 - output sha256: `c71e98f8505a2a02bd32071c2c661c4f856c8194c39d7154c44acbc478505d62`
-- output mtime: 2026-09-27 13:21
+- output mtime: 2026-09-27 14:19
 
 ### Figure 2a
 
-- filename: `rq1_entropy_heatmap_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_medmentions.pdf` 21 KB, sha256 `a1bd3e21fa3cbf04`
+- filename: `rq1_entropy_heatmap_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_medmentions.pdf` 20 KB, sha256 `d755faeceb29a148`
 - producer: `scripts/fig_report_rq1.py heatmap-medmentions`
 - model set: pooled over 8 models
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
-- output sha256: `78a74851ed6185e9d28875aa1174c5f0bab705f5e99f8aa0e628416709ad4aff`
-- output mtime: 2026-09-27 12:49
+- output sha256: `222de0b852d7cbe423a22eb74c1031708a59f14aa3db63cf265af6008425699c`
+- output mtime: 2026-09-27 14:18
 
 ### Figure 2c
 
-- filename: `rq1_entropy_heatmap_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_cadec.pdf` 22 KB, sha256 `3ffa85175a236f88`
+- filename: `rq1_entropy_heatmap_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_cadec.pdf` 21 KB, sha256 `058706309b513ad7`
 - producer: `scripts/fig_report_rq1.py heatmap-cadec`
 - model set: pooled over 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
-- output sha256: `0b64c67809205a3b3dbd537c9f1e5c80c086bed7f8f56f7c37e209547380054b`
-- output mtime: 2026-09-27 12:49
+- output sha256: `f69a38848f57303e71f1bd149d6c49cb0bb9546f4288e6b2509fa364afaa9ac0`
+- output mtime: 2026-09-27 14:17
 
 ### Figure 2d (THESIS ONLY, not a manuscript figure)
 
-- filename: `rq1_entropy_heatmap_by_model_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_cadec.pdf` 31 KB, sha256 `8dedc61fca1d8adc`
+- filename: `rq1_entropy_heatmap_by_model_cadec.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_cadec.pdf` 28 KB, sha256 `5842a0800a3a22bd`
 - producer: `scripts/fig_report_rq1.py heatmap-cadec`
 - model set: 8 models, one panel each
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_linguistic_features.csv`  sha256 `7d500ab838009530`  rows 27,814  mtime 2026-09-21 15:40
-- output sha256: `c8ea23ce213ab770e8524204e3908661e14dd68f138554c71fec16fd08a5ea2e`
-- output mtime: 2026-09-27 12:49
+- output sha256: `e038960501a9ff94f584da946cebc3ddec12c563411789ee7a1c12cb01eef740`
+- output mtime: 2026-09-27 14:17
 
 ### Figure 2b (THESIS ONLY, not a manuscript figure)
 
-- filename: `rq1_entropy_heatmap_by_model_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_medmentions.pdf` 30 KB, sha256 `a6e8083d3685bb9a`
+- filename: `rq1_entropy_heatmap_by_model_medmentions.png`  (PNG, 300 dpi) and `rq1_entropy_heatmap_by_model_medmentions.pdf` 27 KB, sha256 `0042a1e5f5e99d66`
 - producer: `scripts/fig_report_rq1.py heatmap-medmentions`
 - model set: 8 models, one panel each, one shared colour scale
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_linguistic_features.csv`  sha256 `b916fd2fee71f819`  rows 758,969  mtime 2026-09-10 08:27
-- output sha256: `960b0ddb5120ab5a16f1cd1b839522393f5ab7467848cd3fb5d293e2ae11ecde`
-- output mtime: 2026-09-27 12:49
+- output sha256: `c317812b6892ed89c5ef393dd107fae81994e464937d0f254246968d38e8ec8b`
+- output mtime: 2026-09-27 14:18
 
 ### Figure 3a
 
-- filename: `fig_rq2_accuracy_split_entropy_cadec.png`  (PNG, 300 dpi) and `fig_rq2_accuracy_split_entropy_cadec.pdf` 19 KB, sha256 `f487ebcacefe6b63`
+- filename: `fig_rq2_accuracy_split_entropy_cadec.png`  (PNG, 300 dpi) and `fig_rq2_accuracy_split_entropy_cadec.pdf` 19 KB, sha256 `42cee021e5649bb1`
 - producer: `scripts/fig_rq2_accuracy_split.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/entropy_cadec.csv`  sha256 `d51c04e3d5014496`  rows 41,288  mtime 2026-09-17 14:38
 - source artefact: `outputs/rq3/intermediate/rq3_cadec_mapped_outputs.csv`  sha256 `c488fbf8ae56a721`  rows 239,680  mtime 2026-09-17 14:37
 - output sha256: `bc285bcd22b02311f7c126dd2399fc483b022b5ebbe4443d9404374a16c51965`
-- output mtime: 2026-09-27 12:36
+- output mtime: 2026-09-27 14:20
 
 ### Figure 3b
 
-- filename: `fig_rq2_accuracy_split_entropy_medmentions.png`  (PNG, 300 dpi) and `fig_rq2_accuracy_split_entropy_medmentions.pdf` 18 KB, sha256 `c0e0dcb9669e9e8a`
+- filename: `fig_rq2_accuracy_split_entropy_medmentions.png`  (PNG, 300 dpi) and `fig_rq2_accuracy_split_entropy_medmentions.pdf` 18 KB, sha256 `9fa1f4ec0612f23c`
 - producer: `scripts/fig_rq2_accuracy_split.py medmentions`
 - model set: 8 models
 - corpus: MedMentions
 - source artefact: `outputs/rq1/entropy_full_umls.csv`  sha256 `ed98865dc4e887ca`  rows 1,135,264  mtime 2026-09-19 22:29
 - source artefact: `outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv`  sha256 `3774ff8f95317fcf`  rows 7,332,245  mtime 2026-09-19 18:31
 - output sha256: `dec75791ecc2711d5923e08ddcfe150a83e4b4543e136a83af89d5ea4c542a62`
-- output mtime: 2026-09-27 12:37
+- output mtime: 2026-09-27 14:21
 
 ### Figure 5
 
@@ -142,34 +142,34 @@ Question-answering lane alias: `OpenBioLLM-8B` is the same model as `Llama3-Open
 
 ### RQ4 risk-coverage, CADEC
 
-- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 21 KB, sha256 `d3d73998bafe9f06`
+- filename: `fig_risk_coverage_cadec.png`  (PNG, 300 dpi) and `fig_risk_coverage_cadec.pdf` 20 KB, sha256 `2bfe259f54b10019`
 - producer: `scripts/fig_report_risk_coverage.py cadec`
 - model set: 8 models
 - corpus: CADEC
 - source artefact: `outputs/rq3/umls_candidate_margin_cadec.csv`  sha256 `534c64929f7996ac`  rows 37,696  mtime 2026-09-18 02:06
-- output sha256: `ff09dda806726d1542f199b92ddc28d0d4c71ebf6a569278ca4e286f7f665ad1`
-- output mtime: 2026-09-27 12:47
+- output sha256: `9564a9102d2e6f6e63ef3883e9d266a21447a5dcd305f68f775b44a5d406ebea`
+- output mtime: 2026-09-27 14:20
 
 ### RQ4 risk-coverage, MedMentions
 
-- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 21 KB, sha256 `30cd8d7960ee36a1`
+- filename: `fig_risk_coverage_medmentions.png`  (PNG, 300 dpi) and `fig_risk_coverage_medmentions.pdf` 20 KB, sha256 `1abd064fc3140220`
 - producer: `scripts/fig_report_risk_coverage.py medmentions`
 - model set: 8 models, margin omitted for the 3 encoders
 - corpus: MedMentions
 - source artefact: `outputs/rq1/umls_candidate_margin_medmentions.csv`  sha256 `1397266faccbaa08`  rows 1,020,784  mtime 2026-09-20 14:19
-- output sha256: `711c5661384f9a88a748505d128585c08c35684c82053cc25d9a1c752c77e025`
-- output mtime: 2026-09-27 12:47
+- output sha256: `69739df646fbcd0b8a5f57c26e3dd7bbf76d45e3cb6f6d7cca3ad7e8c7ae0adc`
+- output mtime: 2026-09-27 14:20
 
 ### RQ4 risk-coverage, QA
 
-- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 19 KB, sha256 `b84c922af47e8f10`
+- filename: `fig_risk_coverage_qa.png`  (PNG, 300 dpi) and `fig_risk_coverage_qa.pdf` 19 KB, sha256 `a0f4d7073967a1ab`
 - producer: `scripts/fig_report_risk_coverage.py qa`
 - model set: 5 models
 - corpus: BioASQ and SQuAD 2.0
 - source artefact: `outputs/qa/qa_results_combined_identity_filtered.csv`  sha256 `711fed36562bcc57`  rows 67,365  mtime 2026-09-21 11:57
 - source artefact: `outputs/qa/umls_candidate_margin_qa.csv`  sha256 `fd286f193e894733`  rows 10,640  mtime 2026-09-21 01:27
-- output sha256: `580b7b70c355f3ba4941a0245cdf9fea5209d339317518a6b2c00a5dbe490174`
-- output mtime: 2026-09-27 02:18
+- output sha256: `15ce624478407635f75c0400a90aaf162f8b68d5afdcb42879927a4d6c709658`
+- output mtime: 2026-09-27 14:20
 
 ### RQ2 dissociation, CADEC
 

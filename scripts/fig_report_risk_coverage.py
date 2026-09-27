@@ -40,17 +40,19 @@ CFG = {
         corpus="CADEC", path=ROOT / "outputs/rq3/umls_candidate_margin_cadec.csv",
         model_col="model_name", acc="accuracy", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
-        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=4,
-        # LANDSCAPE, sidewaysfigure at 7.458in wide by 3.95in tall: linewidth less
-        # the rotated caption. Minimum aspect 1.89, so 8.00 x 4.23in of canvas.
-        panel=(2.02, 2.00), wrap=58, legend_ncol=3, thin_ticks=True,
+        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=2,
+        # UPRIGHT at width=\linewidth. Eight panels reflowed from 2 rows x 4 columns to
+        # 4 rows x 2 columns, which takes each panel from about 1.2in wide to about 2.39in
+        # and lets the canvas be narrow, about 5.0 x 5.2in, so the scale at 4.7738in is
+        # near 0.95 instead of the 0.30 a 15.8in canvas would have given.
+        panel=(2.50, 1.39), wrap=52, legend_ncol=3, thin_ticks=True,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
-        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
-        panel=(2.02, 2.00), wrap=58, legend_ncol=3, thin_ticks=True,
+        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=2,
+        panel=(2.50, 1.39), wrap=52, legend_ncol=3, thin_ticks=True,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
@@ -152,15 +154,35 @@ def main() -> int:
                         label=S.RANDOM_BASELINE["label"])
         handles.setdefault(S.RANDOM_BASELINE["label"], bl)
 
-        sub = "" if has_margin else "\nmargin undefined: no retrieval. combined(2) shown"
-        ax.set_title(f"{m}  (n = {len(g):,}){sub}", fontsize=8.5)
+        # On the upright 4-row plate the long form wrapped to two lines in a 1.39in panel and
+        # took the plotting axes down to 0.36in. The panel still states which estimator was
+        # drawn, which is what the caption's closing clause promises; the reason it was drawn,
+        # and the list of models affected, are already spelled out in the caption note below.
+        _long = "\nmargin undefined: no retrieval. combined(2) shown"
+        sub = "" if has_margin else ("\ncombined(2)" if c.get("thin_ticks") else _long)
+        # Same abbreviation rule as the RQ2 accuracy-split plate: drop the vendor prefix, the
+        # instruction-tuning suffix and the point release; keep the family, the biomedical
+        # qualifier and the parameter count. Unabbreviated, "Meta-Llama-3-8B-Instruct" overflowed
+        # its 2.50in panel, which widened the tight box to 5.57in and cost 0.10 of scale.
+        _m = (m.replace("Meta-", "").replace("-Instruct", "").replace("-v0.1", "")
+               .replace("FLAN-T5-base", "FLAN-T5").replace("Llama3-OpenBioLLM", "OpenBioLLM")
+              if c.get("thin_ticks") else m)
+        ax.set_title(f"{_m}  (n = {len(g):,}){sub}", fontsize=8.5)
         ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
         if c.get("thin_ticks"):
             from matplotlib.ticker import MaxNLocator
-            ax.xaxis.set_major_locator(MaxNLocator(nbins=4, prune="upper"))
-            ax.yaxis.set_major_locator(MaxNLocator(nbins=4, prune="both"))
-            ax.set_title("\n".join(__import__("textwrap").wrap(
-                ax.get_title(), 30)), fontsize=8.5)
+            # 3, not 4: the upright reflow puts each panel at 1.30in, and four 8pt
+            # y labels need more height than the axes has.
+            ax.xaxis.set_major_locator(MaxNLocator(nbins=3, prune="upper"))
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=2, prune="both"))
+            # Wrap each line separately. textwrap.wrap on the whole string collapses the
+            # newline before the combined(2) marker and re-flows it, so a shorter model name
+            # put the marker inline while longer ones kept it on its own line -- the same
+            # figure showed the same fact two ways.
+            _tw_ = __import__("textwrap")
+            ax.set_title("\n".join(
+                "\n".join(_tw_.wrap(_ln, 34)) if _ln.strip() else _ln
+                for _ln in ax.get_title().split("\n")), fontsize=8.5)
         ax.grid(alpha=0.28)
         ax.set_axisbelow(True)
     for k in range(len(models), nrow * ncol):
@@ -178,12 +200,16 @@ def main() -> int:
         ax_b.xaxis.set_tick_params(labelbottom=True)
         ax_b.set_xlabel("Coverage")
     for r_ in range(nrow):
-        axes[r_][0].set_ylabel("Selective risk")
+        # One shared y label, not one per row: at 4 rows x 1.30in the per-row labels
+        # sat on each other. The QA plate keeps the per-row form.
+        if not c.get("thin_ticks"):
+            axes[r_][0].set_ylabel("Selective risk")
 
 
     title = S.title_line("RQ4: selective risk against coverage", c["corpus"])
     import textwrap as _tw
-    fig.suptitle("\n".join(_tw.wrap(title, c.get("wrap", 200))), fontsize=12, y=0.995)
+    fig.suptitle("\n".join(_tw.wrap(title, c.get("wrap", 200))),
+                 fontsize=9 if c.get("thin_ticks") else 12, y=0.995)
     _notes = ["Coverage is the pre-registered domain [0.10, 1.00]. The estimator is not "
               "defined below 0.10 and the axis does not extend there.",
               "Four signals plus a dashed grey random-ordering baseline, one legend for the "
@@ -202,11 +228,13 @@ def main() -> int:
                ncol=min(c.get("legend_ncol", 6), len(handles)), fontsize=9,
                frameon=True,
                bbox_to_anchor=(0.5, -0.025 if c.get("thin_ticks") else -0.02))
-    _bot = 0.105 if c.get("thin_ticks") else 0.035
+    if c.get("thin_ticks"):
+        fig.supylabel("Selective risk", fontsize=9)
+    _bot = 0.075 if c.get("thin_ticks") else 0.035
     fig.tight_layout(rect=(0, _bot, 1, 0.97),
-                     w_pad=2.0 if c.get("thin_ticks") else 1.08)
+                     w_pad=1.2 if c.get("thin_ticks") else 1.08)
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    S.save_png(fig, c["out"])
+    S.save_png(fig, c["out"], pad=0.02)
     plt.close(fig)
     print(f"wrote {c['out']}")
     return 0

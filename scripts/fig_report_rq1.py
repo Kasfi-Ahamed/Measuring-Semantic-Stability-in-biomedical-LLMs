@@ -303,7 +303,7 @@ def _cells(g, cats, types):
 
 
 def _draw_cells(ax, mat, cnt, insts, cats, types, vmax, fs=8, note_fs=None,
-                compact_notes=False):
+                compact_notes=False, terse_notes=False):
     """Two undrawn states, rendered differently, and the limiting count is named.
 
     nothing observed   hatched, "no data (n=0)"
@@ -328,14 +328,16 @@ def _draw_cells(ax, mat, cnt, insts, cats, types, vmax, fs=8, note_fs=None,
                 ax.add_patch(plt.Rectangle((c_ - 0.5, r_ - 0.5), 1, 1, fill=True,
                                            facecolor="#F7F7F7", edgecolor="#AAAAAA",
                                            hatch="///", lw=0.6, zorder=2))
-                ax.text(c_, r_, "no data\n(n=0)", ha="center", va="center",
+                ax.text(c_, r_, "n=0" if terse_notes else "no data\n(n=0)",
+                        ha="center", va="center",
                         fontsize=_nfs, color="#555555", zorder=3)
             else:
                 _r, _i = int(cnt[r_, c_]), int(insts[r_, c_])
                 _sep = "\n" if compact_notes else ", "
-                lab = (f"{_i} instance{'' if _i == 1 else 's'}\n({_r} rows){_sep}below {MIN_CELL}"
-                       if _i <= _r else
-                       f"{_r} row{'' if _r == 1 else 's'}{_sep}below {MIN_CELL}")
+                lab = (f"<{MIN_CELL}" if terse_notes else
+                       (f"{_i} instance{'' if _i == 1 else 's'}\n({_r} rows){_sep}below {MIN_CELL}"
+                        if _i <= _r else
+                        f"{_r} row{'' if _r == 1 else 's'}{_sep}below {MIN_CELL}"))
                 ax.text(c_, r_, lab, ha="center", va="center", fontsize=_nfs,
                         color="#444444")
     return im
@@ -381,16 +383,19 @@ def heatmap(corpus="MedMentions") -> int:
         print(f"    {who:<26} {ca:<14} x {ty:<22} rows={rr:<6} instances={ii:<4}"
               f"  {'EMPTY' if rr == 0 else 'below 3'}")
 
-    # LANDSCAPE, one figure per sidewaysfigure float. The float is bounded at
-    # 7.458in wide (0.98 * textheight) and 3.95in tall: the height is linewidth
-    # LESS the rotated caption, which sits inside the same rotated box. That is a
-    # minimum aspect of 1.89, so the canvas is wide and short, 8.00 x 4.23in, and
-    # the scale at 7.458in is 0.93 rather than 0.81.
-    fig, ax = plt.subplots(figsize=(1.25 * len(types) + 3.18,
-                                   0.355 * len(cats) + 2.07))
+    # UPRIGHT, placed at width=\linewidth = 4.7738in. Not rotated: the sideways placement was
+    # abandoned, and a canvas drawn for 7.458in renders at a scale near 0.30 when it is placed
+    # at 4.7738in instead, which put this plate's text at 4 to 5pt. Redrawn tall, about
+    # 5.0 x 5.2in, so the scale is near 0.95 and ordinary 9pt type renders above 8.5pt with no
+    # inflation. The 4-family by 6-category grid is unchanged and stays one panel; it simply has
+    # more room per cell than the wide version gave it.
+    fig, ax = plt.subplots(figsize=(0.45 * len(types) + 3.20,
+                                   0.62 * len(cats) + 1.48))
     im = _draw_cells(ax, pooled, pooled_n, pooled_i, cats, types, vmax, fs=9,
                      note_fs=9, compact_notes=True)
-    ax.set_xticks(range(len(types))); ax.set_xticklabels(types, rotation=25, ha="right", fontsize=9)
+    ax.set_xticks(range(len(types)))
+    ax.set_xticklabels([ty.replace("_", "\n") for ty in types], rotation=0,
+                       ha="center", fontsize=8)
     ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=9)
     ax.set_xlabel("Perturbation type"); ax.set_ylabel("Linguistic category")
     t = S.title_line("RQ1: mean entropy by perturbation type and linguistic category", corpus)
@@ -399,7 +404,7 @@ def heatmap(corpus="MedMentions") -> int:
                  label=r"Mean normalised entropy $\hat{H}$")
     fig.tight_layout(rect=(0, 0, 1, 0.94))
     name = f"rq1_entropy_heatmap_{c['slug']}.png"
-    S.save_png(fig, c["out_dir"] / name); plt.close(fig)
+    S.save_png(fig, c["out_dir"] / name, pad=0.02); plt.close(fig)
     _pool_undrawn = [u for u in undrawn if u[0] == "pooled"]
     S.emit_caption(name, title=t, n=S.grid_clause(n_grid, n_def),
                    models=f"pooled over all {len(models)} models",
@@ -416,33 +421,38 @@ def heatmap(corpus="MedMentions") -> int:
                                  for _, ca, ty, rr, ii in _pool_undrawn)]
                             if _pool_undrawn else ["Every cell is drawn."]))
 
-    # FONT SIZES, raised 2026-09-27. This plate is placed in a landscape sidewaysfigure at
-    # width=0.98\textheight, which is 7.46in of the 17.6in figure, a scale of 0.424. At the
-    # previous sizes the cell annotations landed at 7 x 0.424 = 3.0pt on the page and were not
-    # readable. The grid, figure size, colours, suppression rule and every value are unchanged;
-    # only the type is larger. A tall 2-by-4 would be worse under this placement.
-    nrow, ncol = 2, 4
-    fig, axes = plt.subplots(nrow, ncol, figsize=(4.4 * ncol, 4.3 * nrow), squeeze=False,
+    # UPRIGHT at width=\linewidth = 4.7738in, reflowed 2026-09-27 from 4 columns x 2 rows to
+    # 2 columns x 4 rows. The previous 17.6in canvas was drawn for a rotated placement; placed
+    # upright at 4.7738in it scaled to 0.27 and its 14pt cell values landed near 3.8pt. Two
+    # columns of four put each model panel at about 2.39 x 1.40in holding its own 4 x 6 grid,
+    # so a cell is about 0.60 x 0.23in, which carries a five-character value at 8pt. Type comes
+    # DOWN, not up: at a 5.0in canvas the scale is 0.95, so 8pt renders above 7.5pt.
+    # The grid, colours, suppression rule and every value are unchanged.
+    nrow, ncol = 4, 2
+    fig, axes = plt.subplots(nrow, ncol, figsize=(2.50 * ncol, 1.36 * nrow), squeeze=False,
                              sharex="col", sharey="row",
-                             gridspec_kw=dict(hspace=0.62, wspace=0.10))
+                             gridspec_kw=dict(hspace=0.40, wspace=0.10))
     for i, m in enumerate(models):
         ax = axes[i // ncol][i % ncol]
-        im = _draw_cells(ax, per[m][0], per[m][1], per[m][2], cats, types, vmax, fs=14,
-                         note_fs=8, compact_notes=True)
-        ax.set_title(m, fontsize=16)
+        # terse_notes: a suppressed cell is marked "<3" rather than carrying its counts, because
+        # the three-line form needs 0.40in in a 0.23in cell. Every undrawn cell's rows and
+        # instances are enumerated in this figure's caption, below.
+        im = _draw_cells(ax, per[m][0], per[m][1], per[m][2], cats, types, vmax, fs=8,
+                         note_fs=8, compact_notes=True, terse_notes=True)
+        ax.set_title(m, fontsize=8)
         if i // ncol == nrow - 1:
             ax.set_xticks(range(len(types)))
-            ax.set_xticklabels(types, rotation=30, ha="right", fontsize=12)
+            ax.set_xticklabels(types, rotation=90, ha="center", va="top", fontsize=8)
         if i % ncol == 0:
-            ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=12)
+            ax.set_yticks(range(len(cats))); ax.set_yticklabels(cats, fontsize=8)
     t2 = S.title_line("RQ1: mean entropy by perturbation type and linguistic category, "
                       "per model", corpus)
-    fig.suptitle(t2, fontsize=12)
-    _cb = fig.colorbar(im, ax=axes, fraction=0.016, pad=0.02)
-    _cb.set_label(r"Mean normalised entropy $\hat{H}$", fontsize=12)
-    _cb.ax.tick_params(labelsize=12)
+    fig.suptitle("\n".join(_tw.wrap(t2, 62)), fontsize=9)
+    _cb = fig.colorbar(im, ax=axes, fraction=0.030, pad=0.02)
+    _cb.set_label(r"Mean normalised entropy $\hat{H}$", fontsize=8)
+    _cb.ax.tick_params(labelsize=8)
     name2 = f"rq1_entropy_heatmap_by_model_{c['slug']}.png"
-    S.save_png(fig, c["out_dir"] / name2); plt.close(fig)
+    S.save_png(fig, c["out_dir"] / name2, pad=0.02); plt.close(fig)
     _bm = [u for u in undrawn if u[0] != "pooled"]
     S.emit_caption(name2, title=t2, n=S.grid_clause(n_grid, n_def),
                    models=f"{len(models)} models, roster order, one panel each",

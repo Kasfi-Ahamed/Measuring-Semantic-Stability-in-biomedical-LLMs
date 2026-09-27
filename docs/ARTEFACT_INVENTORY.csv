@@ -383,7 +383,7 @@ outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv,2026-09-03 0
 outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv.sha256.json,2026-09-13 23:04,CURRENT,,2,,CADEC_entropy.ipynb; CADEC_g4_refit.ipynb; CADEC_perturbations.ipynb,False
 outputs/rq3/rq1_linguistic_predictors_summary.csv,2026-08-02 10:48,UNKNOWN(no inputs resolved),rows=30,0,,RQ1_linguistic_predictors_hurdle.ipynb,True
 outputs/rq3/rq2_dissociation_summary.csv,2026-08-02 10:52,UNKNOWN(no inputs resolved),"n=5212,5633,5659,5668,5669",0,,RQ2_Accuracy_Stability_Dissociation.ipynb,True
-outputs/rq3/rq3_matched_pair_statistics.csv,2026-09-13 22:20,CURRENT,rows=9,2,,RQ3_matched_pairs.ipynb; RQ3_matched_pairs_gpu_pipeline_backup.ipynb; rq3_matched_pairs.py,True
+outputs/rq3/rq3_matched_pair_statistics.csv,2026-09-13 22:20,SUPERSEDED,rows=9,2,superseded by rq3_matched_pair_statistics_cadec.csv(09-17 18:52); rq3_matched_pair_statistics_medmentions.csv(09-20 01:36),RQ3_matched_pairs.ipynb; RQ3_matched_pairs_gpu_pipeline_backup.ipynb; rq3_matched_pairs.py,True
 outputs/rq3/rq4_aurc_summary.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),"n=5212,5633,5659,5668,5669",0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_four_dataset_figures.ipynb,True
 outputs/rq3/rq4_risk_coverage_cadec.csv,2026-08-02 10:57,UNKNOWN(no inputs resolved),rows=608,0,,RQ4_Clinical_Utility_Abstention.ipynb; RQ4_Clinical_Utility_Abstention_cadec_only_backup.ipynb,True
 outputs/rq3/tables/rq3_cadec_accepted_perturbation_type_counts.csv,2026-09-03 02:24,UNKNOWN(no inputs resolved),rows=4,0,,CADEC_perturbations.ipynb,False
