@@ -198,9 +198,12 @@ Three further facts from that attempt, worth not rediscovering:
 * A single unwrapped `suptitle` sets the MediaBox width and defeats the canvas change
   entirely. On the magnitude scatters the MediaBox stayed at 5.66 to 5.68in whether the canvas
   was 3.70 or 3.95in wide.
-* Once the suptitle is wrapped, the **legend** becomes the floor. Eight model names at 8pt in
-  three columns cannot be narrower than about 5.7in, and going to two columns adds rows that
-  break the height allowance.
+* Once the suptitle is wrapped, the **legend** becomes the floor. The figure of "about 5.7in"
+  originally recorded here was an estimate, never measured, and it was wrong by a factor of two:
+  measured on 2026-09-27, the eight-model legend at 8pt in `ncol=min(8, len(models))` is a single
+  row **11.46in** wide, and it *is* the tight box, so the scale at `\linewidth` floors at 0.416
+  and 8pt renders at 3.33pt. The QA lane's five models give 8.10in. Column count, not font size,
+  is the lever: three columns bring it to roughly 4.3in.
 * Mathtext subscripts render at roughly 0.6 of the base size, so `r$_{rb}$` at 8pt puts a 5pt
   glyph on the plate. That glyph, not any label, was the binding minimum on the accuracy-split
   pair.
@@ -210,6 +213,49 @@ needs either more page width per figure or less content per figure, and both are
 about the document rather than about the producers. Deferred to the journal version, where the
 same canvas-and-grid change should be applied across the whole set at once, together with the
 placement.
+
+## Three ways `bbox_inches="tight"` defeats a sizing attempt
+
+Recorded 2026-09-27. Every figure in this repository is written by `report_style.save_png`, which
+saves with `bbox_inches="tight"`. That one argument defeated a sizing attempt three times in this
+work, by three different mechanisms. Each cost a round, and none of the three is evident from the
+matplotlib documentation.
+
+The arithmetic that makes all three bite. A figure placed at a target width `T` is scaled by
+`s = T / W`, where `W` is the **MediaBox** width, not the `figsize` width. So
+
+    rendered height  = H * s          H = MediaBox height
+    rendered minimum = fontsize * s
+
+Both the height ceiling and the font floor are the same factor `s`, pulled in opposite
+directions. Once `H` and the smallest font are fixed, there is no width that satisfies both
+unless `H <= ceiling * fontsize / 7.0`. Tuning the canvas cannot escape it; only changing `H`
+or the font can.
+
+**1. The MediaBox tracks the label block, not `figsize`.** The tight bbox is the union of every
+artist's extent, so labels that overflow the canvas enlarge the output beyond `figsize`. Shrinking
+`figsize` can therefore leave the MediaBox almost unchanged, because the overflow simply grows to
+compensate. The canvas-shrink attempt on the worst nine figures foundered on this: the canvas got
+smaller, the MediaBox did not, and the only thing that changed was that the text collided.
+
+**2. An unwrapped suptitle pins the width independent of `figsize`.** One long title line is wider
+than the axes, the tight bbox grows to contain it, and the MediaBox width is then set by a string.
+Shrinking the canvas below that width buys nothing but a lower `s`.
+
+The same mechanism runs backwards, which is the counter-intuitive half. **Removing** width-pinning
+furniture *narrows* the tight box, which *raises* `s`, which *increases* the rendered height. On
+the three magnitude scatters, dropping the suptitle to save height made the rendered box taller:
+1.67-1.69in became 1.70-1.71in. Height is not bought by deleting wide things.
+
+**3. The default 0.1in pad.** `bbox_inches="tight"` pads 0.1in on every side, adding 0.2in to both
+MediaBox dimensions. On the three scatter subfigures that pad was the *entire* overshoot: the
+tight box measured 1.78in, the MediaBox 1.96in, and the allowance was 1.68in. `save_png` now takes
+an optional `pad` argument for width-starved figures; it defaults to matplotlib's behaviour, so
+nothing else moves.
+
+A corollary for anyone measuring these figures: `fig.get_tightbbox()` returns the **unpadded** box,
+so it under-reports the MediaBox by 0.2in in each dimension at the default pad. Two of the rounds
+lost here came from comparing a `get_tightbbox` measurement against a MediaBox allowance.
 
 ## How this list was produced
 

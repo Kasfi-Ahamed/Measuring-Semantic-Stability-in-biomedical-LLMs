@@ -290,7 +290,7 @@ def _text_overlaps(fig, tol=1.0):
     return bad
 
 
-def save_png(fig, path, *, dpi=300):
+def save_png(fig, path, *, dpi=300, pad=None):
     """PNG at 300 dpi, plus a vector PDF sibling with the same figsize and bbox.
 
     Same figure object, saved twice: this is a format change, not a redesign. The PDF
@@ -299,7 +299,11 @@ def save_png(fig, path, *, dpi=300):
     """
     path = _Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(path, dpi=dpi, bbox_inches="tight")
+    # pad: bbox_inches="tight" pads 0.1in on every side by default, which is 0.2in of
+    # whitespace inside the MediaBox. Width-starved figures pass a smaller pad so the
+    # scale at placement is not spent on margin LaTeX already provides.
+    _pad = {} if pad is None else {"pad_inches": pad}
+    fig.savefig(path, dpi=dpi, bbox_inches="tight", **_pad)
     _ov = _text_overlaps(fig)
     OVERLAPS[path.stem] = _ov
     print(f"  overlap guard {path.stem}: {len(_ov)} colliding text pairs"
@@ -308,7 +312,7 @@ def save_png(fig, path, *, dpi=300):
     pdf = path.with_suffix(".pdf")
     if hit:
         RASTERISED[path.stem] = hit
-        fig.savefig(pdf, dpi=400, bbox_inches="tight")
+        fig.savefig(pdf, dpi=400, bbox_inches="tight", **_pad)
     else:
-        fig.savefig(pdf, bbox_inches="tight")
+        fig.savefig(pdf, bbox_inches="tight", **_pad)
     return path

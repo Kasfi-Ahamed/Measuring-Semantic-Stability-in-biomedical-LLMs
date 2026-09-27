@@ -24,6 +24,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 import textwrap as _tw
 import numpy as np
 import pandas as pd
@@ -123,27 +124,57 @@ def load_scatter(corpus):
     return df, n_grid, c
 
 
-def _scatter_axes(axes, sub_all, sub_nz, colour_of, models):
+POOLED_COLOUR = "#3A6EA5"
+
+
+def _scatter_axes(axes, sub_all, sub_nz, colour_of, models, pooled=False):
+    """pooled=True draws the combined plate: one colour, no legend keys, rho in the title.
+
+    The combined plate reports pooled quantities only -- the regression line, the Spearman rho
+    and the panel n are all computed across models -- so colouring the points per model keyed
+    something no number on the plate distinguished. Measured at the float's own geometry, 39.7%
+    of inked pixels on CADEC and 55.7% on MedMentions changed colour when the draw order was
+    reversed, so what a reader saw was substantially roster order rather than data. The per-model
+    view is not lost: it has its own eight plates per corpus under per_model/.
+
+    pooled=False is the per-model path and is unchanged, colour and marker per model.
+    """
     for ax, (lab, sub) in zip(axes, [("All instances", sub_all),
                                      ("Non-zero entropy instances only", sub_nz)]):
-        for m in models:
-            g = sub[sub["model_name"] == m]
-            ax.scatter(g["lexical_change_magnitude"], g["H"], s=5, alpha=0.30,
-                       color=colour_of(m), marker=S.MODEL_MARKERS[m], linewidths=0, label=m)
+        if pooled:
+            ax.scatter(sub["lexical_change_magnitude"], sub["H"], s=4, alpha=0.18,
+                       color=POOLED_COLOUR, linewidths=0)
+        else:
+            for m in models:
+                g = sub[sub["model_name"] == m]
+                ax.scatter(g["lexical_change_magnitude"], g["H"], s=5, alpha=0.30,
+                           color=colour_of(m), marker=S.MODEL_MARKERS[m], linewidths=0, label=m)
         x = sub["lexical_change_magnitude"].to_numpy(dtype=float)
         y = sub["H"].to_numpy(dtype=float)
         ok = np.isfinite(x) & np.isfinite(y)
+        rho = np.nan
         if ok.sum() >= 2:
             rho = stats.spearmanr(x[ok], y[ok]).statistic
             b, a = np.polyfit(x[ok], y[ok], 1)
             xs = np.linspace(np.nanmin(x[ok]), np.nanmax(x[ok]), 50)
-            ax.plot(xs, a + b * xs, color="#8B0000", lw=2.0, zorder=5)
-            ax.annotate(f"Spearman rho = {rho:.3f}  (n = {int(ok.sum()):,})",
-                        (0.985, 0.03), xycoords="axes fraction", ha="right", fontsize=9,
-                        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="#888888"))
-        ax.set_title(f"{lab} (n = {len(sub):,})", fontsize=10)
-        ax.set_xlabel("Mean lexical change magnitude (normalised edit distance)")
-        ax.set_ylabel(r"Normalised semantic entropy $\hat{H}$")
+            ax.plot(xs, a + b * xs, color="#8B0000", lw=1.4 if pooled else 2.0, zorder=5)
+            if not pooled:
+                ax.annotate(f"Spearman rho = {rho:.3f}  (n = {int(ok.sum()):,})",
+                            (0.985, 0.03), xycoords="axes fraction", ha="right", fontsize=9,
+                            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="#888888"))
+        if pooled:
+            # rho is NOT on the plate. It lives in the subcaptions, because a second title
+            # line cost 0.11in of a figure whose plotting axes was only 0.19in tall. The
+            # producer still prints it so the subcaption can be checked against this code.
+            print(f"    rho, {lab}: {rho:+.6f} -> {rho:+.3f}")
+            ax.set_title(f"{lab} (n = {len(sub):,})", fontsize=8)
+            ax.xaxis.set_major_locator(MaxNLocator(nbins=3, prune="both"))
+            ax.yaxis.set_major_locator(MaxNLocator(nbins=3, prune="both"))
+            ax.tick_params(labelsize=8)
+        else:
+            ax.set_title(f"{lab} (n = {len(sub):,})", fontsize=10)
+            ax.set_xlabel("Mean lexical change magnitude (normalised edit distance)")
+            ax.set_ylabel(r"Normalised semantic entropy $\hat{H}$")
         ax.grid(alpha=0.25)
         ax.set_axisbelow(True)
 
@@ -154,16 +185,33 @@ def scatter(corpus) -> int:
     models = S.ordered(df["model_name"])
     print(f"{corpus}: {n_grid:,} grid, {len(df):,} drawn, {len(models)} models")
 
-    fig, axes = plt.subplots(1, 2, figsize=(15.5, 6.0))
-    _scatter_axes(axes, df, df[df["H"] > 0], lambda m: S.MODEL_COLOURS[m], models)
+    # PORTRAIT SUBFIGURE. The float gives each of the three lanes a rendered box of
+    # 4.7738in wide by 1.68in tall, aspect 2.84. The furniture stack -- wrapped suptitle,
+    # two-line panel titles, shared axis labels, tick labels -- measures 1.78in and does not
+    # reduce: dropping the suptitle and dropping the second title line each left it at 1.78in.
+    # Since rendered height is 1.78 * scale and the rendered minimum is 8pt * scale, the two
+    # constraints are the same factor pulled opposite ways, and the canvas is chosen to put
+    # the scale at about 0.94: 1.68in of height and a 7.5pt minimum.
+    fig, axes = plt.subplots(1, 2, figsize=(5.09, 1.88))
+    _scatter_axes(axes, df, df[df["H"] > 0], lambda m: S.MODEL_COLOURS[m], models, pooled=True)
     title = S.title_line("RQ1: lexical change magnitude against semantic entropy", corpus)
-    fig.suptitle(title, fontsize=12)
-    h, l = axes[0].get_legend_handles_labels()
-    fig.legend(h, l, loc="lower center", ncol=min(8, len(models)), fontsize=8,
-               markerscale=3.0, bbox_to_anchor=(0.5, -0.05))
-    fig.tight_layout(rect=(0, 0.02, 1, 0.95))
+    # NO in-figure suptitle. Each lane is named by its own subcaption, and the wrapped title
+    # cost 0.30in of height on a figure that had 0.19in of plotting axes. Removing it, the
+    # second title line and the x-label parenthetical took the data area from 12% of the
+    # figure to 53% at the same rendered box. title is still computed, for the caption record.
+    # One shared label per axis, not four: the four per-axes labels were in 11 of the 17
+    # colliding pairs measured at this geometry, including colliding with each other.
+    # No "(normalised edit distance)": the caption already defines magnitude as Gate 5's
+    # normalised Levenshtein distance, so the axis was saying it twice.
+    fig.supxlabel("Mean lexical change magnitude", fontsize=8)
+    fig.supylabel(r"Normalised semantic entropy $\hat{H}$", fontsize=8)
+    # No legend. It keyed a per-model colour that the pooled plate no longer draws, and in one
+    # row of eight entries it was itself 11.46in wide, which floored the scale at 0.42.
+    fig.tight_layout(w_pad=1.6)
     name = f"rq1_magnitude_vs_entropy_{c['slug']}.png"
-    S.save_png(fig, c["out_dir"] / name)
+    # pad 0.02 rather than 0.1: the default pad added 0.18in to the MediaBox height,
+    # which alone was the whole overshoot against the 1.68in allowance.
+    S.save_png(fig, c["out_dir"] / name, pad=0.02)
     plt.close(fig)
     _is_qa = bool(c.get("qa"))
     _notes = ["Left panel is every analysed instance; right panel is the non-zero-entropy "
