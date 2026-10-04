@@ -82,7 +82,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 **Models drawn:** 8 models, roster order
 
 - Bars separate for BERT-base, BioBERT, PubMedBERT; they do not for the remaining 5.
-- SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), the same statistic and column the manuscript table reports, so higher entropy with more error is positive. r(rb) contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error. A star marks a value clearing the pre-registered 0.30.
+- SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), the same statistic and column the manuscript table reports, so higher entropy with more error is positive. r(rb) contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error. A star marks a value whose magnitude reaches 0.30. That 0.30 is a post-hoc display threshold for this annotation and nothing else; it was not registered. The registered support criterion is |r(rb)| >= 0.10 (docs/ANALYSIS_PRECOMMIT.md:295-318).
 - SPLIT. The 25th and 75th percentile cut was attempted and is degenerate: q25 = q75 = 0 for 4 of the 8 CADEC models, and no top quarter exists when three quarters are tied at the floor. The split drawn is instances with at least one correct variant against instances with none.
 - The producer aborts if any model's rho differs from rq2_dissociation_summary.csv by more than 5e-6.
 
@@ -95,7 +95,7 @@ Figure titles are one line naming the measure and the corpus. Everything else a 
 **Models drawn:** 8 models, roster order
 
 - Bars do not separate for any model.
-- SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), the same statistic and column the manuscript table reports, so higher entropy with more error is positive. r(rb) contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error. A star marks a value clearing the pre-registered 0.30.
+- SIGNS DIFFER BY CONSTRUCTION. rho is Spearman(entropy, ERROR), the same statistic and column the manuscript table reports, so higher entropy with more error is positive. r(rb) contrasts the correct stratum against the incorrect one, so the same relationship is negative. Both describe entropy rising with error. A star marks a value whose magnitude reaches 0.30. That 0.30 is a post-hoc display threshold for this annotation and nothing else; it was not registered. The registered support criterion is |r(rb)| >= 0.10 (docs/ANALYSIS_PRECOMMIT.md:295-318).
 - SPLIT. The 25th and 75th percentile cut was attempted and is degenerate: q25 = q75 = 0 for 4 of the 8 CADEC models, and no top quarter exists when three quarters are tied at the floor. The split drawn is instances with at least one correct variant against instances with none.
 - The producer aborts if any model's rho differs from rq2_dissociation_summary.csv by more than 5e-6.
 

@@ -389,9 +389,13 @@ both encoder-only and generative model architectures?**
 - SQ2: Is the dissociation architecture-specific?
 - SQ3: How often are apparently correct outputs semantically unstable?
 
-**Pre-registered thresholds:** Rank-biserial r >= 0.30 for Wilcoxon
+**Post-hoc thresholds:** Rank-biserial r >= 0.30 for Wilcoxon
 test. Absolute Spearman rho < 0.30 for dissociation confirmation.
 Fisher z-pooled absolute rho < 0.30 for global confirmation.
+These 0.30 cuts are post-hoc. They were not registered. The registered
+support criterion is absolute rank-biserial r >= 0.10, recorded in
+docs/ANALYSIS_PRECOMMIT.md lines 295-318. In the RQ2 figures 0.30 does one
+thing only: it decides whether an annotation carries an asterisk.
 
 ---
 
@@ -493,7 +497,7 @@ identifies none of these cases.
 
 Top-Q denotes mean entropy in the top 25 percent accuracy quartile.
 Bottom-Q denotes mean entropy in the bottom 25 percent accuracy quartile.
-No model met the pre-registered rank-biserial threshold of 0.30.
+No model met the post-hoc rank-biserial threshold of 0.30.
 All six models confirmed the dissociation on the Spearman criterion.
 
 ---
@@ -554,7 +558,7 @@ none of these cases.
 
 Mean semantic entropy in the top 25 percent accuracy quartile versus
 the bottom 25 percent accuracy quartile for each of the six models.
-The pre-registered rank-biserial r = 0.30 reference line is shown as
+The post-hoc rank-biserial r = 0.30 reference line is shown as
 a dashed line. Near-equal bar heights confirm the accuracy-stability
 dissociation. Primary figure for SQ1.
 
@@ -562,7 +566,7 @@ dissociation. Primary figure for SQ1.
 ![Figure 4](outputs/rq2/figures/rq2_figure4_dissociation_summary.png)
 
 Left panel: rank-biserial r for the Wilcoxon top-versus-bottom
-quartile test. All bars fall below the pre-registered threshold
+quartile test. All bars fall below the post-hoc threshold
 of 0.30. Right panel: absolute Spearman rho between accuracy and
 entropy per model. All bars fall below 0.30, confirming the
 dissociation for all six models. Statistical evidence figure
@@ -878,7 +882,7 @@ requirements.
 | RQ1 | Interaction term excluded | Included in regression | Excluded: near-singular matrix from sparse syntactic reordering cells (n = 161) | Reported descriptively. Inferential confirmation requires larger sample. |
 | RQ1 | G2 NLI threshold | 0.80 | 0.72 | More permissive. Calibrated to biomedical NLI behaviour. |
 | RQ1 | UMLS candidate pool | Full UMLS 457K concepts | MeSH linker subset | Shallow pool. Bimodal entropy distribution. Hardware constraint. |
-| RQ2 | Rank-biserial threshold | r >= 0.30 | Not met (maximum r = 0.236) | Dissociation confirmed via Spearman criterion. |
+| RQ2 | Rank-biserial threshold | r >= 0.30 (post-hoc, not registered) | Not met (maximum r = 0.236) | Dissociation confirmed via Spearman criterion. |
 | RQ3 | G6 gate for QA | UMLS entity linking | Gold answer substring match | QA gold answers are not UMLS-linked entities. |
 | RQ3 | Encoder entropy for QA | UMLS CUI cosine assignment | Cosine similarity cluster bins | Produces identical entropy values for all three encoder models on QA tasks. |
 

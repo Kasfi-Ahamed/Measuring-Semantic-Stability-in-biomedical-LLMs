@@ -75,10 +75,14 @@ observed is due to input variation, not random sampling.
 
 **Pre-registered statistical model:**
 - Primary: One-tailed Wilcoxon signed-rank test, top vs bottom
-  accuracy quartile. Pre-specified threshold: rank-biserial r ≥ 0.30
+  accuracy quartile. Post-hoc threshold: rank-biserial r ≥ 0.30
 - Global: Spearman ρ pooled via Fisher z-transformation.
-  Pre-specified threshold: |ρ_pooled| < 0.30 confirms dissociation
+  Post-hoc threshold: |ρ_pooled| < 0.30 confirms dissociation
 - BH-FDR correction at q = 0.05 across all tests
+- NOTE ON 0.30. Both 0.30 cuts above are post-hoc. They were not registered.
+  The registered support criterion is |rank-biserial r| >= 0.10, recorded in
+  docs/ANALYSIS_PRECOMMIT.md lines 295-318. In the RQ2 figures 0.30 does one
+  thing only: it decides whether an annotation carries an asterisk.
 
 ---
 
@@ -115,7 +119,7 @@ directly.
 
 *Figure 2. Mean semantic entropy in the top 25% accuracy quartile
 (green) vs bottom 25% accuracy quartile (red) for each model.
-Pre-registered r=0.30 reference shown as dashed line. If dissociation
+Post-hoc r=0.30 reference shown as dashed line. If dissociation
 exists, green and red bars should be similar height - high accuracy
 does not reduce entropy.*
 
@@ -134,7 +138,7 @@ height. The mean entropy values are:
 | FLAN-T5-XXL | 0.235 | 0.224 | 0.045 |
 | FLAN-T5-base | 0.253 | 0.248 | 0.033 |
 
-No model reached the pre-registered rank-biserial threshold of r ≥
+No model reached the post-hoc rank-biserial threshold of r ≥
 0.30. The Wilcoxon test was statistically significant for five of six
 models (BH-FDR p < 0.05), confirming the quartile difference is real,
 but effect sizes are small - accuracy explains very little variance
@@ -177,7 +181,7 @@ The Fisher z-pooled Spearman ρ by architecture:
 - Encoder only: ρ_pooled = -0.013 · 95% CI [-0.062, 0.035]
 - Generative only: ρ_pooled = 0.074 · 95% CI [0.026, 0.122]
 
-Both are well below the pre-registered |ρ| < 0.30 threshold.
+Both are well below the post-hoc |ρ| < 0.30 threshold.
 Dissociation is confirmed in both architectures independently.
 
 **Answer to SQ2:** The dissociation is not architecture-specific.
@@ -194,8 +198,8 @@ compared to CUI-ranking tasks.
 ![Figure 4](outputs/rq2/figures/rq2_figure4_dissociation_summary.png)
 
 *Figure 4. Dissociation evidence per model. Left: rank-biserial r
-(pre-registered threshold ≥ 0.30, dashed line; red = not met).
-Right: Spearman |ρ| (pre-registered threshold < 0.30, dashed line;
+(post-hoc threshold ≥ 0.30, dashed line; red = not met).
+Right: Spearman |ρ| (post-hoc threshold < 0.30, dashed line;
 green = dissociation confirmed). All models confirm dissociation on
 the Spearman measure. No model meets the rank-biserial threshold.*
 
@@ -257,7 +261,7 @@ assignments across meaning-equivalent inputs.
 | Encoder only | -0.013 | [-0.062, 0.035] | Confirmed |
 | Generative only | 0.074 | [0.026, 0.122] | Confirmed |
 
-**Pre-registered rank-biserial threshold r ≥ 0.30:** Not met by
+**Post-hoc rank-biserial threshold r ≥ 0.30:** Not met by
 any model. Effects are statistically detectable (Wilcoxon BH-FDR
 p < 0.05 for five of six models) but small in magnitude.
 
@@ -273,7 +277,7 @@ confirmed (|ρ| = 0.043 < 0.30).
 
 | Deviation | Pre-registered | Implemented | Reason |
 |---|---|---|---|
-| Rank-biserial threshold | r ≥ 0.30 | Not met (max = 0.236) | Dissociation confirmed via Spearman; effect sizes small |
+| Rank-biserial threshold | r ≥ 0.30 (post-hoc, not registered) | Not met (max = 0.236) | Dissociation confirmed via Spearman; effect sizes small |
 | Cluster bootstrap CIs | B=1000 parametric | Not implemented for RQ2 | Wilcoxon + Fisher z provide sufficient uncertainty quantification |
 
 ---

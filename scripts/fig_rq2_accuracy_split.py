@@ -10,13 +10,14 @@ Normalised Entropy H-hat, the dissociation question in the subtitle.
 
 THREE DELIBERATE CHANGES FROM THE PILOT, all recorded in figures_for_report/MANIFEST.md:
 
- 1. The dashed "Pre-registered r=0.30 reference" line is REMOVED. It drew a correlation
-    threshold as a horizontal line on an entropy axis, which is dimensionally meaningless:
-    r = 0.30 and H-hat = 0.30 are not the same quantity.
+ 1. The dashed line the pilot labelled "Pre-registered r=0.30 reference" is REMOVED. Its
+    label was wrong as well as its geometry: 0.30 was never registered, and it drew a
+    correlation threshold as a horizontal line on an entropy axis, which is dimensionally
+    meaningless because r = 0.30 and H-hat = 0.30 are not the same quantity.
  2. In its place each model carries its OWN observed rank-biserial r and |Spearman rho|,
-    printed above the pair and marked where either clears the pre-registered 0.30. The
-    pre-registered quantity is now on the figure as a number instead of as a false spatial
-    comparison. This absorbs pilot Figure 4, which is therefore not ported separately.
+    printed above the pair and marked where either reaches 0.30, a post-hoc display
+    threshold. The observed quantity is now on the figure as a number instead of as a
+    false spatial comparison. This absorbs pilot Figure 4, which is therefore not ported separately.
  3. Bar values are printed. The pilot bars were unlabelled.
 
 ONE FORCED CHANGE OF CONSTRUCT. The pilot split instances at the 25th and 75th percentiles
@@ -48,7 +49,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import report_style as S
 
 ROOT = Path(os.path.expanduser("~/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"))
-PREREG_R = 0.30
+# Post-hoc display threshold. It decides one thing: whether an annotation in the
+# RQ2 figures carries an asterisk. It was NOT registered. The registered support
+# criterion is |rank-biserial| >= 0.10 (docs/ANALYSIS_PRECOMMIT.md:295-318).
+# The old name asserted a provenance this number does not have.
+DISPLAY_R = 0.30
 
 CFG = {
     "cadec": dict(
@@ -171,8 +176,8 @@ def main() -> int:
     ax.set_ylim(0, min(1.0, top * 2.35 + 0.12))
     for i, r in R.iterrows():
         pair_top = max(r["mean_hit"], r["mean_miss"])
-        mark_rb = "*" if abs(r["rank_biserial"]) >= PREREG_R else ""
-        mark_rho = "*" if abs(r["spearman"]) >= PREREG_R else ""
+        mark_rb = "*" if abs(r["rank_biserial"]) >= DISPLAY_R else ""
+        mark_rho = "*" if abs(r["spearman"]) >= DISPLAY_R else ""
         # Two decimals, not three: a group is 0.625in wide and 8pt cannot carry
         # three. Full precision is in rq2_dissociation_summary.csv, which this
         # producer still cross-checks at 5e-6.
@@ -183,7 +188,7 @@ def main() -> int:
                     (i, pair_top), textcoords="offset points", xytext=(0, 27),
                     ha="center", fontsize=8, color="#333333")
 
-    sep = R[R["rank_biserial"].abs() >= PREREG_R]["model"].tolist()
+    sep = R[R["rank_biserial"].abs() >= DISPLAY_R]["model"].tolist()
     nosep = [m for m in models if m not in sep]
     title = S.title_line("RQ2: entropy by accuracy split", c["corpus"])
     import textwrap as _tw
@@ -200,7 +205,11 @@ def main() -> int:
                           "higher entropy with more error is positive. r(rb) contrasts the "
                           "correct stratum against the incorrect one, so the same "
                           "relationship is negative. Both describe entropy rising with "
-                          "error. A star marks a value clearing the pre-registered 0.30.",
+                          "error. A star marks a value whose magnitude reaches 0.30. "
+                          "That 0.30 is a post-hoc display threshold for this annotation "
+                          "and nothing else; it was not registered. The registered support "
+                          "criterion is |r(rb)| >= 0.10 "
+                          "(docs/ANALYSIS_PRECOMMIT.md:295-318).",
                           "SPLIT. The 25th and 75th percentile cut was attempted and is "
                           "degenerate: q25 = q75 = 0 for 4 of the 8 CADEC models, and no "
                           "top quarter exists when three quarters are tied at the floor. "
