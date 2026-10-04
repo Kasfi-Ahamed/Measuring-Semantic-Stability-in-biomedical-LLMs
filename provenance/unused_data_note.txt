@@ -1,0 +1,70 @@
+UNUSED CREDENTIALED DATA: ~/data/share, held and then deleted
+Written 2026-10-05, immediately before the directory was removed.
+
+WHAT WAS THERE
+  Path            /home/s224858267/data/share
+  Files           746
+  Directories     31
+  Size            7,774,490 bytes (7.6 MB)
+  Obtained from   physionet.org, via the credentialed-access download path; the whole
+                  tree sits under share/physionet.org/files/semeval2015/2.0/
+  Tree digest     1c7b37ff565144480d1c4bc8e38917238017ffc553963fc913069df98f46fd67
+                  (sha256 of the sorted-path stream of per-file sha256sums, i.e.
+                   find -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum)
+
+  Distribution archives and scripts, with sizes in bytes:
+       286289  semeval-2014-task-7_dev.zip
+       339781  semeval-2014-task-7_train.zip
+       480253  semeval-2014-task-7_test.zip
+       480523  semeval-2015-task-14_dev.zip
+       625946  semeval-2015-task-14_train.zip
+      1056461  semeval-2015-task-14_test.zip
+         5922  semeval-2014-task-7-eval.v0.pl
+        14696  semeval-2015-task-14-task-1-eval.pl
+         2047  semeval-2014-task-7-README-eval-scripts.txt
+         6774  semeval-2015-task-14-README-eval-scripts.txt
+         2518  LICENSE.txt
+         1136  SHA256SUMS.txt
+          547  README.txt
+         1948  index.html
+           22  robots.txt
+
+  The two task collections are SemEval-2014 Task 7 and SemEval-2015 Task 14. They are
+  the ShARe/CLEF shared-task releases; they are not the ShARe corpus distribution that
+  the protocol named, and PhysioNet approval for that was never granted.
+
+  The archives had been EXTRACTED in place. 731 files with the .text extension were
+  present under the 2015 Task 14 train, dev and test trees (discharge 369, ecg 54,
+  echo 54, radiology 54, plus 300 under test/submissions/TEAM-ID/run-*). Those are
+  de-identified clinical narratives, which is why this directory was deleted rather
+  than copied to institutional storage.
+
+WHY NOTHING IN THE THESIS DEPENDS ON IT
+  config/config.json line 20 carries
+      "_comment_share": "ShARe corpus is pending PhysioNet approval - path left null
+                         until access is granted"
+  and the "share" key itself is null. No code path can therefore have resolved a
+  ShARe path.
+
+  notebooks/_legacy/RQ3_matched_pairs_gpu_pipeline_backup.ipynb states
+      "Datasets: MedMentions (RQ1 perturbations), BioASQ, SQuAD 2.0. ShARe excluded."
+
+  Every other occurrence of the string in the repository is in prose - the amendment
+  register, the pre-commit analysis plan, the bug audit and the RQ1/RQ4 notebooks -
+  recording that the corpus was planned and then dropped. None is a read.
+
+  No artefact, table, figure or reported number in the submitted thesis derives from
+  any file in this directory. The four corpora that do appear are MedMentions, CADEC,
+  BioASQ and SQuAD 2.0.
+
+WHY IT WAS DELETED RATHER THAN ARCHIVED
+  The directory raised no integrity question, only a data-holding one. Credentialed
+  PhysioNet material whose approval for the intended use was still pending should not
+  be copied to institutional storage, where it would persist for years unused and
+  unaudited. The decision was Kasfi Ahamed's, taken 2026-10-05, scoped to this one
+  directory. Nothing else was deleted.
+
+  Recovering it, if anyone ever needs to, means a fresh credentialed download from
+  physionet.org; the SHA256SUMS.txt shipped with the release lets a new copy be
+  checked against what was held here, and the tree digest above lets the whole tree
+  be checked.
