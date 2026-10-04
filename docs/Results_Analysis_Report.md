@@ -576,6 +576,51 @@ for SQ1 and SQ2.
 
 ## Research Question 3
 
+> ## SUPERSEDED - DO NOT CITE THIS SECTION
+>
+> **Verified superseded 2026-10-05.** Everything from this marker down to `## Synthesis`
+> describes a research design and a run that no longer exist. It is retained unedited, as a
+> record of what was once reported, and it is wrong about the headline RQ3 finding.
+>
+> **The current RQ3 results are in:**
+> - `outputs/rq3/rq3_matched_pair_statistics_cadec.csv`
+> - `outputs/rq3/rq3_matched_pair_statistics_medmentions.csv`
+> - the forest figure `outputs/rq3/figures/fig_rq3_matched_pairs_forest.{png,pdf}`
+> - the manuscript's own Table `tab:rq3`, which is authoritative
+>
+> **How this was verified.** Every value in the *Complete Statistical Results* table below -
+> six rank-biserial correlations and twelve mean entropies, eighteen numbers - was compared
+> at three decimal places against all 33 rows of all five `rq3_matched_pair_statistics*.csv`
+> artefacts on disk. **Zero matched.** Not one of the eighteen appears anywhere in any
+> matched-pair artefact, including the superseded unsuffixed one from 2026-09-13.
+>
+> **The design changed, not just the numbers.**
+>
+> | | this section | current |
+> |---|---|---|
+> | corpora | MedMentions, BioASQ, SQuAD 2.0 | CADEC, MedMentions |
+> | within-scale pairs | 2 | 3 |
+> | large-tier general model | FLAN-T5-XXL | Mistral-7B-Instruct-v0.1 |
+> | third pair | none | Llama3-OpenBioLLM-8B vs Meta-Llama-3-8B-Instruct |
+>
+> The section mentions FLAN-T5-XXL eight times. That model appears in no current RQ3
+> artefact. It mentions CADEC, OpenBioLLM, Llama and Mistral-7B-Instruct zero times between
+> them, and those are what the current analysis is built on.
+>
+> **The specific claim to ignore.** This section states that "the absolute effect size meets
+> the 0.30 threshold", and judges its *Threshold met* column on 0.30. The registered floor is
+> `|r_rb| >= 0.10` (`docs/ANALYSIS_PRECOMMIT.md:295-318`), which is what the manuscript's
+> Table `tab:rq3` caption and the forest figure both use. The difference is not cosmetic: the
+> two currently supporting cells are **-0.271** (CADEC) and **-0.268** (MedMentions), and both
+> sit between 0.10 and 0.30. A 0.30 rule would turn the entire RQ3 positive finding into a
+> null. The thesis uses 0.10 and is correct.
+>
+> The current six cells, for reference: -0.271 and -0.268 support; +0.157, +0.530 and +0.466
+> are reversed; -0.048 is below threshold.
+>
+> **Nothing below this marker has been edited.** A stale section is labelled stale, not
+> quietly updated to look current.
+
 **Does domain-specific biomedical pretraining reduce semantic entropy
 relative to general-purpose models at equivalent parameter scale,
 and does any stability advantage generalise across the domain continuum?**
