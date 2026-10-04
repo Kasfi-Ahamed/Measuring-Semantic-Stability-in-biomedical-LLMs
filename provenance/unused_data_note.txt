@@ -1,18 +1,34 @@
-UNUSED CREDENTIALED DATA: ~/data/share, held and then deleted
-Written 2026-10-05, immediately before the directory was removed.
+UNUSED CREDENTIALED DATA: TWO holdings, both recorded and both deleted
+Amended 2026-10-05. The first version of this note described one directory. It was wrong,
+and the correction is recorded below rather than quietly folded in.
 
-WHAT WAS THERE
-  Path            /home/s224858267/data/share
+================================================================================
+WHY THIS NOTE WAS AMENDED
+================================================================================
+The original inventory asked du for an explicit list of directories under ~/data, so it
+reported only the directories it was told to look at. ~/data/semeval2015_task14 was never
+on that list and so never appeared, and the note was written as though ~/data/share were
+the only holding. It was not. There were two, 12.8 MB in total, holding the same releases
+in two forms. Deleting only the first would have left 831 clinical narratives on disk and
+a provenance note stating the matter was closed.
+
+The lesson, which is the reason this paragraph exists: an inventory built from a list of
+names can only ever confirm the names it was given. The directory listing came first the
+second time.
+
+================================================================================
+HOLDING 1: /home/s224858267/data/share  -- DELETED 2026-10-05
+================================================================================
   Files           746
   Directories     31
   Size            7,774,490 bytes (7.6 MB)
-  Obtained from   physionet.org, via the credentialed-access download path; the whole
-                  tree sits under share/physionet.org/files/semeval2015/2.0/
+  Obtained from   physionet.org, credentialed-access download; the whole tree sits under
+                  share/physionet.org/files/semeval2015/2.0/
   Tree digest     1c7b37ff565144480d1c4bc8e38917238017ffc553963fc913069df98f46fd67
                   (sha256 of the sorted-path stream of per-file sha256sums, i.e.
                    find -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum)
 
-  Distribution archives and scripts, with sizes in bytes:
+  Distribution archives and scripts, sizes in bytes:
        286289  semeval-2014-task-7_dev.zip
        339781  semeval-2014-task-7_train.zip
        480253  semeval-2014-task-7_test.zip
@@ -29,42 +45,83 @@ WHAT WAS THERE
          1948  index.html
            22  robots.txt
 
-  The two task collections are SemEval-2014 Task 7 and SemEval-2015 Task 14. They are
-  the ShARe/CLEF shared-task releases; they are not the ShARe corpus distribution that
-  the protocol named, and PhysioNet approval for that was never granted.
+  The archives had been extracted in place: 731 files with the .text extension were present
+  under the 2015 Task 14 train, dev and test trees.
 
-  The archives had been EXTRACTED in place. 731 files with the .text extension were
-  present under the 2015 Task 14 train, dev and test trees (discharge 369, ecg 54,
-  echo 54, radiology 54, plus 300 under test/submissions/TEAM-ID/run-*). Those are
-  de-identified clinical narratives, which is why this directory was deleted rather
-  than copied to institutional storage.
+================================================================================
+HOLDING 2: /home/s224858267/data/semeval2015_task14  -- DELETED 2026-10-05
+================================================================================
+  Files           831, every one with the .text extension
+  Directories     32
+  Size            5,200,886 bytes (5.2 MB)
+  Created         2026-07-26 17:23:59 local time, during this project
+  Tree digest     3810e23ea2c506977b195d683da9195ec2828ed12d62b3a5c9d2fab0a0860f02
+                  (same construction as above)
 
-WHY NOTHING IN THE THESIS DEPENDS ON IT
+  A flattened, re-organised copy of the SemEval-2015 Task 14 narratives from holding 1,
+  laid out for loading rather than as the distribution ships it:
+
+       136  train/semeval-2015-task-14_train/data/train/discharge
+        54  train/semeval-2015-task-14_train/data/train/ecg
+        54  train/semeval-2015-task-14_train/data/train/echo
+        54  train/semeval-2015-task-14_train/data/train/radiology
+       133  dev/semeval-2015-task-14_dev/data/devel/discharge
+       100  test/semeval-2015-task-14_test/submissions/TEAM-ID/run-0.00/data/test/discharge
+       100  test/semeval-2015-task-14_test/submissions/TEAM-ID/run-1.00/data/test/discharge
+       100  test/semeval-2015-task-14_test/submissions/TEAM-ID/run-2.00/data/test/discharge
+       100  test_unique/discharge
+
+  FILE DATES, STATED PLAINLY. 431 files carry mtime 2014-11-07 and 300 carry 2014-12-16,
+  which are the dates inside the distribution archives. The remaining 100, all under
+  test_unique/discharge, carry 2026-07-26. test_unique/ does not exist in the distribution;
+  it was DERIVED during this project, apparently by de-duplicating the three identical
+  100-file submission runs down to one set.
+
+  So this corpus was not merely downloaded and forgotten. Somebody unpacked it, reshaped
+  it and de-duplicated part of it on 2026-07-26. That is exploratory work, and it is
+  recorded here because omitting it would make the holding look more inert than it was.
+
+================================================================================
+WHY NOTHING IN THE THESIS DEPENDS ON EITHER HOLDING
+================================================================================
   config/config.json line 20 carries
       "_comment_share": "ShARe corpus is pending PhysioNet approval - path left null
                          until access is granted"
-  and the "share" key itself is null. No code path can therefore have resolved a
-  ShARe path.
+  and the "share" key itself is null, so no code path could resolve a ShARe path.
 
   notebooks/_legacy/RQ3_matched_pairs_gpu_pipeline_backup.ipynb states
       "Datasets: MedMentions (RQ1 perturbations), BioASQ, SQuAD 2.0. ShARe excluded."
 
-  Every other occurrence of the string in the repository is in prose - the amendment
-  register, the pre-commit analysis plan, the bug audit and the RQ1/RQ4 notebooks -
-  recording that the corpus was planned and then dropped. None is a read.
+  No file in the repository references semeval2015_task14 by any spelling: the string does
+  not occur in any .py, .ipynb, .json, .md or .sh file. Every other occurrence of "ShARe"
+  anywhere in the repository is prose in the amendment register, the pre-commit analysis
+  plan, the bug audit or the RQ1/RQ4 notebooks, recording that the corpus was planned and
+  then dropped. None is a read.
 
-  No artefact, table, figure or reported number in the submitted thesis derives from
-  any file in this directory. The four corpora that do appear are MedMentions, CADEC,
-  BioASQ and SQuAD 2.0.
+  The four corpora the thesis reports are MedMentions, CADEC, BioASQ and SQuAD 2.0. No
+  artefact, table, figure or reported number derives from either holding. The exploratory
+  reshaping noted above produced no artefact that anything reads.
 
-WHY IT WAS DELETED RATHER THAN ARCHIVED
-  The directory raised no integrity question, only a data-holding one. Credentialed
-  PhysioNet material whose approval for the intended use was still pending should not
-  be copied to institutional storage, where it would persist for years unused and
-  unaudited. The decision was Kasfi Ahamed's, taken 2026-10-05, scoped to this one
-  directory. Nothing else was deleted.
+  The two task collections are SemEval-2014 Task 7 and SemEval-2015 Task 14, the ShARe/CLEF
+  shared-task releases. They are not the ShARe corpus distribution the protocol named, and
+  approval for that was never granted.
 
-  Recovering it, if anyone ever needs to, means a fresh credentialed download from
-  physionet.org; the SHA256SUMS.txt shipped with the release lets a new copy be
-  checked against what was held here, and the tree digest above lets the whole tree
-  be checked.
+================================================================================
+WHY BOTH WERE DELETED RATHER THAN ARCHIVED
+================================================================================
+  Neither raised an integrity question, only a data-holding one. Credentialed PhysioNet
+  material whose approval for the intended use was still pending should not be copied to
+  institutional storage, where it would persist for years unused and unaudited. Both
+  holdings were de-identified clinical narratives, 1,562 note files between them.
+
+  The decisions were Kasfi Ahamed's: holding 1 on 2026-10-05, holding 2 on 2026-10-05
+  immediately after it was found, each authorisation scoped to that one directory. Nothing
+  else was deleted. The standing instruction against deleting anything remained in force
+  everywhere else.
+
+  Recovering either, if anyone ever needs to, means a fresh credentialed download from
+  physionet.org. The SHA256SUMS.txt shipped with the release lets a new copy be checked
+  against what was held, and the two tree digests above let each tree be checked whole.
+  Holding 2 is reconstructible from holding 1 by unpacking the three 2015 Task 14 archives;
+  the de-duplication that produced test_unique/ is not documented anywhere and would have
+  to be redone from scratch.
