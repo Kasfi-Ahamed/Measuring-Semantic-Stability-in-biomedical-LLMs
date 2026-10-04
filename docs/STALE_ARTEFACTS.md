@@ -384,6 +384,32 @@ the 3 renamed CSVs it calls superseded are `UNKNOWN(no inputs resolved)` there. 
 from "is this artefact older than any input it must read" would return the same verdict as the
 judgement recorded here, and `docs/SUPPLEMENTARY.md` S9 would not have to disclose the gap.
 
+**4. The JBI data availability statement must disclose that the intermediate generation
+files were not retained.** This is a disclosure, not a defect, and it belongs somewhere a
+reader will find it rather than only inside a restricted archive.
+
+Established 2026-10-05 while building the pre-expiry archive. `outputs/rq1/intermediate/mm_shards/`
+holds **400 files, 13.73 GiB**, and within it only **21** `gen_*.csv` files survive against
+**121** `gen_*.csv.complete.json` completion markers. The per-shard raw generations were
+therefore deleted after assembly, for roughly five sixths of the shards. The set is also not
+uniform: shards 1-19 hold 15 files each, 20-22 hold 20, 23 holds 18, 24 holds 14, and 25 holds 4.
+
+What this means for a reader: **the earliest preserved artefact in the RQ1 chain is the mapped
+output**, `rq1_all_outputs_mapped_A9_CUTOFF.csv`, not the raw model generations behind it. The
+mapping step cannot be re-derived or independently re-checked from source for those shards. No
+reported number depends on the shards, which is why nothing is wrong with the results, but a
+reader who asks to inspect the raw generations behind the mapping must be told in advance that
+most of them are gone.
+
+The archive's `MANIFEST.txt` records all 400 surviving files with sizes and SHA-256 under a
+section headed as deliberately not preserved, so what remains is identified and provable. That
+record is in the archive. The data availability statement is where it has to be said out loud.
+
+Suggested wording, to be checked against the journal's template: *"Intermediate per-shard model
+generation files were not retained. The earliest preserved artefacts are the mapped concept
+outputs, from which all reported results derive. A manifest of the retained intermediate files,
+with checksums, accompanies the archived dataset."*
+
 ---
 
 ## How this list was produced
