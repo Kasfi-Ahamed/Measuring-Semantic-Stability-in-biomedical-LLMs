@@ -1,0 +1,23 @@
+python 3.10.20 (main, Jun 11 2026, 15:17:37) [GCC 14.3.0]
+platform Linux-5.15.0-186-generic-x86_64-with-glibc2.35
+torch 2.5.1
+torch.version.cuda 12.1
+cudnn 90100
+cuda available (login node) False
+device count 0
+numpy 1.26.4
+pandas 2.3.3
+scipy 1.10.1
+statsmodels 0.14.6
+sklearn 1.7.2
+matplotlib 3.10.9
+transformers 5.13.1
+faiss 1.14.3
+sentence_transformers 5.6.0
+
+# CUDA driver version: NOT CAPTURED.
+# torch 2.5.1 was built against CUDA toolkit 12.1 (torch.version.cuda above); that is the
+# toolkit the wheel was compiled with, not the driver the jobs ran against. The runtime
+# driver version requires nvidia-smi on a GPU node, and at capture time (2026-10-04) the
+# account's queue was empty, so no job was submitted purely to read it. Node classes used
+# by the reported runs are in provenance/slurm_accounting_2026.csv (NodeList column).
