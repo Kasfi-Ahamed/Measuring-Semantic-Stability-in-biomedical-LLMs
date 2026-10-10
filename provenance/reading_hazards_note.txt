@@ -53,6 +53,13 @@ HAZARD 1: wc -l OVERCOUNTS ROWS IN ANY CSV WITH FREE-TEXT COLUMNS
           amendment-9 receipts, which record len(df_mapped). 2,572,698 + 2,202,290 + 2,557,257
           = 7,332,245, matching A9_CUTOFF exactly.
 
+      THE CHECK CANNOT BE SAMPLED, and raw_llama3.csv is why. Four files from the same stage,
+      the same corpus and the same model family hold 4,645 records each. Three of them read
+      4,674 lines; the fourth reads 12,322. One model's generations happened to contain far
+      more newlines than its siblings'. There is no family-level, stage-level or
+      directory-level rule to infer from -- the file is the only unit of truth, so every file
+      whose count is quoted has to be counted.
+
   THE RULE
       Count records with pandas, or with Python's csv module. Never with wc -l, unless you have
       already shown that the file has no embedded newlines. For a deleted file the SHA-256 and
@@ -79,6 +86,52 @@ HAZARD 2: read_csv WITHOUT float_precision="round_trip" LOSES THE LAST BIT
       bit-exactness claim made from a default read is a claim about pandas, not about the
       pipeline. Production code that must keep reproducing an existing artefact deliberately
       does NOT switch, because switching would move values in the last bit.
+
+================================================================================
+HAZARD 2 IN PRODUCTION: ONE ARTEFACT IS A PARSER-DEGRADED COPY OF ANOTHER
+================================================================================
+  Established 2026-10-11. This is hazard 2 operating inside the pipeline rather than inside a
+  verification script, which is why it has its own section.
+
+  THE SYMPTOM. outputs/rq3/entropy_cadec.csv and outputs/rq3/umls_candidate_margin_cadec.csv
+  both carry a column called mapping_confidence, and they disagree on 21,437 of 37,696 joined
+  rows.
+
+  WHAT IT IS NOT. It is not two different computations, and it is not a float32-versus-float64
+  choice of arithmetic. That was the first hypothesis and the evidence refutes it.
+
+  WHAT IT IS, proven rather than inferred:
+      entropy_cadec.csv          100.00% of its values are float32-exact
+      umls_candidate_margin      58.29%
+      float32(margin) == float32(entropy, committed)        37,696 of 37,696   100.00%
+      margin == entropy read with float_precision=round_trip 21,972 of 37,696    58.29%
+      margin == entropy read with pandas' DEFAULT parser     37,696 of 37,696   100.00%
+
+  The last line is the finding. scripts/refresh_margin_entropy_columns.py exists to copy the
+  entropy-derived columns into the margin file -- see its own docstring, "This re-does ONLY
+  that join" -- and it does so with
+
+      mg  = pd.read_csv(MARGIN,  low_memory=False)
+      ent = pd.read_csv(ENTROPY, low_memory=False)
+
+  with no float_precision. So it read the canonical float32 values, had 15,724 of 37,696 of
+  them perturbed by 1 ULP by the parser, and wrote the perturbed values back. The margin
+  file's extra precision is not more information; it is damage.
+
+  THE CANONICAL SOURCE IS THEREFORE entropy_cadec.csv, not the float64-looking file. A reader
+  choosing the one with more decimal places would choose the corrupted copy.
+
+  SCOPE. MedMentions is unaffected: entropy_full_umls.csv and
+  umls_candidate_margin_medmentions.csv agree on 0 differing of 1,020,784 rows, because that
+  refresh script is hardcoded to CADEC. Nothing reported moves either way -- max |delta|
+  4.178e-04, median 1.110e-16, 35 of 37,696 rows rounding differently at three decimals, means
+  differing by 1.690e-07.
+
+  THE WIDER EXPOSURE, NOT YET ASSESSED. A sweep of scripts/ found more than twenty scripts that
+  both read and write CSVs with no float_precision anywhere, refresh_margin_entropy_columns.py
+  among them. Any of them that copies a float column from one artefact to another has the same
+  defect by construction. They are listed in this session's working notes and have NOT been
+  audited one by one.
 
 ================================================================================
 WHY THESE TWO BELONG TOGETHER
