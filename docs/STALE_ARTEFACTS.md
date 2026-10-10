@@ -449,6 +449,34 @@ generation files were not retained for every block. The generated output text it
 preserved within the mapped concept outputs, from which all reported results derive. What is
 not recoverable is the partitioning of those generations by shard, not the generations."*
 
+**4b. The QA lane's correctness labels were never persisted, and that is a separate disclosure.**
+Found 2026-10-11. No CSV under `outputs/` carries a QA gold answer. The scored columns are all
+there -- `correct`, `em`, `f1`, `is_unanswerable` in `qa_results_*.csv` -- but the gold answer
+sets they were scored against were held in memory and never written out. Correctness was
+computed in-notebook against the source datasets.
+
+So **the QA lane's reported numbers cannot be re-derived from this repository's artefacts by
+anyone, including us.** Reproducing them requires re-running the QA notebook against BioASQ
+Task 13b and SQuAD 2.0 at the checksums recorded in
+`provenance/source_data_provenance.txt`. Nothing is wrong with the numbers. The chain from
+dataset to label is simply not retained, which is a different claim from the shard disclosure
+above and needs its own sentence.
+
+For comparison, the concept lane does not have this problem: `gold_cui_or_entity` and
+`gold_mention` are both persisted in the mapped outputs, so MedMentions and CADEC accuracy is
+re-derivable from the artefacts alone.
+
+Suggested wording, to be checked against the journal's template: *"Question-answering
+correctness labels were computed during analysis against the BioASQ Task 13b and SQuAD 2.0
+source distributions and were not retained as a separate artefact. Reproducing the
+question-answering results therefore requires re-running the scoring step against those
+distributions, whose checksums are provided. Concept-level accuracy is re-derivable from the
+archived outputs without reference to the source corpora."*
+
+The rerun should close this rather than disclose it again: a `qa_gold_answers.csv` carrying the
+question id, the gold answer set and the predicate applied costs a few MB and removes the gap
+permanently. Recorded in the rerun plan.
+
 ---
 
 ## How this list was produced
