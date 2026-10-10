@@ -237,6 +237,55 @@ HAZARD 3: pandas TURNS A LITERAL "NA" GOLD MENTION INTO A MISSING VALUE
   refresh_margin_entropy_columns, recompute_zero_block_cadec, mm_assemble, mm_assemble_perts
   and cadec_threshold_band. That change is the point, and it is unvalidated by execution.
 
+  GATE 6 IS CLOSED, AND THE VERDICTS ARE SOUND. The four rows whose g6_entity_check_mode reads
+  "unverified" were checked against their shards:
+
+      mm_0099374_p07  block 12   shard gold_mention 'NA'   shard mode unverified
+      mm_0099374_p08  block 12   shard gold_mention 'NA'   shard mode unverified
+      mm_0142416_p03  block 17   shard gold_mention 'NA'   shard mode unverified
+      mm_0142416_p04  block 17   shard gold_mention 'NA'   shard mode unverified
+
+  All four hold the token intact in the shard, AND the shard already records "unverified". So
+  the gate ran against the real value and reached that verdict on its own terms; the
+  "unverified" has a cause in the gate's own handling of a two-character mention, not in any
+  data loss. The blanking happened purely at assembly. This is a STORAGE defect in one column
+  of one derived file, not a computation defect, and no gate verdict is in question.
+
+  THE "nan" FILTER: A LIVE MECHANISM, ZERO ROWS AFFECTED, MASKED BY A CONJUNCT.
+  notebooks/03_mapping_entropy/RQ4_umls_candidate_margin.ipynb filters with
+
+      (df_mapped["output_text"].astype(str).str.strip() != "")
+      & (df_mapped["predicted_cui"] != UNASSIGNED)
+
+  and reads with default NA handling. A blank output_text therefore becomes NaN, .astype(str)
+  turns it into the literal string "nan", and the first clause admits it as a real generation.
+  1,458 MedMentions rows and 82 CADEC rows are blank and would be admitted that way.
+
+  They are not admitted, because every one of them also has predicted_cui == UNASSIGNED --
+  1,458 of 1,458 and 82 of 82 -- so the second clause excludes them. Measured both ways, the
+  CADEC retrieval population is 239,207 under the default read and 239,207 under a strict read,
+  matching the notebook's own receipt exactly. Rows admitted only by the default read: 0.
+
+  So the notebook is FRAGILE, NOT WRONG. The defect is real and the masking is incidental: it
+  would become live the moment a blank generation received an assigned CUI, or the conjunct were
+  reordered or removed. Deferred, with that reasoning attached rather than a bare "no impact".
+
+  THE QA LANE CANNOT BE REPRODUCED FROM THE ARTEFACTS. THIS IS NOT A BUG.
+  No CSV under outputs/ carries a QA gold answer. The scored columns -- correct, em, f1,
+  is_unanswerable -- are present in qa_results_*.csv, but the gold answer sets they were scored
+  against were held in memory and never written out. Correctness was computed in-notebook
+  against the source datasets.
+
+  The consequence is plain: the QA lane's reported numbers are not reproducible from the
+  repository's artefacts by anyone, including us. Reproducing them requires re-running the QA
+  notebook against BioASQ Task 13b and SQuAD 2.0 at the checksums in
+  provenance/source_data_provenance.txt. Nothing is wrong with the numbers; the chain from
+  dataset to label simply is not retained.
+
+  The rerun closes this permanently and almost for free: persist a qa_gold_answers.csv carrying
+  the question id, the gold answer set and the predicate applied. It is a few MB and removes
+  the gap for good.
+
   STILL OPEN. The bucket logic does NOT transfer from floats to text. For floats, bucket 2 was
   safe because a 1 ULP perturbation propagates harmlessly into a derived number. For text, a
   script that reads a mention as NaN and then COMPARES it produces a wrong verdict, not a
