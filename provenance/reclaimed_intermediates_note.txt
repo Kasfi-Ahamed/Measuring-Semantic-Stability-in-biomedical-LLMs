@@ -1,0 +1,139 @@
+RECLAIMED SUPERSEDED INTERMEDIATES, 2026-10-10
+Written BEFORE the files were removed. Companion to archive_preexpiry/MANIFEST.txt, which
+carries the same per-file record.
+
+WHY
+  The 26-block MedMentions re-run needs roughly 2.05 GiB for new artefacts. The quota ceiling
+  was calibrated empirically on 2026-10-10 -- a file grown in $HOME until EDQUOT, at
+  200,144,601,746 bytes = 186.40 GiB = 200 GB decimal -- against 183.90 GiB used, leaving
+  2.50 GiB. The previous disk guard reported 20.02 GiB of headroom at that moment because it
+  read the quota as 200 GiB rather than 200 GB and added a hardcoded 21 GiB allowance for
+  "home excluding data and outputs" that had drifted to 24.91 GiB. Both are fixed in
+  scripts/disk_guard.py, which now measures used space with du and fails closed.
+
+WHAT WENT, AND THE EVIDENCE
+  rq1_all_outputs_mapped.csv
+    1,341,264,922 bytes, 7,332,245 rows, sha256 3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9
+    Byte-identical duplicate of rq1_all_outputs_mapped_A9_CUTOFF.csv, proven with cmp(1) on
+    2026-10-10. Same 1,341,264,922 bytes, same 7,332,245 rows, same digest.
+
+  rq1_all_outputs_mapped_A9_partA1.csv
+    470,351,880 bytes, 2,572,698 rows, sha256 b9b25053367c6bd05fba40664bd704384723781b970bf8d3af02f932d448702a
+    One of the three parts the A9 re-map was split into (blocks 6-12). Its 2,572,698 rows are
+    a subset of A9_CUTOFF: the three parts sum to 7,332,245 rows and A9_CUTOFF holds exactly
+    7,332,245. Its amendment-9 receipt JSON is retained.
+
+  rq1_all_outputs_mapped_A9_partA2.csv
+    403,014,946 bytes, 2,202,290 rows, sha256 00182f4286d969c39b13d068b5fdc70741ee2e881dbba659a5bf7d4e49b9d706
+    A9 re-map part 2 of 3 (blocks 13-18), 2,202,290 rows, same row-count identity as above.
+    Its amendment-9 receipt JSON is retained.
+
+  rq1_all_outputs_mapped_A9_partB.csv
+    468,017,830 bytes, 2,557,257 rows, sha256 745bf2491d3fa76f6b3b9a8552576d42dab6404d4d04992672badc01355cc7b9
+    A9 re-map part 3 of 3 (blocks 0-5 and 19), 2,557,257 rows. Its sha256 below matches the
+    digest frozen in rq1_all_outputs_mapped_A9_partB.csv.sha256.json on 2026-09-18, which is
+    retained, so the freeze receipt still verifies against this record.
+
+  rq1_all_outputs_mapped.csv.bak.20260910T150307
+    138,052,487 bytes, 758,560 rows, sha256 1d3b2f904b3660abdfae083bc5c645dc8d8359d45287723fcb7ea7d4daa88d22
+    Dated backup of a file that was rewritten on 2026-09-19 and has itself now been removed as
+    a duplicate. 758,560 rows against the current 7,332,245: a tenth of the corpus, from
+    before the A9 re-map.
+
+  rq1_all_outputs_mapped_CONTAMINATED_PRECUTOFF.csv
+    532,323,539 bytes, 2,927,685 rows, sha256 08431c8c5bbade5c72a59ec1d52e30a2a2da08320811351c82032511cbe4d3d9
+    The pre-cutoff mapping, named CONTAMINATED by its author because it reused the contaminated
+    mapped cache (see the comment block at slurm/run_mm_causal_shard_inf.sbatch:51-59). It
+    covers blocks 0-6 and 19 only, 2,927,685 rows, and was superseded by the clean post-cutoff
+    re-map that produced A9_CUTOFF. REMOVED ON A WEAKER EVIDENTIAL BASIS THAN THE OTHERS: the
+    evidence is a filename and an inline comment, not a checksum identity. It was removed
+    because a contaminated artefact is one that would never be reported under any
+    circumstances, so retaining it preserved nothing usable, while removing it bought 0.50 GiB
+    against 2.50 GiB of headroom. This entry exists so the record shows it existed and why it
+    went.
+
+  Total: 3,353,025,604 bytes (3.12 GiB)
+
+WHAT WAS KEPT AND WHY
+  rq1_all_model_outputs_PRE_A9REMAP.csv stays on disk and is also archived gzipped. It was
+  first believed to be the only surviving source of output_text for blocks 6-18. That belief
+  was wrong: A9_CUTOFF carries output_text for blocks 0-19, and a 2,388-row sample from
+  PRE_A9REMAP was found in A9_CUTOFF with byte-equal output_text in every case. It is
+  redundant. It is retained as the provenance record of the re-map's input, not as insurance.
+
+  A CONSEQUENCE THAT REACHES FURTHER. Because the mapped file carries output_text, the loss
+  caused by scripts/mm_prune_mapped_shards.py is narrower than docs/STALE_ARTEFACTS.md
+  deferred item 4 currently states. What was destroyed for blocks 0-5 and 19 is the per-shard
+  partitioning of the generations, not the generated text itself. That deferred item, and any
+  data availability statement drawn from it, needs correcting on those terms.
+
+==============================================================================
+SECOND RECLAIM, 2026-10-10 -- 9 FILES, 1.15 GiB
+==============================================================================
+
+Written before removal, as before. Every file below was confirmed present in
+thesis_restricted_data_20261005.tar.gz with a digest equal to the one MANIFEST.txt recorded at
+archive time -- except PRE_A9REMAP, which was gzipped into the archive directory first and its
+round trip verified. All nine had nlink=1, checked beforehand because the previous reclaim
+included a hardlink whose apparent 1.25 GiB had never cost any space at all.
+
+  outputs/rq1/umls_candidate_margin_medmentions_QUARANTINE_GOLD_ANCHORED_ENCODER_MARGIN.csv
+    272,223,084 bytes, 1,020,784 data rows
+    sha256 908aadfa7f0bd43729137e60cc2788722faa4a09d90be891f702d70a3a429573
+    Quarantined gold-anchored encoder-margin variant. Present in thesis_restricted_data_20261005.tar.gz;
+    its digest here equals the digest MANIFEST.txt recorded at archive time, so the archived copy is
+    the same bytes.
+
+  outputs/rq1/umls_candidate_margin_medmentions.csv.bak_before_encoder_margin
+    237,981,478 bytes, 1,020,784 data rows
+    sha256 1397266faccbaa08d46013a002560d54aa655fb75392bf0f11ebd65d0659760d
+    Pre-encoder-margin backup of the MedMentions candidate margin. In the archive, digest matched.
+
+  outputs/rq3/intermediate/rq3_cadec_mapped_outputs_PREEMPTYFIX.csv
+    56,627,999 bytes, 239,680 data rows
+    sha256 6db658e7811ed03f419cd12e89f83ce6f09186040469c7d3d5550344022f0c4d
+    Superseded CADEC mapped outputs, pre-empty-fix. In the archive, digest matched.
+
+  outputs/rq3/intermediate/rq3_cadec_mapped_outputs_A9CONTROL.csv
+    56,623,185 bytes, 239,680 data rows
+    sha256 261fdc9ab5268b31860ce8f4f8c249f2c95877f06145c7c2ae8c28f5bdc356ca
+    Superseded CADEC mapped outputs, amendment-9 control run. In the archive, digest matched. Its
+    460-byte amendment9_receipt.json is DELIBERATELY RETAINED on disk as provenance.
+
+  outputs/rq3/intermediate/rq3_cadec_mapped_outputs_PRETIEBREAK.csv
+    56,593,889 bytes, 239,680 data rows
+    sha256 ea2ee567c51cb20951206c37df1c92064fe7c10734fba7b73d0e7babd0e60d20
+    Superseded CADEC mapped outputs, pre-tiebreak. In the archive, digest matched.
+
+  outputs/rq3/intermediate/rq3_cadec_mapped_outputs_GOLDLEAK_prefix.csv
+    56,557,186 bytes, 239,680 data rows
+    sha256 e6892d43fa14da60a6f64c361e1d31e5c6d08a05434374efd17e21622502125a
+    Superseded CADEC mapped outputs, gold-leak prefix diagnostic. In the archive, digest matched.
+
+  outputs/rq3/umls_candidate_margin_cadec_PREEMPTYFIX.csv
+    9,666,964 bytes, 37,696 data rows
+    sha256 3893300b40f7a4c5f0b29d634138178f502ba765ce8cd583db87227386caee94
+    Superseded CADEC candidate margin, pre-empty-fix. In the archive, digest matched.
+
+  outputs/rq3/umls_candidate_margin_cadec_PRETIEBREAK.csv
+    9,530,538 bytes, 37,696 data rows
+    sha256 62ceb3a782712f703709271f1ef2195c259de1d59914591ea29baa899e6d19e2
+    Superseded CADEC candidate margin, pre-tiebreak. In the archive, digest matched.
+
+  outputs/rq1/intermediate/rq1_all_model_outputs_PRE_A9REMAP.csv
+    481,279,161 bytes, 4,774,988 data rows
+    sha256 567dc4b732f8c500e4a23526eb808dfe57030b431c7c60dc8e35926e0db1655f
+    The pre-amendment-9 assembled grid. Removed from disk only after being gzipped into
+    archive_preexpiry/rq1_all_model_outputs_PRE_A9REMAP.csv.gz (35,905,629 bytes, 13.4x) whose
+    gunzip digest was verified byte-equal to this file. PROVEN REDUNDANT FOR RECOVERY: a 2,388-row
+    sample taken every 2000th row was found in rq1_all_outputs_mapped_A9_CUTOFF.csv with byte-equal
+    output_text in 2,388 of 2,388 cases, 0 differing, and the row counts agree exactly
+    (partA1 2,572,698 + partA2 2,202,290 = 4,774,988 = this file).
+
+  Total: 1,237,083,484 bytes (1.15 GiB), all nlink=1 so all of it real.
+
+  NOT REMOVED, against the approved count of nine: the 460-byte
+  rq3_cadec_mapped_outputs_A9CONTROL.amendment9_receipt.json. Receipts were deliberately
+  retained in the first reclaim and the same rule is applied here -- it frees nothing and it is
+  the provenance for a file that has just gone. The nine files above are therefore the eight
+  archived data variants plus PRE_A9REMAP, not the nine the candidate listing showed.
