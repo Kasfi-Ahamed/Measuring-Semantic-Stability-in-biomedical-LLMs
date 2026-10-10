@@ -173,6 +173,38 @@ They are retained because a per-model breakdown is the natural first question a 
 a pooled heatmap, and having it already rendered costs nothing but disk. The size is recorded
 so that 20M inside the submission tag is a known quantity rather than a discovery.
 
+## Superseded but still produced: `fig_risk_coverage_qa`
+
+`figures_for_report/fig_risk_coverage_qa.{png,pdf}` and the same pair under
+`outputs/qa/figures/` are **not manuscript figures** and have not been since before submission.
+They are retained here because they still regenerate, which is the whole problem with them.
+
+**Why it was superseded.** The pooled QA risk-coverage plate covered BioASQ and SQuAD 2.0 on one
+set of axes. Those two datasets have incommensurable correctness criteria, so a pooled curve
+invites precisely the misreading that the separate captions now foreclose. Before submission it
+was replaced by two floats, `fig:rc-bioasq` and `fig:rc-squad`, which are
+`fig_risk_coverage_bioasq` and `fig_risk_coverage_squad`. Those two are cited; the pooled plate
+is not.
+
+**Why it keeps coming back.** `scripts/fig_report_risk_coverage.py` still carries a `"qa"` entry
+in its `CFG` dict covering `corpus="BioASQ and SQuAD 2.0"`, so every run of the risk-coverage
+family regenerates it, and `scripts/build_figures_for_report.py` still lists
+`outputs/qa/figures/fig_risk_coverage_qa.png` among its inputs and copies it into
+`figures_for_report/`. It was regenerated on 2026-09-28 03:47, in the same batch as the four
+plates that *are* cited, so it carries a current timestamp and sits alphabetically among them.
+
+**The cost of leaving it.** A file with a current mtime, a plausible name and no citation reads
+as a cited figure that someone forgot to reference. It cost five minutes of doubt during the
+2026-10-10 artefact trace, which found it as the only genuine figure in
+`figures_for_report/` that is not one of the manuscript's 26 and could not tell from this side
+whether it was a stray or a missing citation. The next person gets the same five minutes unless
+this is written down.
+
+**Not deleted**, because it is a live output of a live script and deleting the file without
+removing the `"qa"` CFG entry would simply mean it reappears on the next run under the same
+confusable name. Either remove the CFG entry and the `build_figures_for_report.py` input line
+together, or leave both and keep this note. Deferred, not urgent: nothing reads it.
+
 ## `RQ4_four_dataset_figures.ipynb` fails on purpose. Do not "fix" it.
 
 **Do not restore `outputs/rq4/rq4_risk_coverage_margin_qa.csv` or `rq4_aurc_margin_qa.csv`.**
