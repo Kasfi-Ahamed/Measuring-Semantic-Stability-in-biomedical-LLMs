@@ -302,7 +302,7 @@ AXES_FRACTION_WARN = 0.30
 AXES_FRACTION_FLOOR = 0.15
 
 
-def _axes_fraction(fig, pad):
+def _axes_fraction(fig, pad, tight=True):
     """Share of the rendered figure area that is actually plotting axes.
 
     Every other guard in this file measures whether TEXT fits. None of them notices when the
@@ -315,9 +315,13 @@ def _axes_fraction(fig, pad):
     """
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
-    tb = fig.get_tightbbox(r)
-    _p = 0.1 if pad is None else pad
-    fig_area = (tb.width + 2 * _p) * (tb.height + 2 * _p)
+    if tight:
+        tb = fig.get_tightbbox(r)
+        _p = 0.1 if pad is None else pad
+        fig_area = (tb.width + 2 * _p) * (tb.height + 2 * _p)
+    else:
+        _w, _h = fig.get_size_inches()
+        fig_area = _w * _h
     ink = 0.0
     for ax in fig.get_axes():
         if ax.get_label() == "<colorbar>":
@@ -327,7 +331,7 @@ def _axes_fraction(fig, pad):
     return ink / fig_area if fig_area > 0 else 0.0
 
 
-def save_png(fig, path, *, dpi=300, pad=None):
+def save_png(fig, path, *, dpi=300, pad=None, tight=True):
     """PNG at 300 dpi, plus a vector PDF sibling with the same figsize and bbox.
 
     Same figure object, saved twice: this is a format change, not a redesign. The PDF
@@ -339,10 +343,14 @@ def save_png(fig, path, *, dpi=300, pad=None):
     # pad: bbox_inches="tight" pads 0.1in on every side by default, which is 0.2in of
     # whitespace inside the MediaBox. Width-starved figures pass a smaller pad so the
     # scale at placement is not spent on margin LaTeX already provides.
-    _pad = {} if pad is None else {"pad_inches": pad}
+    # tight=False: save the canvas as authored, so the MediaBox IS figsize and a figure
+    # authored at final size needs no scaling at all when included. bbox_inches="tight"
+    # would crop or grow to the artists and reintroduce a scale factor.
+    _pad = ({} if pad is None else {"pad_inches": pad}) if tight else {}
+    _bbox = {"bbox_inches": "tight"} if tight else {}
     # Plotting-axes fraction, checked BEFORE anything is written: a figure whose plot has been
     # squeezed to nothing should not reach the delivery directory at all.
-    _frac = _axes_fraction(fig, pad)
+    _frac = _axes_fraction(fig, pad, tight=tight)
     AXES_FRACTION[path.stem] = _frac
     print(f"  axes fraction {path.stem}: {100 * _frac:.1f}% of the rendered figure is plot"
           + ("" if _frac >= AXES_FRACTION_WARN else
@@ -353,7 +361,7 @@ def save_png(fig, path, *, dpi=300, pad=None):
             f"below the {100 * AXES_FRACTION_FLOOR:.0f}% floor. The furniture has squeezed out "
             f"the plot. Reduce titles, labels or padding, or give the figure more of the page; "
             f"do not lower this floor to make a figure pass.")
-    fig.savefig(path, dpi=dpi, bbox_inches="tight", **_pad)
+    fig.savefig(path, dpi=dpi, **_bbox, **_pad)
     _ov = _text_overlaps(fig)
     OVERLAPS[path.stem] = _ov
     print(f"  overlap guard {path.stem}: {len(_ov)} colliding text pairs"
@@ -362,7 +370,7 @@ def save_png(fig, path, *, dpi=300, pad=None):
     pdf = path.with_suffix(".pdf")
     if hit:
         RASTERISED[path.stem] = hit
-        fig.savefig(pdf, dpi=400, bbox_inches="tight", **_pad)
+        fig.savefig(pdf, dpi=400, **_bbox, **_pad)
     else:
-        fig.savefig(pdf, bbox_inches="tight", **_pad)
+        fig.savefig(pdf, **_bbox, **_pad)
     return path

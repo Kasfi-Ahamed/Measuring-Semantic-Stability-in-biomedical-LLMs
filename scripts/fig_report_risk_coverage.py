@@ -41,19 +41,17 @@ CFG = {
         corpus="CADEC", path=ROOT / "outputs/rq3/umls_candidate_margin_cadec.csv",
         model_col="model_name", acc="accuracy", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
-        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=4,
-        # 4 COLUMNS x 2 ROWS, sized so the per-panel FRAME (ax.get_window_extent, not the
-        # grid cell) lands between 1.15 and 1.25, matching the question-answering plates.
-        # The cell is wider than the frame because the cell also carries the panel title and,
-        # on the bottom row, the tick labels and axis label.
-        panel=(1.315, 1.75), wrap=66, legend_ncol=3, thin_ticks=True, hspace=0.74,
+        out=ROOT / "outputs/rq3/figures/fig_risk_coverage_cadec.png", ncol=2,
+        # TWO COLUMNS, authored at the placement width. Four columns at 4.77in left each
+        # panel 1.19in wide; two give about 1.8in.
+        figsize=(4.77, 6.60), wrap=70, thin_ticks=True,
     ),
     "medmentions": dict(
         corpus="MedMentions", path=ROOT / "outputs/rq1/umls_candidate_margin_medmentions.csv",
         model_col="model_name", acc="mean_accuracy_full", keep="retained_m_distinct",
         ent="normalised_entropy_dedup", conf="mapping_confidence", marg="margin_mean",
-        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=4,
-        panel=(1.315, 1.75), wrap=66, legend_ncol=3, thin_ticks=True, hspace=0.74,
+        out=ROOT / "outputs/rq1/figures/fig_risk_coverage_medmentions.png", ncol=2,
+        figsize=(4.77, 6.60), wrap=70, thin_ticks=True,
     ),
     "qa": dict(
         corpus="BioASQ and SQuAD 2.0",
@@ -66,8 +64,8 @@ CFG = {
         # left four of them illegible: the curves occupy a narrow band and the panel is
         # wider than it is tall. The shared axis stays, because that is what makes the
         # panels comparable; the panels get room instead.
-        out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=3,
-        panel=(1.73, 2.07), wrap=66, legend_ncol=3, thin_ticks=True,
+        out=ROOT / "outputs/qa/figures/fig_risk_coverage_qa.png", ncol=2,
+        figsize=(4.77, 4.30), wrap=70, thin_ticks=True,
     ),
 }
 
@@ -103,6 +101,9 @@ def curve(y: np.ndarray, safe: np.ndarray) -> np.ndarray:
     ry = y[order]
     n = len(y)
     return np.array([1.0 - float(np.mean(ry[:max(1, int(np.ceil(c * n)))])) for c in GRID])
+
+
+_YR_OUT: dict = {}
 
 
 def _top_rect(n_sup_lines: int) -> float:
@@ -171,7 +172,13 @@ def main() -> int:
     # into an unreadable band at the top: its risk genuinely sits at 0.86 to 0.98, so on a 0 to 1
     # axis every curve and its baseline collapse into the same few pixels. This is also where the
     # style diverges from the e3043c6 reference, which used sharey=True.
-    fig, axes = plt.subplots(nrow, ncol, figsize=(_pw * ncol, _ph * nrow),
+    # AUTHORED AT FINAL SIZE. figsize IS the placement width, 4.77in = 345pt = \linewidth,
+    # so the scale at inclusion is 1.0: 8pt type renders at 8pt and a 1.5pt line at 1.5pt.
+    # Nothing between the size set here and the size printed.
+    _fs = c.get("figsize")
+    if _fs is None:
+        _fs = (_pw * ncol, _ph * nrow)
+    fig, axes = plt.subplots(nrow, ncol, figsize=_fs,
                              sharex=False, sharey=False, squeeze=False)
     handles: dict[str, object] = {}
     omitted_any = []
@@ -205,7 +212,7 @@ def main() -> int:
                 continue
             r = curve(y[ok], safe[ok])
             ln, = ax.plot(GRID, r, color=S.SIGNAL_COLOURS[name], ls=S.SIGNAL_LINESTYLES[name],
-                          lw=1.5, marker="o", markersize=2.6, markeredgewidth=0,
+                          lw=1.5, marker="o", markersize=2.4, markeredgewidth=0,
                           label=S.SIGNAL_LABELS[name])
             _ys.append(np.asarray(r, dtype=float))
             handles.setdefault(S.SIGNAL_LABELS[name], ln)
@@ -234,17 +241,22 @@ def main() -> int:
         # n is NOT in the panel title. It is identical in every panel of a figure, so it is
         # stated once in the suptitle; repeating it eight times was what forced the wrapping.
         _per_n.append(len(g))
-        ax.set_title(_m, fontsize=8)
+        ax.set_title(_m, fontsize=9)
         # x is identical on every panel and stays on the pre-registered domain.
         ax.set_xlim(S.COVERAGE_MIN, S.COVERAGE_MAX)
         ax.set_xticks([0.2, 0.4, 0.6, 0.8, 1.0])
-        # IDENTICAL AXES ON EVERY PANEL OF EVERY FIGURE: y 0.2 to 1.0 on the same 0.2 grid
-        # as x. Author's call, made explicitly. Note for the record that MedMentions' risk
-        # runs about 0.86 to 0.99, so its curves sit in the top fifth of each panel; the
-        # per-cell numbers are in Table 10 and Supplementary S8.
-        ax.set_ylim(0.2, 1.0)
-        ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
-        _yr[m] = (0.2, 1.0)
+        # NO HARD y LIMITS. A fixed (0.2, 1.0) clipped real data: on the SQuAD 2.0 FLAN-T5
+        # panel semantic entropy runs flat along the axis floor and mapping confidence and
+        # combined(3) bottom out at the same value. Each panel autoscales to its own data
+        # with a 5% pad, clamped into [0, 1].
+        _all = np.concatenate(_ys) if _ys else np.array([0.0, 1.0])
+        _dlo, _dhi = float(np.nanmin(_all)), float(np.nanmax(_all))
+        _pad5 = max(0.05 * (_dhi - _dlo), 0.005)
+        _ylo, _yhi = max(0.0, _dlo - _pad5), min(1.0, _dhi + _pad5)
+        ax.set_ylim(_ylo, _yhi)
+        ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
+        _yr[m] = dict(data_min=_dlo, data_max=_dhi, ylim=(_ylo, _yhi),
+                      at_floor=bool(abs(_dlo - _ylo) < 0.005))
         ax.tick_params(labelsize=8, labelbottom=True, labelleft=True)
         ax.set_xlabel("Coverage", fontsize=8)
         ax.set_ylabel("Risk", fontsize=8)
@@ -294,28 +306,21 @@ def main() -> int:
     # how many lines the suptitle happened to wrap to: MedMentions carries an extra line naming
     # the three encoders, which shortened its frames and pushed its aspect from 1.29 to 1.43
     # while every other setting was identical.
-    _SUP_LINE_IN, _LEG_IN, _BOT_IN = 0.135, 0.68, 0.40
-    _W0, _H0 = fig.get_size_inches()
-    _H = _H0 + _SUP_LINE_IN * max(0, len(_sup_lines) - 2)
-    fig.set_size_inches(_W0, _H, forward=True)
+    _SUP_LINE_IN, _LEG_IN = 0.150, 0.58
+    _W, _H = fig.get_size_inches()
     _top = 1.0 - (_SUP_LINE_IN * len(_sup_lines) + _LEG_IN) / _H
-    # BIGGER FRAMES, but not at any price. The margins and the inter-panel spacing are the
-    # only slack once the type floor fixes the canvas width. Taken to the limit
-    # (0.070/0.992, wspace 0.42, hspace 0.62) the plot area reached 35% and broke two things:
-    # the rightmost panel's "1.0" tick overflowed the canvas, widening the MediaBox to 5.49in
-    # and dropping the concept lanes to 6.96pt; and each row's "Coverage" label met the next
-    # row's panel title. These values keep most of the gain without either.
-    # Tighter than before, which a fixed 0.2 to 1.0 axis makes safe: every y label is now
-    # three characters, so none of them reaches into the neighbouring panel the way
-    # MedMentions' five-character adaptive labels did.
-    fig.subplots_adjust(left=0.068, right=0.988, top=_top, bottom=_BOT_IN / _H,
-                        wspace=c.get("wspace", 0.34), hspace=c.get("hspace", 0.52))
+    # Absolute inches, on a canvas that is not going to be rescaled: 0.52in of left margin
+    # carries the y label and its ticks, 0.34in of gutter carries the second column's, and
+    # each row keeps 0.30in for its own x tick labels and "Coverage".
+    fig.subplots_adjust(left=0.52 / _W, right=1.0 - 0.06 / _W, top=_top,
+                        bottom=0.34 / _H, wspace=0.56 / 1.815, hspace=0.98)
     import math as _math
     fig.legend(handles.values(), handles.keys(), loc="upper center",
                ncol=_math.ceil(len(handles) / 2), fontsize=8, frameon=False,
                bbox_to_anchor=(0.5, 1.0 - (_SUP_LINE_IN * len(_sup_lines)) / _H))
+    _YR_OUT.clear(); _YR_OUT.update(_yr)
     c["out"].parent.mkdir(parents=True, exist_ok=True)
-    S.save_png(fig, c["out"], pad=0.02)
+    S.save_png(fig, c["out"], tight=False)
     plt.close(fig)
     print(f"wrote {c['out']}")
     return 0
