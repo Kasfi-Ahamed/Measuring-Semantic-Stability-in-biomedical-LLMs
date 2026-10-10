@@ -43,7 +43,18 @@ echo "=== $(date) causal-inf shard=${MM_SHARD_ID} causal_batch=${MM_CAUSAL_BATCH
 mkdir -p logs
 flock logs/mm_assemble.lock "$PY" scripts/mm_assemble_if_stale.py
 
-for k in biomistral mistral openbiollm llama3; do
+# MM_ONLY_MODELS narrows the loop to named keys. The per-(model,shard) completion check
+# already skips finished work, so this is an optimisation and not a correctness change: it
+# avoids loading three 7-8B models from disk only to skip them. Needed to re-run block 23's
+# llama3 on its own, which is the test that the fixed submission gate behaves.
+CAUSAL_KEYS="${MM_ONLY_MODELS:-biomistral mistral openbiollm llama3}"
+CAUSAL_KEYS="${CAUSAL_KEYS//,/ }"
+echo "causal keys this job: ${CAUSAL_KEYS}"
+for k in ${CAUSAL_KEYS}; do
+  case " biomistral mistral openbiollm llama3 " in
+    *" $k "*) ;;
+    *) echo "skip non-causal key '$k' (this tier runs the 4 causal models only)"; continue ;;
+  esac
   echo "--- causal ${k} shard ${MM_SHARD_ID} ---"
   MM_MODEL_KEY="$k" MM_SHARD_ID="${MM_SHARD_ID}" "$PY" scripts/exec_notebook.py "$NB"
 done
