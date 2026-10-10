@@ -84,7 +84,7 @@ def main() -> int:
     frames = []
     for ds in ("squad2", "bioasq"):
         p = PERT_DIR / f"qa_question_perturbations_{ds}.csv"
-        d = pd.read_csv(p, keep_default_na=False, na_values=[""])
+        d = pd.read_csv(p, keep_default_na=False, na_values=[""], float_precision="round_trip")
         d["dataset"] = ds
         frames.append(d)
     pert = pd.concat(frames, ignore_index=True)

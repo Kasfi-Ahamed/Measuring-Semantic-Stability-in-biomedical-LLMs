@@ -62,7 +62,7 @@ def assemble_partial_grid(project_root: Path | None = None, require_all_eight: b
         for k in GEN_KEYS:
             p = shard_csv(root, "gen", k, sid)
             if require_all_eight or shard_is_complete(p):
-                df = pd.read_csv(p, low_memory=False)
+                df = pd.read_csv(p, low_memory=False, float_precision="round_trip")
                 missing = [c for c in TARGET_COLS if c not in df.columns]
                 if missing:
                     raise ValueError(f"{p} missing {missing}")
@@ -77,7 +77,7 @@ def assemble_partial_grid(project_root: Path | None = None, require_all_eight: b
         for k in ENC_KEYS:
             p = shard_csv(root, "enc", k, sid)
             if require_all_eight or shard_is_complete(p):
-                g = pd.read_csv(p, low_memory=False)
+                g = pd.read_csv(p, low_memory=False, float_precision="round_trip")
                 enc_aligned.append(pd.DataFrame({
                     "instance_id": g["instance_id"].values,
                     "model_name": g["model_name"].values,

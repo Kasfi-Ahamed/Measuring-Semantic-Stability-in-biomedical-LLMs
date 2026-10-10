@@ -64,7 +64,7 @@ def auroc(score: pd.Series, correct: pd.Series):
 
 
 def analyse(path: Path, label: str, ent_col: str) -> list[dict]:
-    d = pd.read_csv(path)
+    d = pd.read_csv(path, float_precision="round_trip")
     blk = d[d[ent_col] == 0].copy()
     rows: list[dict] = []
 

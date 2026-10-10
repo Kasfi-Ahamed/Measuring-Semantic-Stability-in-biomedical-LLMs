@@ -40,7 +40,7 @@ def main() -> int:
         if not p.is_file():
             print(f"  SKIP (absent) {rel}")
             continue
-        d = pd.read_csv(p, dtype=str, keep_default_na=False)
+        d = pd.read_csv(p, dtype=str, keep_default_na=False, float_precision="round_trip")
         n0, c0 = len(d), list(d.columns)
         present = [c for c in cols if c in d.columns]
         if not present:
@@ -50,8 +50,8 @@ def main() -> int:
         tmp = p.with_suffix(p.suffix + ".tmp")
         d.to_csv(tmp, index=False)
         os.replace(tmp, p)
-        chk = pd.read_csv(p, dtype=str, keep_default_na=False, nrows=5)
-        ok = len(pd.read_csv(p, usecols=[0], dtype=str)) == n0 and not set(present) & set(chk.columns)
+        chk = pd.read_csv(p, dtype=str, keep_default_na=False, nrows=5, float_precision="round_trip")
+        ok = len(pd.read_csv(p, usecols=[0], dtype=str, float_precision="round_trip")) == n0 and not set(present) & set(chk.columns)
         bad += (not ok)
         print(f"  {'OK  ' if ok else 'FAIL'} {rel}: removed {present}  "
               f"cols {len(c0)}->{len(chk.columns)}  rows {n0:,} preserved={ok}")

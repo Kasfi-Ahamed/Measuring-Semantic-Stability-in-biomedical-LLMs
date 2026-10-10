@@ -153,7 +153,7 @@ def scan(path: Path, ordinal: dict[str, int], shard_size: int) -> dict:
     st = {"rows": 0, "blocks": {}, "unresolved": 0, "inject": 0,
           "empty_rows": 0, "empty_assigned": 0, "cols": None}
     for ch in pd.read_csv(path, chunksize=CHUNK, low_memory=False,
-                          keep_default_na=False, na_values=[""]):
+                          keep_default_na=False, na_values=[""], float_precision="round_trip"):
         if st["cols"] is None:
             st["cols"] = list(ch.columns)
         st["rows"] += len(ch)
@@ -221,7 +221,7 @@ def main(argv: list[str] | None = None) -> int:
     if a.out.exists():
         sys.exit(f"REFUSING TO START: {a.out} already exists. Nothing is overwritten.")
 
-    idx = pd.read_csv(a.index)
+    idx = pd.read_csv(a.index, float_precision="round_trip")
     ordinal = dict(zip(idx["instance_id"].astype(str), idx["ordinal"].astype(int)))
     print(f"instance_index: {len(ordinal):,} ids")
     print(f"joining {len(parts)} parts: {', '.join(p.label for p in parts)}")
@@ -322,7 +322,7 @@ def main(argv: list[str] | None = None) -> int:
     written = 0
     for p in parts:
         for ch in pd.read_csv(p.path, chunksize=CHUNK, low_memory=False,
-                              keep_default_na=False, na_values=[""]):
+                              keep_default_na=False, na_values=[""], float_precision="round_trip"):
             ch.to_csv(a.out, mode="w" if written == 0 else "a",
                       header=written == 0, index=False)
             written += len(ch)

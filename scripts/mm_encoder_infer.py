@@ -226,7 +226,7 @@ def assemble_encoder_outputs(project_root: Path) -> Path:
         for k in ENC_KEYS:
             p = shard_csv(root, "enc", k, sid)
             if shard_is_complete(p):
-                parts.append(pd.read_csv(p, low_memory=False))
+                parts.append(pd.read_csv(p, low_memory=False, float_precision="round_trip"))
     out = project_root / "outputs" / "rq1" / "intermediate" / "rq1_model_outputs.csv"
     if not parts:
         print("No complete encoder shards yet — not writing rq1_model_outputs.csv", flush=True)
@@ -253,7 +253,7 @@ def run_encoder_job(project_root: Path | None = None, variants_df: pd.DataFrame 
     inter = project_root / "outputs" / "rq1" / "intermediate"
     pool_path = inter / "umls_candidate_pool.csv"
     assert pool_path.is_file(), pool_path
-    pool = pd.read_csv(pool_path)
+    pool = pd.read_csv(pool_path, float_precision="round_trip")
     candidate_texts = pool["candidate_text"].astype(str).tolist()
     candidate_labels = pool["candidate_label"].astype(str).tolist()
 
@@ -262,7 +262,7 @@ def run_encoder_job(project_root: Path | None = None, variants_df: pd.DataFrame 
 
     mm_root = shard_root(project_root)
     inst_ids = (
-        pd.read_csv(inter / "rq1_sampled_instances.csv", usecols=["instance_id"])["instance_id"]
+        pd.read_csv(inter / "rq1_sampled_instances.csv", usecols=["instance_id"], float_precision="round_trip")["instance_id"]
         .astype(str).tolist()
     )
     write_instance_index(mm_root, inst_ids, seed=42)
@@ -292,7 +292,7 @@ def run_encoder_job(project_root: Path | None = None, variants_df: pd.DataFrame 
                 torch.cuda.empty_cache()
                 assemble_encoder_outputs(project_root)
                 out = project_root / "outputs" / "rq1" / "intermediate" / "rq1_model_outputs.csv"
-                return pd.read_csv(out, low_memory=False) if out.is_file() else pd.DataFrame()
+                return pd.read_csv(out, low_memory=False, float_precision="round_trip") if out.is_file() else pd.DataFrame()
             ids = shard_instance_ids(mm_root, sid)
             sub = variants[variants["instance_id"].isin(ids)].copy()
             exp = expected_variant_rows(variants, ids)
@@ -325,7 +325,7 @@ def run_encoder_job(project_root: Path | None = None, variants_df: pd.DataFrame 
     assemble_encoder_outputs(project_root)
     out = project_root / "outputs" / "rq1" / "intermediate" / "rq1_model_outputs.csv"
     if out.is_file():
-        return pd.read_csv(out, low_memory=False)
+        return pd.read_csv(out, low_memory=False, float_precision="round_trip")
     return pd.DataFrame()
 
 

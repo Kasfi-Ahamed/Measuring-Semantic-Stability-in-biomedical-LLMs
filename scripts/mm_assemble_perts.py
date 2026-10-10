@@ -41,7 +41,7 @@ def assemble_perts(project_root: Path | None = None) -> dict:
     if not ready:
         return {"ready": [], "perts": None, "feats": None}
 
-    pert_parts = [pd.read_csv(pert_csv(root, sid), low_memory=False) for sid in ready]
+    pert_parts = [pd.read_csv(pert_csv(root, sid), low_memory=False, float_precision="round_trip") for sid in ready]
     df_p = pd.concat(pert_parts, ignore_index=True)
     pert_out = inter / "rq1_validated_perturbations.csv"
     df_p.to_csv(pert_out, index=False, quoting=csv.QUOTE_MINIMAL, escapechar="\\")
@@ -51,7 +51,7 @@ def assemble_perts(project_root: Path | None = None) -> dict:
     for sid in ready:
         fp = feat_csv(root, sid)
         if shard_is_complete(fp) or fp.is_file():
-            feat_parts.append(pd.read_csv(fp, low_memory=False))
+            feat_parts.append(pd.read_csv(fp, low_memory=False, float_precision="round_trip"))
     feat_out = inter / "rq1_linguistic_features.csv"
     if feat_parts:
         df_f = pd.concat(feat_parts, ignore_index=True)

@@ -43,13 +43,13 @@ def auroc(g: pd.DataFrame) -> float:
 def main() -> int:
     if not RECHECK.is_file():
         sys.exit(f"missing {RECHECK} — run scripts/qa_gate_failopen_audit.py first")
-    rc = pd.read_csv(RECHECK, keep_default_na=False, na_values=[""])
+    rc = pd.read_csv(RECHECK, keep_default_na=False, na_values=[""], float_precision="round_trip")
     ident = rc[rc["identical_to_original"] == True]                       # noqa: E712
     n_ident_per_id = ident.groupby(ident["id"].astype(str)).size()
     print(f"identical-to-original variants: {len(ident):,} over {len(n_ident_per_id):,} ids "
           f"({ident.groupby('dataset').size().to_dict()})")
 
-    df = pd.read_csv(COMBINED, keep_default_na=False, na_values=[""])
+    df = pd.read_csv(COMBINED, keep_default_na=False, na_values=[""], float_precision="round_trip")
     inc = df[df["included"] == True]                                      # noqa: E712
     print(f"included rows: {len(inc):,} over {inc['id'].nunique():,} instances")
 

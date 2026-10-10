@@ -45,7 +45,7 @@ def main() -> int:
         return 1
 
     df = pd.read_csv(MAPPED, usecols=["instance_id", "model_name", "predicted_cui",
-                                      "confidence"], low_memory=False)
+                                      "confidence"], low_memory=False, float_precision="round_trip")
     conf = df["confidence"].astype(float)
     dist = (conf - THRESHOLD).abs()
     df["distance_to_threshold"] = dist

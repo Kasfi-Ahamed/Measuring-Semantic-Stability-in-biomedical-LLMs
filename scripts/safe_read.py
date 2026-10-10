@@ -29,5 +29,11 @@ def read_csv_strict(path, **kwargs):
     """read_csv where an empty cell is missing and every other token is a literal string."""
     kwargs.setdefault("low_memory", False)
     kwargs["keep_default_na"] = False
+    # float_precision: pandas' default and "high" both parse some float64 values 1 ULP away
+    # from what the file contains; only "round_trip" returns the written value. A reader that
+    # copies a float column from one artefact into another therefore degrades it. Default it
+    # here so every caller of this wrapper is faithful, and let an explicit kwarg override.
+    # See provenance/reading_hazards_note.txt.
+    kwargs.setdefault("float_precision", "round_trip")
     kwargs["na_values"] = [""]
     return pd.read_csv(path, **kwargs)

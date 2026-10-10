@@ -33,7 +33,7 @@ def main() -> int:
 
     # keep_default_na=False, na_values=[""]: literal 'None'/'NA' outputs are REAL answers and
     # must not be swept in with the empties (docs/BUG_AUDIT.md, B2).
-    df = pd.read_csv(MAPPED, low_memory=False, keep_default_na=False, na_values=[""])
+    df = pd.read_csv(MAPPED, low_memory=False, keep_default_na=False, na_values=[""], float_precision="round_trip")
     t = df["output_text"]
     empty = t.isna() | (t.astype(str).str.strip() == "")
     n = int(empty.sum())
@@ -67,7 +67,7 @@ def main() -> int:
     df.to_csv(MAPPED, index=False, na_rep="")
     print(f"  wrote {MAPPED.name}")
 
-    chk = pd.read_csv(MAPPED, low_memory=False, keep_default_na=False, na_values=[""])
+    chk = pd.read_csv(MAPPED, low_memory=False, keep_default_na=False, na_values=[""], float_precision="round_trip")
     t2 = chk["output_text"]
     e2 = t2.isna() | (t2.astype(str).str.strip() == "")
     assert int(e2.sum()) == n, "empty-row count changed across the write"

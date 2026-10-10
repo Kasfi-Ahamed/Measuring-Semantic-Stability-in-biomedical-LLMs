@@ -29,8 +29,8 @@ MARGIN_OWN = ["n_retrieval_rows", "margin_mean", "margin_min", "s1_mean", "s2_me
 
 
 def main() -> int:
-    mg = pd.read_csv(MARGIN, low_memory=False)
-    ent = pd.read_csv(ENTROPY, low_memory=False)
+    mg = pd.read_csv(MARGIN, low_memory=False, float_precision="round_trip")
+    ent = pd.read_csv(ENTROPY, low_memory=False, float_precision="round_trip")
     ent_cols = [c for c in mg.columns if c in ent.columns and c not in K]
     print(f"margin rows: {len(mg):,}   entropy rows: {len(ent):,}")
     print(f"entropy-derived columns to refresh: {len(ent_cols)}")
