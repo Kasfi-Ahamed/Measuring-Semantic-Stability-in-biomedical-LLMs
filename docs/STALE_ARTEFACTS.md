@@ -384,31 +384,38 @@ the 3 renamed CSVs it calls superseded are `UNKNOWN(no inputs resolved)` there. 
 from "is this artefact older than any input it must read" would return the same verdict as the
 judgement recorded here, and `docs/SUPPLEMENTARY.md` S9 would not have to disclose the gap.
 
-**4. The JBI data availability statement must disclose that the intermediate generation
-files were not retained.** This is a disclosure, not a defect, and it belongs somewhere a
-reader will find it rather than only inside a restricted archive.
+**4. The JBI data availability statement must disclose that the per-shard intermediate
+generation files were not retained.** This is a disclosure, not a defect, and it belongs
+somewhere a reader will find it rather than only inside a restricted archive.
 
-Established 2026-10-05 while building the pre-expiry archive. `outputs/rq1/intermediate/mm_shards/`
-holds **400 files, 13.73 GiB**, and within it only **21** `gen_*.csv` files survive against
-**121** `gen_*.csv.complete.json` completion markers. The per-shard raw generations were
-therefore deleted after assembly, for roughly five sixths of the shards. The set is also not
-uniform: shards 1-19 hold 15 files each, 20-22 hold 20, 23 holds 18, 24 holds 14, and 25 holds 4.
+CORRECTED 2026-10-10. The first version of this item overstated the loss, and the correction
+matters because the item exists to stop a reader being misled. It said the raw model
+generations behind the mapping were mostly gone. **They are not.**
+`rq1_all_outputs_mapped_A9_CUTOFF.csv` carries `output_text` as its fifth column for all of
+instance-blocks 0-19, so the generated text itself survives inside the mapped outputs. What
+was destroyed is the *partitioning* of those generations into per-shard files, not the
+generations.
 
-What this means for a reader: **the earliest preserved artefact in the RQ1 chain is the mapped
-output**, `rq1_all_outputs_mapped_A9_CUTOFF.csv`, not the raw model generations behind it. The
-mapping step cannot be re-derived or independently re-checked from source for those shards. No
-reported number depends on the shards, which is why nothing is wrong with the results, but a
-reader who asks to inspect the raw generations behind the mapping must be told in advance that
-most of them are gone.
+The evidence, so this is checkable rather than asserted: a 2,388-row sample taken every
+2000th row from `rq1_all_model_outputs_PRE_A9REMAP.csv` was found in
+`rq1_all_outputs_mapped_A9_CUTOFF.csv` with **byte-equal `output_text` in 2,388 of 2,388
+cases, 0 differing**, and the row counts agree exactly (partA1 2,572,698 + partA2 2,202,290
+= 4,774,988, the pre-remap grid's full row count).
 
-The archive's `MANIFEST.txt` records all 400 surviving files with sizes and SHA-256 under a
-section headed as deliberately not preserved, so what remains is identified and provable. That
-record is in the archive. The data availability statement is where it has to be said out loud.
+What remains true. `outputs/rq1/intermediate/mm_shards/` holds **400 files, 13.73 GiB**, and
+within it only **21** `gen_*.csv` survive against **121** `gen_*.csv.complete.json` markers,
+so the per-shard files were deleted after assembly for roughly five sixths of the shards. The
+set is not uniform: shards 1-19 hold 15 files each, 20-22 hold 20, 23 holds 18, 24 holds 14,
+25 holds 4. The cause is now known precisely: `scripts/mm_prune_mapped_shards.py`, wired as an
+unconditional `unlink()` into `slurm/run_mm_partial_map.sbatch`. It was rewritten on
+2026-10-10 to be opt-in via `MM_ALLOW_PRUNE=1`, to refuse any block whose `output_text`
+exists nowhere else, and to log candidates instead of deleting them. Verified by running the
+mapping path: zero deletions attempted.
 
-Suggested wording, to be checked against the journal's template: *"Intermediate per-shard model
-generation files were not retained. The earliest preserved artefacts are the mapped concept
-outputs, from which all reported results derive. A manifest of the retained intermediate files,
-with checksums, accompanies the archived dataset."*
+Suggested wording, to be checked against the journal's template: *"Per-shard intermediate
+generation files were not retained for every block. The generated output text itself is
+preserved within the mapped concept outputs, from which all reported results derive. What is
+not recoverable is the partitioning of those generations by shard, not the generations."*
 
 ---
 
