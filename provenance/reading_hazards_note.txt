@@ -174,6 +174,87 @@ HAZARD 2 IN PRODUCTION: ONE ARTEFACT IS A PARSER-DEGRADED COPY OF ANOTHER
       defending itself), test_safe_read (fixtures built in memory).
 
 ================================================================================
+HAZARD 3: pandas TURNS A LITERAL "NA" GOLD MENTION INTO A MISSING VALUE
+================================================================================
+  Established 2026-10-11. This one has already destroyed data, which neither of the others
+  had, and the generalisable lesson is in how it was fixed the first time.
+
+  THE DEFAULT RULES. pandas read_csv converts 19 tokens to NaN, among them "NA", "N/A", "NaN",
+  "None", "null", "n/a", "nan", "NULL" and the empty string. A literal mention of "NA" -- a
+  real abbreviation in clinical text -- is therefore read as missing unless
+  keep_default_na=False is passed. Note that a bare "-" is NOT in the list and was never at
+  risk.
+
+  THE CORPORA DO CONTAIN THEM. outputs/rq1/intermediate/rq1_sampled_instances.csv, the source
+  of truth for 202,019 MedMentions instances:
+      gold_mention == "NA"      12 instances
+      gold_mention == "null"     3 instances
+                               ----
+      at risk                   15 instances
+  CADEC's gold mentions are clean. QA's question text is clean; one SQuAD 2.0 prediction is the
+  literal string "None", in the superseded umls_candidate_margin_qa_PREHASHSEED.csv.
+
+  THE LOSS, ALREADY IN THE ARTEFACTS. Compare the same 15 instances across three files:
+      mm_shards/pert_shard{0005,0012,0013,0017,0024}.csv   "NA" x96, "null" x24   INTACT
+      rq1_validated_perturbations.csv                      "" x120                BLANKED
+      rq1_all_outputs_mapped_A9_CUTOFF.csv                 "NA" x616              PRESERVED
+
+  The shards hold the tokens. The assembled file does not. The mapped file does.
+
+  THE WRITE THAT LOST THEM, traced rather than guessed: scripts/mm_assemble_perts.py line 44,
+  which concatenated the pert shards into rq1_validated_perturbations.csv with
+  pd.read_csv(..., low_memory=False) and no keep_default_na. The gate verdicts were computed
+  before this write -- 115 of the 120 rows carry g6_entity_check_mode "mention_exact", meaning
+  Gate 6 had a mention to match -- so what was lost is the stored column, not the gating. The
+  remaining 4 rows read "unverified", which is what Gate 6 records when it has nothing to check.
+
+  SCALE, FOR THE RECORD. 15 instances, 120 rows. In the reported arm, instance-blocks 0-19:
+      96 of 1,280,000 generated candidates   0.00750%
+      65 of   758,969 accepted candidates    0.00856%
+  All 96 rows in the reported arm are the "NA" cases; the 24 "null" rows fall in block 24,
+  outside the arm. Nothing published moves: Gate 6 is reported at 96.2% and four rows shift it
+  by 0.0003 percentage points. Accuracy scoring is untouched, because it reads the mapped file,
+  which preserved the tokens.
+
+  THE GENERALISABLE PART, AND THE REASON THIS SECTION EXISTS.
+  The mapping path already carries the fix. Its read is commented
+
+      # keep_default_na=False: a literal 'None'/'NA' output is a real answer (BUG_AUDIT B2)
+
+  so this defect was found once, understood correctly, and fixed ON THE ONE PATH WHERE IT WAS
+  OBSERVED. scripts/safe_read.py was written to centralise it, with a test suite that names
+  mm_0046685 explicitly. And then it was used in exactly 3 of roughly 199 text-column read
+  sites, all in one script.
+
+  A fix applied where a bug was observed, rather than where the class of bug lives, leaves the
+  class alive. The wrapper existed, passed its tests, and did not prevent this.
+
+  WHAT WAS DONE 2026-10-11, fix only, nothing executed. All 11 bucket-1 scripts -- the ones
+  that copy a column from one artefact into another -- now read through
+  safe_read.read_csv_strict rather than pd.read_csv, so keep_default_na=False and
+  float_precision="round_trip" are the default and a deviation has to be written deliberately.
+  Five of the 11 had no keep_default_na at all and their NA semantics change as a result:
+  refresh_margin_entropy_columns, recompute_zero_block_cadec, mm_assemble, mm_assemble_perts
+  and cadec_threshold_band. That change is the point, and it is unvalidated by execution.
+
+  STILL OPEN. The bucket logic does NOT transfer from floats to text. For floats, bucket 2 was
+  safe because a 1 ULP perturbation propagates harmlessly into a derived number. For text, a
+  script that reads a mention as NaN and then COMPARES it produces a wrong verdict, not a
+  slightly wrong number. 23 scripts and notebooks read a CSV and compare a text column; 13 of
+  them pass no keep_default_na. The ones that matter most:
+      notebooks/04_qa_lane/QA_answer_level_semantic_entropy.ipynb   ABSENT  QA scoring
+      notebooks/03_mapping_entropy/RQ4_umls_candidate_margin.ipynb  ABSENT  filters on
+                                                                            output_text != ""
+      notebooks/02_concept_inference/CADEC_inference.ipynb          ABSENT
+      scripts/mm_encoder_infer.py                                   present and via the
+          wrapper -- and it is the accuracy scorer, where `correct = int(pred_mention.lower()
+          .strip() == gm) if gm else 0` forces a 0 when the gold mention is falsy. The one
+          place the original fix landed is the one place it mattered most, which is luck
+          rather than design.
+  The QA gold answers are not persisted in any artefact under outputs/, so the QA side cannot
+  be counted from the repository at all; scoring ran in-notebook against the source datasets.
+
+================================================================================
 WHY THESE TWO BELONG TOGETHER
 ================================================================================
   They fail in opposite directions and that is what makes them a pair.
