@@ -127,11 +127,51 @@ HAZARD 2 IN PRODUCTION: ONE ARTEFACT IS A PARSER-DEGRADED COPY OF ANOTHER
   4.178e-04, median 1.110e-16, 35 of 37,696 rows rounding differently at three decimals, means
   differing by 1.690e-07.
 
-  THE WIDER EXPOSURE, NOT YET ASSESSED. A sweep of scripts/ found more than twenty scripts that
-  both read and write CSVs with no float_precision anywhere, refresh_margin_entropy_columns.py
-  among them. Any of them that copies a float column from one artefact to another has the same
-  defect by construction. They are listed in this session's working notes and have NOT been
-  audited one by one.
+  THE CURRENT CADEC MARGIN FILE IS LEFT PERTURBED, DELIBERATELY.
+      outputs/rq3/umls_candidate_margin_cadec.csv as it stands on disk carries the pre-fix,
+      1-ULP-perturbed copy of mapping_confidence in 15,724 of 37,696 rows. It is NOT being
+      rewritten, and the reason is not laziness.
+
+      That file is what the submitted risk-coverage figures were drawn from. Rewriting it now
+      would make the published figures no longer reproducible from what is on disk, trading a
+      defect that moves nothing reported -- max |delta| 4.178e-04, 35 of 37,696 rows rounding
+      differently at three decimals, means differing by 1.690e-07 -- for a broken
+      correspondence between artefact and publication. The damage is cheap to keep. The
+      correspondence is not cheap to lose.
+
+      entropy_cadec.csv is canonical. The fix is in scripts/refresh_margin_entropy_columns.py
+      as of 2026-10-11 and has NOT been executed against the current artefacts, so the
+      26-block rerun's outputs will be clean by construction while the submitted artefacts stay
+      exactly as published.
+
+  THE WIDER EXPOSURE, TRIAGED 2026-10-11 RATHER THAN SWEPT.
+      53 scripts in scripts/ read CSVs and, before this pass, none passed float_precision.
+      Classified by what each does with the floats, not audited line by line:
+
+      BUCKET 1, copies a float column from one artefact into another -- 12 files. The defect by
+      construction and the only class that corrupts data. Fixed on branch
+      fix/float-roundtrip-bucket1; nothing was executed.
+          overwrites its own source (4): refresh_margin_entropy_columns, apply_amendment7_cadec,
+              recompute_zero_block_cadec, strip_text_columns
+          writes a new file carrying the copy (7): a9_concat_corpus, mm_assemble,
+              mm_assemble_perts, qa_identity_exclusion, mm_encoder_infer,
+              qa_gate_failopen_audit, cadec_threshold_band
+          the single-point lever (1): safe_read.py. read_csv_strict is this project's own
+              wrapper and already centralises the NA-token fix, the one that stops pandas
+              turning a literal "NA" gold mention into a missing value. float_precision now
+              defaults there too, so every caller is faithful, and an explicit kwarg still
+              overrides. Four reads in mm_encoder_infer.py reach it and were invisible to a
+              grep for read_csv. Its own test suite still passes all five checks.
+
+      BUCKET 2, reads floats and computes new values -- 38 files. A 1 ULP input perturbation
+      propagates into derived numbers but nothing is overwritten. Deferred to the rerun, where
+      these are re-executed anyway. Includes every figure and statistics producer.
+
+      BUCKET 3, no float round trip at all -- 4 files. mm_shard_lib (writes only instance_id
+      and ordinal), broad_except_sweep (a source linter whose 'to_csv' is a string in a rule
+      table), cadec_tiebreak_replay (its to_csv references are a WRITE GUARD that refuses any
+      write outside a scratch directory -- the only script in the set that was already
+      defending itself), test_safe_read (fixtures built in memory).
 
 ================================================================================
 WHY THESE TWO BELONG TOGETHER
