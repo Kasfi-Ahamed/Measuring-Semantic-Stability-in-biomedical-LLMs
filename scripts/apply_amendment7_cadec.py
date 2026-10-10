@@ -20,6 +20,11 @@ from pathlib import Path
 
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 MAPPED = ROOT / "outputs" / "rq3" / "intermediate" / "rq3_cadec_mapped_outputs.csv"
 PRESERVE = MAPPED.with_name("rq3_cadec_mapped_outputs_PREEMPTYFIX.csv")
@@ -33,7 +38,7 @@ def main() -> int:
 
     # keep_default_na=False, na_values=[""]: literal 'None'/'NA' outputs are REAL answers and
     # must not be swept in with the empties (docs/BUG_AUDIT.md, B2).
-    df = pd.read_csv(MAPPED, low_memory=False, keep_default_na=False, na_values=[""], float_precision="round_trip")
+    df = read_csv_strict(MAPPED, low_memory=False, keep_default_na=False, na_values=[""], float_precision="round_trip")
     t = df["output_text"]
     empty = t.isna() | (t.astype(str).str.strip() == "")
     n = int(empty.sum())
@@ -67,7 +72,7 @@ def main() -> int:
     df.to_csv(MAPPED, index=False, na_rep="")
     print(f"  wrote {MAPPED.name}")
 
-    chk = pd.read_csv(MAPPED, low_memory=False, keep_default_na=False, na_values=[""], float_precision="round_trip")
+    chk = read_csv_strict(MAPPED, low_memory=False, keep_default_na=False, na_values=[""], float_precision="round_trip")
     t2 = chk["output_text"]
     e2 = t2.isna() | (t2.astype(str).str.strip() == "")
     assert int(e2.sum()) == n, "empty-row count changed across the write"

@@ -18,6 +18,11 @@ from pathlib import Path
 
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 MARGIN = ROOT / "outputs" / "rq3" / "umls_candidate_margin_cadec.csv"
 PRESERVE = MARGIN.with_name("umls_candidate_margin_cadec_PREEMPTYFIX.csv")
@@ -29,8 +34,8 @@ MARGIN_OWN = ["n_retrieval_rows", "margin_mean", "margin_min", "s1_mean", "s2_me
 
 
 def main() -> int:
-    mg = pd.read_csv(MARGIN, low_memory=False, float_precision="round_trip")
-    ent = pd.read_csv(ENTROPY, low_memory=False, float_precision="round_trip")
+    mg = read_csv_strict(MARGIN, low_memory=False, float_precision="round_trip")
+    ent = read_csv_strict(ENTROPY, low_memory=False, float_precision="round_trip")
     ent_cols = [c for c in mg.columns if c in ent.columns and c not in K]
     print(f"margin rows: {len(mg):,}   entropy rows: {len(ent):,}")
     print(f"entropy-derived columns to refresh: {len(ent_cols)}")

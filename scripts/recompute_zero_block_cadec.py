@@ -34,6 +34,11 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 CURRENT = ROOT / "outputs/rq3/umls_candidate_margin_cadec.csv"
 # The 2026-09-14 vintage, kept because the manuscript's row count (16,083) matches it.
@@ -64,7 +69,7 @@ def auroc(score: pd.Series, correct: pd.Series):
 
 
 def analyse(path: Path, label: str, ent_col: str) -> list[dict]:
-    d = pd.read_csv(path, float_precision="round_trip")
+    d = read_csv_strict(path, float_precision="round_trip")
     blk = d[d[ent_col] == 0].copy()
     rows: list[dict] = []
 

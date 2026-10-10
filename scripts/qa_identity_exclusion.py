@@ -21,6 +21,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 RECHECK = ROOT / "outputs" / "qa" / "qa_gate_recheck.csv"
 COMBINED = ROOT / "outputs" / "qa" / "qa_results_combined.csv"
@@ -43,13 +48,13 @@ def auroc(g: pd.DataFrame) -> float:
 def main() -> int:
     if not RECHECK.is_file():
         sys.exit(f"missing {RECHECK} — run scripts/qa_gate_failopen_audit.py first")
-    rc = pd.read_csv(RECHECK, keep_default_na=False, na_values=[""], float_precision="round_trip")
+    rc = read_csv_strict(RECHECK, keep_default_na=False, na_values=[""], float_precision="round_trip")
     ident = rc[rc["identical_to_original"] == True]                       # noqa: E712
     n_ident_per_id = ident.groupby(ident["id"].astype(str)).size()
     print(f"identical-to-original variants: {len(ident):,} over {len(n_ident_per_id):,} ids "
           f"({ident.groupby('dataset').size().to_dict()})")
 
-    df = pd.read_csv(COMBINED, keep_default_na=False, na_values=[""], float_precision="round_trip")
+    df = read_csv_strict(COMBINED, keep_default_na=False, na_values=[""], float_precision="round_trip")
     inc = df[df["included"] == True]                                      # noqa: E712
     print(f"included rows: {len(inc):,} over {inc['id'].nunique():,} instances")
 

@@ -21,6 +21,11 @@ from pathlib import Path
 
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(os.path.expanduser("~/projects/Measuring-Semantic-Stability-in-Clinical-LLMs"))
 MAPPED = ROOT / "outputs" / "rq3" / "intermediate" / "rq3_cadec_mapped_outputs.csv"
 REPORT = ROOT / "logs" / "cadec_dedup_validation" / "report.json"
@@ -44,7 +49,7 @@ def main() -> int:
         print(f"FATAL: canonical mapped outputs not found: {MAPPED}", file=sys.stderr)
         return 1
 
-    df = pd.read_csv(MAPPED, usecols=["instance_id", "model_name", "predicted_cui",
+    df = read_csv_strict(MAPPED, usecols=["instance_id", "model_name", "predicted_cui",
                                       "confidence"], low_memory=False, float_precision="round_trip")
     conf = df["confidence"].astype(float)
     dist = (conf - THRESHOLD).abs()
