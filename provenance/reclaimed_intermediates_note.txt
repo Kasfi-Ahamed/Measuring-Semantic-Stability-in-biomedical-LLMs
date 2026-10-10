@@ -35,13 +35,13 @@ WHAT WENT, AND THE EVIDENCE
     retained, so the freeze receipt still verifies against this record.
 
   rq1_all_outputs_mapped.csv.bak.20260910T150307
-    138,052,487 bytes, 758,560 rows, sha256 1d3b2f904b3660abdfae083bc5c645dc8d8359d45287723fcb7ea7d4daa88d22
+    138,052,487 bytes, 758,560 physical lines (wc -l, NOT verified as records -- see the caveat at the end), sha256 1d3b2f904b3660abdfae083bc5c645dc8d8359d45287723fcb7ea7d4daa88d22
     Dated backup of a file that was rewritten on 2026-09-19 and has itself now been removed as
     a duplicate. 758,560 rows against the current 7,332,245: a tenth of the corpus, from
     before the A9 re-map.
 
   rq1_all_outputs_mapped_CONTAMINATED_PRECUTOFF.csv
-    532,323,539 bytes, 2,927,685 rows, sha256 08431c8c5bbade5c72a59ec1d52e30a2a2da08320811351c82032511cbe4d3d9
+    532,323,539 bytes, 2,927,685 physical lines (wc -l, NOT verified as records -- see the caveat at the end), sha256 08431c8c5bbade5c72a59ec1d52e30a2a2da08320811351c82032511cbe4d3d9
     The pre-cutoff mapping, named CONTAMINATED by its author because it reused the contaminated
     mapped cache (see the comment block at slurm/run_mm_causal_shard_inf.sbatch:51-59). It
     covers blocks 0-6 and 19 only, 2,927,685 rows, and was superseded by the clean post-cutoff
@@ -137,3 +137,29 @@ included a hardlink whose apparent 1.25 GiB had never cost any space at all.
   retained in the first reclaim and the same rule is applied here -- it frees nothing and it is
   the provenance for a file that has just gone. The nine files above are therefore the eight
   archived data variants plus PRE_A9REMAP, not the nine the candidate listing showed.
+
+================================================================================
+ROW-COUNT CAVEAT ADDED 2026-10-10, AFTER THE FACT
+================================================================================
+  Two row counts above came from wc -l on a file that no longer exists, so they cannot be
+  re-derived and may be overstated:
+
+    rq1_all_outputs_mapped.csv.bak.20260910T150307      758,560 physical lines
+    rq1_all_outputs_mapped_CONTAMINATED_PRECUTOFF.csv 2,927,685 physical lines
+
+  wc -l counts physical lines, and a CSV whose free-text fields contain newlines reads far
+  higher than its record count -- rq3_cadec_validated_perturbations_full.csv reads 521,705 and
+  holds 55,976, a 9.3-fold overcount. Both files above carry an output_text column, so the
+  hazard applies to them in principle.
+
+  WHAT STANDS AS THE EXACT RECORD for those two files: the SHA-256 and the byte size. Those
+  were measured directly and are not affected.
+
+  The other counts in this note are sound. The three A9 parts and A9_CUTOFF were corroborated
+  against the pipeline's own amendment-9 receipts, which record len(df_mapped) and are record
+  counts by construction; 2,572,698 + 2,202,290 + 2,557,257 = 7,332,245, matching A9_CUTOFF
+  exactly. PRE_A9REMAP's 4,774,988 equals partA1 + partA2 from the same receipts. The CADEC
+  and MedMentions margin and mapped-output counts were re-derived with pandas on 2026-10-10
+  and are unchanged.
+
+  See provenance/reading_hazards_note.txt for the general rule.

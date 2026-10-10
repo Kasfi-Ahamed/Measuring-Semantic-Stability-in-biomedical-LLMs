@@ -57,6 +57,42 @@ THE THREE COMMITS THAT PRODUCED THE RESTYLE
   fix/figure-regenerations together with the figures, because figures without the code that
   makes them are not reproducible.
 
+THE PRODUCER CHAIN, NAMING THE LAYER THAT DRAWS RATHER THAN THE ONE THAT MOVES FILES
+  An earlier version of this trace named scripts/build_figures_for_report.py as the producer of
+  23 of the 26 manuscript figures. That was the wrong layer. That script is a COPIER: lines 242
+  and 249 are shutil.copy2(src, DEST / ...). It moves finished figures from outputs/*/figures/
+  into figures_for_report/ and draws nothing.
+
+  The chain is:   producer -> outputs/<rq>/figures/<name>.png -> copy -> figures_for_report/
+
+  Producers that actually draw, by figure group:
+      scripts/fig_report_rq1.py              rq1_entropy_heatmap{,_by_model}_{cadec,medmentions}
+                                             rq1_magnitude_vs_entropy_{cadec,medmentions,qa}
+                                             (templated: f"rq1_entropy_heatmap_{c['slug']}.png"
+                                              at line 406, by_model at 454, magnitude at 211)
+      scripts/fig_report_risk_coverage.py    fig_risk_coverage_{cadec,medmentions,bioasq,squad}
+                                             and the superseded pooled fig_risk_coverage_qa
+      scripts/fig_report_rq3_continuum.py    fig_entropy_across_corpora
+      scripts/fig_rq2_accuracy_split.py      fig_rq2_accuracy_split_entropy_{cadec,medmentions}
+      scripts/fig_rq3_matched_pairs_forest.py fig_rq3_matched_pairs_forest
+      scripts/fig_entropy_distribution.py    fig_entropy_distribution_{cadec,medmentions,qa}
+      scripts/fig_signal_independence.py     fig_signal_independence_{cadec,medmentions,qa}
+      scripts/make_coef_appendix_plates.py   rq1_linguistic_predictors_coefs_{cadec,medmentions}
+                                             (.pdf at line 91, .png at line 111)
+
+  WHY THE FIRST TRACE WAS WRONG, because the method matters more than the correction.
+  The trace matched figure basenames against script text. Eight figures are written from
+  f-strings built out of a corpus slug, so their full basename never appears literally in the
+  producing script and the search could not see it. The one script that DID contain every
+  basename literally was the copier, which lists them to copy them. So the search returned a
+  complete-looking answer that named the wrong layer for 23 of 26 figures, and the two plates
+  with no literal match anywhere were reported as having no producer at all.
+
+  Re-running the trace by STEM rather than full basename found producers for 20 of the 26 that
+  the exact-name pass had missed. A name-based trace cannot see a templated output path, and a
+  trace that returns one confident answer per figure is not evidence that it found the right
+  one.
+
 DID ANY PLOTTED VALUE MOVE? NO. THIS IS PRESENTATION ONLY.
   This was checked at COLUMN level against the data each figure actually reads, not inferred
   from the commit messages.

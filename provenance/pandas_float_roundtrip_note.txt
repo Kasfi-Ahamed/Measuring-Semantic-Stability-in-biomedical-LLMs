@@ -1,6 +1,10 @@
 READING ENTROPY CSVs: pandas LOSES THE LAST BIT UNLESS YOU ASK IT NOT TO
 Established 2026-10-10. Costs a day to rediscover, so it is written down.
 
+SEE ALSO provenance/reading_hazards_note.txt, which states this hazard alongside the other
+way these artefacts mislead a careless reader: wc -l overcounting rows in any CSV with
+free-text columns, by up to a factor of 9.3.
+
 THE FINDING
   pandas.read_csv parses some float64 values one unit-in-the-last-place away from the value
   the file actually contains. The default is float_precision=None, and -- this is the part

@@ -1,0 +1,98 @@
+TWO WAYS THIS PROJECT'S ARTEFACTS LIE TO A CARELESS READER
+Both established 2026-10-10. Both cost real time before they were found. One place, so the
+next person finds them together.
+
+================================================================================
+HAZARD 1: wc -l OVERCOUNTS ROWS IN ANY CSV WITH FREE-TEXT COLUMNS
+================================================================================
+  wc -l counts PHYSICAL LINES. A CSV whose quoted text fields contain newlines has more lines
+  than records, and in this project the gap reaches a factor of 9.3.
+
+  THE WORKED CASE
+      outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv
+          wc -l            521,705
+          pandas records    55,976     <-- the true count, 6,997 mentions x 8 perturbations
+      The 521,705 figure was quoted in a status report before it was checked. It is wrong by
+      465,728 rows and it looked entirely plausible next to the other counts in the directory.
+
+  HOW WIDESPREAD, measured by re-counting every CSV in archive_preexpiry/MANIFEST.txt with
+  pandas on 2026-10-10:
+      102 CSVs checked
+       88 sound       (wc -l == records + 1; no embedded newlines)
+       14 OVERSTATED  (corrected in MANIFEST.txt, now written "N records")
+
+      The 14, with the claimed line count against the true record count:
+          outputs/rq3/intermediate/rq3_cadec_instances.csv                    65,286 ->  7,006
+          outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv 521,705 -> 55,976
+          outputs_archive/.../rq2/tables/rq2_generative_outputs.csv           16,056 ->  9,633
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_biomistral.csv  4,674 -> 4,645
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_llama3.csv     12,322 -> 4,645
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_mistral.csv     4,674 -> 4,645
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_openbiollm.csv  4,674 -> 4,645
+          outputs_archive/.../rq3/intermediate/rq3_bioasq_instances.csv            184 ->    150
+          outputs_archive/.../rq3/intermediate/rq3_bioasq_perturbations.csv        471 ->    456
+          outputs_archive/.../rq3/intermediate/rq3_cadec_instances.csv          65,286 ->  7,006
+          outputs_archive/.../rq3/intermediate/rq3_cadec_mapped_outputs.csv    309,040 -> 266,024
+          outputs_archive/.../rq3/intermediate/rq3_cadec_validated_perturbations_full.csv 521,705 -> 55,976
+          outputs_archive/.../rq3/intermediate/rq3_squad_instances.csv             203 ->    200
+          outputs_archive/.../rq3/intermediate/rq3_squad_perturbations.csv         645 ->    628
+
+      Note raw_llama3.csv: 12,322 lines for 4,645 records, while its three sibling files read
+      4,674 for the same 4,645. Same model family, same stage, one file with far more newlines
+      in its generations. There is no pattern to rely on -- check the file, not the family.
+
+  WHAT WAS NOT AFFECTED, checked rather than assumed:
+      outputs/rq1/intermediate/rq1_model_outputs.csv   7.51 GiB, the biggest file in the
+          not-preserved section. wc -l 3,447,016, pandas records 3,447,015. Off by exactly the
+          header, not by newlines. The recorded figure was sound.
+      outputs/rq1/intermediate/mm_shards/*            a 12-file sample agreed across all three
+          measures: shard_manifest.json n_rows == wc -l minus one == pandas records. The shard
+          manifest's counts come from len(df) in the pipeline and are record counts by
+          construction, so the shard record is reliable.
+      rq1_all_outputs_mapped_A9_CUTOFF.csv and the three A9 parts: corroborated against the
+          amendment-9 receipts, which record len(df_mapped). 2,572,698 + 2,202,290 + 2,557,257
+          = 7,332,245, matching A9_CUTOFF exactly.
+
+  THE RULE
+      Count records with pandas, or with Python's csv module. Never with wc -l, unless you have
+      already shown that the file has no embedded newlines. For a deleted file the SHA-256 and
+      the byte size are the exact record; a line count is not.
+
+================================================================================
+HAZARD 2: read_csv WITHOUT float_precision="round_trip" LOSES THE LAST BIT
+================================================================================
+  Full treatment, with the worked example and a reproducer, is in
+  provenance/pandas_float_roundtrip_note.txt. In short:
+
+      pandas parses some float64 values 1 ULP away from what the file contains, and
+      float_precision="high" is EXACTLY AS WRONG as the default. Only "round_trip" is correct.
+
+      entropy_full_umls.csv, ('mm_0000001','FLAN-T5-base'), stored as 1.5219280948873621:
+          default      -> 1.521928094887362    WRONG by 2.220e-16
+          "high"       -> 1.521928094887362    WRONG
+          "round_trip" -> 1.5219280948873621   correct
+
+      119,115 of 1,135,264 semantic_entropy_full values, about 10.5%, are affected.
+
+  THE RULE
+      Verification code passes float_precision="round_trip", without exception. A
+      bit-exactness claim made from a default read is a claim about pandas, not about the
+      pipeline. Production code that must keep reproducing an existing artefact deliberately
+      does NOT switch, because switching would move values in the last bit.
+
+================================================================================
+WHY THESE TWO BELONG TOGETHER
+================================================================================
+  They fail in opposite directions and that is what makes them a pair.
+
+  wc -l inflates a count, so it makes an artefact look MORE complete than it is. A reader sees
+  521,705 where 55,976 exist and concludes the file covers nine times the corpus it covers.
+
+  A default float read perturbs a value, so it makes two identical artefacts look DIFFERENT. A
+  reader diffs a recomputation against a stored result, sees 119,115 differing cells, and
+  concludes the pipeline changed when nothing did.
+
+  Both were hit in this project within hours of each other, both produced a confident wrong
+  conclusion that had to be retracted, and in both cases the tell was the same: the INTEGER
+  columns agreed while something else did not. Identical counts with differing floats is
+  hazard 2. A count that disagrees with every other count of the same thing is hazard 1.
