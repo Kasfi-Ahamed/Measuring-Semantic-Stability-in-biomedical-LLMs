@@ -1,5 +1,5 @@
 perturbation_type,accepted_count
-back_translation,12812
-controlled_paraphrase,10465
-synonym_substitution,12295
-syntactic_reordering,2354
+back_translation,3352
+controlled_paraphrase,2957
+synonym_substitution,2790
+syntactic_reordering,629
