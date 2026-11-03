@@ -287,15 +287,28 @@ chore/reproducible-structure
   2. feat/incremental-mapping-src      3002995   on 1
   3. docs/mapping-confidence-source    3d2475f   on 2
   4. fix/float-roundtrip-bucket1       f486949   on 3
-  5. fix/rq2-threshold-naming          4f34f71   independent
-  6. docs/rq3-section-superseded       b7ba370   on 5
-  7. docs/mm-shards-disclosure         e2a8cae   independent
-  8. docs/superseded-qa-plate          f5b0754   on 7
-  9. docs/qa-labels-not-retained       3ed56cb   on 8
+  5. docs/rerun-plan                   e20dfac   on 4   (this document)
+  6. wip/uncommitted-regenerations     54cd089   on 5   SEE THE WARNING BELOW
+  7. fix/rq2-threshold-naming          4f34f71   independent
+  8. docs/rq3-section-superseded       b7ba370   on 7
+  9. docs/mm-shards-disclosure         e2a8cae   independent
+ 10. docs/superseded-qa-plate          f5b0754   on 9
+ 11. docs/qa-labels-not-retained       3ed56cb   on 10
      fix/figure-regenerations          ed6554e   independent
 
 main (provenance notes only)           ddb02d7   independent of all the above
+claude/experiment-monitoring-diagnostics-08da58  e3043c6   the risk-coverage reference input
 ```
+
+**`wip/uncommitted-regenerations` is deliberately last and deliberately named `wip/`.** It
+carries five files that existed in exactly one place — a working tree on an expiring account —
+and that are in no archive tarball. It is a preservation commit, not a result. Two of the three
+`outputs/rq1/tables/*.csv` in it are **single-block diagnostics, not corpus-level**: they total
+16,152 generated and 9,728 accepted, which is instance-block 25's tail, because the shard-25 job
+overwrote them. `outputs/rq3/entropy_cadec.csv` in it is a regeneration whose
+`mapping_confidence` differs from the committed version in 10,324 of 41,288 rows, though every
+entropy and accuracy column is unchanged. **Do not fast-forward it over the thesis versions.**
+Merge it only if you want those files in history, and read its commit message first.
 
 Branches 3–4 and 6 and 8–9 touch the same files as their parents. Merging out of order produces
 conflicts that look like content disagreements and are not.
