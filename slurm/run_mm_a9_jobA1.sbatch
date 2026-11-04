@@ -71,8 +71,12 @@ echo "PYTHONHASHSEED=$PYTHONHASHSEED MM_EXPECT_ROWS=$MM_EXPECT_ROWS"
 echo "source:      $MM_MAP_SOURCE (assembled rq1_all_model_outputs.csv, block-filtered)"
 echo "blocks:      $MM_MAP_BLOCKS"
 echo "destination: $MM_OUT_MAPPED"
-"$PY" scripts/disk_guard.py
+# GATE, not a walk. The plan's step 5 patterns the blocks-20-25 mapping on THIS script,
+# so it must not pay the du walk twice. Largest single write is the mapped CSV.
+"$PY" scripts/disk_guard.py --gate --probe-gib 2.0 --target outputs/rq1/intermediate
 "$PY" -c "import torch; assert torch.cuda.is_available(), 'CUDA not visible'; print(torch.cuda.get_device_name(0))"
 "$PY" scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
 echo "=== done $(date) ==="
-"$PY" scripts/disk_guard.py
+# GATE, not a walk. The plan's step 5 patterns the blocks-20-25 mapping on THIS script,
+# so it must not pay the du walk twice. Largest single write is the mapped CSV.
+"$PY" scripts/disk_guard.py --gate --probe-gib 2.0 --target outputs/rq1/intermediate

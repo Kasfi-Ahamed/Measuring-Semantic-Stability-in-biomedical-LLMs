@@ -34,6 +34,6 @@ export PYTHONUNBUFFERED=1
 echo "JAVA_HOME=$JAVA_HOME ($(java -version 2>&1 | head -1))"
 
 # 7B/8B bf16: keep off 16–24GB cards (A4000 / Ada / 4500 / 6000).
-BIG_GPU_EXCLUDE="${BIG_GPU_EXCLUDE:-g16-8gpu-1,g16-8gpu-2,g20-2gpu-[1-6],g24-2gpu-[1-3],g48-1gpu-[1-2],g48-2gpu-1}"
+BIG_GPU_EXCLUDE="${BIG_GPU_EXCLUDE:-g16-2gpu-1,g16-8gpu-1,g16-8gpu-2,g20-2gpu-[1-7],g24-2gpu-[1-3],g48-1gpu-[1-2],g48-2gpu-1}"
 # Perturbations / encoders: only the known-bad node.
 SMALL_GPU_EXCLUDE="${SMALL_GPU_EXCLUDE:-g48-2gpu-1}"

@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=80G
 #SBATCH --time=24:00:00
-#SBATCH --exclude=g16-8gpu-1,g16-8gpu-2,g20-2gpu-[1-6],g32-2gpu-1,g48-2gpu-1
+#SBATCH --exclude=g16-2gpu-1,g16-8gpu-1,g16-8gpu-2,g20-2gpu-[1-7],g32-2gpu-1,g48-2gpu-1
 #SBATCH -o logs/mm_causal_inf_%A_%a.log
 #SBATCH -J mm_causal_inf
 #
@@ -13,8 +13,18 @@
 # 512-token prompts, CAUSAL_MAX_NEW_TOKENS=16, single-sequence. 24 GB and 48 GB cards
 # therefore fit with real headroom and are eligible.
 # Still excluded, and why:
+#   g16-2gpu-1      RTX A4000, 16 GB      -- same card, same arithmetic, and it was MISSING
+#                                            from this list until 2026-11-04. Job 48101 landed
+#                                            on it and device_map="auto" offloaded 35 modules
+#                                            (layers 29-31, norm, rotary_emb, lm_head) to CPU.
+#                                            assert_no_offload refused to generate rather than
+#                                            mix CPU bf16 with GPU bf16 -- the silent-offload
+#                                            failure this comment predicted, caught explicitly.
 #   g16-8gpu-[1-2]  RTX A4000, 16 GB      -- 8B weights alone are 14.96 GiB; does not fit.
-#   g20-2gpu-[1-6]  RTX 4000 SFF Ada 20GB -- fits on paper, ~3 GiB spare, never validated;
+#   g20-2gpu-[1-7]  RTX 4000 SFF Ada 20GB -- fits on paper, ~3 GiB spare, never validated;
+#                                            g20-2gpu-7 is new since this list was written and
+#                                            g20-2gpu-1 no longer exists: the cluster grew a
+#                                            node and the range did not follow it.
 #                                            device_map="auto" would CPU-offload silently.
 #   g32-2gpu-1      Tesla V100, 32 GB     -- Volta has no native bf16 (methodology gate).
 #   g48-2gpu-1      RTX 6000 Ada, 48 GB   -- node health, not GPU: CPULoad ~25 against 4
