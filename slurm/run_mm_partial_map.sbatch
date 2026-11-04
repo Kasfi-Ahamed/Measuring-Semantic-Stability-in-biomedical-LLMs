@@ -29,7 +29,9 @@ source slurm/_common.sh
 export MM_PARTIAL_GRID=1
 
 echo "=== $(date) job ${SLURM_JOB_ID:-local} ==="
-"$PY" scripts/disk_guard.py
+# GATE, not a walk. The mapping path's largest single write is the mapped CSV (~0.37 GiB
+# for blocks 20-25) followed by the entropy CSV (~0.24 GiB); 2 GiB + 10% is ample margin.
+"$PY" scripts/disk_guard.py --gate --probe-gib 2.0 --target outputs/rq1/intermediate
 "$PY" -c "import torch; assert torch.cuda.is_available(), 'CUDA not visible'; print(torch.cuda.get_device_name(0))"
 "$PY" scripts/mm_assemble.py
 "$PY" scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
@@ -38,4 +40,6 @@ echo "=== $(date) job ${SLURM_JOB_ID:-local} ==="
 # have drifted. Runs last, so the mapping and prune are already durable.
 "$PY" scripts/mm_assert_grid.py
 echo "=== done $(date) ==="
-"$PY" scripts/disk_guard.py
+# GATE, not a walk. The mapping path's largest single write is the mapped CSV (~0.37 GiB
+# for blocks 20-25) followed by the entropy CSV (~0.24 GiB); 2 GiB + 10% is ample margin.
+"$PY" scripts/disk_guard.py --gate --probe-gib 2.0 --target outputs/rq1/intermediate

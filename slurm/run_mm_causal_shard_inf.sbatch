@@ -36,7 +36,10 @@ export MM_CAUSAL_BATCH="${MM_CAUSAL_BATCH:-1}"   # 1 = single-sequence (required
 NB="notebooks/02_concept_inference/MedMentions_generative_inference.ipynb"
 
 echo "=== $(date) causal-inf shard=${MM_SHARD_ID} causal_batch=${MM_CAUSAL_BATCH} job ${SLURM_JOB_ID:-local} node=$(hostname) ==="
-"$PY" scripts/disk_guard.py
+# GATE, not a walk: a write probe into the directory this job writes to. The old call ran
+# du -sb $HOME, which did not finish in 25 minutes on a loaded login node and spent that
+# time on .conda and .cursor-server while this job held a GPU. See scripts/disk_guard.py.
+"$PY" scripts/disk_guard.py --gate --probe-gib 0.25 --target outputs/rq1/intermediate/mm_shards
 
 # Idempotent assemble refresh (flock-shared with the cheap job) so this job's gen inference
 # reads the current validated-perturbations file even if it starts before the cheap job.

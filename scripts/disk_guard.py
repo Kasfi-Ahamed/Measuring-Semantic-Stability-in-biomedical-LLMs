@@ -34,6 +34,34 @@ WHAT IT DOES NOW
       (c) MEASURED_CEILING_GIB below, the tar-failure observation, as a documented fallback.
   * FAILS CLOSED. If it cannot establish a ceiling it pauses rather than guessing high, and
     it never reports headroom larger than the filesystem's own free space.
+
+WHY THE IN-JOB GATE IS NOW A WRITE PROBE (2026-11-04)
+-----------------------------------------------------
+Measuring $HOME was the wrong question, and an expensive way to ask it. `du -sb $HOME` did not
+finish in 25 minutes on a loaded login node (load average 21, 42 users), and the time went
+almost entirely to tooling caches rather than data:
+
+    .conda          >200 s (timed out)    .vscode-server   41 s     data   11 s
+    .cursor-server   192 s                projects         34 s
+
+The guard runs at line 39 of run_mm_causal_shard_inf.sbatch and line 25 of
+run_mm_enc_flan_shard_inf.sbatch, inside `set -euo pipefail`, while the job holds a GPU. Across
+the twelve outstanding model-block runs that is 2-5 GPU-hours spent walking an editor cache:
+14-35% on top of the 14.3 hours of real inference, and twice over in the mapping job.
+
+A job does not need to know how many bytes $HOME contains. It needs to know whether its largest
+single write will fit. That has a direct test: write a probe of that size plus 10% into the
+job's own output directory, fsync it, delete it. Seconds on this filesystem, immune to every
+accounting drift we have hit, and it tests the real property rather than a model of it. The
+calibration routine below already proves the technique -- growing a file until EDQUOT is how the
+186.40 GiB ceiling was found in the first place.
+
+So: THE PROBE IS THE GATE. The du accounting stays, but only as the human-readable log line,
+read from a cache that a scheduled walk refreshes. Both fail closed -- a failed write, a failed
+cleanup, or a missing, unparseable or expired cache all pause.
+
+A measurement that has lied twice (a GB/GiB unit error, then a swallowed partial walk) is
+replaced for gating purposes by a test that cannot.
 """
 from __future__ import annotations
 
@@ -53,6 +81,12 @@ GIB = 1024 ** 3
 # Rounded DOWN so the fallback errs pessimistically. Prefer logs/quota_calibration.json.
 MEASURED_CEILING_GIB = 186.0
 CALIBRATION_FILE = _ROOT / "logs" / "quota_calibration.json"
+USAGE_CACHE = _ROOT / "logs" / "disk_usage_cache.json"
+USAGE_CACHE_MAX_AGE_H = float(os.environ.get("DISK_USAGE_CACHE_MAX_AGE_H", "26"))
+# Default probe: comfortably above the largest single write an inference job makes (an encoder
+# shard CSV is ~110 MB). The mapping job overrides it, because its mapped CSV is ~0.37 GiB and
+# its entropy CSV ~0.24 GiB.
+PROBE_GIB = float(os.environ.get("DISK_PROBE_GIB", "0.25"))
 PAUSE_FLAG = _ROOT / "logs" / "DISK_PAUSE"
 PAUSE_GB = float(os.environ.get("DISK_PAUSE_GB", "4"))
 
@@ -188,6 +222,141 @@ def calibrate(max_probe_gib: float = 24.0) -> dict:
     return {"ok": True, **rec}
 
 
+def write_probe(target_dir: Path, need_bytes: float, headroom_factor: float = 1.10) -> dict:
+    """THE GATE. Write `need_bytes * headroom_factor` into target_dir, fsync, delete.
+
+    Returns {"ok": bool, "reason": str, ...}. ok=False means the job must not proceed, and that
+    includes a failure to CLEAN UP: a probe left behind is itself consuming the headroom the job
+    is about to need, so a cleanup failure is a hard fail rather than a warning."""
+    size = int(need_bytes * headroom_factor)
+    target_dir = Path(target_dir)
+    try:
+        target_dir.mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        return {"ok": False, "reason": f"cannot create {target_dir}: {e}", "bytes": size}
+    probe = target_dir / f".disk_probe.{os.getpid()}.tmp"
+    chunk = 32 * 1024 * 1024
+    buf = b"\0" * chunk
+    written = 0
+    try:
+        with open(probe, "wb") as fh:
+            while written < size:
+                n = min(chunk, size - written)
+                fh.write(buf[:n])
+                written += n
+            fh.flush()
+            os.fsync(fh.fileno())
+    except OSError as e:
+        name = errno.errorcode.get(e.errno, str(e.errno))
+        probe.unlink(missing_ok=True)
+        return {"ok": False, "reason": f"write failed after {written:,} of {size:,} bytes "
+                                      f"({name}): {e}", "bytes": size, "written": written}
+    except Exception as e:  # noqa: BLE001 - any failure here must fail the job closed
+        probe.unlink(missing_ok=True)
+        return {"ok": False, "reason": f"write failed: {e!r}", "bytes": size, "written": written}
+    try:
+        probe.unlink()
+    except OSError as e:
+        return {"ok": False, "reason": f"CLEANUP FAILED, probe left at {probe}: {e}",
+                "bytes": size, "written": written}
+    if probe.exists():
+        return {"ok": False, "reason": f"CLEANUP FAILED, {probe} still present",
+                "bytes": size, "written": written}
+    return {"ok": True, "reason": "write and cleanup succeeded", "bytes": size,
+            "written": written, "path": str(probe)}
+
+
+def walk_usage() -> dict:
+    """Full per-subtree du walk. Slow by nature -- run it from a login node, not inside a job."""
+    home = Path.home()
+    rec = {"measured_utc": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"),
+           "subtrees": {}, "partial": False}
+    total = 0
+    for child in sorted(home.iterdir()):
+        if not child.is_dir() or child.is_symlink():
+            continue
+        b = _du_bytes(child, strict=True)
+        if b < 0:
+            rec["partial"] = True
+            rec["subtrees"][child.name] = None
+            continue
+        rec["subtrees"][child.name] = b
+        total += b
+    loose = sum(f.stat().st_size for f in home.iterdir() if f.is_file() and not f.is_symlink())
+    rec["loose_files_bytes"] = loose
+    rec["total_bytes"] = total + loose
+    USAGE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    USAGE_CACHE.write_text(json.dumps(rec, indent=2) + "\n", encoding="utf-8")
+    return rec
+
+
+def read_usage_cache() -> tuple[dict | None, str]:
+    """Cached usage, or (None, why). Expired, missing and unparseable all mean None."""
+    if not USAGE_CACHE.is_file():
+        return None, f"{USAGE_CACHE.name} absent -- run --walk from a login node"
+    try:
+        rec = json.loads(USAGE_CACHE.read_text())
+        ts = datetime.strptime(rec["measured_utc"], "%Y-%m-%d %H:%M:%S UTC").replace(tzinfo=timezone.utc)
+    except Exception as e:  # noqa: BLE001
+        return None, f"{USAGE_CACHE.name} unparseable ({e!r})"
+    age_h = (datetime.now(timezone.utc) - ts).total_seconds() / 3600.0
+    if age_h > USAGE_CACHE_MAX_AGE_H:
+        return None, f"{USAGE_CACHE.name} is {age_h:.1f} h old, limit {USAGE_CACHE_MAX_AGE_H:.0f} h"
+    if rec.get("partial"):
+        return None, f"{USAGE_CACHE.name} records a PARTIAL walk"
+    rec["_age_h"] = age_h
+    return rec, "ok"
+
+
+def gate(target_dir: Path, probe_gib: float = PROBE_GIB, exit_on_fail: bool = True) -> dict:
+    """What a job calls. Probe first, then print the cached accounting for a human."""
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    print(f"=== DISK GATE {now} ===", flush=True)
+    need = probe_gib * GIB
+    print(f"probe: {need * 1.10 / GIB:.2f}GiB (largest expected write {probe_gib:.2f}GiB + 10%) "
+          f"into {target_dir}", flush=True)
+    res = write_probe(target_dir, need)
+    print(f"probe: {'PASS' if res['ok'] else 'FAIL'} -- {res['reason']}", flush=True)
+
+    rec, why = read_usage_cache()
+    if rec is None:
+        print(f"accounting: UNAVAILABLE -- {why}", flush=True)
+    else:
+        ceiling, source = resolve_ceiling()
+        used = rec["total_bytes"]
+        print(f"accounting: home={used / GIB:.2f}GiB of {ceiling / GIB:.2f}GiB "
+              f"(ceiling source: {source}), headroom={(ceiling - used) / GIB:.2f}GiB, "
+              f"cache {rec['_age_h']:.1f} h old", flush=True)
+        top = sorted(((v or 0, k) for k, v in rec["subtrees"].items()), reverse=True)[:6]
+        print("accounting: " + "  ".join(f"{k}={v / GIB:.1f}G" for v, k in top), flush=True)
+
+    ok = res["ok"] and rec is not None
+    if not ok:
+        reasons = []
+        if not res["ok"]:
+            reasons.append("write probe failed")
+        if rec is None:
+            reasons.append(f"accounting unavailable ({why})")
+        msg = ("PAUSE: " + "; ".join(reasons) +
+               ". Not starting work. Flag: logs/DISK_PAUSE")
+        print(msg, flush=True)
+        # Writing the flag can ITSELF fail with EDQUOT, and that is precisely the case the flag
+        # exists for: the first test of this gate filled the quota, cleaned up, and then could
+        # not write the flag because the filesystem had not yet reflected the unlink. A failure
+        # to record the pause must never turn into a failure to pause, so the exit status is set
+        # unconditionally and the flag is best-effort.
+        try:
+            PAUSE_FLAG.parent.mkdir(parents=True, exist_ok=True)
+            PAUSE_FLAG.write_text(msg + "\n", encoding="utf-8")
+        except OSError as e:
+            print(f"WARNING: could not write {PAUSE_FLAG} ({e}); pausing anyway", flush=True)
+        if exit_on_fail:
+            sys.exit(99)
+    elif PAUSE_FLAG.is_file():
+        PAUSE_FLAG.unlink()
+    return {"ok": ok, "probe": res, "usage": rec}
+
+
 def log_and_check(exit_on_pause: bool = True) -> dict:
     PAUSE_FLAG.parent.mkdir(parents=True, exist_ok=True)
     home = Path.home()
@@ -235,7 +404,30 @@ def log_and_check(exit_on_pause: bool = True) -> dict:
 
 
 if __name__ == "__main__":
-    if "--calibrate" in sys.argv:
+    import argparse
+    ap = argparse.ArgumentParser(description="Disk gate and accounting for the MM pipeline.")
+    ap.add_argument("--calibrate", action="store_true",
+                    help="find the quota ceiling empirically (empty queue only)")
+    ap.add_argument("--walk", action="store_true",
+                    help="full per-subtree du walk, refreshing logs/disk_usage_cache.json. "
+                         "SLOW -- run from a login node, never inside a job.")
+    ap.add_argument("--gate", action="store_true",
+                    help="what a job calls: write probe, then the cached accounting")
+    ap.add_argument("--target", default=None,
+                    help="directory the probe writes into (default: outputs/)")
+    ap.add_argument("--probe-gib", type=float, default=PROBE_GIB,
+                    help=f"largest single write this job will make (default {PROBE_GIB})")
+    a = ap.parse_args()
+    if a.calibrate:
         calibrate()
+    elif a.walk:
+        rec = walk_usage()
+        print(f"walked {len(rec['subtrees'])} subtrees, total {rec['total_bytes'] / GIB:.2f}GiB, "
+              f"partial={rec['partial']}", flush=True)
+        for k, v in sorted(rec["subtrees"].items(), key=lambda kv: -(kv[1] or 0)):
+            print(f"  {k:28s} {'PARTIAL' if v is None else f'{v / GIB:10.2f}GiB'}", flush=True)
+        print(f"  -> {USAGE_CACHE}", flush=True)
+    elif a.gate:
+        gate(Path(a.target) if a.target else _ROOT / "outputs", probe_gib=a.probe_gib)
     else:
         log_and_check(exit_on_pause=True)
