@@ -134,18 +134,5 @@
       "input_variant_id": "mm_0007731_p01"
     }
   ],
-  "why": "accepted when inference ran, rejected in the CURRENT gate verdicts; rq1_validated_perturbations.csv was re-assembled after that inference",
-  "emitted_by": "OUT OF BAND \u2014 scripts/find_acceptance_filter_dropped.py, not job 34288",
-  "why_out_of_band": "The enumerating filter landed in cell 11 as commit ca4db4f AFTER 34288 had already started, so the job that produced this corpus printed only the count. Rather than leave the one corpus whose provenance has to hold up as the only one without a receipt, the same computation was re-run against the same inputs and recorded here. Every later run emits this file from the job itself.",
-  "slurm_job_id_of_entropy_run": "34288",
-  "computed_utc": "2026-09-19T12:18:36.341515+00:00",
-  "corpus": "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv",
-  "corpus_sha256": "3774ff8f95317fcf280038bbde2282e380d50388573cbc12a2b637d4c84dd8c9",
-  "gate_verdicts_file": "outputs/rq1/intermediate/rq1_validated_perturbations.csv",
-  "gate_verdicts_sha256": "249a735c9d9f5c7f8464f889aa249cae03925657f7d4340ed34bd0e47984bcba",
-  "accepted_perturbation_ids": 758969,
-  "block_distribution": {
-    "0": 24
-  },
-  "closes_ledger_item": "docs/BUG_AUDIT.md 2026-09-13 \u2014 the same 3 perturbations and the same 24 rows, now measured over all 20 blocks instead of shard 0 alone. The exposure window covered shards 6-17 as well; it landed in block 0 only."
+  "why": "accepted when inference ran, rejected in the CURRENT gate verdicts; rq1_validated_perturbations.csv was re-assembled after that inference"
 }
