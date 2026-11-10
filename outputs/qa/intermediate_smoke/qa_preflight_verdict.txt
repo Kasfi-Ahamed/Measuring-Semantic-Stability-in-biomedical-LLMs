@@ -1,0 +1,2 @@
+PREFLIGHT: check1=PASS check2=PASS check3=PASS
+warnings=['acronym-set does not collapse on MiniLM at any practical thr (not a 0.72-transfer failure; lexical/abbr gap). Keeping nli_threshold=0.72.', 'hist_n=3']

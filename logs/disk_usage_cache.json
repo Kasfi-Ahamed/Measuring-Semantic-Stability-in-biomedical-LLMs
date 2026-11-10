@@ -1,0 +1,30 @@
+{
+  "measured_utc": "2026-11-10 14:30:45 UTC",
+  "subtrees": {
+    ".cache": 413875646,
+    ".claude": 1039011369,
+    ".conda": 15287183821,
+    ".config": 272,
+    ".copilot": 21838,
+    ".cursor": 10510152,
+    ".cursor-server": 1081172216,
+    ".cursor-server-backup": 2331323664,
+    ".dotnet": 258218,
+    ".ipython": 4931963,
+    ".jupyter": 33,
+    ".lmod.d": 290748,
+    ".local": 1586239369,
+    ".nv": 1,
+    ".scispacy": 335655652,
+    ".ssh": 3875,
+    ".vscode-server": 3911625256,
+    "Desktop": 1172284,
+    "archive_preexpiry": 998492847,
+    "data": 134123013233,
+    "nltk_data": 97226854,
+    "projects": 35307151324
+  },
+  "partial": false,
+  "loose_files_bytes": 34591117,
+  "total_bytes": 196563751752
+}

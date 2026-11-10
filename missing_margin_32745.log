@@ -1,0 +1,27 @@
+=== Sun Sep 13 11:32:29 PM AEST 2026 job 32745 on g24-2gpu-3 ===
+CUDA_VISIBLE_DEVICES=0
+name, memory.total [MiB], memory.free [MiB]
+NVIDIA RTX 4500 Ada Generation, 24570 MiB, 24223 MiB
+torch 2.5.1 NVIDIA RTX 4500 Ada Generation
+
+===== cell 0 =====
+
+===== cell 2 =====
+GPU: NVIDIA RTX 4500 Ada Generation
+Loading FAISS from /home/s224858267/data/umls/embeddings/sapbert_full_len3
+FAISS 7,653,278 forms
+
+===== cell 3 =====
+Loading SapBERT from /home/s224858267/data/hf_cache/hub/models--cambridgeltl--SapBERT-from-PubMedBERT-fulltext/snapshots/090663c3ae57bf35ffe4d0d468a2a88d03051a4d
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  17%|█▋        | 34/199 [00:00<00:00, 323.55it/s]Loading weights:  38%|███▊      | 76/199 [00:00<00:00, 366.42it/s]Loading weights:  57%|█████▋    | 113/199 [00:00<00:00, 332.68it/s]Loading weights:  74%|███████▍  | 147/199 [00:00<00:00, 332.71it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 373.20it/s]
+SapBERT on cuda:0
+
+===== cell 4 =====
+Traceback (most recent call last):
+  File "<stdin>", line 16, in <module>
+  File "notebooks/03_mapping_entropy/RQ4_compute_missing_umls_margin.ipynb:cell4", line 7, in <module>
+AssertionError
+Traceback (most recent call last):
+  File "<stdin>", line 16, in <module>
+  File "notebooks/03_mapping_entropy/RQ4_compute_missing_umls_margin.ipynb:cell4", line 7, in <module>
+AssertionError

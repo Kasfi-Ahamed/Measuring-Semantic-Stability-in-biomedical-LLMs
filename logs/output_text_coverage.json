@@ -1,0 +1,107 @@
+{
+  "outputs/rq1/intermediate/rq1_all_model_outputs.csv|110912934|1791098281": [
+    20,
+    21,
+    22
+  ],
+  "outputs/rq1/intermediate/rq1_all_model_outputs_PRE_A9REMAP.csv|481279161|1789609957": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "outputs/rq1/intermediate/rq1_generative_model_outputs.csv|72375401|1791098275": [
+    20,
+    21,
+    22
+  ],
+  "outputs/rq1/intermediate/rq1_all_outputs_mapped.csv|1341264922|1789806707": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_CUTOFF.csv|1341264922|1789806707": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_partA1.csv|470351880|1789708524": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_partA2.csv|403014946|1789706773": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_partB.csv|468017830|1789659874": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    19
+  ],
+  "outputs/rq1/intermediate/rq1_all_outputs_mapped_CONTAMINATED_PRECUTOFF.csv|532323539|1789323138": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    19
+  ]
+}

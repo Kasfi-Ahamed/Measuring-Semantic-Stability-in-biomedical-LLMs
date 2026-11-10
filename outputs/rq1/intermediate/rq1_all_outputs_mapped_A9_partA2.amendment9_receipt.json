@@ -1,0 +1,13 @@
+{
+  "amendment": 9,
+  "output": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/rq1_all_outputs_mapped_A9_partA2.csv",
+  "rows": 2202290,
+  "tiebreak_checked": 1360555,
+  "tiebreak_decided_by_terminal_key": 18427,
+  "tiebreak_violations": 0,
+  "tiebreak_rule": "terminal_cui_ascending",
+  "pythonhashseed": "0",
+  "host": "g16-8gpu-1",
+  "slurm_job_id": "33871",
+  "written_utc": "2026-09-18T04:46:03.291763+00:00"
+}

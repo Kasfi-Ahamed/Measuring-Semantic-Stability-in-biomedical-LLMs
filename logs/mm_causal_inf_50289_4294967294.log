@@ -1,0 +1,7 @@
+JAVA_HOME=/home/s224858267/data/jdk/temurin-17 (openjdk version "17.0.20" 2026-07-21)
+=== Wed Nov 11 01:30:12 AM AEDT 2026 causal-inf shard=24 causal_batch=1 job 50289 node=g24-2gpu-3 ===
+=== DISK GATE 2026-11-10 14:30:12 UTC ===
+probe: 0.28GiB (largest expected write 0.25GiB + 10%) into outputs/rq1/intermediate/mm_shards
+probe: PASS -- write and cleanup succeeded
+accounting: UNAVAILABLE -- disk_usage_cache.json is 142.9 h old, limit 26 h
+PAUSE: accounting unavailable (disk_usage_cache.json is 142.9 h old, limit 26 h). Not starting work. Flag: logs/DISK_PAUSE

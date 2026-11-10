@@ -1,0 +1,156 @@
+QA-lane handoff check (inspect only; no recompute)
+Date of this check: 2026-08-19
+Source: outputs/qa/  (run finished 2026-08-05 00:22)
+
+================================================================================
+STEP 0 — did the full run finish?
+================================================================================
+YES. Main per-instance file exists and is non-empty.
+
+  outputs/qa/qa_results_combined.csv
+    size  1,397,218 bytes (1.4M)
+    mtime 2026-08-05 00:22
+    rows  13,000
+    = 5 models × (1,000 SQuAD2 + 1,600 BioASQ factoid)
+
+Also present (same timestamp 2026-08-05 00:22):
+  qa_summary.csv                         1,976 B
+  qa_exclusion_report.csv                  122 B
+  qa_risk_coverage_{bioasq,squad2}.png   ~125 K each
+  10 per-model qa_results_{dataset}_{model}.csv
+  intermediate/ question-perturbation CSVs (2026-08-04 22:36 / 23:09)
+  intermediate_smoke/ preflight (check1=PASS check2=PASS check3=PASS)
+
+Not copied: raw per-model duplicates, perturbation CSVs, PNG caches.
+
+================================================================================
+STEP 1 — per-instance file
+================================================================================
+File: outputs/qa/qa_results_combined.csv  (also copied to handoff/)
+
+Exact columns (16):
+  id, model, dataset, included, m, n_clusters, entropy, norm_entropy,
+  is_zero, pred, correct, em, f1, confidence, is_unanswerable, qtype
+
+First 5 rows of the file are excluded SQuAD (m<3, entropy NaN). Five INCLUDED samples:
+
+  id=56de0ffd4396321400ee258e  BioMistral-7B squad2  m=3 n_clusters=2
+    entropy=0.811  norm=0.406  confidence=-0.077  is_unanswerable=False
+  id=5ad568d35b96ef001a10ae1d  BioMistral-7B squad2  m=3 n_clusters=3
+    entropy=1.500  norm=0.750  confidence=-0.186  is_unanswerable=True
+  id=56e1e9dfe3433e14004231fc  BioMistral-7B squad2  m=3 n_clusters=2
+    entropy=0.811  norm=0.406  confidence=-0.085  is_unanswerable=False
+  id=56e1f10ee3433e1400423222  BioMistral-7B squad2  m=3 n_clusters=2
+    entropy=0.811  norm=0.406  confidence=-0.190  is_unanswerable=False
+  id=5705e4fe75f01819005e7704  BioMistral-7B squad2  m=3 n_clusters=2
+    entropy=0.811  norm=0.406  confidence=-0.131  is_unanswerable=False
+
+`included` is exactly `m>=3` (0 mismatches). m is instance-level (same across 5 models).
+
+--- SQuAD2 ---
+  unique questions attempted: 1000
+  m>=3 / included:            139
+  inclusion rate:             139/1000 = 0.139
+  m distribution (questions): {0:150, 1:353, 2:358, 3:139}
+  unanswerable in attempted:  505/1000 = 0.505  (matches notebook load log)
+  unanswerable in included:   56/139  = 0.403
+  row count in combined:      5000 (5 models × 1000)
+
+--- BioASQ ---
+  unique questions:           1600  (qtype=factoid for all 8000 rows)
+  m>=3 / included:            392
+  inclusion rate:             392/1600 = 0.245
+  m distribution (questions): {0:120, 1:393, 2:695, 3:387, 4:5}
+  row count in combined:      8000 (5 models × 1600)
+  Gold answers are NOT stored in the results CSV. Checked against the same
+  BioASQ-training13b.zip the notebook loaded, matched on result ids:
+    factoid in zip:                    1600
+    result ids with non-empty gold:    1600 / 1600
+    empty flattened gold:              0
+    list-leftover strings (still look like "['...]"):  0
+  Notebook load log: "BioASQ factoid loaded: n=1600"
+
+================================================================================
+STEP 2 — entropy sanity (INCLUDED rows only)
+================================================================================
+Primary entropy column: `entropy` (unnormalised Shannon).
+Also stored: `norm_entropy` = entropy / log2(max(n_clusters,2))-style normaliser
+             (range ~0..1; used in qa_summary.csv as mean_norm_entropy).
+Zero flag:   `is_zero`
+
+NOTE: entropy is never bitwise == 0.0. Zero-entropy cells are ~ -1.6e-15
+(float noise). Use is_zero or |entropy|<1e-12; those match qa_summary
+zero_inflation exactly. "frac exactly == 0" = 0.000 for every cell.
+
+dataset  model                       n    entropy mean (std) [min, max]     zero-infl  norm_entropy mean
+bioasq   BioMistral-7B              392   1.364 (0.620) [-1.6e-15, 2.32]    0.097      0.681
+bioasq   FLAN-T5-base               392   1.135 (0.622) [-1.6e-15, 2.00]    0.151      0.566
+bioasq   Meta-Llama-3-8B-Instruct   392   0.912 (0.690) [-1.6e-15, 2.00]    0.283      0.455
+bioasq   Mistral-7B-Instruct-v0.1   392   1.384 (0.609) [-1.6e-15, 2.32]    0.087      0.690
+bioasq   OpenBioLLM-8B              392   1.490 (0.591) [-1.6e-15, 2.32]    0.064      0.744
+squad2   BioMistral-7B              139   1.162 (0.646) [-1.6e-15, 2.00]    0.151      0.581
+squad2   FLAN-T5-base               139   0.449 (0.498) [-1.6e-15, 1.50]    0.525      0.225
+squad2   Meta-Llama-3-8B-Instruct   139   0.555 (0.598) [-1.6e-15, 2.00]    0.489      0.278
+squad2   Mistral-7B-Instruct-v0.1   139   1.018 (0.670) [-1.6e-15, 2.00]    0.201      0.509
+squad2   OpenBioLLM-8B              139   1.159 (0.652) [-1.6e-15, 2.00]    0.151      0.580
+
+n_clusters distribution (included):
+
+dataset  model                       n=1          n=2          n=3+         n_clusters==m
+bioasq   BioMistral-7B               9.7%         23.2%        67.1%        34.4%
+bioasq   FLAN-T5-base                15.1%        33.2%        51.8%        36.0%
+bioasq   Meta-Llama-3-8B-Instruct    28.3%        34.2%        37.5%        24.7%
+bioasq   Mistral-7B-Instruct-v0.1    8.7%         23.0%        68.4%        35.2%
+bioasq   OpenBioLLM-8B               6.4%         20.4%        73.2%        29.3%
+squad2   BioMistral-7B               15.1%        33.1%        51.8%        31.7%
+squad2   FLAN-T5-base                52.5%        41.7%         5.8%         5.8%
+squad2   Meta-Llama-3-8B-Instruct    48.9%        33.8%        17.3%        15.8%
+squad2   Mistral-7B-Instruct-v0.1    20.1%        41.0%        38.8%        20.9%
+squad2   OpenBioLLM-8B               15.1%        33.1%        51.8%        30.9%
+
+Clustering diagnosis:
+  NOT global over-merging (would be ~all n_clusters=1).
+  NOT global under-merging (would be ~all n_clusters==m).
+  BioASQ generatives: mostly 3–4 clusters; healthy spread.
+  SQuAD FLAN-T5 and Llama-3: ~50% one-cluster (and matching ~50% zero-inflation)
+    = mild over-merging / collapse on those two cells only, not a pipeline-wide
+    entailment-index failure (that would flatten ALL models).
+
+Confidence column: `confidence`
+  Present on every included row. 100% finite. Never a constant placeholder
+  (not all-0, not all-1). Values are negative (mean −0.37, range about
+  −2.38 .. −9e-5) = sequence logprob, varies within every (dataset, model)
+  (nunique ≈ n). FLAN-T5 BioASQ is more negative (mean −1.20) than the
+  decoder-only models.
+
+================================================================================
+STEP 3 — clustering integrity (NLI entailment index)
+================================================================================
+Production notebook: notebooks/QA_answer_level_semantic_entropy.ipynb
+Executed output of the load-NLI cell (the run that wrote these CSVs):
+
+  NLI model:  cross-encoder/nli-MiniLM2-L6-H768   (CFG["nli_model"])
+  id2label:   {0: 'contradiction', 1: 'entailment', 2: 'neutral'}
+  Printed:    "Resolved ENTAIL_IDX=1  CONTRA_IDX=0"
+
+Code path (not hardcoded to 2):
+
+  _ENTAIL_IDX = next(
+      int(i) for i, lab in _nli_model.config.id2label.items()
+      if "entail" in str(lab).lower()
+  )
+  assert _ENTAIL_IDX == 1   # MiniLM; refuses RoBERTa-MNLI index 2
+
+entailment_prob() uses softmax(... )[_ENTAIL_IDX].
+
+Preflight (outputs/qa/intermediate_smoke/qa_preflight_verdict.txt):
+  PREFLIGHT: check1=PASS check2=PASS check3=PASS
+  check1 was this same id2label resolution (printed ENTAIL_IDX=1).
+
+Verdict: entailment index = 1, resolved from id2label. NOT hardcoded 2.
+
+================================================================================
+STEP 4 — handoff/ contents
+================================================================================
+Copied light artifacts only (no raw generations, no perturbation CSVs, no caches).
+Per-instance file is 1.4M / 13k rows — under the 2000-row sample threshold, copied whole.

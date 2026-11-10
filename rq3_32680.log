@@ -1,0 +1,3 @@
+[NbConvertApp] Converting notebook notebooks/05_analysis/RQ3_matched_pairs.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+slurmstepd: error: *** JOB 32680 ON g24-2gpu-1 CANCELLED AT 2026-09-13T21:06:47 ***

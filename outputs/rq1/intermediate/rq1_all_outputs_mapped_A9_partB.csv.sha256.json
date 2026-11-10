@@ -1,0 +1,12 @@
+{
+  "file": "rq1_all_outputs_mapped_A9_partB.csv",
+  "sha256": "745bf2491d3fa76f6b3b9a8552576d42dab6404d4d04992672badc01355cc7b9",
+  "bytes": 468017830,
+  "mtime_utc": "2026-09-17T15:44:34Z",
+  "frozen_utc": "2026-09-18T00:02:42Z",
+  "previous_sha256": null,
+  "rows": 2557257,
+  "slurm_job_id": "33366",
+  "write_ordering": "pre-os.replace (receipt written before corpus); digest recorded because the final name existing is not by itself evidence the write completed",
+  "verified": "row count 2,557,257 == pre-registered; amendment9 receipt violations 0, evaluated 1,579,573"
+}
