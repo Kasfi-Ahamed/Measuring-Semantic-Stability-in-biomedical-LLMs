@@ -22,7 +22,8 @@ export MM_SHARD_ID="${MM_SHARD_ID:-$SLURM_ARRAY_TASK_ID}"
 NB="notebooks/02_concept_inference/MedMentions_generative_inference.ipynb"
 
 echo "=== $(date) encflan-inf shard=${MM_SHARD_ID} job ${SLURM_JOB_ID:-local} node=$(hostname) ==="
-"$PY" scripts/disk_guard.py
+# GATE, not a walk. An encoder shard CSV is ~110 MB; 0.25 GiB + 10% covers it.
+"$PY" scripts/disk_guard.py --gate --probe-gib 0.25 --target outputs/rq1/intermediate/mm_shards
 
 # Rebuild the assembled validated-perturbations file if stale (flock-serialized across all
 # inference jobs so it is never written concurrently). Encoder + gen both read it.

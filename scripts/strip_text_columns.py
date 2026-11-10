@@ -21,6 +21,11 @@ import os, sys
 from pathlib import Path
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 STRIP = {
     "outputs/qa/qa_gate_recheck.csv": ["orig_question", "pert_question"],
@@ -40,7 +45,7 @@ def main() -> int:
         if not p.is_file():
             print(f"  SKIP (absent) {rel}")
             continue
-        d = pd.read_csv(p, dtype=str, keep_default_na=False)
+        d = read_csv_strict(p, dtype=str, keep_default_na=False, float_precision="round_trip")
         n0, c0 = len(d), list(d.columns)
         present = [c for c in cols if c in d.columns]
         if not present:
@@ -50,8 +55,8 @@ def main() -> int:
         tmp = p.with_suffix(p.suffix + ".tmp")
         d.to_csv(tmp, index=False)
         os.replace(tmp, p)
-        chk = pd.read_csv(p, dtype=str, keep_default_na=False, nrows=5)
-        ok = len(pd.read_csv(p, usecols=[0], dtype=str)) == n0 and not set(present) & set(chk.columns)
+        chk = read_csv_strict(p, dtype=str, keep_default_na=False, nrows=5, float_precision="round_trip")
+        ok = len(read_csv_strict(p, usecols=[0], dtype=str, float_precision="round_trip")) == n0 and not set(present) & set(chk.columns)
         bad += (not ok)
         print(f"  {'OK  ' if ok else 'FAIL'} {rel}: removed {present}  "
               f"cols {len(c0)}->{len(chk.columns)}  rows {n0:,} preserved={ok}")

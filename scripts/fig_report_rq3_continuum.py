@@ -82,7 +82,11 @@ def main() -> int:
     print("\nanalysed rows per corpus:", {k: f"{v:,}" for k, v in ns.items()})
 
     x = np.arange(len(S.CORPUS_ORDER))
-    fig, ax = plt.subplots(figsize=(11.5, 6.6))
+    # AUTHORED AT FINAL SIZE. 4.77in = 345pt = \linewidth, so the scale at inclusion is 1.0
+    # and 9pt type renders at 9pt rather than the 3.86pt an 11.367in canvas gave. Height 4.15,
+    # not 3.20: the legend moves from outside the axes on the right -- which is what made the
+    # canvas 11.367in wide -- to below them, two columns of four. Width is never grown.
+    fig, ax = plt.subplots(figsize=(4.77, 4.15))
     for m in models:
         y = agg[m].to_numpy(dtype=float)
         ok = np.isfinite(y)
@@ -110,8 +114,8 @@ def main() -> int:
     # "measure, corpus" and this title names no single corpus; check_text still runs.
     title = "The grounding boundary: mean semantic entropy across the four corpora"
     S.check_text(title)
-    S.check_text("Corpus")
-    ax.set_title(title, fontsize=12)
+    import textwrap as _twrap
+    ax.set_title("\n".join(_twrap.wrap(title, 46)), fontsize=10)
     S.emit_caption(OUT.name, title=title,
                    n="   ".join(f"{c}: {S.grid_clause(RETAINED.get(c, ns.get(c, 0)), ns.get(c, 0))}"
                                 for c in S.CORPUS_ORDER),
@@ -127,14 +131,19 @@ def main() -> int:
     ax.set_xticks(x)
     ax.set_xticklabels(S.CORPUS_ORDER)
     ax.set_xlim(-0.35, len(S.CORPUS_ORDER) - 0.65)
-    ax.set_xlabel("Corpus")
     ax.set_ylabel(r"Mean Normalised Entropy $\hat{H}$")
     ax.grid(axis="y", alpha=0.3)
     ax.set_axisbelow(True)
-    ax.legend(loc="center left", bbox_to_anchor=(1.01, 0.5), fontsize=9, frameon=True)
-    fig.tight_layout()
+    _h, _l = ax.get_legend_handles_labels()
+    fig.legend(_h, _l, loc="lower center", bbox_to_anchor=(0.5, 0.008), ncol=2,
+               fontsize=9, frameon=True, framealpha=0.95)
+    # Absolute inches. 1.10in at the bottom carries the x tick labels and the four-row legend
+    # with slack, rather than the 1.27in on a 3.95in canvas that met exactly and collided.
+    _W, _H = fig.get_size_inches()
+    fig.subplots_adjust(left=0.62 / _W, right=1.0 - 0.05 / _W,
+                        top=1.0 - 0.42 / _H, bottom=1.10 / _H)
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    S.save_png(fig, OUT)
+    S.save_png(fig, OUT, tight=False)
     plt.close(fig)
     agg[models].to_csv(OUT.with_suffix(".csv"))
     print(f"\nwrote {OUT}\nwrote {OUT.with_suffix('.csv')}")

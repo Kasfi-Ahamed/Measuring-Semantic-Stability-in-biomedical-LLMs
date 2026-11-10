@@ -5,8 +5,11 @@ export HF_HOME="${HF_HOME:-$HOME/data/hf_cache}"
 export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
 export CUDA_DEVICE_ORDER=PCI_BUS_ID
-export ASSUMED_QUOTA_GB="${ASSUMED_QUOTA_GB:-200}"
-export DISK_PAUSE_GB="${DISK_PAUSE_GB:-10}"
+# No default ceiling here any more: scripts/disk_guard.py derives it (calibration file, else
+# the calibrated 186 GiB = 200 GB-decimal ceiling). Setting ASSUMED_QUOTA_GB still overrides.
+# 4 GiB: over twice the largest single write on the mapping path (the mapped CSV, ~1.63 GiB
+# at 23 blocks). The guard fails closed, so this is a floor and not an allowance.
+export DISK_PAUSE_GB="${DISK_PAUSE_GB:-4}"
 
 # G4 LanguageTool needs a JRE. Binary lives at ~/data/jdk/temurin-17 (not ~/data/jdk/bin).
 # Set JAVA_HOME EXPLICITLY; never infer it from the environment.
@@ -31,6 +34,6 @@ export PYTHONUNBUFFERED=1
 echo "JAVA_HOME=$JAVA_HOME ($(java -version 2>&1 | head -1))"
 
 # 7B/8B bf16: keep off 16–24GB cards (A4000 / Ada / 4500 / 6000).
-BIG_GPU_EXCLUDE="${BIG_GPU_EXCLUDE:-g16-8gpu-1,g16-8gpu-2,g20-2gpu-[1-6],g24-2gpu-[1-3],g48-1gpu-[1-2],g48-2gpu-1}"
+BIG_GPU_EXCLUDE="${BIG_GPU_EXCLUDE:-g16-2gpu-1,g16-8gpu-1,g16-8gpu-2,g20-2gpu-[1-7],g24-2gpu-[1-3],g48-1gpu-[1-2],g48-2gpu-1}"
 # Perturbations / encoders: only the known-bad node.
 SMALL_GPU_EXCLUDE="${SMALL_GPU_EXCLUDE:-g48-2gpu-1}"

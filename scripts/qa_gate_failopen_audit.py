@@ -21,6 +21,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault("HF_HOME", str(Path.home() / "data" / "hf_cache"))
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
@@ -84,7 +89,7 @@ def main() -> int:
     frames = []
     for ds in ("squad2", "bioasq"):
         p = PERT_DIR / f"qa_question_perturbations_{ds}.csv"
-        d = pd.read_csv(p, keep_default_na=False, na_values=[""])
+        d = read_csv_strict(p, keep_default_na=False, na_values=[""], float_precision="round_trip")
         d["dataset"] = ds
         frames.append(d)
     pert = pd.concat(frames, ignore_index=True)

@@ -15,6 +15,24 @@ Usage:  python scripts/signal_independence_stats.py {cadec|medmentions}
 
 MedMentions must not be run before the 21 September cutoff (docs/BUG_AUDIT.md).
 """
+
+# WHICH FILE SUPPLIES mapping_confidence, AND WHY. This module declares TWO inputs per corpus
+# in `chain` (the entropy table and the margin table) for staleness tracking, but reads exactly
+# ONE, named by `path`: the MARGIN file. It is one `path=` away from reading the other, and the
+# two do not agree, so the choice is recorded here rather than left implicit.
+#
+# For CADEC the two files disagree on mapping_confidence in 21,437 of 37,696 joined rows. That
+# is NOT two different computations: entropy_cadec.csv holds the canonical float32 FAISS
+# cosine (100% float32-exact), and the margin file's column is a COPY of it made by
+# scripts/refresh_margin_entropy_columns.py, which reads with pandas' default float parser and
+# so degraded 15,724 of 37,696 values by 1 ULP before writing them back. Proven on 2026-10-11:
+# reading entropy_cadec.csv with the DEFAULT parser reproduces the margin column for 37,696 of
+# 37,696 rows, while reading it with float_precision="round_trip" reproduces only 58.29%.
+# See provenance/reading_hazards_note.txt.
+#
+# Nothing reported moves: max |delta| 4.178e-04, median 1.110e-16, 35 of 37,696 rows round
+# differently at three decimals, and the means differ by 1.690e-07. The MedMentions pair agrees
+# exactly (0 of 1,020,784), because that refresh script is hardcoded to CADEC.
 from __future__ import annotations
 
 import datetime as _dt

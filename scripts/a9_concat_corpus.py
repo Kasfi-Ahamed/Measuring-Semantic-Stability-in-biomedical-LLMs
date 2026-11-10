@@ -65,6 +65,11 @@ from pathlib import Path
 
 import pandas as pd
 
+# Bucket-1 rule: an artefact-to-artefact copy reads through the wrapper, so
+# keep_default_na=False and float_precision="round_trip" are the default and a
+# deviation has to be written deliberately. See provenance/reading_hazards_note.txt.
+from scripts.safe_read import read_csv_strict  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 
 # Per-part pre-registered row counts. A part whose label is absent from this mapping fails R3.
@@ -152,8 +157,8 @@ def scan(path: Path, ordinal: dict[str, int], shard_size: int) -> dict:
     """One chunked pass per part: rows, blocks, unresolved ids, injections, empty-with-assignment."""
     st = {"rows": 0, "blocks": {}, "unresolved": 0, "inject": 0,
           "empty_rows": 0, "empty_assigned": 0, "cols": None}
-    for ch in pd.read_csv(path, chunksize=CHUNK, low_memory=False,
-                          keep_default_na=False, na_values=[""]):
+    for ch in read_csv_strict(path, chunksize=CHUNK, low_memory=False,
+                          keep_default_na=False, na_values=[""], float_precision="round_trip"):
         if st["cols"] is None:
             st["cols"] = list(ch.columns)
         st["rows"] += len(ch)
@@ -221,7 +226,7 @@ def main(argv: list[str] | None = None) -> int:
     if a.out.exists():
         sys.exit(f"REFUSING TO START: {a.out} already exists. Nothing is overwritten.")
 
-    idx = pd.read_csv(a.index)
+    idx = read_csv_strict(a.index, float_precision="round_trip")
     ordinal = dict(zip(idx["instance_id"].astype(str), idx["ordinal"].astype(int)))
     print(f"instance_index: {len(ordinal):,} ids")
     print(f"joining {len(parts)} parts: {', '.join(p.label for p in parts)}")
@@ -321,8 +326,8 @@ def main(argv: list[str] | None = None) -> int:
     a.out.parent.mkdir(parents=True, exist_ok=True)
     written = 0
     for p in parts:
-        for ch in pd.read_csv(p.path, chunksize=CHUNK, low_memory=False,
-                              keep_default_na=False, na_values=[""]):
+        for ch in read_csv_strict(p.path, chunksize=CHUNK, low_memory=False,
+                              keep_default_na=False, na_values=[""], float_precision="round_trip"):
             ch.to_csv(a.out, mode="w" if written == 0 else "a",
                       header=written == 0, index=False)
             written += len(ch)
