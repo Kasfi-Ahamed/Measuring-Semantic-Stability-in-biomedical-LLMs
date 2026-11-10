@@ -143,7 +143,12 @@ def main() -> int:
                 cmd.append(f"--dependency=afterok:{':'.join(prev)}")
             env_pass = f"ALL,MM_SHARD_ID={sid}"
             if want:
-                env_pass += f",MM_ONLY_MODELS={','.join(sorted(want))}"
+                # '+' NOT ',' -- sbatch splits --export on commas, so a comma inside a VALUE
+                # silently truncates it and turns the remainder into variable NAMES to inherit.
+                # Job 48124 was submitted with MM_ONLY_MODELS=llama3,mistral,openbiollm and ran
+                # llama3 ALONE: sbatch read MM_ONLY_MODELS=llama3 and then looked for variables
+                # called "mistral" and "openbiollm". The sbatch translates '+' back to spaces.
+                env_pass += f",MM_ONLY_MODELS={'+'.join(sorted(want))}"
             cmd += [f"--export={env_pass}", str(script)]
             if a.dry_run:
                 print("  DRY-RUN  " + " ".join(cmd), flush=True)

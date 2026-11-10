@@ -61,7 +61,8 @@ flock logs/mm_assemble.lock "$PY" scripts/mm_assemble_if_stale.py
 # avoids loading three 7-8B models from disk only to skip them. Needed to re-run block 23's
 # llama3 on its own, which is the test that the fixed submission gate behaves.
 CAUSAL_KEYS="${MM_ONLY_MODELS:-biomistral mistral openbiollm llama3}"
-CAUSAL_KEYS="${CAUSAL_KEYS//,/ }"
+CAUSAL_KEYS="${CAUSAL_KEYS//+/ }"   # '+' is the submit-time delimiter: see the note in
+CAUSAL_KEYS="${CAUSAL_KEYS//,/ }"   # mm_submit_shard_inf.py about commas in --export values
 echo "causal keys this job: ${CAUSAL_KEYS}"
 for k in ${CAUSAL_KEYS}; do
   case " biomistral mistral openbiollm llama3 " in
