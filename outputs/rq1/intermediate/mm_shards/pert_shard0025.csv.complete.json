@@ -1,0 +1,9 @@
+{
+  "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0025.csv",
+  "n_rows": 16152,
+  "sha256": "18033acbec7eb9d62cac7fa593d3ac428c98760b5fd43c758bc3c01e439b70be",
+  "bytes": 44371604,
+  "written_utc": "2026-10-04 05:16:28 UTC",
+  "expected_rows": 16152,
+  "n_instances": 2019
+}
