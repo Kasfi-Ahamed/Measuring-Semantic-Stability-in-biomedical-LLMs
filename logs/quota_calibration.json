@@ -1,0 +1,10 @@
+{
+  "ceiling_bytes": 200144601746,
+  "ceiling_gib": 186.399,
+  "home_at_start_bytes": 197460247186,
+  "probe_bytes_at_failure": 2684354560,
+  "errno": 122,
+  "errno_name": "EDQUOT",
+  "measured_utc": "2026-10-10 05:43:50 UTC",
+  "method": "grew a file in $HOME until the filesystem refused the write"
+}
