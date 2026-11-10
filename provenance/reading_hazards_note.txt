@@ -319,3 +319,67 @@ WHY THESE TWO BELONG TOGETHER
   conclusion that had to be retracted, and in both cases the tell was the same: the INTEGER
   columns agreed while something else did not. Identical counts with differing floats is
   hazard 2. A count that disagrees with every other count of the same thing is hazard 1.
+
+================================================================================
+HAZARD 3: THE CHECK THAT COULD NOT HAVE FAILED
+Added 2026-11-11, after six instances in one audit.
+================================================================================
+
+The two hazards above are about MISREADING a number. This one is about running a check that
+confirms whatever it is given.
+
+THE QUESTION TO ASK OF ANY CHECK IS WHAT RESULT WOULD HAVE FALSIFIED IT. If there isn't one,
+it is documentation rather than verification, and passing carries no information.
+
+It belongs beside the reading hazards precisely because it does not announce itself. A
+misread number eventually contradicts something. A check that cannot fail just keeps passing.
+
+SIX INSTANCES, all real, all cheap, all passed:
+
+1. THE WRAPPER'S TEST SUITE. A test suite that exercised the safe_read wrapper rather than the
+   pipeline that calls it. Every test passed and none of them touched the code path where the
+   float round-trip defect lived.
+
+2. "MORE DECIMAL PLACES MEANS MORE PRECISION." An inference about printed output that could not
+   be contradicted by looking at more printed output. The extra digits WERE the damage: they
+   were the float round-trip artefact being faithfully displayed.
+
+3. ORACLE <= BEST <= RAND. Run across thirteen RQ4 cells, zero violations, reported as
+   verification of a derived Oracle column. The ordering holds for the right Oracle value AND
+   the wrong one, so it could not distinguish them. Two errors survived it: the wrong branch of
+   the closed form on seven of thirteen cells, and using a closed form at all where the
+   manuscript uses a 19-point trapezoid.
+
+4. A MINIMUM OVER A SUPERSET. AURC_best was computed as the minimum over all seven signals when
+   the manuscript reports the best SINGLE signal. min over 7 is necessarily <= min over 3, so
+   the computed value could only ever be lower than or equal to the artefact's own
+   best_single_AURC column. No comparison against that column could have flagged it in either
+   direction -- and the column was named after the quantity being computed, sitting unread in
+   the same dataframe.
+
+5. A SUBMITTER REPORTING ITS OWN INTENT. The job gate printed
+   models=['llama3','mistral','openbiollm'] and submitted a job that ran one model, because
+   sbatch splits --export on commas. The gate's log confirmed the intent it was derived from.
+   Only the JOB's log said "causal keys this job: llama3". Verify from the far end: read the
+   log of the thing that ran, not the launcher's.
+
+6. A FALSIFICATION DISCARDED IN THE SUMMARY -- the worst of the six, because here the check DID
+   fail and the failure was overwritten. A blob-hash sweep reported nine licence-restricted files
+   as being in no git branch AND no archive tarball. That output was then summarised as "they are
+   already preserved in the archive tarballs" -- the opposite of what it said. The error surfaced
+   only because a later step printed NOT IN ANY TARBALL nine times in a column. Had it not, those
+   nine files, including a reported table of 209,025 rows, would have expired with the account.
+
+   Instances 1-5 are checks that could not disconfirm. Instance 6 is a check that did
+   disconfirm, whose result did not survive the trip from tool output to prose.
+
+A COROLLARY, from the same audit: CLASSIFY BY CONTENT, NOT BY LOCATION. Two attempts to push
+swept-up files were refused, correctly. The first included the author's own coursework PDFs
+because they sat inside the project directory. The second included nine UMLS-, MedMentions- and
+SQuAD-derived files because they sat under outputs/. Living in outputs/ is not a safety property
+and a path is not a licence classification.
+
+AND ONE ON VERIFICATION HAVING A TIMESTAMP: an archive was verified file-by-file against SHA-256
+on a second machine, and then grew by two tarballs an hour later. The verification was true when
+made and stale immediately. A verification is a statement about a moment, not a standing
+guarantee; re-derive against the manifest as it stands.

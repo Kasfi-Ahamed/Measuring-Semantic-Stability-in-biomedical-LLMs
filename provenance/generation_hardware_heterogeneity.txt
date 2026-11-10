@@ -1,0 +1,38 @@
+GENERATION HARDWARE HETEROGENEITY -- a reproducibility limitation of the published results
+Recorded 2026-11-11.
+
+DECODING CONFIGURATION, from notebooks/02_concept_inference/MedMentions_generative_inference.ipynb:
+  do_sample=False              # greedy, T=0
+  max_new_tokens=16            # CAUSAL_MAX_NEW_TOKENS
+  bf16, device_map="auto"
+  NO torch.manual_seed, NO torch.use_deterministic_algorithms, NO cuDNN/CUBLAS determinism flags
+  anywhere in the generation path. The only seed=42 is the instance-index shuffle in cell 4,
+  not generation.
+
+Greedy decoding consumes no RNG, so a seed would not help. The exposure is different: greedy
+argmax can flip on near-ties when floating-point reduction order differs, and reduction order
+differs across GPU architectures. So the card matters even at temperature 0.
+
+THE PUBLISHED MEDMENTIONS GENERATIONS SPAN THREE CARD TYPES.
+Established from sacct for the blocks 0-19 Llama-3 inference window (2026-09-08 to 09-18):
+
+  A100       blocks 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+             on g40-2gpu-1, g40-3gpu-2, g40-4gpu-1, g40-4gpu-2
+  L40S       block 0        on g46-1gpu-3
+  RTX 4500   block 3        on g24-2gpu-1
+
+Blocks 1, 2 and 5 fall outside that sacct window; their markers are dated 09-09 to 09-11 and the
+jobs either predate it or ran under another job name. The conclusion does not depend on them.
+
+The 2026-11 rerun blocks landed as follows: block 23 and block 24 on g24-2gpu-2 and g24-2gpu-3,
+both RTX 4500. That introduces no new card type -- RTX 4500 already produced block 3.
+
+WHAT THIS MEANS, stated for a reproducibility statement rather than buried:
+Exact regeneration of a MedMentions generation requires the same GPU architecture that produced
+it. Re-running block 7 on an L40S will not necessarily reproduce the A100 output token for token,
+even with identical weights, identical prompts and greedy decoding, because no determinism flags
+were in force. The effect is confined to near-ties, so aggregate statistics are robust; per-row
+byte equality is not guaranteed.
+
+This is a limitation of the PUBLISHED work, not of the rerun. It was found only by asking what
+the hardware was doing, which nothing in the pipeline reports.
