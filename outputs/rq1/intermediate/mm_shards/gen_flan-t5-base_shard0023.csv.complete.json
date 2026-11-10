@@ -1,0 +1,9 @@
+{
+  "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0023.csv",
+  "n_rows": 45578,
+  "sha256": "be2384a625625f63f4583fda074e86f6c42f251537d4551304f2c4f484c41462",
+  "bytes": 4365488,
+  "written_utc": "2026-10-03 21:42:35 UTC",
+  "n_instances": 8000,
+  "expected_rows": 45578
+}

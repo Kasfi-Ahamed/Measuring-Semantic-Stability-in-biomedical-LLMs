@@ -1,0 +1,9 @@
+{
+  "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0023.csv",
+  "n_rows": 45578,
+  "sha256": "824df85314042988fd585395f9e8c64f9ac0c40ec234cc396a4374c004e48594",
+  "bytes": 4998167,
+  "written_utc": "2026-10-04 06:45:25 UTC",
+  "n_instances": 8000,
+  "expected_rows": 45578
+}

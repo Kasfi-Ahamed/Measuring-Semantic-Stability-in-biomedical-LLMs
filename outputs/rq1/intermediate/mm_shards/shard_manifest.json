@@ -1,0 +1,2725 @@
+{
+  "seed": 42,
+  "shard_size": 8000,
+  "n_instances": 202019,
+  "n_shards": 26,
+  "gen_keys": [
+    "biomistral",
+    "mistral",
+    "openbiollm",
+    "llama3",
+    "flan-t5-base"
+  ],
+  "enc_keys": [
+    "BERT-base",
+    "BioBERT",
+    "PubMedBERT"
+  ],
+  "updated_utc": "2026-11-04 21:26:12 UTC",
+  "shards": {
+    "3": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0003.csv",
+          "n_rows": 64000,
+          "sha256": "6fab3ae5b4889814dbd3cbd83a75eb00cff32099d38cb63cdffffc2892ef8fc5",
+          "bytes": 176262244,
+          "written_utc": "2026-09-03 01:52:28 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0003.csv",
+          "n_rows": 37668,
+          "sha256": "ba116e875ba3ef38db541f5cf00d31e52a9c5c5c07bb9ac1dba09bc71e8a177f",
+          "bytes": 87060718,
+          "written_utc": "2026-09-03 01:54:07 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0003.csv",
+          "n_rows": 45668,
+          "sha256": "e530df7fffe469b5d0a96c9f27456dd785318b61bd85c1291343dd61a7a45e2b",
+          "bytes": 105726832,
+          "written_utc": "2026-09-08 02:05:59 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45668
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0003.csv",
+          "n_rows": 45668,
+          "sha256": "9c1d49be2ca65f06cbd23e208361704a8edc99182aea4821898099b4650b2645",
+          "bytes": 105824814,
+          "written_utc": "2026-09-08 02:07:14 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45668
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0003.csv",
+          "n_rows": 45668,
+          "sha256": "3744fcc8cf0afbeff8141f8fece5cebd4a7c9a96589101a99a0084f92a8c5468",
+          "bytes": 107763947,
+          "written_utc": "2026-09-08 02:08:17 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45668
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0003.csv",
+          "n_rows": 45420,
+          "sha256": "abb62c964b4cb17b6e38d1b668286f371da82dbeb14dde8b4f76aa411aa47fcc",
+          "bytes": 4357757,
+          "written_utc": "2026-09-08 02:12:08 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45420
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0003.csv",
+          "n_rows": 45420,
+          "sha256": "05ec2533364cd34c3914abd4f6367a1604ba3f0abde7615577743bbdfe32ab6e",
+          "bytes": 4399704,
+          "written_utc": "2026-09-10 17:54:38 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45420
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0003.csv",
+          "n_rows": 45420,
+          "sha256": "30a1248331c2f3a9abeaac6acf18a1baf94309c13120d2358c6dd969a071c5b1",
+          "bytes": 5091000,
+          "written_utc": "2026-09-11 05:08:53 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45420
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0003.csv",
+          "n_rows": 45420,
+          "sha256": "7b46cd2b4d9e3c52582d18844b8c88a52cf7bc8bb43d0c6f61fe3dcd08927996",
+          "bytes": 4998201,
+          "written_utc": "2026-09-11 12:44:12 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45420
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0003.csv",
+          "n_rows": 45420,
+          "sha256": "fc9b635abb586a56b1511a48f4d6586de16dc95fa595ec056dcf19866300a8e8",
+          "bytes": 5170622,
+          "written_utc": "2026-09-11 15:44:15 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45420
+        }
+      }
+    },
+    "5": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0005.csv",
+          "n_rows": 64000,
+          "sha256": "8b690ac7c7858e506d124145ca0ed305f031bcd56019306d83514ff74772285f",
+          "bytes": 177647261,
+          "written_utc": "2026-09-03 09:36:00 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0005.csv",
+          "n_rows": 37506,
+          "sha256": "7e203c0a7ab47fa5aa4d17699827ca9a1e632b26cacdef67b1c246aa4dc6833b",
+          "bytes": 87961761,
+          "written_utc": "2026-09-03 09:37:39 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0005.csv",
+          "n_rows": 45506,
+          "sha256": "71f320653a632445b64a091889da676190881805b5c82c269ffed753fdefcda4",
+          "bytes": 106917441,
+          "written_utc": "2026-09-08 02:25:03 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45506
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0005.csv",
+          "n_rows": 45506,
+          "sha256": "69e7921c061217806bf397fc9153f721e2dafcbbe8418be6f4ea966d0621ed06",
+          "bytes": 107021140,
+          "written_utc": "2026-09-08 02:26:19 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45506
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0005.csv",
+          "n_rows": 45506,
+          "sha256": "2135649b132d56599ae3c92edb4f23b108e4c29ae7da2d1199cd6012ecb15a88",
+          "bytes": 108945936,
+          "written_utc": "2026-09-08 02:27:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45506
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0005.csv",
+          "n_rows": 45254,
+          "sha256": "61fcf0c35c9e2712ca19909f2349fa4a103ada5dbdc815d1d058747f215328c2",
+          "bytes": 4317429,
+          "written_utc": "2026-09-08 02:31:31 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45254
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0005.csv",
+          "n_rows": 45254,
+          "sha256": "13fb815a0141104485e2ae575328822854ec6b9aab905754ca3994ecf4df477d",
+          "bytes": 4372939,
+          "written_utc": "2026-09-10 21:55:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45254
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0005.csv",
+          "n_rows": 45254,
+          "sha256": "5fb281177934f1db57429712458cc589f802079d371f868c9ea019f1438208d2",
+          "bytes": 5080858,
+          "written_utc": "2026-09-11 00:40:01 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45254
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0005.csv",
+          "n_rows": 45254,
+          "sha256": "ac03720f93edb725a5357aa0172d50af46a31c58cf0b6226196123c17a2f800a",
+          "bytes": 4959101,
+          "written_utc": "2026-09-11 05:29:59 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45254
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0005.csv",
+          "n_rows": 45254,
+          "sha256": "0aeab9e16c2b6c0603c8fba2306c3716aa2c3fcf83110c4ced453608b51883c6",
+          "bytes": 5137700,
+          "written_utc": "2026-09-11 08:48:55 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45254
+        }
+      }
+    },
+    "0": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0000.csv",
+          "n_rows": 64000,
+          "sha256": "aa518b926098523696588fe68fa2e8cc98b31f27e63d4af6002c0e054f66ea3a",
+          "bytes": 173917787,
+          "written_utc": "2026-09-03 17:20:04 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0000.csv",
+          "n_rows": 37670,
+          "sha256": "251abf94f18f80edd2505610f6fc0191b0a5989af638530fce9d1d0846c1158d",
+          "bytes": 85765977,
+          "written_utc": "2026-09-03 17:21:37 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0000.csv",
+          "n_rows": 45670,
+          "sha256": "83bf84c72c765d0b506ac23a606011ab2424e0601501e25778c73ce0d1952748",
+          "bytes": 104220199,
+          "written_utc": "2026-09-08 01:39:12 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45670
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0000.csv",
+          "n_rows": 45670,
+          "sha256": "7dd365afc78eb3049ae4ea71e15fa15e369026673edca3dfd07733ef29bb5485",
+          "bytes": 104320232,
+          "written_utc": "2026-09-08 01:40:28 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45670
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0000.csv",
+          "n_rows": 45670,
+          "sha256": "cba06e3e96eac7ed6fa38649b8febff464a17aa958b4e3a6984f37605f34a7c5",
+          "bytes": 106263543,
+          "written_utc": "2026-09-08 01:41:40 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45670
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0000.csv",
+          "n_rows": 45505,
+          "sha256": "7ce61250eec5ed1b5bdbe6898f5a9773fd80f637bd490f7bf1d5fc51e5975b05",
+          "bytes": 4362393,
+          "written_utc": "2026-09-08 01:45:15 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45505
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0000.csv",
+          "n_rows": 45505,
+          "sha256": "1f662c4c0af612586f9ed333b4f46101868fa86e47243007078c0a56e06ce25e",
+          "bytes": 4398105,
+          "written_utc": "2026-09-09 00:46:32 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45505
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0000.csv",
+          "n_rows": 45505,
+          "sha256": "0ab8583b36d896c5521313fb703ace2319e1600b5aa816b8e3597d7e5292dd93",
+          "bytes": 5113010,
+          "written_utc": "2026-09-09 03:25:05 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45505
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0000.csv",
+          "n_rows": 45505,
+          "sha256": "6cec17d31871dde82f92987497b1f22a9ebd10288afafd52d8a545af002946c6",
+          "bytes": 4985931,
+          "written_utc": "2026-09-09 08:05:34 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45505
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0000.csv",
+          "n_rows": 45505,
+          "sha256": "3f43353ec5d02bb420211a81a04385d2452a8696d9eff830ff62751907d63677",
+          "bytes": 5161395,
+          "written_utc": "2026-09-09 09:57:30 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45505
+        }
+      }
+    },
+    "2": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0002.csv",
+          "n_rows": 64000,
+          "sha256": "2ea9ae0f12e6b47810935591f8a78ad78ce1237292d4a487c0c00633e3d6138a",
+          "bytes": 177315508,
+          "written_utc": "2026-09-03 23:37:43 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0002.csv",
+          "n_rows": 37918,
+          "sha256": "f12d5a6e6126abd60d7739a384c036911b62ee4c369740221d930663dcbd1d58",
+          "bytes": 88674295,
+          "written_utc": "2026-09-03 23:39:19 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0002.csv",
+          "n_rows": 45918,
+          "sha256": "4982cf442293abf145d6c491bbd1bd16db36d39286e88ad52e62fea180049140",
+          "bytes": 107532773,
+          "written_utc": "2026-09-08 01:57:00 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45918
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0002.csv",
+          "n_rows": 45918,
+          "sha256": "1934876b743d5f8d66c92eb5c5fed586eb0999104f0b2a20d29aa1111321c70b",
+          "bytes": 107637554,
+          "written_utc": "2026-09-08 01:58:16 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45918
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0002.csv",
+          "n_rows": 45918,
+          "sha256": "80d79e42aa0497f9ec36859b2e11474141c5cade36d0de69a98ef32a91496cde",
+          "bytes": 109582018,
+          "written_utc": "2026-09-08 01:59:20 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45918
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0002.csv",
+          "n_rows": 45730,
+          "sha256": "07ddbf4094e8ad3ed61481feea53491268ce27732c182cae6de83f14e4377989",
+          "bytes": 4380437,
+          "written_utc": "2026-09-08 02:03:07 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45730
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0002.csv",
+          "n_rows": 45730,
+          "sha256": "f465a13ec0c2234a00c9dfc838a4b094b0153966748cc23075747fe99777eea7",
+          "bytes": 4402698,
+          "written_utc": "2026-09-10 01:18:48 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45730
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0002.csv",
+          "n_rows": 45730,
+          "sha256": "61b2f1e9a5e2bd19a2f6591d9968255aaf7a7634340d317dfc668ce2abef1cab",
+          "bytes": 5144418,
+          "written_utc": "2026-09-10 03:57:12 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45730
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0002.csv",
+          "n_rows": 45730,
+          "sha256": "7ec23ccae90713a59aa4bcf911da806f8be5ee6649bf715da917da665432f757",
+          "bytes": 5025136,
+          "written_utc": "2026-09-10 08:40:51 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45730
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0002.csv",
+          "n_rows": 45730,
+          "sha256": "7ba9e1621ca91a2134c4706d626133448daa95b6ac14d01450423dd46c5eed03",
+          "bytes": 5185420,
+          "written_utc": "2026-09-10 10:33:00 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45730
+        }
+      }
+    },
+    "1": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0001.csv",
+          "n_rows": 64000,
+          "sha256": "12b409f8ac1272474f41b3e6ec8c03f63affcd1165254a29419f5d90403d1a15",
+          "bytes": 172834473,
+          "written_utc": "2026-09-03 23:41:33 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0001.csv",
+          "n_rows": 38351,
+          "sha256": "6ad1cd7bbe9a1fe6d10629abcc39a96e751fa0bfcd4e8d7fe4abc34a4f672111",
+          "bytes": 86744825,
+          "written_utc": "2026-09-03 23:43:11 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0001.csv",
+          "n_rows": 46351,
+          "sha256": "7b570be809db03fec16bc078dae3459dcaca257ada963d84da415e9b09c99633",
+          "bytes": 105123203,
+          "written_utc": "2026-09-08 01:48:16 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46351
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0001.csv",
+          "n_rows": 46351,
+          "sha256": "cbdf07c312f0dab756665863bdfc53380cdc848ea284be0aa1bd41f9884c4e30",
+          "bytes": 105227067,
+          "written_utc": "2026-09-08 01:49:33 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46351
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0001.csv",
+          "n_rows": 46351,
+          "sha256": "d476fa89b389437a27a640f11320ca9aa2def63968083574ffc4ea963fd1ba95",
+          "bytes": 107186172,
+          "written_utc": "2026-09-08 01:50:36 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46351
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0001.csv",
+          "n_rows": 46191,
+          "sha256": "46eb974fe3cb1e2584f027007d5594549420962b0f4ac4447908029b44022806",
+          "bytes": 4401937,
+          "written_utc": "2026-09-08 01:54:15 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46191
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0001.csv",
+          "n_rows": 46191,
+          "sha256": "d7d9db979b6e4d4f537cc2512da21ecb6182c05c2d9b16ed502cbeac0c807bf2",
+          "bytes": 4449263,
+          "written_utc": "2026-09-09 11:44:07 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46191
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0001.csv",
+          "n_rows": 46191,
+          "sha256": "7e971411de1d51c272754a381db812405bd6f855ee4614e539504957fdc9a424",
+          "bytes": 5156656,
+          "written_utc": "2026-09-09 14:20:55 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46191
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0001.csv",
+          "n_rows": 46191,
+          "sha256": "7eebfa4d591eef363ea5a8d938d253c6e34cedc6ab5ad5acf57337c0197c752e",
+          "bytes": 5061372,
+          "written_utc": "2026-09-09 19:06:51 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46191
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0001.csv",
+          "n_rows": 46191,
+          "sha256": "230fce95f183c290f43946574b96543f3a72f8a7115be3af467dde75895a4fcc",
+          "bytes": 5239153,
+          "written_utc": "2026-09-09 20:59:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46191
+        }
+      }
+    },
+    "4": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0004.csv",
+          "n_rows": 64000,
+          "sha256": "6e7c26f0e3f60d21b2a42f66437461a512cc187d152f8185785973acbe1e6278",
+          "bytes": 180121983,
+          "written_utc": "2026-09-04 06:09:07 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0004.csv",
+          "n_rows": 37544,
+          "sha256": "f0c564277b74bef511df6f00d3ee478fbbc33211ef293c1afdbcc2e267c20cea",
+          "bytes": 89052138,
+          "written_utc": "2026-09-04 06:10:40 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0004.csv",
+          "n_rows": 45544,
+          "sha256": "90c2259a5002ad93c9d3354b0c3f4a9fede625da00362a70e079cc0eb32b9f12",
+          "bytes": 108260715,
+          "written_utc": "2026-09-08 02:15:32 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45544
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0004.csv",
+          "n_rows": 45544,
+          "sha256": "116f6d527d1b1e18c70fa627ae233b698035cae7c5c788054a90a4dfc5cac29e",
+          "bytes": 108360231,
+          "written_utc": "2026-09-08 02:16:48 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45544
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0004.csv",
+          "n_rows": 45544,
+          "sha256": "7b65f2522c844db49a15cefc56a7d0ec82805457c7c6ead2492bc34566cfa095",
+          "bytes": 110291076,
+          "written_utc": "2026-09-08 02:17:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45544
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0004.csv",
+          "n_rows": 45270,
+          "sha256": "45bd3e1430a64d86be3553fd77d4a21d7c6c922a896a96d6658700aec9a052c6",
+          "bytes": 4318486,
+          "written_utc": "2026-09-08 02:21:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45270
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0004.csv",
+          "n_rows": 45270,
+          "sha256": "762ed86635eac77add8dc4cd65a544d09a95d63632a8093794497c7c05906ee2",
+          "bytes": 4346813,
+          "written_utc": "2026-09-10 20:07:09 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45270
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0004.csv",
+          "n_rows": 45270,
+          "sha256": "dabc81e53c1efe7d491454528cd788b96becb78736d64b0b295814baa0c16fe6",
+          "bytes": 5074914,
+          "written_utc": "2026-09-11 18:33:28 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45270
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0004.csv",
+          "n_rows": 45270,
+          "sha256": "415e6fddcdc2928a9bbce0f980a93310a56fe583fff9a3f80e3483ee896f71b5",
+          "bytes": 4968340,
+          "written_utc": "2026-09-11 23:19:33 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45270
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0004.csv",
+          "n_rows": 45270,
+          "sha256": "570c12925944f188093a8db287ac27f5751c1e78663859bcd936c5098c7c72ab",
+          "bytes": 5160958,
+          "written_utc": "2026-09-12 01:12:05 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45270
+        }
+      }
+    },
+    "6": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0006.csv",
+          "n_rows": 64000,
+          "sha256": "09263052d8fe1123dda36509441d220850d915152c3c8bd188849ae2af5d2152",
+          "bytes": 175855074,
+          "written_utc": "2026-09-04 06:20:32 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0006.csv",
+          "n_rows": 38391,
+          "sha256": "0e1045f8fd420ab10c3a92c983440a032280bbc4c21190129ead2569c821883f",
+          "bytes": 88751928,
+          "written_utc": "2026-09-04 06:22:09 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0006.csv",
+          "n_rows": 46391,
+          "sha256": "a927ad6fda38ff0469665fe7ecf07b0a0cf4b9a4b6d62c9917b057c32861f9cd",
+          "bytes": 107421447,
+          "written_utc": "2026-09-08 02:35:05 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46391
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0006.csv",
+          "n_rows": 46391,
+          "sha256": "522754a7a59b7ceb571f114b65de677f589799edd0b3004cd8c96ee07c200bf6",
+          "bytes": 107527769,
+          "written_utc": "2026-09-08 02:36:23 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46391
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0006.csv",
+          "n_rows": 46391,
+          "sha256": "fbfb28d373c3ebcfc720982da7293b6781037d87e130372f9aafec70556378ca",
+          "bytes": 109492474,
+          "written_utc": "2026-09-08 02:37:29 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46391
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0006.csv",
+          "n_rows": 46251,
+          "sha256": "54db6f2517957d5510f5a5fe8010c2fdf8dd3754229a5dacf948cafff2894ec1",
+          "bytes": 4397637,
+          "written_utc": "2026-09-08 02:41:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46251
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0006.csv",
+          "n_rows": 46251,
+          "sha256": "9beb6300be6801372680b37db830b285b3a591c339208ec3d272980ee5b6fb3e",
+          "bytes": 4434836,
+          "written_utc": "2026-09-13 02:57:56 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46251
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0006.csv",
+          "n_rows": 46251,
+          "sha256": "0e70304e63d11babb2b1ee5311e140ab91e0661353dcf12c74b85327b08af029",
+          "bytes": 5172562,
+          "written_utc": "2026-09-13 05:51:57 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46251
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0006.csv",
+          "n_rows": 46251,
+          "sha256": "a88466cfd8288ecac5fe3a719e8a63c6274eefe60fe4c55cff430223e9c45425",
+          "bytes": 5065717,
+          "written_utc": "2026-09-13 10:47:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46251
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0006.csv",
+          "n_rows": 46251,
+          "sha256": "9d9549c6395638632dfa94510218d3470c880682a89569650805e9cc121116ed",
+          "bytes": 5232514,
+          "written_utc": "2026-09-13 12:39:53 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46251
+        }
+      }
+    },
+    "7": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0007.csv",
+          "n_rows": 64000,
+          "sha256": "51581098b22189ca2a98d1f9cf496d807535912faceee0d4351104f3f7aa1bd6",
+          "bytes": 173171323,
+          "written_utc": "2026-09-04 12:20:00 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0007.csv",
+          "n_rows": 37926,
+          "sha256": "3f62590268920af4fb5ce7cc2f1183c651986bc6cd0eb1cdba72ec62da95c952",
+          "bytes": 86459754,
+          "written_utc": "2026-09-04 12:21:33 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0007.csv",
+          "n_rows": 45926,
+          "sha256": "2f38cdfacaf6ee77a3c8fb8cbf17960e1ff61b856f4ae219cd840678ec1d8cf0",
+          "bytes": 104952079,
+          "written_utc": "2026-09-08 02:45:03 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45926
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0007.csv",
+          "n_rows": 45926,
+          "sha256": "dce2f89a0566898022e059a38a00cd4bb8f55316f9c51869fc0b2097dedb1777",
+          "bytes": 105063773,
+          "written_utc": "2026-09-08 02:46:20 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45926
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0007.csv",
+          "n_rows": 45926,
+          "sha256": "e6185bcf63d0345817c5dd4f2c01a0f3d6c0c141dd61d9339cc26b878c5e5efc",
+          "bytes": 107003705,
+          "written_utc": "2026-09-08 02:47:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45926
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0007.csv",
+          "n_rows": 45694,
+          "sha256": "15dceb6b0d107945e4fe89e723e027599aa26f63607f0680896264417f02b496",
+          "bytes": 4353714,
+          "written_utc": "2026-09-08 02:51:49 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0007.csv",
+          "n_rows": 45694,
+          "sha256": "897a20620a97efc985c3ec30a4f1185cce4fbf84a452241d07b5f08e1b391463",
+          "bytes": 4377422,
+          "written_utc": "2026-09-13 14:27:47 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0007.csv",
+          "n_rows": 45694,
+          "sha256": "0babaeb2212013bef11eb72b2a0052435ee18316672d6f40771316ec73c51533",
+          "bytes": 5102431,
+          "written_utc": "2026-09-13 17:13:15 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0007.csv",
+          "n_rows": 45694,
+          "sha256": "de5755de95ee51add51433dd3bfd32cd6852cfbc5884fcc0b6b2775a17c52609",
+          "bytes": 4987894,
+          "written_utc": "2026-09-13 22:02:30 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0007.csv",
+          "n_rows": 45694,
+          "sha256": "2d7d907025105c31b99c212248fedced16da34c2a41d9da9380af347442c866a",
+          "bytes": 5202182,
+          "written_utc": "2026-09-14 00:00:39 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        }
+      }
+    },
+    "8": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0008.csv",
+          "n_rows": 64000,
+          "sha256": "b7dbda23c488efd9f4e79855d4c19ca0e2774b3a79e79bc3078d4cf16bb45ba3",
+          "bytes": 174458480,
+          "written_utc": "2026-09-04 12:50:53 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0008.csv",
+          "n_rows": 38132,
+          "sha256": "aad695568ebacd33d851877a4e78315e0acc8bc87493fcd011aa90530e0bf0b4",
+          "bytes": 87402443,
+          "written_utc": "2026-09-04 12:52:31 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0008.csv",
+          "n_rows": 46132,
+          "sha256": "895eeba0676fa11dd118aef2a1551a33b1f4fe4295c20d58aba82c6291a7e9ea",
+          "bytes": 106044709,
+          "written_utc": "2026-09-08 02:55:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46132
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0008.csv",
+          "n_rows": 46132,
+          "sha256": "4715e69408baf30f0fd70aeed608d8cb131409dcc9ea157aeb2a1a8809f09c30",
+          "bytes": 106154121,
+          "written_utc": "2026-09-08 02:56:54 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46132
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0008.csv",
+          "n_rows": 46132,
+          "sha256": "d04faeecd67940fa6082494f8e228fb7e443e5d76153276127d7086f0d715377",
+          "bytes": 108109567,
+          "written_utc": "2026-09-08 02:57:59 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46132
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0008.csv",
+          "n_rows": 45982,
+          "sha256": "8d84c8ab93a7028ad47a524dce0c888d277a42100f8a54cede8e5235b63cbbcd",
+          "bytes": 4378874,
+          "written_utc": "2026-09-08 03:02:31 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45982
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0008.csv",
+          "n_rows": 45982,
+          "sha256": "69e4224645ac50524f0081b25d66a2a549c6e465c3ac13097ecf9c3b068e6386",
+          "bytes": 4419873,
+          "written_utc": "2026-09-14 03:03:03 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45982
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0008.csv",
+          "n_rows": 45982,
+          "sha256": "ebbe78ee05aaea2e18c6620cce1c03fdc06046db96d56dcecd54ea959f7a3c14",
+          "bytes": 5154965,
+          "written_utc": "2026-09-14 05:52:04 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45982
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0008.csv",
+          "n_rows": 45982,
+          "sha256": "86bae8525c656169b982f2bbd35ea2cd4dc7d2c24d5816795cb137a1e6068b2d",
+          "bytes": 5037614,
+          "written_utc": "2026-09-14 10:59:48 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45982
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0008.csv",
+          "n_rows": 45982,
+          "sha256": "ba258e388d717277206ccaf8c2f642930e62b1738c01cfc8f85867df97ee2f90",
+          "bytes": 5208637,
+          "written_utc": "2026-09-14 12:51:08 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45982
+        }
+      }
+    },
+    "9": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0009.csv",
+          "n_rows": 64000,
+          "sha256": "feb8e57a6fb73241c070efced1af7f7a244b2d92aa5524851f69e77743b16432",
+          "bytes": 173322743,
+          "written_utc": "2026-09-04 18:37:27 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0009.csv",
+          "n_rows": 37479,
+          "sha256": "b394b86bb04d84abc7bc4106df50bdb85ae396368560c02debe0b4b9983dc88d",
+          "bytes": 85449997,
+          "written_utc": "2026-09-04 18:39:00 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0009.csv",
+          "n_rows": 45479,
+          "sha256": "56afd7676e49fef953701937ac08209cd5d4b90f06f803d24c9e1bcdd8b0a118",
+          "bytes": 103868544,
+          "written_utc": "2026-09-08 03:06:06 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45479
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0009.csv",
+          "n_rows": 45479,
+          "sha256": "30d4ec7d4d06cc6a452369d0d20155363456605736741be645e30f6304e976a9",
+          "bytes": 103973701,
+          "written_utc": "2026-09-08 03:07:23 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45479
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0009.csv",
+          "n_rows": 45479,
+          "sha256": "622b89cf8421e50b7c69d200cc999725283cc4572897424ca9be734f796e457a",
+          "bytes": 105892569,
+          "written_utc": "2026-09-08 03:08:27 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45479
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0009.csv",
+          "n_rows": 45284,
+          "sha256": "37d51dfdcd7ef4598ed13a459724345641493365cf33a4e4d1c08fdac11fed48",
+          "bytes": 4318253,
+          "written_utc": "2026-09-08 03:13:07 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45284
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0009.csv",
+          "n_rows": 45284,
+          "sha256": "abcd4b66e8268aec77e38dac87a527487c1bb690a10b585ac4b58132fd71a313",
+          "bytes": 4350169,
+          "written_utc": "2026-09-14 14:40:04 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45284
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0009.csv",
+          "n_rows": 45284,
+          "sha256": "13b3403abdb619ba5eb621af5e9901fdac601d63830d9507f7a413a72fb77d33",
+          "bytes": 5062524,
+          "written_utc": "2026-09-14 17:24:54 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45284
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0009.csv",
+          "n_rows": 45284,
+          "sha256": "16dd1ffdf5c273df318a0274058e0d408907d22a58337340072f895c9850a381",
+          "bytes": 4957554,
+          "written_utc": "2026-09-14 22:11:31 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45284
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0009.csv",
+          "n_rows": 45284,
+          "sha256": "54fec3e3de01862b8cd26bf59699958e2eedd63e0b9d65d325ff5939dc3c8797",
+          "bytes": 5128260,
+          "written_utc": "2026-09-15 00:05:14 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45284
+        }
+      }
+    },
+    "10": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0010.csv",
+          "n_rows": 64000,
+          "sha256": "df71863f6d7b180905051d626d00b39be2116fbce1269e522a1e431806f083c3",
+          "bytes": 174436375,
+          "written_utc": "2026-09-04 19:20:40 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0010.csv",
+          "n_rows": 38177,
+          "sha256": "ae04211e09c29cf8ee8366121ed25d7b5638e8faabc708760f56a3d724888a87",
+          "bytes": 87906599,
+          "written_utc": "2026-09-04 19:22:17 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0010.csv",
+          "n_rows": 46177,
+          "sha256": "a5a04f6c8c0116d7b822cc56f4152fb98e06645bb73d68d6a43eda369c861638",
+          "bytes": 106455757,
+          "written_utc": "2026-09-08 03:16:38 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46177
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0010.csv",
+          "n_rows": 46177,
+          "sha256": "135881377f93ef58db1f1d830f67a021cdbb4fee71acc3ae2e5b7f8fcde45f42",
+          "bytes": 106557675,
+          "written_utc": "2026-09-08 03:17:54 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46177
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0010.csv",
+          "n_rows": 46177,
+          "sha256": "7bfeab30dc8916340ce14c96d50bde281ca57ac4e1a9148f210958ab61f51040",
+          "bytes": 108513464,
+          "written_utc": "2026-09-08 03:18:57 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46177
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0010.csv",
+          "n_rows": 45957,
+          "sha256": "7c2a25f472818a44bb44b70c4aeec47c2a21bd307c380ee0cb2a0877799cc2b8",
+          "bytes": 4383028,
+          "written_utc": "2026-09-08 03:23:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45957
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0010.csv",
+          "n_rows": 45957,
+          "sha256": "ab1f316b4e165b2cb24402559c8c10632e42f9b4c059e45b8d99d1420cd9a654",
+          "bytes": 4405271,
+          "written_utc": "2026-09-15 01:57:26 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45957
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0010.csv",
+          "n_rows": 45957,
+          "sha256": "50eddc219a9324b6ebdbb205116af6de41ce409c58d2747daf4aac17ed251f86",
+          "bytes": 5168753,
+          "written_utc": "2026-09-15 04:51:13 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45957
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0010.csv",
+          "n_rows": 45957,
+          "sha256": "88e1c2d894e6ce8137c8f5b7e6666815b98bd4b9c4251dd10b305452c6d5f2f4",
+          "bytes": 5029416,
+          "written_utc": "2026-09-15 09:44:17 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45957
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0010.csv",
+          "n_rows": 45957,
+          "sha256": "d752ce1d25f3caa4339b4ad2fc19a0c4e39fd6bda179b2d8d1fa2f0da23bfa5a",
+          "bytes": 5213152,
+          "written_utc": "2026-09-15 11:41:20 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45957
+        }
+      }
+    },
+    "11": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0011.csv",
+          "n_rows": 64000,
+          "sha256": "f66e6269a3f83619e4796f2c5b65211dbd84313420c28e04d77fa2cfa05ec2a1",
+          "bytes": 172642490,
+          "written_utc": "2026-09-05 01:05:59 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0011.csv",
+          "n_rows": 38201,
+          "sha256": "3834b07fa39cfcaaa07fd492ad9224fc50093380f3c65a01a5954f726fe516c9",
+          "bytes": 86505296,
+          "written_utc": "2026-09-05 01:07:33 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0011.csv",
+          "n_rows": 46201,
+          "sha256": "a8268575a882e2bd825e83dbb8f1c789bd2bbd668c52b36f458d8570bf17b76a",
+          "bytes": 104807833,
+          "written_utc": "2026-09-08 03:27:39 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46201
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0011.csv",
+          "n_rows": 46201,
+          "sha256": "b2f43b8d0b051ab72434cecae9c73997ebe1079f7e5f624fb9870effa1196dbd",
+          "bytes": 104914473,
+          "written_utc": "2026-09-08 03:28:54 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46201
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0011.csv",
+          "n_rows": 46201,
+          "sha256": "6e255a05da679ee50f3c6a488e04f6b5b887a4f3600b8049be070fc0bc44bed0",
+          "bytes": 106868936,
+          "written_utc": "2026-09-08 03:29:57 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46201
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0011.csv",
+          "n_rows": 46037,
+          "sha256": "12a0e9ee46cf5d1d0a2abadf5bb812efcbc8299bdc59b3df46bd93cccd962cc2",
+          "bytes": 4407818,
+          "written_utc": "2026-09-08 03:35:01 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46037
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0011.csv",
+          "n_rows": 46037,
+          "sha256": "ff6dfcdc082fa97bb581ec5e833218fbaae57288d4c1efd72ed657f08823d0e7",
+          "bytes": 4425616,
+          "written_utc": "2026-09-15 08:49:07 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46037
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0011.csv",
+          "n_rows": 46037,
+          "sha256": "2d11a29d4ec34e1628d0e292f0c877a77d1015854f68b791e529be3171130434",
+          "bytes": 5151353,
+          "written_utc": "2026-09-15 11:41:16 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46037
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0011.csv",
+          "n_rows": 46037,
+          "sha256": "1bd2eec3fbea8732c6393752e7f7ea1ae7d47690710476456eabbf65bd2767b6",
+          "bytes": 5062208,
+          "written_utc": "2026-09-15 16:45:52 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46037
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0011.csv",
+          "n_rows": 46037,
+          "sha256": "ac603b548fd68934f3f585a5c0721be2b41f439bf9f91f5e356b0f8bbbdeb572",
+          "bytes": 5247841,
+          "written_utc": "2026-09-15 18:40:24 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46037
+        }
+      }
+    },
+    "12": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0012.csv",
+          "n_rows": 64000,
+          "sha256": "0a8bea80481c6ff06258463004cb46a449c24af32d8677c6d99653722a943d1c",
+          "bytes": 177621656,
+          "written_utc": "2026-09-05 01:56:21 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0012.csv",
+          "n_rows": 38065,
+          "sha256": "8969639b92c4b7e8799d38217a2c1dda65f614e65a7228bacffee3b8e6a9810e",
+          "bytes": 89160379,
+          "written_utc": "2026-09-05 01:57:58 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0012.csv",
+          "n_rows": 46065,
+          "sha256": "cee465da8a34ab1fcb40153b84e61ee47f19f5c364a346bce7fc6fb516b9ad0b",
+          "bytes": 108046420,
+          "written_utc": "2026-09-08 03:38:36 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46065
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0012.csv",
+          "n_rows": 46065,
+          "sha256": "bdf982d1ce4cf17ea9023fa022f58a0a11c6a47f0b603effff45c816aaaa43f3",
+          "bytes": 108149498,
+          "written_utc": "2026-09-08 03:39:51 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46065
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0012.csv",
+          "n_rows": 46065,
+          "sha256": "610d0a881f13c287d17767afcab37b62dca81f5de3efc07db2a0a6d9fd3605bb",
+          "bytes": 110113315,
+          "written_utc": "2026-09-08 03:40:55 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46065
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0012.csv",
+          "n_rows": 45912,
+          "sha256": "9d11c7d3bd6916b213f6225bed66caae049ef3e3c8fe0a01878d4073b7d3854e",
+          "bytes": 4381768,
+          "written_utc": "2026-09-08 03:46:05 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45912
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0012.csv",
+          "n_rows": 45912,
+          "sha256": "f8a1c73ff963bc7aaee40535affa908ace58aa8c0d881b36cf04209b6f41ea5e",
+          "bytes": 4448409,
+          "written_utc": "2026-09-15 13:41:11 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45912
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0012.csv",
+          "n_rows": 45912,
+          "sha256": "04da8482154e40f2408598e3e09dd5a394add7aaa0b22100dcbe55a1a0e659c0",
+          "bytes": 5163208,
+          "written_utc": "2026-09-15 16:31:57 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45912
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0012.csv",
+          "n_rows": 45912,
+          "sha256": "a093579ec33b4d718e76d973ecca6e9b4e2a312b65111e297c5ad4539194e675",
+          "bytes": 5039410,
+          "written_utc": "2026-09-15 21:24:55 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45912
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0012.csv",
+          "n_rows": 45912,
+          "sha256": "a2b33cd6a8b94ef56476a0bb50e6082dfc5ddddd78f65871f817cabba6c6bd9a",
+          "bytes": 5222139,
+          "written_utc": "2026-09-15 23:16:38 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45912
+        }
+      }
+    },
+    "14": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0014.csv",
+          "n_rows": 64000,
+          "sha256": "9574365196ab781075218a37b74ec0fcdeee3822747cb53db9c6d01d996ec216",
+          "bytes": 171360205,
+          "written_utc": "2026-09-06 21:42:40 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0014.csv",
+          "n_rows": 37914,
+          "sha256": "3760e02c026a0cb98b29b64c166bbca3c38c4abe5a5a72a10bb2d52563b0ac17",
+          "bytes": 85225473,
+          "written_utc": "2026-09-06 21:46:45 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0014.csv",
+          "n_rows": 45914,
+          "sha256": "c33e0a2a4d122d902f5b4128a74bdc8fe065c15f02d6cfdbbdd7116c19bda756",
+          "bytes": 103401827,
+          "written_utc": "2026-09-08 04:16:27 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45914
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0014.csv",
+          "n_rows": 45914,
+          "sha256": "74937b3897cc7ef2a218093c1e8c7fbf7faad8a380ed18c41812e80da26c13f9",
+          "bytes": 103502214,
+          "written_utc": "2026-09-08 04:18:59 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45914
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0014.csv",
+          "n_rows": 45914,
+          "sha256": "71b4d455560b190fc8192a050e13b54286c67b603067c1fd1b1f97cc3c739621",
+          "bytes": 105452582,
+          "written_utc": "2026-09-08 04:21:04 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45914
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0014.csv",
+          "n_rows": 45725,
+          "sha256": "1bf5e6ac8612f35ec2d06cb3738588e626d4fbfa291219e40b3e5cb978b6cfd7",
+          "bytes": 4366890,
+          "written_utc": "2026-09-08 04:31:38 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45725
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0014.csv",
+          "n_rows": 45725,
+          "sha256": "8e0cdbac13528a44c3917cf5cb507800cb6884305d1015a6c07c5aae15ce0dee",
+          "bytes": 4403805,
+          "written_utc": "2026-09-16 01:06:37 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45725
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0014.csv",
+          "n_rows": 45725,
+          "sha256": "1be1e2b5ac1c5f6d936a492bad2a917f1c6a13afd4db3737a9ecb4ba3eefc663",
+          "bytes": 5141575,
+          "written_utc": "2026-09-16 03:56:14 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45725
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0014.csv",
+          "n_rows": 45725,
+          "sha256": "a45e04032dbf724963e8e079f66d371c2d9b3cd43596737a4dc7daa262d2649f",
+          "bytes": 4997192,
+          "written_utc": "2026-09-16 08:44:01 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45725
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0014.csv",
+          "n_rows": 45725,
+          "sha256": "f192d76b9bd2126a04ef125e5602d61a31afd6567b260ec23b90051fcf23fb3e",
+          "bytes": 5188021,
+          "written_utc": "2026-09-16 10:36:44 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45725
+        }
+      }
+    },
+    "13": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0013.csv",
+          "n_rows": 64000,
+          "sha256": "547f153b79c5c22325ab7ec3aa39de88981d32d3314617f8b8c493dd7bdfd751",
+          "bytes": 176191079,
+          "written_utc": "2026-09-06 22:59:55 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0013.csv",
+          "n_rows": 38305,
+          "sha256": "46ae51397aba495270826e830604e9b15fb2ed727ef0d0ea8028a901684edef9",
+          "bytes": 88861352,
+          "written_utc": "2026-09-06 23:03:57 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0013.csv",
+          "n_rows": 46305,
+          "sha256": "4d9028e3652bee94ac291ccdd17ce8f251a63e309c8a4509b1ba4287d3fd8b90",
+          "bytes": 107521347,
+          "written_utc": "2026-09-08 03:52:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46305
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0013.csv",
+          "n_rows": 46305,
+          "sha256": "6e44be666934e911469de2062fb8e667b1ec152871804e3d999598127e44fb3f",
+          "bytes": 107624587,
+          "written_utc": "2026-09-08 03:55:28 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46305
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0013.csv",
+          "n_rows": 46305,
+          "sha256": "9faae5705456089bc65228798da6a0b49c56f65528fbd7f370e48b4ceb1fc8da",
+          "bytes": 109589490,
+          "written_utc": "2026-09-08 03:57:37 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46305
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0013.csv",
+          "n_rows": 46115,
+          "sha256": "967585c19889aa1b626e49fd5d3bf06d4f62bef1de87148e8a2bb75b698d1338",
+          "bytes": 4430456,
+          "written_utc": "2026-09-08 04:08:20 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46115
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0013.csv",
+          "n_rows": 46115,
+          "sha256": "8d139f6e4e4cccd0b0dffb46e47fe6414969fcb05e6dd44284cae8d2a013b1be",
+          "bytes": 4440772,
+          "written_utc": "2026-09-15 20:33:18 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46115
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0013.csv",
+          "n_rows": 46115,
+          "sha256": "5f898ac1cad79172e14da5743724b3225af4795e8c729d670bd676ec1dd97dfd",
+          "bytes": 5182331,
+          "written_utc": "2026-09-15 23:28:16 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46115
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0013.csv",
+          "n_rows": 46115,
+          "sha256": "1b372794c4b87f3d7efddad0450efd98efacaf8fdebaf3d7d9e02edc2c3663ae",
+          "bytes": 5052326,
+          "written_utc": "2026-09-16 04:27:21 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46115
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0013.csv",
+          "n_rows": 46115,
+          "sha256": "16c45b0c0cd04dbdefd5068aac413c784ef9cc9ae4216285e83565d60f8c3c59",
+          "bytes": 5249399,
+          "written_utc": "2026-09-16 06:26:00 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46115
+        }
+      }
+    },
+    "16": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0016.csv",
+          "n_rows": 64000,
+          "sha256": "6066d4ececc5d7c0faa663a531430ee7d2b57514b85a462e7093e51770703427",
+          "bytes": 172989006,
+          "written_utc": "2026-09-07 17:24:47 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0016.csv",
+          "n_rows": 37783,
+          "sha256": "e1b3b598b3f0c602bec763125b332ae59ed7ce416e6cc50374f1304f09f171d8",
+          "bytes": 85647264,
+          "written_utc": "2026-09-07 17:27:21 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0016.csv",
+          "n_rows": 45783,
+          "sha256": "3ba86f6ad168cdf7fff8db57ecdb623f850275ca62f574702335af1bc56d3441",
+          "bytes": 103949051,
+          "written_utc": "2026-09-08 04:39:58 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45783
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0016.csv",
+          "n_rows": 45783,
+          "sha256": "39fee58cf25bc91ded553f0588d1a542999104cdbe788b2f3bc8e943c6c198e0",
+          "bytes": 104049378,
+          "written_utc": "2026-09-08 04:42:31 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45783
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0016.csv",
+          "n_rows": 45783,
+          "sha256": "ddd81f0e2f21b76f3390180a379df04fb0222ebc0b544391b38da581853c88b0",
+          "bytes": 105994245,
+          "written_utc": "2026-09-08 04:44:42 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45783
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0016.csv",
+          "n_rows": 45531,
+          "sha256": "6041389df76c08ccf81b9b90c24a4e87b184a1a79743d5b5be150b94c5454073",
+          "bytes": 4354889,
+          "written_utc": "2026-09-08 04:55:21 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45531
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0016.csv",
+          "n_rows": 45531,
+          "sha256": "217fa19a0acdacef4bb299131f7138679006fb3d5d4dedeae2e231d1b9adef0c",
+          "bytes": 4384276,
+          "written_utc": "2026-09-16 09:53:48 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45531
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0016.csv",
+          "n_rows": 45531,
+          "sha256": "c5fbee5e89bc886ef64c9eece3606da933137a3720d8d428577229dcab9a1490",
+          "bytes": 5098953,
+          "written_utc": "2026-09-16 12:40:20 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45531
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0016.csv",
+          "n_rows": 45531,
+          "sha256": "5289e3b41b4878040f78f5a7d6f30ee02d4bb987a210d5ebb32f5015fadfc007",
+          "bytes": 5011675,
+          "written_utc": "2026-09-16 17:39:11 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45531
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0016.csv",
+          "n_rows": 45531,
+          "sha256": "2a8fda250d45e991aedb21047a2e9ffc77003640ec98230f7ba26af65c0b0d79",
+          "bytes": 5174055,
+          "written_utc": "2026-09-16 19:32:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45531
+        }
+      }
+    },
+    "17": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0017.csv",
+          "n_rows": 64000,
+          "sha256": "931a1c1bc9e92ebdd2821a213e29dd19430d22a1b17aa3911b447abe19fbbfcf",
+          "bytes": 177832108,
+          "written_utc": "2026-09-08 14:01:39 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0017.csv",
+          "n_rows": 37972,
+          "sha256": "93f36ab298b01bfc271b3770ff8738577b87dd879383e2548cb45036a2269741",
+          "bytes": 88478332,
+          "written_utc": "2026-09-08 14:05:45 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0017.csv",
+          "n_rows": 45972,
+          "sha256": "e570c0036d7a8487f5074a621970cdc6b7ebc0b2273d094604976293ad6284ac",
+          "bytes": 107380753,
+          "written_utc": "2026-09-08 21:47:42 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45972
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0017.csv",
+          "n_rows": 45972,
+          "sha256": "e28dbe31c4813a682c68179832161e142db18cec3de05b038264d7848fd078b3",
+          "bytes": 107482380,
+          "written_utc": "2026-09-08 21:49:52 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45972
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0017.csv",
+          "n_rows": 45972,
+          "sha256": "f4bd0192017b437127969b81270547399a00c719e0bbaf4fedd5b33ec51e66cf",
+          "bytes": 109439623,
+          "written_utc": "2026-09-08 21:51:53 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45972
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0017.csv",
+          "n_rows": 45764,
+          "sha256": "8fe2ea40567ef82f21696be3a4dc2698b33a61f564edba5e7044b55da8b0b34d",
+          "bytes": 4369856,
+          "written_utc": "2026-09-08 22:03:13 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45764
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0017.csv",
+          "n_rows": 45764,
+          "sha256": "f91a6da3f415781b4f3f3876b4631aee0d11b5dace4a94b869129188848906fc",
+          "bytes": 4413217,
+          "written_utc": "2026-09-13 20:04:30 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45764
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0017.csv",
+          "n_rows": 45764,
+          "sha256": "48a79e7040d6e555826fcb5afc6c3e68282e4d57e7cfff2480a8b88b2d2811cf",
+          "bytes": 5122941,
+          "written_utc": "2026-09-13 22:54:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45764
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0017.csv",
+          "n_rows": 45764,
+          "sha256": "a46c29ca129602d41e0766161143645ee696c6c13d7a95bd208ac7fd5e161769",
+          "bytes": 5005628,
+          "written_utc": "2026-09-14 03:48:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45764
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0017.csv",
+          "n_rows": 45764,
+          "sha256": "77832f0112b0e5528bc6e5cfdcd542654fbdc137baf26a8576d01697e03bdbb2",
+          "bytes": 5185824,
+          "written_utc": "2026-09-14 05:46:31 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45764
+        }
+      }
+    },
+    "15": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0015.csv",
+          "n_rows": 64000,
+          "sha256": "9db028ebb9bef1c3dfd37faf6708cd6d3d41f9bd1e0b046ef3cb43225acfd7ef",
+          "bytes": 178734578,
+          "written_utc": "2026-09-08 21:33:52 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0015.csv",
+          "n_rows": 38200,
+          "sha256": "df52e42d8365df426bcc6d34a7e298e4c048accc79b188c8e47820a5aa9dbb20",
+          "bytes": 89874169,
+          "written_utc": "2026-09-08 21:37:31 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0015.csv",
+          "n_rows": 46200,
+          "sha256": "c5712700159218a13d2a7716da365f1c76205a543740a4929917707773b7fcee",
+          "bytes": 108944351,
+          "written_utc": "2026-09-08 22:12:18 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46200
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0015.csv",
+          "n_rows": 46200,
+          "sha256": "1fc10550aa6a4d628dbc86f57403688038eee5b43289094d6a341cf7685416de",
+          "bytes": 109052337,
+          "written_utc": "2026-09-08 22:14:44 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46200
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0015.csv",
+          "n_rows": 46200,
+          "sha256": "ed2e45d797808b86736c10d30b0bbb0578be644a95a4b929729ec1f339c12c47",
+          "bytes": 111012825,
+          "written_utc": "2026-09-08 22:17:06 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46200
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0015.csv",
+          "n_rows": 46003,
+          "sha256": "a83511cc6130e50aafaffbcb764abeeaa50a5844c840946e68a1158b99f6857f",
+          "bytes": 4392931,
+          "written_utc": "2026-09-08 22:31:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46003
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0015.csv",
+          "n_rows": 46003,
+          "sha256": "f8007c6a934462739821573511051e10085adfa728e0ed66f8210d8abbb14830",
+          "bytes": 4430014,
+          "written_utc": "2026-09-14 07:42:31 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46003
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0015.csv",
+          "n_rows": 46003,
+          "sha256": "2c19c6b399f1594876a6a52ffc2d7b48ac389ace7cb1d7c854a800afdb9938d0",
+          "bytes": 5137592,
+          "written_utc": "2026-09-14 10:37:55 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46003
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0015.csv",
+          "n_rows": 46003,
+          "sha256": "cfa55df72760e5afc36085f356d1fbbdb9e218007dd0816610d2ae86e79b7f14",
+          "bytes": 5031848,
+          "written_utc": "2026-09-14 15:33:30 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46003
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0015.csv",
+          "n_rows": 46003,
+          "sha256": "3b27f6c5e279eb8de6e0dce4d5f0221129c6b118614b3b9e0ee6a1530dc2d3be",
+          "bytes": 5198671,
+          "written_utc": "2026-09-14 17:25:50 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46003
+        }
+      }
+    },
+    "18": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0018.csv",
+          "n_rows": 64000,
+          "sha256": "d56e211cff2b2ca21411bb689e34c1834238b5897c56264f5ce21ac5be2f328f",
+          "bytes": 179511204,
+          "written_utc": "2026-09-09 12:08:57 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0018.csv",
+          "n_rows": 37841,
+          "sha256": "987103a91e7fc35afbd0a1394a970a9dd9b639173176d469bb59c4bdc395763e",
+          "bytes": 89757886,
+          "written_utc": "2026-09-09 12:13:00 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0018.csv",
+          "n_rows": 45841,
+          "sha256": "84be914baedfa07d8fdb69bf278eb89ca3c83b97c7cabfb06fd2a038423d3319",
+          "bytes": 108718772,
+          "written_utc": "2026-09-09 22:32:23 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45841
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0018.csv",
+          "n_rows": 45841,
+          "sha256": "79e922ac96c28426854ab5e6c61a7fc90dc0cf1fb6a32cc3236402756faa6316",
+          "bytes": 108829769,
+          "written_utc": "2026-09-09 22:34:34 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45841
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0018.csv",
+          "n_rows": 45841,
+          "sha256": "60a831e47909daba75aa38f8ba6e397d453988e86afe1b3d1cff2544aea62176",
+          "bytes": 110774341,
+          "written_utc": "2026-09-09 22:36:43 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45841
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0018.csv",
+          "n_rows": 45711,
+          "sha256": "b7bcf97d5e5ade9d0e2df607efff7fde25175898b82a7813ad3854a56a74fd32",
+          "bytes": 4382398,
+          "written_utc": "2026-09-09 22:48:42 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45711
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0018.csv",
+          "n_rows": 45711,
+          "sha256": "588aac801687c7e0774d32edc94cf2a8ec53a62e4da5ef9b82a6b842e129d604",
+          "bytes": 4443714,
+          "written_utc": "2026-09-14 19:21:00 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45711
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0018.csv",
+          "n_rows": 45711,
+          "sha256": "155b9f42edbf1b34a2e288200aeb6facd00c1575f41730e63827e516bdbfcf08",
+          "bytes": 5115160,
+          "written_utc": "2026-09-14 22:10:37 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45711
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0018.csv",
+          "n_rows": 45711,
+          "sha256": "ba115f924fd6ec8ef549def93fd3ae9f081a5006876bba67801ddec1172a840e",
+          "bytes": 5018284,
+          "written_utc": "2026-09-15 03:04:02 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45711
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0018.csv",
+          "n_rows": 45711,
+          "sha256": "b3148705f81c82392a752fbac308ba788a6af4fb519682e9e88f3d96d07b6dff",
+          "bytes": 5186691,
+          "written_utc": "2026-09-15 04:57:37 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45711
+        }
+      }
+    },
+    "19": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0019.csv",
+          "n_rows": 64000,
+          "sha256": "89dce42312cf60b2226b40498f09c929ebf12f988f76d81d6c461a2de2a3c5e7",
+          "bytes": 173716189,
+          "written_utc": "2026-09-09 22:20:40 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0019.csv",
+          "n_rows": 37926,
+          "sha256": "ba46e4fc3fbe8121233b71740bc9c90409e8a1467fe027517197da0827cef6c3",
+          "bytes": 86706371,
+          "written_utc": "2026-09-09 22:22:48 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0019.csv",
+          "n_rows": 45926,
+          "sha256": "d2404fc3fb9fec3159f25fbafaf3fb088412e41e9a29b3950d4ed158e04287de",
+          "bytes": 105267411,
+          "written_utc": "2026-09-09 22:57:43 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45926
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0019.csv",
+          "n_rows": 45926,
+          "sha256": "4c223c83832f66a75a928274cd7f05473bc31a2f8b00f9576b8ada1b0f6163ca",
+          "bytes": 105372827,
+          "written_utc": "2026-09-09 22:59:51 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45926
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0019.csv",
+          "n_rows": 45926,
+          "sha256": "9deb442eab499b7925e498d07b417e7cc22c9f3f53660eb0986a5efd909acce2",
+          "bytes": 107327720,
+          "written_utc": "2026-09-09 23:01:45 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45926
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0019.csv",
+          "n_rows": 45738,
+          "sha256": "71e1f5ea5bc3b48fe7c00d5931bb03c7b3aab8d7df52a871a7620c096ff19883",
+          "bytes": 4386805,
+          "written_utc": "2026-09-09 23:14:01 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45738
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0019.csv",
+          "n_rows": 45738,
+          "sha256": "44bee630f6457c22131a938a0d08eba2543ca900be8a36bb1c254515cf342342",
+          "bytes": 4397087,
+          "written_utc": "2026-09-10 01:04:24 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45738
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0019.csv",
+          "n_rows": 45738,
+          "sha256": "22dc70af2923cbfd0540951b608f8fd0806418b2180a0ec23f14a4cc2b18b427",
+          "bytes": 5126834,
+          "written_utc": "2026-09-10 03:55:14 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45738
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0019.csv",
+          "n_rows": 45738,
+          "sha256": "1d9d9b63ce7dadc9e808e1ae3fedb8513e5c17ba6b4818906a396f9dbde951ce",
+          "bytes": 5020776,
+          "written_utc": "2026-09-10 08:43:10 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45738
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0019.csv",
+          "n_rows": 45738,
+          "sha256": "9f9b66784e1c43aa720a24ccd4f515088f7ff2fe24aee7ac4e84626f19167460",
+          "bytes": 5198691,
+          "written_utc": "2026-09-10 10:37:00 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45738
+        }
+      }
+    },
+    "20": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0020.csv",
+          "n_rows": 64000,
+          "sha256": "df8c7167b564d206ad1ce439c60eeef84ba718ffd96617d856e57879ea08067d",
+          "bytes": 177812848,
+          "written_utc": "2026-10-01 16:54:33 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0020.csv",
+          "n_rows": 37927,
+          "sha256": "191be673856c1bd60ef48373e92349f568f2abdeed948513c20fa68249e83fd0",
+          "bytes": 88656950,
+          "written_utc": "2026-10-01 16:56:46 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0020.csv",
+          "n_rows": 45927,
+          "sha256": "2aaf476d9200a1d68cd3b94c72f89669c286ce0a221b9912202b2020c391bfc9",
+          "bytes": 107505128,
+          "written_utc": "2026-10-01 17:17:03 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45927
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0020.csv",
+          "n_rows": 45927,
+          "sha256": "38ba4f9bbd71cc577ea30cb7db8585190e892412d31cb29113055f7ef2b2f5f9",
+          "bytes": 107614593,
+          "written_utc": "2026-10-01 17:18:38 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45927
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0020.csv",
+          "n_rows": 45927,
+          "sha256": "54df1ac22fb92e4cbeb1864b44ef801caf921c2c31a8c278c15e8a3ae7147c64",
+          "bytes": 109564670,
+          "written_utc": "2026-10-01 17:19:58 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45927
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0020.csv",
+          "n_rows": 45694,
+          "sha256": "f942f88eb4d36a73e5e20125685b1c8c0688c3c445641eb29c54d536a7634666",
+          "bytes": 4380699,
+          "written_utc": "2026-10-01 17:28:11 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0020.csv",
+          "n_rows": 45694,
+          "sha256": "6efc09fb8e9477e254dd7e821147ef1f3719101bf5403d94f4ea24dae86c3f81",
+          "bytes": 4392308,
+          "written_utc": "2026-10-01 19:17:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0020.csv",
+          "n_rows": 45694,
+          "sha256": "1d42ce319c00a4095fb53be756a83a7101a731667318482b1638a2c7fd7aedcf",
+          "bytes": 5118379,
+          "written_utc": "2026-10-01 22:08:13 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0020.csv",
+          "n_rows": 45694,
+          "sha256": "6bb17b32800e6dc82fc8c2f58d27ce4b25eaf0d9f9babdf69f6d9cc2132de7b0",
+          "bytes": 5013989,
+          "written_utc": "2026-10-02 03:07:18 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0020.csv",
+          "n_rows": 45694,
+          "sha256": "d419d34906e870d32332294c016e614d6a9d552f7ef18ee7f33b2e84c08cbd3b",
+          "bytes": 5179526,
+          "written_utc": "2026-10-02 05:00:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45694
+        }
+      }
+    },
+    "21": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0021.csv",
+          "n_rows": 64000,
+          "sha256": "d02b19c55efd6b30ea483c8e55b4a14394b48178f22743a944e865e7b1cc57dc",
+          "bytes": 172755156,
+          "written_utc": "2026-10-02 03:18:06 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0021.csv",
+          "n_rows": 37792,
+          "sha256": "7a67997fb5e770bd38d9476a118156f9fa3363c94d1023cca00568481bcfea75",
+          "bytes": 85720580,
+          "written_utc": "2026-10-02 03:20:17 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0021.csv",
+          "n_rows": 45792,
+          "sha256": "0e5d9941acf91cf863f52200a2f5a3bbd81d72decb69276f9f5c7977180a5624",
+          "bytes": 103984521,
+          "written_utc": "2026-10-02 05:09:30 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45792
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0021.csv",
+          "n_rows": 45792,
+          "sha256": "48ff67764af2440ad92e00f257ee02b50f2a6501a32c29a95de30fcbd60dea7b",
+          "bytes": 104089619,
+          "written_utc": "2026-10-02 05:11:04 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45792
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0021.csv",
+          "n_rows": 45792,
+          "sha256": "8c962fe4d17fbb9d65e029a961759c26c5eb78f8dd523a03fe15543e213fe368",
+          "bytes": 106027463,
+          "written_utc": "2026-10-02 05:12:21 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45792
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0021.csv",
+          "n_rows": 45560,
+          "sha256": "8c107999fb2268f1ef59f03c744333062a1a74637af713b3df35d6c9a58095a5",
+          "bytes": 4363813,
+          "written_utc": "2026-10-02 05:20:46 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45560
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0021.csv",
+          "n_rows": 45560,
+          "sha256": "55ef5b095d97776d0633bfa1b980f511aebbe3e93328ae6959bce36e0914093b",
+          "bytes": 4391317,
+          "written_utc": "2026-10-02 07:15:17 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45560
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0021.csv",
+          "n_rows": 45560,
+          "sha256": "a85a1629a56a68fef3024c8a692184ab2697194682f7b9172a1e25b8d1e5a56b",
+          "bytes": 5098583,
+          "written_utc": "2026-10-02 10:02:32 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45560
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0021.csv",
+          "n_rows": 45560,
+          "sha256": "40a58b42c4eec3ef05eaf72f6a0a86b2c76f621f996bfd4d0509668fbaceb821",
+          "bytes": 4998958,
+          "written_utc": "2026-10-02 14:55:12 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45560
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0021.csv",
+          "n_rows": 45560,
+          "sha256": "d74036636d3bc15720cbd5c26fb972e7b8fa6aef0becf4c8a92356a21f3588a7",
+          "bytes": 5167085,
+          "written_utc": "2026-10-02 16:51:55 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45560
+        }
+      }
+    },
+    "22": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0022.csv",
+          "n_rows": 64000,
+          "sha256": "fd31a983952114d20742945f44aa7b97c97da0910310f426db248b538edac8ae",
+          "bytes": 175850687,
+          "written_utc": "2026-10-03 00:44:33 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0022.csv",
+          "n_rows": 38219,
+          "sha256": "0e6030b3b0f696cbad8ffa3d3ec4ef2b299f8089b956d76e93bdeaefb73a7e2e",
+          "bytes": 88310959,
+          "written_utc": "2026-10-03 00:48:37 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0022.csv",
+          "n_rows": 46219,
+          "sha256": "766b94cc33f9323b0d4489ba6f7204427622e40634b103ca2e3dbb3d0c56680b",
+          "bytes": 106989633,
+          "written_utc": "2026-10-03 01:00:29 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46219
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0022.csv",
+          "n_rows": 46219,
+          "sha256": "114f1aaf7e0861ea3f275a6fedc59ed1ed59dd02c2f1dd9bd7638992ab48d2c1",
+          "bytes": 107098271,
+          "written_utc": "2026-10-03 01:03:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46219
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0022.csv",
+          "n_rows": 46219,
+          "sha256": "09b2935fc78b48ccc5ae111ae88a46396fb17644f1b1f52a41b09f31724ca4f5",
+          "bytes": 109050950,
+          "written_utc": "2026-10-03 01:06:00 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46219
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0022.csv",
+          "n_rows": 45985,
+          "sha256": "1025fad6ed72937d23123b431037a690c44c5bda537c3bb52bd0790f2bc6aace",
+          "bytes": 4405571,
+          "written_utc": "2026-10-03 01:22:08 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45985
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0022.csv",
+          "n_rows": 45985,
+          "sha256": "4ddbcfb2ff8eb59d8d301c66a84128cfd930131ce26237497ced43b265556f0e",
+          "bytes": 4432405,
+          "written_utc": "2026-10-03 03:13:02 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45985
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0022.csv",
+          "n_rows": 45985,
+          "sha256": "d13ad1665527a57bd344ca24af86b5a6710d566fad1284ac348cb7675c166f5a",
+          "bytes": 5170301,
+          "written_utc": "2026-10-03 05:54:44 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45985
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0022.csv",
+          "n_rows": 45985,
+          "sha256": "3f96b5c05390ad9b11e4b509fa91799adbb146d44945b8f8b4663a5cb64af7de",
+          "bytes": 5034772,
+          "written_utc": "2026-10-03 10:40:23 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45985
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0022.csv",
+          "n_rows": 45985,
+          "sha256": "60d840c12dc557949637701d93ec157588226823ad3bd7a85f656e9563e3db76",
+          "bytes": 5230087,
+          "written_utc": "2026-10-03 12:35:01 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45985
+        }
+      }
+    },
+    "23": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0023.csv",
+          "n_rows": 64000,
+          "sha256": "1310684a2d11f5ac07a9e878a2a0d480b6103b16faf8a7de2e1bca9ede86a9e1",
+          "bytes": 174176195,
+          "written_utc": "2026-10-03 21:25:26 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0023.csv",
+          "n_rows": 37777,
+          "sha256": "8b15675a09de495360c2ac317f82262d144802eb0c80fb7059f3ccb19d8b100b",
+          "bytes": 86616986,
+          "written_utc": "2026-10-03 21:29:26 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0023.csv",
+          "n_rows": 45777,
+          "sha256": "31e910ac5d712a9c650b69d10762e7ccabc2a9a77e1ac23fe06191685b64b6b0",
+          "bytes": 105091133,
+          "written_utc": "2026-10-03 21:35:17 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45777
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0023.csv",
+          "n_rows": 45777,
+          "sha256": "8d26a4846d43e4b1cafa62f42b0175a30b5a3fcd9835cf0d6d98c69a8bdb4b0b",
+          "bytes": 105196943,
+          "written_utc": "2026-10-03 21:36:10 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45777
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0023.csv",
+          "n_rows": 45777,
+          "sha256": "3f450e8b8c8aa62ab548fa88cfcb4ade6fe7f8f458c6bdb82952f236723ae74e",
+          "bytes": 107140138,
+          "written_utc": "2026-10-03 21:36:54 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45777
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0023.csv",
+          "n_rows": 45578,
+          "sha256": "be2384a625625f63f4583fda074e86f6c42f251537d4551304f2c4f484c41462",
+          "bytes": 4365488,
+          "written_utc": "2026-10-03 21:42:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45578
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0023.csv",
+          "n_rows": 45578,
+          "sha256": "10b3f240392321344113491316ca36a1fc750add5165bf829aff05a1d8e86831",
+          "bytes": 4401675,
+          "written_utc": "2026-10-03 23:26:35 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45578
+        },
+        "mistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_mistral_shard0023.csv",
+          "n_rows": 45578,
+          "sha256": "50e9e5378b5a55493a491c1b9de3d4fdd263fffb2fd83595314aa9640fb17cbd",
+          "bytes": 5110919,
+          "written_utc": "2026-10-04 02:03:30 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45578
+        },
+        "openbiollm": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_openbiollm_shard0023.csv",
+          "n_rows": 45578,
+          "sha256": "824df85314042988fd585395f9e8c64f9ac0c40ec234cc396a4374c004e48594",
+          "bytes": 4998167,
+          "written_utc": "2026-10-04 06:45:25 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45578
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0023.csv",
+          "n_rows": 45578,
+          "sha256": "2cd786f89f93c28bfcd72a3e8e17c4f4a618ae049b56231dcaae07be18ac4709",
+          "bytes": 5170278,
+          "written_utc": "2026-11-04 14:37:03 UTC",
+          "n_instances": 8000,
+          "expected_rows": 45578
+        }
+      }
+    },
+    "24": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0024.csv",
+          "n_rows": 64000,
+          "sha256": "f37656874268b1f66cff439864a812daae5c042eafe2b287ae919445650edceb",
+          "bytes": 170569624,
+          "written_utc": "2026-10-04 03:44:53 UTC",
+          "expected_rows": 64000,
+          "n_instances": 8000
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0024.csv",
+          "n_rows": 38321,
+          "sha256": "7f141f672e2a1fd0de03c78d97bc3a426e981fdafc86657b1721aa9933c88e57",
+          "bytes": 85204435,
+          "written_utc": "2026-10-04 03:46:29 UTC"
+        }
+      },
+      "enc": {
+        "BERT-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BERT-base_shard0024.csv",
+          "n_rows": 46321,
+          "sha256": "0b371f5e3dbd41c0d3a1a8f85456cb3047962e484e53bcd0dd32a02bf3f02c75",
+          "bytes": 103149930,
+          "written_utc": "2026-10-04 05:22:16 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46321
+        },
+        "BioBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_BioBERT_shard0024.csv",
+          "n_rows": 46321,
+          "sha256": "5e670c285b0769a6b3886abe56f784c1b6db40ef423b1c99ac4d2421a1c92149",
+          "bytes": 103254958,
+          "written_utc": "2026-10-04 05:23:13 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46321
+        },
+        "PubMedBERT": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/enc_PubMedBERT_shard0024.csv",
+          "n_rows": 46321,
+          "sha256": "823e716186e40d15ab8b4020653ff09e068af72c76ca2c8f68430561a9256a5e",
+          "bytes": 105224890,
+          "written_utc": "2026-10-04 05:24:03 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46321
+        }
+      },
+      "gen": {
+        "flan-t5-base": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_flan-t5-base_shard0024.csv",
+          "n_rows": 46167,
+          "sha256": "f541170ccdbe0b67c9573e4c1d62fb6e321ffe50688acc68c1c04faaee898811",
+          "bytes": 4413792,
+          "written_utc": "2026-10-04 05:30:04 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46167
+        },
+        "biomistral": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_biomistral_shard0024.csv",
+          "n_rows": 46167,
+          "sha256": "232d003b4b58d6aef29391e8ff0a6ee68ea35819cac4dd6beac7bf33da392ea9",
+          "bytes": 4457236,
+          "written_utc": "2026-10-04 07:15:51 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46167
+        },
+        "llama3": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/gen_llama3_shard0024.csv",
+          "n_rows": 46167,
+          "sha256": "060fe8b87101a0b827177fbd979b2923b36a4c648615136b82199cea6567d36e",
+          "bytes": 5262243,
+          "written_utc": "2026-11-04 21:26:12 UTC",
+          "n_instances": 8000,
+          "expected_rows": 46167
+        }
+      }
+    },
+    "25": {
+      "pert": {
+        "sixgate": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/pert_shard0025.csv",
+          "n_rows": 16152,
+          "sha256": "18033acbec7eb9d62cac7fa593d3ac428c98760b5fd43c758bc3c01e439b70be",
+          "bytes": 44371604,
+          "written_utc": "2026-10-04 05:16:28 UTC",
+          "expected_rows": 16152,
+          "n_instances": 2019
+        }
+      },
+      "feat": {
+        "ling": {
+          "status": "complete",
+          "path": "/home/s224858267/projects/Measuring-Semantic-Stability-in-Clinical-LLMs/outputs/rq1/intermediate/mm_shards/feat_shard0025.csv",
+          "n_rows": 9728,
+          "sha256": "a3c62b027943cc500519dc728117679457a53bfd9608888399db565419fd9a09",
+          "bytes": 22650285,
+          "written_utc": "2026-10-04 05:16:52 UTC"
+        }
+      }
+    }
+  }
+}
