@@ -1,0 +1,72 @@
+Rebuilding cache, please wait ... (written to file) done.
+
+----------------------- /usr/share/lmod/lmod/modulefiles -----------------------
+   Core/lmod/6.6    Core/settarg/6.6
+
+------------------------------- /opt/modulefiles -------------------------------
+   BBMap/38.86                     nasm/2.15.05
+   BOLT-LMM/2.3.4                  ncl/6.6.2_py3.8
+   CPLEX_Studio/12.9               nsight-compute/2020.1.2
+   CPLEX_Studio/12.10              nsight-compute/2020.2.0
+   CPLEX_Studio/22.1.0      (D)    nsight-compute/2020.2.1      (D)
+   GPy/1.9.9_py3.8                 nsight-systems/2020.3.2
+   KronaTools/2.7.1                nsight-systems/2020.3.4      (D)
+   LDOPE/1.7                       nvhpc/20.7
+   MITObim/1.9.1                   nvhpc-byo-compiler/20.7
+   MaSuRCA/3.2.8                   nvhpc-nompi/20.7
+   MaSuRCA/3.4.2            (D)    ont-guppy-cpu/3.2.2
+   Metassembler/1.5                ont-guppy-gpu/4.5.4
+   NAMD/multicore/2.14             opencv/4.5.0_py3.8
+   NAMD/multicore-CUDA/2.14        paml/4.9j
+   PGDSpider/2.1.1.5               pb-assembly/0.0.8
+   R/4.0                           poolparty/0.8
+   R/4.3                    (D)    protobuf/3.13.0.1_py3.8
+   VCFtools/0.1.17                 pycharm-community/2019.2
+   VelvetOptimiser/2.2.6           pycharm-community/2020.2.3   (D)
+   baypass/2.31                    pyomo/5.7.1_py3.8
+   beast/2.6.3                     python/3.8                   (D)
+   canu/2.2                        python/3.9
+   cuda/11.2                       python/3.10
+   cuda/12.2                       python/3.11
+   cuda/12.6                (D)    python/3.13
+   dineof/1.0                      pytorch/1.7.0_py3.8          (D)
+   doxygen/1.9.1                   pytorch/1.10.1_py3.9
+   emacs/27.2                      pytorch/2.7.1_py3.13
+   fastqc/0.11.9                   qiime2/2023.2.0_py3.8
+   fsleyes/1.12.6                  qiime2/2023.5.1_py3.8        (D)
+   gdal/3.1.4_py3.8                rnabloom/2.0.1
+   go/1.13.4                       sNMF/1.2
+   go/1.18.2                (D)    seqtk/1.4
+   graphviz/2.42.3_py3.8           smartlink/6.0.0.47841
+   gurobi/9.0                      smartlink/7.0.1
+   gurobi/11.0.0            (D)    smartlink/8.0.0.80529
+   heg/2.15                        smartlink/10.1.0.119588      (D)
+   htseq/0.13.5_py3.8              snap/7.0
+   idba/1.1.3                      spades/3.15.5
+   iqtree/1.6.12                   sqlite/3.33.0_py3.8
+   iqtree/2.1.1             (D)    stacks/2.58
+   java/jdk/14.0.2                 stacks/2.65                  (D)
+   java/jdk/15              (D)    tamarin-prover/1.4.1
+   java/jre/1.8.0_261              tassel-5-standalone/5.2.65
+   knem/1.1.4                      taxonkit/0.6.0
+   kraken2/2.1.1_py3.8             tensorflow/2.2.0_py3.8       (D)
+   matlab/R2019b                   tensorflow/2.6.2_py3.9
+   matlab/R2020a                   tensorflow-gpu/2.2.0_py3.8   (D)
+   matlab/R2024a            (D)    tensorflow-gpu/2.6.2_py3.9
+   metamap/2020                    tensorflow-gpu/2.17.0_py3.11
+   metaphlan/3.0.4_py3.8           theano/1.0.5_py3.8
+   metaphlan2/2.9.14_py2.7         trinityrnaseq/2.11.0
+   metaworks/1.5.1_py3.8           trinityrnaseq/2.15.2         (D)
+   miniconda/24.5.0                turbovnc/2.2.4
+   mira/4.0.2                      velvet/1.0.19
+   mirdeep2/0.1.3                  weka/3.8.3
+   multiqc/1.9_py3.8               zonation/4.0.0rc1
+   multiqc/1.24.1_py3.11    (D)
+
+  Where:
+   D:  Default Module
+
+Use "module spider" to find all possible modules.
+Use "module keyword key1 key2 ..." to search for all possible modules matching
+any of the "keys".
+

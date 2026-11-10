@@ -1,0 +1,7 @@
+# conda environments:
+#
+clinical_llm             /home/s224858267/.conda/envs/clinical_llm
+torch26_gpu              /home/s224858267/.conda/envs/torch26_gpu
+torch_gpu                /home/s224858267/.conda/envs/torch_gpu
+base                  *  /opt/python/miniconda/24.5.0
+

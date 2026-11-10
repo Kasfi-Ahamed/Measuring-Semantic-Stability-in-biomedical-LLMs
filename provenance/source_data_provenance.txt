@@ -1,0 +1,40 @@
+# Source data provenance, captured 2026-10-04T21:35:18+11:00
+# SHA-256 of the source files actually read by the pipeline.
+
+## UMLS release (read from the installed release, not from memory)
+  # Release Metadata 
+  #Wed Apr 08 10:02:29 EDT 2026
+  umls.release.description=Base Release for Spring 2026
+  umls.release.name=2026AA
+  nlm.build.date=2026_04_07_14_35_57
+  mmsys.build.date=2026_03_17_13_01_52
+  umls.release.date=20260504
+  umls.lvg.version=2026
+  umls.medline.date=20130401
+  umls.medline.file=medline13n0717.xml
+  mmsys.version=MMSYS-2026AA-20260317
+
+## UMLS source files
+  MRCONSO.RRF    bytes=2340511941     lines=18064970     sha256=1bb9833e19a8d0f2c19bd7d63eca23480a4315c206f58d1ac0c71ba3f45de8b3
+  MRSTY.RRF      bytes=212736397      lines=3876927      sha256=2b0eae5416224ab3260555805788d9591b0b05d8ddcb3fb2e8662096e2349016
+  MRRANK.RRF     bytes=17183          lines=947          sha256=fad189192f347adb53389bbb58d267fdf5294dda7a91395ae0cb4f0b362c744e
+
+## Corpus archives
+  MedMentions-master.zip                   bytes=12091066     sha256=a6d61a03d2331119e3f5905150c42f81b70d169595ad26ff7344a74fd3d609aa
+  BioASQ-training13b.zip                   bytes=6926365      sha256=01ea3f6d440be81e3514296c2fa791303472b9716f10695bffaed6bbeebbc93f
+  CADEC.zip                                bytes=1878289      sha256=6bef4fa34b0bc5efd770d3642a3904e83a986b473c02d4d94752b1f921c01018
+
+## SQuAD 2.0
+  rajpurkar/squad_v2 via HuggingFace datasets (no local archive; see hf_cache/)
+
+## Corpus record counts (read from the archives)
+  MedMentions: 17 entries in archive
+      MedMentions-master/full/data/corpus_pubtator_pmids_all.txt lines=    4,392  blank-separated records=       0
+      MedMentions-master/full/data/corpus_pubtator_pmids_dev.txt lines=      878  blank-separated records=       0
+      MedMentions-master/full/data/corpus_pubtator_pmids_test.txt lines=      879  blank-separated records=       0
+      MedMentions-master/full/data/corpus_pubtator_pmids_trng.txt lines=    2,635  blank-separated records=       0
+  CADEC: 6 entries in archive
+      metadata/collection_import_sha256sum.txt             lines=        2  blank-separated records=       0
+      metadata/collection_import_sha512sum.txt             lines=        2  blank-separated records=       0
+  BioASQ: 3 entries in archive
+      BioASQ-training13b/training13b.json                  lines=  744,337

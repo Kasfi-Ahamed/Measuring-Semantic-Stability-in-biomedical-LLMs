@@ -1,0 +1,67 @@
+READING ENTROPY CSVs: pandas LOSES THE LAST BIT UNLESS YOU ASK IT NOT TO
+Established 2026-10-10. Costs a day to rediscover, so it is written down.
+
+SEE ALSO provenance/reading_hazards_note.txt, which states this hazard alongside the other
+way these artefacts mislead a careless reader: wc -l overcounting rows in any CSV with
+free-text columns, by up to a factor of 9.3.
+
+THE FINDING
+  pandas.read_csv parses some float64 values one unit-in-the-last-place away from the value
+  the file actually contains. The default is float_precision=None, and -- this is the part
+  people get caught by -- float_precision="high" is EXACTLY AS WRONG as the default. Only
+  float_precision="round_trip" recovers what was written.
+
+THE WORKED EXAMPLE
+  outputs/rq1/entropy_full_umls.csv, row ('mm_0000001', 'FLAN-T5-base'), column
+  semantic_entropy_full. The file contains, as text:
+
+      mm_0000001,FLAN-T5-base,1.5219280948873621
+
+  Read it back four ways:
+
+      float_precision=None        -> 1.521928094887362   0x1.859d146267a14p+0   WRONG
+      float_precision="high"      -> 1.521928094887362   0x1.859d146267a14p+0   WRONG
+      float_precision="round_trip"-> 1.5219280948873621  0x1.859d146267a15p+0   correct
+      python float() (strtod)     -> 1.5219280948873621  0x1.859d146267a15p+0   correct
+
+  The error is 2.220e-16, exactly 1 ULP at that magnitude. The stored text is the shortest
+  round-trippable repr of the correct double, so nothing was lost when the file was WRITTEN:
+  the loss is entirely in the read.
+
+  Reproduce it in four lines:
+
+      import pandas as pd, io
+      t = "x\n1.5219280948873621\n"
+      for fp in (None, "high", "round_trip"):
+          kw = {} if fp is None else {"float_precision": fp}
+          print(fp, repr(pd.read_csv(io.StringIO(t), **kw)["x"].iloc[0]))
+
+HOW WIDESPREAD IT IS HERE
+  119,115 of 1,135,264 semantic_entropy_full values in entropy_full_umls.csv -- about 10.5% --
+  do not survive a default read. Those are the values whose shortest round-trippable repr needs
+  17 significant digits; the ones needing 16 or fewer are unaffected.
+
+WHAT IT DOES NOT AFFECT
+  No published number. Every reported entropy figure is quoted to three or four decimal places
+  and 1e-16 is invisible there. No table, no figure and no statistical test changes. This is a
+  bit-exactness property of reading the artefact, not an error in the artefact or in any result.
+
+THE TWO CONSEQUENCES THAT DO MATTER
+
+  1. VERIFICATION CODE FROM HERE ON PASSES float_precision="round_trip", WITHOUT EXCEPTION.
+     A bit-exactness claim made from a default read is a claim about pandas' parser, not about
+     the pipeline. The 26-block rerun's reconciliation work is held to this rule.
+
+  2. ANY EARLIER RECONCILIATION IN THIS PROJECT THAT USED A DEFAULT READ AND REPORTED A SMALL
+     NUMBER OF DIFFERING CELLS WAS MEASURING PANDAS, NOT THE PIPELINE. Recorded here so nobody
+     re-litigates a phantom discrepancy later. The first run of the two-file entropy
+     reconciliation on 2026-10-10 is the worked instance: it reported 119,115 differing cells
+     and read as a failure. Re-run with float_precision="round_trip" and nothing else changed,
+     it passed on all 1,135,264 rows across twelve columns at zero tolerance, dominant_cluster
+     included. The difference between those two runs is entirely the parser.
+
+  Note the diagnostic signature, because it is what tells the two cases apart at a glance: the
+  integer columns agreed exactly. n_variants, n_assigned, n_unassigned, m_accepted,
+  all_unassigned and n_clusters_full all showed 0 differing across all 1,135,264 rows while
+  the floats differed. Identical integer label counts with a last-bit float difference is
+  serialisation. A real computational difference moves the counts too.

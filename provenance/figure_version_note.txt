@@ -1,0 +1,142 @@
+FIGURE VERSIONS: v1.0.2-thesis-submission DOES NOT SERVE THE SUBMITTED PLATES
+Established 2026-10-10.
+
+THE DISCREPANCY
+  Five manuscript figures, ten files, exist on disk in a NEWER form than the version committed
+  at the tag the manuscript cites. The submitted PDF carries the 28 September regenerations.
+  A fresh clone of v1.0.2-thesis-submission serves the pre-restyle versions.
+
+  The tag cannot move: it is cited in a submitted document. So the discrepancy is recorded
+  here instead, and the newer files are committed on branch fix/figure-regenerations so the
+  versions the manuscript actually used exist somewhere permanent.
+
+fig_entropy_across_corpora.png
+    committed  d3a5850e58e14c5589f8aeb41018da2cf517e74fc2f14408b34ee999acafd5e6    391,285 B  commit 2026-09-28 02:25
+    worktree   13f5a964214fe5ef26272a9e4fd66f247b5a872d635e4f7dbe97bb547e3b740f    239,377 B  mtime  2026-09-28 04:10
+fig_entropy_across_corpora.pdf
+    committed  64c7fbc4ab4754a7b851be50ab78ec6ceb942daf209ca441c094067de2b11c04     26,100 B  commit 2026-09-28 02:25
+    worktree   0e280abb144a19abfd0bae12cc5a3631ec9eb27d4e66b652c3609fe2257cb9cc     26,025 B  mtime  2026-09-28 04:10
+fig_risk_coverage_bioasq.png
+    committed  6f50c3d51d15d2f1c529d720d4a9e30f0d59417166c3292c50604e519e5252c5    200,684 B  commit 2026-09-28 03:25
+    worktree   01449a757297cb791dfe7cee3c312645f88f151034e2c6a18fe3ab854889d734    261,618 B  mtime  2026-09-28 03:46
+fig_risk_coverage_bioasq.pdf
+    committed  d20aab0bd026930280a8c92709aff3ba07b91f668d3a78bffa70bc734b5d1a87     28,838 B  commit 2026-09-28 03:25
+    worktree   4ab318f87d86a0b99825be0c0c9d42007b4e53d3c0edd0246ff9eb745f0ea138     28,659 B  mtime  2026-09-28 03:46
+fig_risk_coverage_cadec.png
+    committed  5578668113345edcd89a6dc70bb55227061d0c2bcd6af37e92cd84627417ba88    219,060 B  commit 2026-09-28 03:25
+    worktree   f36e0677edd614828e2579b0a6134ad6f220835dcfbaa020d47a66f7b393c34c    382,949 B  mtime  2026-09-28 03:46
+fig_risk_coverage_cadec.pdf
+    committed  a096a58ec49850d25ab7a0814edcac98ba4cc14bf92e38c22b6ff516ca804069     38,599 B  commit 2026-09-28 03:25
+    worktree   a8cc0ff36c906dd6c03932ec44da9bf435725823e07b6fc731f30482161dacb1     37,909 B  mtime  2026-09-28 03:46
+fig_risk_coverage_medmentions.png
+    committed  9605e77075ed2a7009408c4d5a5be553512f7936ecf8e3656e34856bce3150cf    208,175 B  commit 2026-09-28 03:25
+    worktree   e8878214dfbc216e42e5064d2f1d1970806378ad65a29a057b7d163f4959efb8    406,072 B  mtime  2026-09-28 03:46
+fig_risk_coverage_medmentions.pdf
+    committed  fbc4579469bf4731dda415bc8097d4b1485d556f986ca94a4d621e3656060d3a     36,165 B  commit 2026-09-28 03:25
+    worktree   eaf9007f47738161dd6f30b92dfe40719763facfca022b12b40ecdc4ae9c3c8f     35,880 B  mtime  2026-09-28 03:46
+fig_risk_coverage_squad.png
+    committed  1aa287fcf0b606e943c25324473389604939ed8c14c0f2d3e1314d41dc561a9b    198,244 B  commit 2026-09-28 03:25
+    worktree   88a2306f2ca8895af13005ef46f69ea8c86380a9093f0c575964ba9982b49db1    265,120 B  mtime  2026-09-28 03:46
+fig_risk_coverage_squad.pdf
+    committed  2092fd853fc3723bb4ab089e0239d933c950a87459fe47ba324071a8e14e3e97     29,416 B  commit 2026-09-28 03:25
+    worktree   a5ef206240e59fb6beb33fc6ae18f623c675443ae0440851660c93887d842f6a     29,439 B  mtime  2026-09-28 03:46
+
+THE THREE COMMITS THAT PRODUCED THE RESTYLE
+  All on chore/reproducible-structure, which is 60 commits ahead of origin and unpushed:
+
+    6f7a212  Restyle the risk-coverage family from the e3043c6 reference; recolour the forest plot
+    1f3075a  Risk-coverage: the reference's 0.2 tick grid, and bigger plotting frames
+    4bb3016  Forest plot: true minus in the printed values, and the band label states magnitude
+
+  Two earlier commits in the same series set up the family:
+    3a02241  One set of axes for the risk-coverage family, split the QA lane, and give RQ3 a figure
+    4d707d4  Record the supplied risk-coverage reference as an input, out of the figure directory
+
+  The uncommitted producers are scripts/fig_report_risk_coverage.py,
+  scripts/fig_report_rq3_continuum.py and scripts/report_style.py. They are committed on
+  fix/figure-regenerations together with the figures, because figures without the code that
+  makes them are not reproducible.
+
+THE PRODUCER CHAIN, NAMING THE LAYER THAT DRAWS RATHER THAN THE ONE THAT MOVES FILES
+  An earlier version of this trace named scripts/build_figures_for_report.py as the producer of
+  23 of the 26 manuscript figures. That was the wrong layer. That script is a COPIER: lines 242
+  and 249 are shutil.copy2(src, DEST / ...). It moves finished figures from outputs/*/figures/
+  into figures_for_report/ and draws nothing.
+
+  The chain is:   producer -> outputs/<rq>/figures/<name>.png -> copy -> figures_for_report/
+
+  Producers that actually draw, by figure group:
+      scripts/fig_report_rq1.py              rq1_entropy_heatmap{,_by_model}_{cadec,medmentions}
+                                             rq1_magnitude_vs_entropy_{cadec,medmentions,qa}
+                                             (templated: f"rq1_entropy_heatmap_{c['slug']}.png"
+                                              at line 406, by_model at 454, magnitude at 211)
+      scripts/fig_report_risk_coverage.py    fig_risk_coverage_{cadec,medmentions,bioasq,squad}
+                                             and the superseded pooled fig_risk_coverage_qa
+      scripts/fig_report_rq3_continuum.py    fig_entropy_across_corpora
+      scripts/fig_rq2_accuracy_split.py      fig_rq2_accuracy_split_entropy_{cadec,medmentions}
+      scripts/fig_rq3_matched_pairs_forest.py fig_rq3_matched_pairs_forest
+      scripts/fig_entropy_distribution.py    fig_entropy_distribution_{cadec,medmentions,qa}
+      scripts/fig_signal_independence.py     fig_signal_independence_{cadec,medmentions,qa}
+      scripts/make_coef_appendix_plates.py   rq1_linguistic_predictors_coefs_{cadec,medmentions}
+                                             (.pdf at line 91, .png at line 111)
+
+  WHY THE FIRST TRACE WAS WRONG, because the method matters more than the correction.
+  The trace matched figure basenames against script text. Eight figures are written from
+  f-strings built out of a corpus slug, so their full basename never appears literally in the
+  producing script and the search could not see it. The one script that DID contain every
+  basename literally was the copier, which lists them to copy them. So the search returned a
+  complete-looking answer that named the wrong layer for 23 of 26 figures, and the two plates
+  with no literal match anywhere were reported as having no producer at all.
+
+  Re-running the trace by STEM rather than full basename found producers for 20 of the 26 that
+  the exact-name pass had missed. A name-based trace cannot see a templated output path, and a
+  trace that returns one confident answer per figure is not evidence that it found the right
+  one.
+
+DID ANY PLOTTED VALUE MOVE? NO. THIS IS PRESENTATION ONLY.
+  This was checked at COLUMN level against the data each figure actually reads, not inferred
+  from the commit messages.
+
+  The four risk-coverage figures read, per scripts/fig_report_risk_coverage.py CFG:
+      cadec        outputs/rq3/umls_candidate_margin_cadec.csv          tracked, CLEAN
+      medmentions  outputs/rq1/umls_candidate_margin_medmentions.csv    unchanged on disk
+      qa           outputs/qa/qa_results_combined_identity_filtered.csv tracked, CLEAN
+  None of their inputs is modified, so no plotted value in those four can have moved.
+
+  fig_entropy_across_corpora reads outputs/rq3/entropy_cadec.csv, which IS modified. Its
+  concept() reads exactly three columns:
+      usecols=["model_name", "normalised_entropy_dedup", "retained_m_distinct"]
+  Comparing the committed and working-tree versions of entropy_cadec.csv at zero tolerance
+  with float_precision="round_trip":
+      normalised_entropy_dedup   0 differing
+      retained_m_distinct        0 differing
+      model_name                 0 differing
+  So every value this figure plots is byte-identical. The restyle is presentation only.
+
+  WHAT DID MOVE IN entropy_cadec.csv, recorded because it is real even though unplotted:
+      mapping_confidence   10,324 of 41,288 cells, max |delta| 4.178e-04, median 5.960e-08.
+                           NOT floating-point noise: 0 of the 10,324 are within 4 ULP of the
+                           value, and the median delta is exactly float32 epsilon near 1.0
+                           (2^-24 = 5.96e-08), which points at a float32/float64 change in how
+                           the column was produced rather than at a rounding artefact.
+      dominant_cui         1 cell: cadec_LIPITOR.60_TT2 / Llama3-OpenBioLLM-8B, C2142181 ->
+                           C5442019, with normalised_entropy identical at 0.5644754678724235.
+                           An entropy-preserving flip, i.e. a tie between two equal-sized
+                           clusters broken the other way.
+      dominant_cui_dedup   the same 1 cell.
+  Every entropy and accuracy column is unchanged. mapping_confidence IS a plotted signal in
+  the risk-coverage figures, but those read it from umls_candidate_margin_*.csv, not from
+  entropy_cadec.csv, and those files are clean.
+
+  A SEPARATE PRE-EXISTING INCONSISTENCY, found while checking the above and not caused by the
+  restyle: umls_candidate_margin_cadec.csv and entropy_cadec.csv disagree on
+  mapping_confidence for 15,724 of 37,696 joined rows against the committed entropy file and
+  21,437 against the working-tree one. The two artefacts were produced at different times and
+  neither is a copy of the other. No figure reads both, so nothing reported is affected, but
+  the two files are not interchangeable as a source for that column.
+
+WHAT THIS MEANS FOR ANYONE CHECKING THE MANUSCRIPT
+  Comparing a figure in the submitted PDF against a fresh clone of v1.0.2 will show visible
+  differences in these five plates -- tick grids, frame sizes, colours, and a legend label.
+  Those differences are styling. The numbers behind them are identical. Use
+  fix/figure-regenerations, not the tag, to reproduce the submitted plates.

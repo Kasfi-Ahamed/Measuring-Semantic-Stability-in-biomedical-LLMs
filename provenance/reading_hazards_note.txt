@@ -1,0 +1,321 @@
+TWO WAYS THIS PROJECT'S ARTEFACTS LIE TO A CARELESS READER
+Both established 2026-10-10. Both cost real time before they were found. One place, so the
+next person finds them together.
+
+================================================================================
+HAZARD 1: wc -l OVERCOUNTS ROWS IN ANY CSV WITH FREE-TEXT COLUMNS
+================================================================================
+  wc -l counts PHYSICAL LINES. A CSV whose quoted text fields contain newlines has more lines
+  than records, and in this project the gap reaches a factor of 9.3.
+
+  THE WORKED CASE
+      outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv
+          wc -l            521,705
+          pandas records    55,976     <-- the true count, 6,997 mentions x 8 perturbations
+      The 521,705 figure was quoted in a status report before it was checked. It is wrong by
+      465,728 rows and it looked entirely plausible next to the other counts in the directory.
+
+  HOW WIDESPREAD, measured by re-counting every CSV in archive_preexpiry/MANIFEST.txt with
+  pandas on 2026-10-10:
+      102 CSVs checked
+       88 sound       (wc -l == records + 1; no embedded newlines)
+       14 OVERSTATED  (corrected in MANIFEST.txt, now written "N records")
+
+      The 14, with the claimed line count against the true record count:
+          outputs/rq3/intermediate/rq3_cadec_instances.csv                    65,286 ->  7,006
+          outputs/rq3/intermediate/rq3_cadec_validated_perturbations_full.csv 521,705 -> 55,976
+          outputs_archive/.../rq2/tables/rq2_generative_outputs.csv           16,056 ->  9,633
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_biomistral.csv  4,674 -> 4,645
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_llama3.csv     12,322 -> 4,645
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_mistral.csv     4,674 -> 4,645
+          outputs_archive/.../rq3/intermediate/matched_pair_raw/raw_openbiollm.csv  4,674 -> 4,645
+          outputs_archive/.../rq3/intermediate/rq3_bioasq_instances.csv            184 ->    150
+          outputs_archive/.../rq3/intermediate/rq3_bioasq_perturbations.csv        471 ->    456
+          outputs_archive/.../rq3/intermediate/rq3_cadec_instances.csv          65,286 ->  7,006
+          outputs_archive/.../rq3/intermediate/rq3_cadec_mapped_outputs.csv    309,040 -> 266,024
+          outputs_archive/.../rq3/intermediate/rq3_cadec_validated_perturbations_full.csv 521,705 -> 55,976
+          outputs_archive/.../rq3/intermediate/rq3_squad_instances.csv             203 ->    200
+          outputs_archive/.../rq3/intermediate/rq3_squad_perturbations.csv         645 ->    628
+
+      Note raw_llama3.csv: 12,322 lines for 4,645 records, while its three sibling files read
+      4,674 for the same 4,645. Same model family, same stage, one file with far more newlines
+      in its generations. There is no pattern to rely on -- check the file, not the family.
+
+  WHAT WAS NOT AFFECTED, checked rather than assumed:
+      outputs/rq1/intermediate/rq1_model_outputs.csv   7.51 GiB, the biggest file in the
+          not-preserved section. wc -l 3,447,016, pandas records 3,447,015. Off by exactly the
+          header, not by newlines. The recorded figure was sound.
+      outputs/rq1/intermediate/mm_shards/*            a 12-file sample agreed across all three
+          measures: shard_manifest.json n_rows == wc -l minus one == pandas records. The shard
+          manifest's counts come from len(df) in the pipeline and are record counts by
+          construction, so the shard record is reliable.
+      rq1_all_outputs_mapped_A9_CUTOFF.csv and the three A9 parts: corroborated against the
+          amendment-9 receipts, which record len(df_mapped). 2,572,698 + 2,202,290 + 2,557,257
+          = 7,332,245, matching A9_CUTOFF exactly.
+
+      THE CHECK CANNOT BE SAMPLED, and raw_llama3.csv is why. Four files from the same stage,
+      the same corpus and the same model family hold 4,645 records each. Three of them read
+      4,674 lines; the fourth reads 12,322. One model's generations happened to contain far
+      more newlines than its siblings'. There is no family-level, stage-level or
+      directory-level rule to infer from -- the file is the only unit of truth, so every file
+      whose count is quoted has to be counted.
+
+  THE RULE
+      Count records with pandas, or with Python's csv module. Never with wc -l, unless you have
+      already shown that the file has no embedded newlines. For a deleted file the SHA-256 and
+      the byte size are the exact record; a line count is not.
+
+================================================================================
+HAZARD 2: read_csv WITHOUT float_precision="round_trip" LOSES THE LAST BIT
+================================================================================
+  Full treatment, with the worked example and a reproducer, is in
+  provenance/pandas_float_roundtrip_note.txt. In short:
+
+      pandas parses some float64 values 1 ULP away from what the file contains, and
+      float_precision="high" is EXACTLY AS WRONG as the default. Only "round_trip" is correct.
+
+      entropy_full_umls.csv, ('mm_0000001','FLAN-T5-base'), stored as 1.5219280948873621:
+          default      -> 1.521928094887362    WRONG by 2.220e-16
+          "high"       -> 1.521928094887362    WRONG
+          "round_trip" -> 1.5219280948873621   correct
+
+      119,115 of 1,135,264 semantic_entropy_full values, about 10.5%, are affected.
+
+  THE RULE
+      Verification code passes float_precision="round_trip", without exception. A
+      bit-exactness claim made from a default read is a claim about pandas, not about the
+      pipeline. Production code that must keep reproducing an existing artefact deliberately
+      does NOT switch, because switching would move values in the last bit.
+
+================================================================================
+HAZARD 2 IN PRODUCTION: ONE ARTEFACT IS A PARSER-DEGRADED COPY OF ANOTHER
+================================================================================
+  Established 2026-10-11. This is hazard 2 operating inside the pipeline rather than inside a
+  verification script, which is why it has its own section.
+
+  THE SYMPTOM. outputs/rq3/entropy_cadec.csv and outputs/rq3/umls_candidate_margin_cadec.csv
+  both carry a column called mapping_confidence, and they disagree on 21,437 of 37,696 joined
+  rows.
+
+  WHAT IT IS NOT. It is not two different computations, and it is not a float32-versus-float64
+  choice of arithmetic. That was the first hypothesis and the evidence refutes it.
+
+  WHAT IT IS, proven rather than inferred:
+      entropy_cadec.csv          100.00% of its values are float32-exact
+      umls_candidate_margin      58.29%
+      float32(margin) == float32(entropy, committed)        37,696 of 37,696   100.00%
+      margin == entropy read with float_precision=round_trip 21,972 of 37,696    58.29%
+      margin == entropy read with pandas' DEFAULT parser     37,696 of 37,696   100.00%
+
+  The last line is the finding. scripts/refresh_margin_entropy_columns.py exists to copy the
+  entropy-derived columns into the margin file -- see its own docstring, "This re-does ONLY
+  that join" -- and it does so with
+
+      mg  = pd.read_csv(MARGIN,  low_memory=False)
+      ent = pd.read_csv(ENTROPY, low_memory=False)
+
+  with no float_precision. So it read the canonical float32 values, had 15,724 of 37,696 of
+  them perturbed by 1 ULP by the parser, and wrote the perturbed values back. The margin
+  file's extra precision is not more information; it is damage.
+
+  THE CANONICAL SOURCE IS THEREFORE entropy_cadec.csv, not the float64-looking file. A reader
+  choosing the one with more decimal places would choose the corrupted copy.
+
+  SCOPE. MedMentions is unaffected: entropy_full_umls.csv and
+  umls_candidate_margin_medmentions.csv agree on 0 differing of 1,020,784 rows, because that
+  refresh script is hardcoded to CADEC. Nothing reported moves either way -- max |delta|
+  4.178e-04, median 1.110e-16, 35 of 37,696 rows rounding differently at three decimals, means
+  differing by 1.690e-07.
+
+  THE CURRENT CADEC MARGIN FILE IS LEFT PERTURBED, DELIBERATELY.
+      outputs/rq3/umls_candidate_margin_cadec.csv as it stands on disk carries the pre-fix,
+      1-ULP-perturbed copy of mapping_confidence in 15,724 of 37,696 rows. It is NOT being
+      rewritten, and the reason is not laziness.
+
+      That file is what the submitted risk-coverage figures were drawn from. Rewriting it now
+      would make the published figures no longer reproducible from what is on disk, trading a
+      defect that moves nothing reported -- max |delta| 4.178e-04, 35 of 37,696 rows rounding
+      differently at three decimals, means differing by 1.690e-07 -- for a broken
+      correspondence between artefact and publication. The damage is cheap to keep. The
+      correspondence is not cheap to lose.
+
+      entropy_cadec.csv is canonical. The fix is in scripts/refresh_margin_entropy_columns.py
+      as of 2026-10-11 and has NOT been executed against the current artefacts, so the
+      26-block rerun's outputs will be clean by construction while the submitted artefacts stay
+      exactly as published.
+
+  THE WIDER EXPOSURE, TRIAGED 2026-10-11 RATHER THAN SWEPT.
+      53 scripts in scripts/ read CSVs and, before this pass, none passed float_precision.
+      Classified by what each does with the floats, not audited line by line:
+
+      BUCKET 1, copies a float column from one artefact into another -- 12 files. The defect by
+      construction and the only class that corrupts data. Fixed on branch
+      fix/float-roundtrip-bucket1; nothing was executed.
+          overwrites its own source (4): refresh_margin_entropy_columns, apply_amendment7_cadec,
+              recompute_zero_block_cadec, strip_text_columns
+          writes a new file carrying the copy (7): a9_concat_corpus, mm_assemble,
+              mm_assemble_perts, qa_identity_exclusion, mm_encoder_infer,
+              qa_gate_failopen_audit, cadec_threshold_band
+          the single-point lever (1): safe_read.py. read_csv_strict is this project's own
+              wrapper and already centralises the NA-token fix, the one that stops pandas
+              turning a literal "NA" gold mention into a missing value. float_precision now
+              defaults there too, so every caller is faithful, and an explicit kwarg still
+              overrides. Four reads in mm_encoder_infer.py reach it and were invisible to a
+              grep for read_csv. Its own test suite still passes all five checks.
+
+      BUCKET 2, reads floats and computes new values -- 38 files. A 1 ULP input perturbation
+      propagates into derived numbers but nothing is overwritten. Deferred to the rerun, where
+      these are re-executed anyway. Includes every figure and statistics producer.
+
+      BUCKET 3, no float round trip at all -- 4 files. mm_shard_lib (writes only instance_id
+      and ordinal), broad_except_sweep (a source linter whose 'to_csv' is a string in a rule
+      table), cadec_tiebreak_replay (its to_csv references are a WRITE GUARD that refuses any
+      write outside a scratch directory -- the only script in the set that was already
+      defending itself), test_safe_read (fixtures built in memory).
+
+================================================================================
+HAZARD 3: pandas TURNS A LITERAL "NA" GOLD MENTION INTO A MISSING VALUE
+================================================================================
+  Established 2026-10-11. This one has already destroyed data, which neither of the others
+  had, and the generalisable lesson is in how it was fixed the first time.
+
+  THE DEFAULT RULES. pandas read_csv converts 19 tokens to NaN, among them "NA", "N/A", "NaN",
+  "None", "null", "n/a", "nan", "NULL" and the empty string. A literal mention of "NA" -- a
+  real abbreviation in clinical text -- is therefore read as missing unless
+  keep_default_na=False is passed. Note that a bare "-" is NOT in the list and was never at
+  risk.
+
+  THE CORPORA DO CONTAIN THEM. outputs/rq1/intermediate/rq1_sampled_instances.csv, the source
+  of truth for 202,019 MedMentions instances:
+      gold_mention == "NA"      12 instances
+      gold_mention == "null"     3 instances
+                               ----
+      at risk                   15 instances
+  CADEC's gold mentions are clean. QA's question text is clean; one SQuAD 2.0 prediction is the
+  literal string "None", in the superseded umls_candidate_margin_qa_PREHASHSEED.csv.
+
+  THE LOSS, ALREADY IN THE ARTEFACTS. Compare the same 15 instances across three files:
+      mm_shards/pert_shard{0005,0012,0013,0017,0024}.csv   "NA" x96, "null" x24   INTACT
+      rq1_validated_perturbations.csv                      "" x120                BLANKED
+      rq1_all_outputs_mapped_A9_CUTOFF.csv                 "NA" x616              PRESERVED
+
+  The shards hold the tokens. The assembled file does not. The mapped file does.
+
+  THE WRITE THAT LOST THEM, traced rather than guessed: scripts/mm_assemble_perts.py line 44,
+  which concatenated the pert shards into rq1_validated_perturbations.csv with
+  pd.read_csv(..., low_memory=False) and no keep_default_na. The gate verdicts were computed
+  before this write -- 115 of the 120 rows carry g6_entity_check_mode "mention_exact", meaning
+  Gate 6 had a mention to match -- so what was lost is the stored column, not the gating. The
+  remaining 4 rows read "unverified", which is what Gate 6 records when it has nothing to check.
+
+  SCALE, FOR THE RECORD. 15 instances, 120 rows. In the reported arm, instance-blocks 0-19:
+      96 of 1,280,000 generated candidates   0.00750%
+      65 of   758,969 accepted candidates    0.00856%
+  All 96 rows in the reported arm are the "NA" cases; the 24 "null" rows fall in block 24,
+  outside the arm. Nothing published moves: Gate 6 is reported at 96.2% and four rows shift it
+  by 0.0003 percentage points. Accuracy scoring is untouched, because it reads the mapped file,
+  which preserved the tokens.
+
+  THE GENERALISABLE PART, AND THE REASON THIS SECTION EXISTS.
+  The mapping path already carries the fix. Its read is commented
+
+      # keep_default_na=False: a literal 'None'/'NA' output is a real answer (BUG_AUDIT B2)
+
+  so this defect was found once, understood correctly, and fixed ON THE ONE PATH WHERE IT WAS
+  OBSERVED. scripts/safe_read.py was written to centralise it, with a test suite that names
+  mm_0046685 explicitly. And then it was used in exactly 3 of roughly 199 text-column read
+  sites, all in one script.
+
+  A fix applied where a bug was observed, rather than where the class of bug lives, leaves the
+  class alive. The wrapper existed, passed its tests, and did not prevent this.
+
+  WHAT WAS DONE 2026-10-11, fix only, nothing executed. All 11 bucket-1 scripts -- the ones
+  that copy a column from one artefact into another -- now read through
+  safe_read.read_csv_strict rather than pd.read_csv, so keep_default_na=False and
+  float_precision="round_trip" are the default and a deviation has to be written deliberately.
+  Five of the 11 had no keep_default_na at all and their NA semantics change as a result:
+  refresh_margin_entropy_columns, recompute_zero_block_cadec, mm_assemble, mm_assemble_perts
+  and cadec_threshold_band. That change is the point, and it is unvalidated by execution.
+
+  GATE 6 IS CLOSED, AND THE VERDICTS ARE SOUND. The four rows whose g6_entity_check_mode reads
+  "unverified" were checked against their shards:
+
+      mm_0099374_p07  block 12   shard gold_mention 'NA'   shard mode unverified
+      mm_0099374_p08  block 12   shard gold_mention 'NA'   shard mode unverified
+      mm_0142416_p03  block 17   shard gold_mention 'NA'   shard mode unverified
+      mm_0142416_p04  block 17   shard gold_mention 'NA'   shard mode unverified
+
+  All four hold the token intact in the shard, AND the shard already records "unverified". So
+  the gate ran against the real value and reached that verdict on its own terms; the
+  "unverified" has a cause in the gate's own handling of a two-character mention, not in any
+  data loss. The blanking happened purely at assembly. This is a STORAGE defect in one column
+  of one derived file, not a computation defect, and no gate verdict is in question.
+
+  THE "nan" FILTER: A LIVE MECHANISM, ZERO ROWS AFFECTED, MASKED BY A CONJUNCT.
+  notebooks/03_mapping_entropy/RQ4_umls_candidate_margin.ipynb filters with
+
+      (df_mapped["output_text"].astype(str).str.strip() != "")
+      & (df_mapped["predicted_cui"] != UNASSIGNED)
+
+  and reads with default NA handling. A blank output_text therefore becomes NaN, .astype(str)
+  turns it into the literal string "nan", and the first clause admits it as a real generation.
+  1,458 MedMentions rows and 82 CADEC rows are blank and would be admitted that way.
+
+  They are not admitted, because every one of them also has predicted_cui == UNASSIGNED --
+  1,458 of 1,458 and 82 of 82 -- so the second clause excludes them. Measured both ways, the
+  CADEC retrieval population is 239,207 under the default read and 239,207 under a strict read,
+  matching the notebook's own receipt exactly. Rows admitted only by the default read: 0.
+
+  So the notebook is FRAGILE, NOT WRONG. The defect is real and the masking is incidental: it
+  would become live the moment a blank generation received an assigned CUI, or the conjunct were
+  reordered or removed. Deferred, with that reasoning attached rather than a bare "no impact".
+
+  THE QA LANE CANNOT BE REPRODUCED FROM THE ARTEFACTS. THIS IS NOT A BUG.
+  No CSV under outputs/ carries a QA gold answer. The scored columns -- correct, em, f1,
+  is_unanswerable -- are present in qa_results_*.csv, but the gold answer sets they were scored
+  against were held in memory and never written out. Correctness was computed in-notebook
+  against the source datasets.
+
+  The consequence is plain: the QA lane's reported numbers are not reproducible from the
+  repository's artefacts by anyone, including us. Reproducing them requires re-running the QA
+  notebook against BioASQ Task 13b and SQuAD 2.0 at the checksums in
+  provenance/source_data_provenance.txt. Nothing is wrong with the numbers; the chain from
+  dataset to label simply is not retained.
+
+  The rerun closes this permanently and almost for free: persist a qa_gold_answers.csv carrying
+  the question id, the gold answer set and the predicate applied. It is a few MB and removes
+  the gap for good.
+
+  STILL OPEN. The bucket logic does NOT transfer from floats to text. For floats, bucket 2 was
+  safe because a 1 ULP perturbation propagates harmlessly into a derived number. For text, a
+  script that reads a mention as NaN and then COMPARES it produces a wrong verdict, not a
+  slightly wrong number. 23 scripts and notebooks read a CSV and compare a text column; 13 of
+  them pass no keep_default_na. The ones that matter most:
+      notebooks/04_qa_lane/QA_answer_level_semantic_entropy.ipynb   ABSENT  QA scoring
+      notebooks/03_mapping_entropy/RQ4_umls_candidate_margin.ipynb  ABSENT  filters on
+                                                                            output_text != ""
+      notebooks/02_concept_inference/CADEC_inference.ipynb          ABSENT
+      scripts/mm_encoder_infer.py                                   present and via the
+          wrapper -- and it is the accuracy scorer, where `correct = int(pred_mention.lower()
+          .strip() == gm) if gm else 0` forces a 0 when the gold mention is falsy. The one
+          place the original fix landed is the one place it mattered most, which is luck
+          rather than design.
+  The QA gold answers are not persisted in any artefact under outputs/, so the QA side cannot
+  be counted from the repository at all; scoring ran in-notebook against the source datasets.
+
+================================================================================
+WHY THESE TWO BELONG TOGETHER
+================================================================================
+  They fail in opposite directions and that is what makes them a pair.
+
+  wc -l inflates a count, so it makes an artefact look MORE complete than it is. A reader sees
+  521,705 where 55,976 exist and concludes the file covers nine times the corpus it covers.
+
+  A default float read perturbs a value, so it makes two identical artefacts look DIFFERENT. A
+  reader diffs a recomputation against a stored result, sees 119,115 differing cells, and
+  concludes the pipeline changed when nothing did.
+
+  Both were hit in this project within hours of each other, both produced a confident wrong
+  conclusion that had to be retracted, and in both cases the tell was the same: the INTEGER
+  columns agreed while something else did not. Identical counts with differing floats is
+  hazard 2. A count that disagrees with every other count of the same thing is hazard 1.
