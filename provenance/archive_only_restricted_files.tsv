@@ -1,0 +1,25 @@
+# LICENCE-RESTRICTED FILES PRESERVED IN THE ARCHIVE ONLY, NOT IN GIT
+#
+# These nine files are NOT in the git repository and must not be added to it. Their
+# content derives from UMLS 2026AA, MedMentions, SQuAD2 and BioASQ; committing it would
+# make the repository permanently unpublishable, enforced only by a note in a file.
+#
+# THEY WERE NOT LOST. Each is inside the archive tarball named in the last column.
+# Verify any archive copy against the sha256 below. Row counts exclude the header.
+#
+# A correction worth recording: an earlier draft of the handover asserted these were
+# already inside the archive tarballs. They were not. The blob-hash sweep had reported
+# them as being in no branch AND no tarball, and that output was contradicted rather
+# than read. They were archived only after the ledger printed NOT IN ANY TARBALL nine
+# times. The sweep was right and the summary of it was wrong.
+#
+path	bytes	sha256	rows	derived_from	archive_member
+outputs/rq1/intermediate/umls_candidate_pool.csv	6599380	94f71233772287a5b4e9b0da02d26cfdfb71210ea91e6d2891b54c9a84f847aa	88100	UMLS 2026AA candidate pool	restricted_derived_20261111.tar.gz
+outputs/rq1/tables/pipeline_ceiling_gold_mention.csv	26886256	959e732f758c134cbdf2eb19c9224a8f4def34497967e529942cb8385aefa900	209025	MedMentions gold mentions	restricted_derived_20261111.tar.gz
+outputs/rq1/intermediate/mm_model_raw/mm_raw_llama3.csv	362920	3e1f8f00064a5f0768bb97e1d6065050e4842986fe77a3fce0a8e1f54e310675	3208	raw model output over MedMentions text	restricted_derived_20261111.tar.gz
+outputs/rq1/intermediate/mm_model_raw/mm_raw_mistral.csv	358279	4ef7169de99575211604e4851da3b424d949372280d866bc947dd96423235f80	3208	raw model output over MedMentions text	restricted_derived_20261111.tar.gz
+outputs/rq1/intermediate/mm_model_raw/mm_raw_openbiollm.csv	352350	9e349233ce7dbd45d805736ec7b5f5246dd8fc29bd1367b1c8b465c41d9ac396	3208	raw model output over MedMentions text	restricted_derived_20261111.tar.gz
+outputs/rq1/intermediate/mm_model_raw/mm_raw_biomistral.csv	307902	b66abc89b74c43e5ce8c5629a0d828864dd189486ed306e2089908f1505e8417	3208	raw model output over MedMentions text	restricted_derived_20261111.tar.gz
+outputs/rq1/intermediate/mm_model_raw/mm_raw_flan-t5-base.csv	306132	ad4e33c388d524e6a7a8d499f4a6251be4dc227abdcc94bbb4be0c9d60ab2fcd	3208	raw model output over MedMentions text	restricted_derived_20261111.tar.gz
+outputs/qa/intermediate/qa_question_perturbations_squad2.csv	1842962	6a3d43721d781f5a77d31f20230965c7637dcbbc31e8e379012e051403dba4db	17992	SQuAD2-derived question perturbations	restricted_derived_20261111.tar.gz
+outputs/qa/intermediate/qa_question_perturbations_bioasq.csv	302301	ab9f6f98af8f57f2d7a86f772032dbc4cf18aa7e364e30f57ed8848d8397c6c6	2964	BioASQ-derived question perturbations	restricted_derived_20261111.tar.gz
