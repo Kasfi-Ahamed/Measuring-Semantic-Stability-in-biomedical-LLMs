@@ -13,13 +13,28 @@ Greedy decoding consumes no RNG, so a seed would not help. The exposure is diffe
 argmax can flip on near-ties when floating-point reduction order differs, and reduction order
 differs across GPU architectures. So the card matters even at temperature 0.
 
-THE PUBLISHED MEDMENTIONS GENERATIONS SPAN THREE CARD TYPES, AT BLOCK LEVEL.
-Established from sacct for the blocks 0-19 Llama-3 inference window (2026-09-08 to 09-18):
+THE PUBLISHED MEDMENTIONS GENERATIONS SPAN SIX CARD TYPES ACROSS THREE GPU GENERATIONS.
+CORRECTED 2026-11-11. An earlier version of this file said THREE card types, established from
+sacct for the blocks 0-19 Llama-3 inference window alone. That window was not the whole published
+set. Resolving every (model, block) pair through sacct's NodeList and sinfo's gres -- which
+covers all 202 pairs with none unresolved, rather than the 81 logs that happen to carry a
+DEVICE OK line -- gives SIX card types for the blocks 0-19 generative set:
 
-  A100       blocks 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
-             on g40-2gpu-1, g40-3gpu-2, g40-4gpu-1, g40-4gpu-2
-  L40S       block 0        on g46-1gpu-3
-  RTX 4500   block 3        on g24-2gpu-1
+  NVIDIA A100-PCIE-40GB                65 pairs    Ampere
+  NVIDIA RTX 4500 Ada (24GB)           16 pairs    Ada Lovelace
+  NVIDIA L40S (48GB)                   12 pairs    Ada Lovelace
+  NVIDIA RTX 4000 SFF Ada (20GB)        3 pairs    Ada Lovelace
+  Tesla V100-PCIE-32GB                  3 pairs    VOLTA
+  NVIDIA RTX 6000 Ada (48GB)            1 pair     Ada Lovelace
+
+The Volta card matters most. V100 is two architecture generations from Ada and one from Ampere,
+with different tensor-core behaviour and different reduction ordering, so it is the least likely
+of the six to reproduce another card's output token for token.
+
+The full per-pair table is provenance/generation_hardware_by_model_block.csv: corpus, block,
+tier, model, job id, node, card, job state, start, end, elapsed, and the source log, for all 202
+resolved pairs across blocks 0-25. Six pairs are absent because block 25 was still running when
+it was written.
 
 Blocks 1, 2 and 5 fall outside that sacct window; their markers are dated 09-09 to 09-11 and the
 jobs either predate it or ran under another job name. The conclusion does not depend on them.
