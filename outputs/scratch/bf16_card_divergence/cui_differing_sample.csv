@@ -1,41 +1,41 @@
 input_variant_id,output_text_published_v100,cui_pub,output_text_regen,cui_regen
-mm_0136256_p07,additive,C0442796,additive models,C0181920
-mm_0136256_p08,additive,C0442796,additive models,C0181920
-mm_0136257_p07,additive,C0442796,additive models,C0181920
-mm_0136257_p08,additive,C0442796,additive models,C0181920
-mm_0136259_p02,GAMs,C0061057,fitness,C1456706
-mm_0136315_p05,health,C0018684,board,C0972401
-mm_0136323_orig,criteria,C0243161,board,C0972401
-mm_0136334_p07,demographic,C0011298,population,C1257890
-mm_0136334_p08,demographic,C0011298,population,C1257890
-mm_0136335_p07,demographic,C0011298,population,C1257890
-mm_0136335_p08,demographic,C0011298,population,C1257890
-mm_0136338_p05,rebozo,C0168388,idea,C1031756
-mm_0136389_p02,S403 - p62,C2715937,p62,C1420393
-mm_0136391_p06,p62,C1420393,ubiquitin,C0041538
-mm_0136392_p05,p62,C1420393,ubiquitin,C0041538
-mm_0136394_p05,p62,C1420393,ubiquitin,C0041538
-mm_0136395_p05,p62,C1420393,ubiquitin,C0041538
-mm_0136448_orig,coatings,C1704806,current coatings,C1273642
-mm_0136449_orig,coatings,C1704806,current coatings,C1273642
-mm_0136450_orig,coatings,C1704806,current coatings,C1273642
-mm_0136494_p02,non - spatial information,C0871397,non-spatial,C1428114
-mm_0136554_p01,cardioprotection,C0007209,disruption,C0332453
-mm_0136632_p07,HBM,C1416917,body mass index,C1305855
-mm_0136632_p08,HBM,C1416917,body mass index,C1305855
-mm_0136633_p07,HBM,C1416917,body mass index,C1305855
-mm_0136633_p08,HBM,C1416917,body mass index,C1305855
-mm_0136634_p07,HBM,C1416917,body mass index,C1305855
-mm_0136634_p08,HBM,C1416917,body mass index,C1305855
-mm_0136635_p07,HBM,C1416917,body mass index,C1305855
-mm_0136635_p08,HBM,C1416917,body mass index,C1305855
-mm_0136656_p01,leptin,C1416825,obesity,C0028754
-mm_0136745_p07,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136745_p08,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136746_p07,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136746_p08,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136747_p07,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136747_p08,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136748_p07,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136748_p08,neo-yoke repair,C0339891,hypospadias,C0848558
-mm_0136749_p07,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0152267_p02,genome sequencing,C1328887,genome,C0017428
+mm_0152275_p03,whole-genome sequencing,C3640076,metabolite,C0870883
+mm_0152275_p04,whole-genome sequencing,C3640076,metabolite,C0870883
+mm_0152276_p04,whole-genome sequencing,C3640076,metabolite,C0870883
+mm_0152277_p03,whole-genome sequencing,C3640076,metabolite,C0870883
+mm_0152278_p04,whole-genome sequencing,C3640076,metabolite,C0870883
+mm_0152279_p04,whole-genome sequencing,C3640076,metabolite,C0870883
+mm_0152358_p02,DDIs,C0012133,prescription,C0033080
+mm_0152389_orig,impact of psychotherapist training and experience on posttermination contact,UNASSIGNED,impact,C1825598
+mm_0152390_orig,impact of psychotherapist training and experience on posttermination contact,UNASSIGNED,impact,C1825598
+mm_0152401_p07,clinicians,C0871685,demographic,C0011298
+mm_0152401_p08,clinicians,C0871685,demographic,C0011298
+mm_0152402_p07,clinicians,C0871685,demographic,C0011298
+mm_0152402_p08,clinicians,C0871685,demographic,C0011298
+mm_0152403_p07,clinicians,C0871685,demographic,C0011298
+mm_0152403_p08,clinicians,C0871685,demographic,C0011298
+mm_0152404_p07,clinicians,C0871685,demographic,C0011298
+mm_0152404_p08,clinicians,C0871685,demographic,C0011298
+mm_0152405_p07,clinicians,C0871685,demographic,C0011298
+mm_0152405_p08,clinicians,C0871685,demographic,C0011298
+mm_0152465_p01,SSNS,C0403396,drug,C0013227
+mm_0152473_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152474_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152475_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152476_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152477_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152477_p01,drug,C0013227,hyperlipidaemia,C0020473
+mm_0152478_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152479_orig,pharmacodynamic,C0851347,drug,C0013227
+mm_0152495_p06,expansion,C0205229,gastrointestinal,C0521362
+mm_0152497_p05,drug,C0013227,combination,C3811910
+mm_0152506_p05,drug transfer,C1154689,drug,C0013227
+mm_0152594_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152595_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152596_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152597_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152598_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152599_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152600_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321
+mm_0152601_orig,Human Immunoglobulin Heavy Gamma Chain Polymorphisms,C0021033,Human Immunoglobulin,C0358321

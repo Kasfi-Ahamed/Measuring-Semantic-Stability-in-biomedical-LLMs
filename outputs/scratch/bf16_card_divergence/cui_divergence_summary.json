@@ -1,13 +1,13 @@
 {
-  "differing_string_rows": 972,
-  "resolvable_both_sides": 794,
+  "differing_string_rows": 1202,
+  "resolvable_both_sides": 1026,
   "ambiguous_either_side": 0,
-  "compared": 794,
-  "same_cui": 102,
-  "different_cui": 692,
-  "unresolvable_rows": 178,
-  "string_coverage": 0.9393,
-  "cui_divergence_lower": 0.871537,
-  "cui_divergence_upper": 0.895062,
+  "compared": 1026,
+  "same_cui": 196,
+  "different_cui": 830,
+  "unresolvable_rows": 176,
+  "string_coverage": 0.9472,
+  "cui_divergence_lower": 0.808967,
+  "cui_divergence_upper": 0.836938,
   "bounds_note": "lower = resolved-different / compared; upper = (resolved-different + unresolvable) / (compared + unresolvable); AMBIGUOUS excluded from both"
 }

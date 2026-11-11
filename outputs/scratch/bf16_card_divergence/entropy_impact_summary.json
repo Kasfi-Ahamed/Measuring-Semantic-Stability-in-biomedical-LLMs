@@ -1,0 +1,44 @@
+{
+  "blocks": [
+    17,
+    19
+  ],
+  "model": "FLAN-T5-base",
+  "formula": "H=-sum p ln p over CUI clusters, normalised by ln(n_variants)",
+  "formula_validation_vs_published": "98.328% exact on normalised H and n_clusters; 100% on n_variants (blocks 17-19)",
+  "string_cui_coverage": 0.9878,
+  "bounds": {
+    "lower": {
+      "instances": 15749,
+      "changed": 1072,
+      "changed_share": 0.068068,
+      "mean_H_published": 0.24676,
+      "mean_H_regen": 0.242381,
+      "mean_shift": -0.00438,
+      "mean_abs_shift_over_changed": 0.201816,
+      "max_abs_shift": 1.0,
+      "p50_abs_changed": 0.172271,
+      "p95_abs_changed": 0.57938,
+      "increased": 436,
+      "decreased": 636,
+      "zero_to_nonzero": 101,
+      "nonzero_to_zero": 195
+    },
+    "upper": {
+      "instances": 15751,
+      "changed": 1038,
+      "changed_share": 0.065901,
+      "mean_H_published": 0.246729,
+      "mean_H_regen": 0.24719,
+      "mean_shift": 0.000461,
+      "mean_abs_shift_over_changed": 0.211689,
+      "max_abs_shift": 1.0,
+      "p50_abs_changed": 0.177623,
+      "p95_abs_changed": 0.57938,
+      "increased": 530,
+      "decreased": 508,
+      "zero_to_nonzero": 132,
+      "nonzero_to_zero": 129
+    }
+  }
+}

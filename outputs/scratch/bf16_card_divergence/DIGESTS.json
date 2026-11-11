@@ -1,11 +1,19 @@
 {
   "cui_differing_sample.csv": {
-    "bytes": 2291,
-    "sha256": "b3431d826cb1df7a4a6534e26536c3d21dcccc37b443a016e18f8dd098025bb3"
+    "bytes": 2905,
+    "sha256": "6c6862c0be54dd753ae017cbebe4a65d5bafecd359b417ddeb6d78f3f702fb44"
   },
   "cui_divergence_summary.json": {
-    "bytes": 448,
-    "sha256": "2630d2fee17ae376673f4e18afe46e7fffa096938a41d5db0f015867dfc30885"
+    "bytes": 451,
+    "sha256": "843e57505e03fca8cc3b21fefb41635d2f4f24487f4bdb39a98994787c3dc068"
+  },
+  "entropy_impact_per_instance.csv": {
+    "bytes": 851228,
+    "sha256": "6bb09e26f13bf08397996fdc9141a7aaf4399638b7daad027533b5e667e93810"
+  },
+  "entropy_impact_summary.json": {
+    "bytes": 1216,
+    "sha256": "d28a1e64b3bd28e1e327c0a960b15fb78d887728027be2ef1562c2f2c37aca8a"
   },
   "flan_shard0017_ampere_regen.csv": {
     "bytes": 2851924,
@@ -22,5 +30,17 @@
   "flan_shard0017_ampere_regen.summary.json": {
     "bytes": 166,
     "sha256": "d8a86801f96a9759d2b6fc0068efe127f8cf6726c5266ca1672329f5cac6fe97"
+  },
+  "flan_shard0019_ampere_regen.csv": {
+    "bytes": 2887487,
+    "sha256": "4d184f278bd3b6bdf9587aaf204a39af18360323260e990709e382c79663b03d"
+  },
+  "flan_shard0019_ampere_regen.differing_rows.csv": {
+    "bytes": 95491,
+    "sha256": "0216e618b6701f2ae1da152cb0ed83e74b2cd571a417625b4817aa45af26e479"
+  },
+  "flan_shard0019_ampere_regen.summary.json": {
+    "bytes": 167,
+    "sha256": "bc5da1ce37f7ca56bbf7526e261557b473192bf1b4e20e774b7ab1e350671872"
   }
 }
