@@ -13,7 +13,7 @@ Greedy decoding consumes no RNG, so a seed would not help. The exposure is diffe
 argmax can flip on near-ties when floating-point reduction order differs, and reduction order
 differs across GPU architectures. So the card matters even at temperature 0.
 
-THE PUBLISHED MEDMENTIONS GENERATIONS SPAN THREE CARD TYPES.
+THE PUBLISHED MEDMENTIONS GENERATIONS SPAN THREE CARD TYPES, AT BLOCK LEVEL.
 Established from sacct for the blocks 0-19 Llama-3 inference window (2026-09-08 to 09-18):
 
   A100       blocks 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
@@ -24,8 +24,29 @@ Established from sacct for the blocks 0-19 Llama-3 inference window (2026-09-08 
 Blocks 1, 2 and 5 fall outside that sacct window; their markers are dated 09-09 to 09-11 and the
 jobs either predate it or ran under another job name. The conclusion does not depend on them.
 
-The 2026-11 rerun blocks landed as follows: block 23 and block 24 on g24-2gpu-2 and g24-2gpu-3,
-both RTX 4500. That introduces no new card type -- RTX 4500 already produced block 3.
+CARD TYPE VARIES AT THE MODEL-BLOCK LEVEL, NOT THE BLOCK LEVEL.
+This is the granularity that matters, and block 24 demonstrates it within a single block. Its
+five generative models were produced on THREE different architectures:
+
+  gen_llama3_shard0024.csv        RTX 4500 Ada      g24-2gpu-2   job 48124
+  gen_biomistral_shard0024.csv    L40S              g46-1gpu-1   job 37708
+  gen_flan-t5-base_shard0024.csv  L40S              g46-1gpu-1   job 37707
+  gen_openbiollm_shard0024.csv    L40S              g46-2gpu-2   job 50303   (2026-11-11)
+  gen_mistral_shard0024.csv       RTX 6000 Ada      g48-1gpu-1   job 50304   (2026-11-11)
+
+So "block 3 was produced on an RTX 4500" is the wrong shape of statement. The unit of hardware
+provenance is the (model, block) pair, because each pair is one job and the scheduler places each
+job independently. A reviewer asking which card produced a given number needs the model-block
+cell, not the block.
+
+Nothing records this. The .complete.json markers carry path, sha256, rows and expected_rows but
+no node or card, so hardware provenance has to be recovered from job logs -- which is how the
+table above was built, by grepping "RUN gen <model> shard <n>" and the adjacent DEVICE OK line
+across logs/. If the logs are lost, the card is unrecoverable. Adding node and GPU name to the
+marker is a one-line change that was not made, and it is the right fix.
+
+The 2026-11 rerun added L40S and RTX 6000 Ada to the set of architectures in the corpus. Block 23
+ran on RTX 4500, which was already present via block 3.
 
 WHAT THIS MEANS, stated for a reproducibility statement rather than buried:
 Exact regeneration of a MedMentions generation requires the same GPU architecture that produced
