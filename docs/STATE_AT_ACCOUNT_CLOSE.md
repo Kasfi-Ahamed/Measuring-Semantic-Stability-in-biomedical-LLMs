@@ -120,31 +120,97 @@ and FLAN-T5-base can use the small A4000 cards that the causal sbatch excludes. 
 constraint on parallelism is the **fixed 2-job QoS cap**, not the exclude list. Do not propose a
 QoS upgrade; it has been declined.
 
-## 6. Downstream stages, which did not run
+## 6. Downstream stages, which did not run — exact commands to finish them elsewhere
 
-Mapping, entropy and margin were deliberately not run on the final night: mapping alone is 4–6
-hours and would have displaced inference that cannot be bought back, whereas all three are
-reproducible off-cluster from the preserved inference outputs plus the UMLS 2026AA release, which
-NLM reissues at the checksums recorded in `provenance/source_data_provenance.txt`.
+Mapping, entropy and margin were deliberately not run on the cluster: mapping alone is 4–6 hours
+and would have displaced inference that cannot be bought back, whereas all three are reproducible
+off-cluster from the preserved inference outputs plus the UMLS 2026AA release, which NLM reissues
+at the checksums recorded in `provenance/source_data_provenance.txt`.
 
-To run them elsewhere:
+These are the real invocations, taken from `slurm/run_mm_a9_jobA1.sbatch` which is what actually
+ran, not reconstructed from prose. Run them from the repository root with the project environment
+active.
+
+### 6.1 Mapping — blocks 20–25
 
 ```bash
-# 1. mapping, block-filtered. Pattern: slurm/run_mm_a9_jobA1.sbatch
-export MM_MAP_SOURCE=shards
-export MM_MAP_BLOCKS="20,21,22,23,24,25"
-export MM_EXPECT_ROWS=<sum of expected_rows over those blocks>   # binds at the block filter AND the assign gate
+cd <repo root>
+export PYTHONHASHSEED=0                   # the notebook relies on it; set it or results shift
+export MM_MAP_SOURCE=shards               # read the per-shard CSVs, not a mapped corpus
+export MM_MAP_BLOCKS="20,21,22,23,24,25"  # THIS is what makes MM_EXPECT_ROWS bind
+export MM_EMPTY_POLICY=unassigned         # Amendment 7. Required. There is no default.
+export MM_EXPECT_ROWS=<see below>         # asserted at the block filter AND the assign gate
+export MM_OUT_MAPPED="$PWD/outputs/rq1/intermediate/rq1_all_outputs_mapped_BLOCKS20_25.csv"
+export MM_SCRATCH_DIR="$PWD/outputs/scratch/blocks20_25"
 python scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
-
-# 2. entropy
-python scripts/exec_notebook.py notebooks/03_mapping_entropy/<entropy notebook>
-
-# 3. margin
-python scripts/refresh_margin_entropy_columns.py
 ```
 
-`MM_EXPECT_ROWS` must be set. Job A set it and it was **never asserted** because no block list
-was passed, so the check was skipped in silence. `MM_MAP_BLOCKS` is what makes it bind.
+**`MM_EXPECT_ROWS` must be computed, not copied.** As of this writing, blocks 20–24 are complete
+and sum to **1,835,028**; block 25 is still running and will add roughly 93,000, so the figure
+will land near 1,928,000. Recompute it exactly once block 25 finishes:
+
+```bash
+python - <<'EOF'
+import json, glob, re, os
+tot = 0
+for m in glob.glob("outputs/rq1/intermediate/mm_shards/*.complete.json"):
+    mb = re.match(r'(gen|enc)_(.+)_shard(\d{4})\.csv\.complete\.json$', os.path.basename(m))
+    if not mb:                      # skips feat_ and pert_ markers -- see the warning below
+        continue
+    if 20 <= int(mb.group(3)) <= 25:
+        d = json.load(open(m))
+        tot += d.get("expected_rows") or d["rows"]
+print(tot)
+EOF
+```
+
+**Do not sum every `.complete.json` in that directory.** Each block also has `feat_` and `pert_`
+markers, which are perturbation inputs rather than model outputs. Including them gives 2,171,180
+instead of 1,835,028 — an over-count of 336,152 — and the mapping would abort at the assert. The
+regex above restricts to `gen_` and `enc_`. This was nearly written into this handover as fact.
+
+**`MM_OUT_MAPPED` must not be `rq1_all_outputs_mapped_A9_CUTOFF.csv`.** That file is the
+published corpus and the second copy of the blocks 0–19 generations (§4). Write to a new path.
+
+### 6.2 Entropy
+
+```bash
+export PYTHONHASHSEED=0
+export MM_MAPPED_SRC="$PWD/outputs/rq1/intermediate/rq1_all_outputs_mapped_BLOCKS20_25.csv"
+export RQ_ENTROPY_ARM=primary       # 'raw' is the S1 sensitivity arm, not the headline
+python scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
+```
+
+`MM_MAPPED_SRCS` (plural) accepts a comma-separated list if you are combining the rerun blocks
+with an existing mapped corpus rather than analysing them alone.
+
+### 6.3 Margin
+
+```bash
+export PYTHONHASHSEED=0
+python scripts/refresh_margin_entropy_columns.py
+# UMLS candidate margin, if the candidate pool must be rebuilt:
+python scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ4_umls_candidate_margin.ipynb
+# and for instances the above leaves without a margin:
+python scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ4_compute_missing_umls_margin.ipynb
+```
+
+`margin_mean` is the statistic every producer uses and the one the manuscript reports.
+`margin_min` also exists in the artefacts and is **not** the reported statistic; see
+`outputs/rq4/rq4_margin_variant_robustness.csv` for why the distinction does not change any
+conclusion.
+
+### 6.4 The incremental path, if you want mapping to resume rather than restart
+
+```bash
+export PYTHONHASHSEED=0
+export MM_PARTIAL_GRID=1
+python scripts/exec_notebook.py notebooks/03_mapping_entropy/RQ1_PART2_full_umls_pool.ipynb
+python scripts/mm_prune_mapped_shards.py     # REPORT ONLY unless MM_ALLOW_PRUNE=1
+```
+
+Leave `MM_ALLOW_PRUNE` unset. Setting it is what destroyed the per-shard partitioning for blocks
+0–5 and 19 in October. The script is deliberately report-only without it.
 
 ## 7. Verification commands
 
