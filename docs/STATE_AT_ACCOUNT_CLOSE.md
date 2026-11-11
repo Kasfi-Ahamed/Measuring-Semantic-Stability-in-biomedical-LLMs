@@ -295,6 +295,200 @@ to push swept-up files were refused: the first included the author's own coursew
 `Documents/`, the second included nine UMLS-, MedMentions- and SQuAD-derived files. Both refusals
 were correct.
 
+
+## 8a. THE bf16 EXCLUSION CRITERION DID NOT HOLD, AND WHAT THAT COST
+
+Read this section before quoting any per-instance entropy value for FLAN-T5-base.
+
+### What the manuscript says
+
+> Experiments ran on a SLURM-managed cluster using NVIDIA L40S and A100 accelerators in
+> bfloat16. Nodes without native bfloat16 support are excluded, because emulated arithmetic
+> would perturb the very quantities being measured.
+
+### What happened, as a sequence, with no gloss
+
+```
+2026-09-08 22:03:13 UTC   block 17 FLAN-T5-base completes on g32-2gpu-1 (Tesla V100), job 32008
+2026-09-09 22:48:42 UTC   block 18 ditto, job 32171
+2026-09-09 23:14:00 UTC   block 19 ditto, job 32203
+2026-09-10 07:57:55 UTC   commit 6e4413f "Exclude the V100 node from encoder/FLAN shard
+                          inference" adds g32-2gpu-1 to --exclude
+```
+
+The node was excluded about nine hours after the last of those runs. The problem was recognised
+and fixed forward; the three already-produced outputs were left in place; the manuscript then
+stated the exclusion unconditionally. Nothing has landed on that node since.
+
+Tesla V100 is Volta, compute capability 7.0. Native bf16 arithmetic begins at 8.0 (Ampere). The
+job logs show bf16 was explicitly requested and loaded:
+
+```
+[2026-09-08 21:57:24 UTC] LOAD seq2seq FLAN-T5-base from google/flan-t5-base
+                          (bf16, explicit cuda, T=0 greedy) n=45,764
+DEVICE OK [seq2seq:flan-t5-base]: param_devices=['cuda:0'] | GPU=Tesla V100-PCIE-32GB
+```
+
+### Scope: three runs, not twelve
+
+Twelve (model, block) pairs ran on that node, all in blocks 0-19. Nine are the encoders
+(BERT-base, BioBERT, PubMedBERT x blocks 17, 18, 19), and `scripts/mm_encoder_infer.py` calls
+`AutoModel.from_pretrained` with no dtype argument, so they load **float32**, which is native on
+Volta. They do not violate the stated criterion and were deliberately NOT regenerated;
+uniformity for its own sake would have cost GPU hours the audit needed elsewhere. The paper
+should name them in one sentence and say so.
+
+The bf16 violation is exactly the three FLAN-T5-base generative runs, blocks 17, 18, 19.
+
+### The measurement, block 17
+
+Regenerated on an RTX 4500 Ada (capability 8.9, `is_bf16_supported=True`, `BF16 OK` logged),
+identical prompts, greedy, `max_new_tokens=16`, compared against the published generations
+recovered row-for-row from `rq1_all_outputs_mapped_A9_CUTOFF.csv` (the per-shard CSVs for all
+three blocks were pruned in October and are in no archive tarball; only their markers survive).
+
+```
+rows generated 45,764   published recovered 45,764 (full coverage)
+both sides have text 45,757   identical 44,785   differing 972   null one side 7
+STRING DIVERGENCE  2.1243%   (97.88% exact match)
+```
+
+Of the 972 differing rows, 14 are casing-only, 278 are prefix/extension at the 16-token
+truncation boundary, and 680 are unrelated strings. CUI divergence among the differences,
+bounded (lower = resolved-different / compared; upper adds unresolvable to both):
+
+```
+CUI DIVERGENCE WITHIN DIFFERENCES   87.15% to 89.51%   (bounds 2.4 points apart)
+net effect: roughly 1.87% of ALL rows receive a different CUI
+```
+
+Even the benign-looking truncation class changes the identifier: `coatings` -> `current coatings`
+moves C1704806 -> C1273642.
+
+### Entropy impact, block 17: report GROSS movement, never net
+
+Normalised entropy recomputed over CUI clusters, formula validated at 98.328% exact against the
+published column (100% on n_variants; raw H differs only because the published column is in bits
+and this is in nats, and the normalised quantity is base-invariant).
+
+```
+                              LOWER      UPPER
+instances compared            7,865      7,867
+entropy CHANGES                 506        510      -> 6.43% to 6.48% of instances
+median |shift| over changed   0.169      0.178
+p95 |shift| over changed      0.421      0.579
+max |shift|                   0.579      1.000
+```
+
+**6.4% of instances, against a 1.87% per-row rate** — the per-row figure understates the
+instance-level effect roughly threefold, because an instance has ~5.7 variants and one changed
+variant can restructure its clusters.
+
+GROSS movement is the finding; NET movement is too small to sign:
+
+```
+mean shift        -0.0031 (lower)   +0.0018 (upper)   <- FLIPS SIGN, both tiny vs mean 0.239
+zero-crossings, gross   137             125           <- stable
+zero-crossings, net     -45              +1           <- FLIPS SIGN
+instances changed       506             510           <- stable
+```
+
+Anything quoting a net direction from one bound is quoting noise. Block-level means are robust to
+about 1%; per-instance values are not robust for one instance in sixteen.
+
+**The specific exposure is the zero-entropy stratum, not stratification in general.**
+`is_zero_entropy` is a column in the entropy artefact, and RQ4 contrasts accuracy in the
+zero-entropy block against the highest-entropy quartile. Between 125 and 137 instances cross that
+boundary. An instance crossing it leaves one stratum and joins another, which a mean never has to
+survive. A reported corpus mean survives this; a stratified contrast is directly exposed.
+
+### Against the manuscript's own standard
+
+The thesis argues batched generation is a methodological problem rather than a reproducibility
+preference, on exact match between 92.3% and 98.3% across the four causal models. Hardware
+heterogeneity gives **97.88%** on FLAN-T5-base. By the manuscript's own criterion the hardware
+effect is of the same order as the effect it treats as disqualifying, so the argument against
+batching applies to card heterogeneity with comparable force.
+
+### Compounding on one model
+
+FLAN-T5-base is already recorded in the manuscript as the single model run batched rather than
+single-sequence, reported as an unresolved inconsistency. It is now also the model with three
+blocks on non-compliant hardware. Two independent methodological asterisks on the same model,
+found separately, connected nowhere in the thesis. The JBI version should treat them together.
+
+### THE OPEN QUESTION, AND WHICH BRANCH THE ANSWER TAKES
+
+Everything above compares a NON-COMPLIANT card against a compliant one, which is the case the
+manuscript said was excluded. The hardware table
+(`provenance/generation_hardware_by_model_block.csv`) shows the published corpus spans SIX card
+types across THREE GPU generations, and every one except the V100 is compliant bf16. Compliant
+does not mean identical: two compliant architectures also differ in reduction order.
+
+Job **50711** runs block 17's FLAN-T5-base on an A100 (Ampere) against the identical inputs, for
+comparison with tonight's Ada regeneration. Ampere against Ada, both compliant, nothing else
+varying.
+
+```
+RESULT TO BE FILLED IN: Ampere-vs-Ada exact string match on block 17 = ____________
+   (file: outputs/scratch/bf16_card_divergence/flan_shard0017_a100_regen.csv,
+    compare against  flan_shard0017_ampere_regen.csv  -- the Ada run)
+```
+
+**BRANCH A, if that number is near 99.9%.** The instability is an artefact of three blocks that
+should never have run on a V100. The regenerations fix it. The paper reports a bounded incident
+with a measured cost, names the nine fp32 encoder runs as unaffected, and the 6.4% instance
+churn is confined to FLAN-T5-base blocks 17-19.
+
+**BRANCH B, if that number is near 98%.** The instability is a property of the study as a whole.
+Every model has generations produced across architectures that disagree at that rate, the
+blocks 0-19 corpus spans six card types, and the 6.4% instance-level entropy churn is a floor
+under every reported per-instance quantity, not an incident. That is a different paper, and the
+limitation belongs in the abstract rather than in a hardware appendix.
+
+### The framing for the JBI version
+
+A paper whose subject is the stability of model interpretation has measured the stability of its
+own measuring instrument under hardware variation, and reports it. Given plainly and early rather
+than buried, a reviewer reads that as rigour: a selective-prediction study that quantifies the
+floor imposed by its own pipeline. The chain is coherent and should be presented as one --
+**97.88% string match, 87-89.5% CUI divergence among the differences, 6.4% instance-level entropy
+churn, means robust to ~1%, 125-137 instances crossing the zero-entropy boundary.**
+
+### The guard that now prevents recurrence
+
+`scripts/mm_shard_lib.assert_bf16_capable()` raises unless the visible device is capability >= 8.0,
+logging card, capability and `is_bf16_supported` on both paths, with a `dtype` argument so it is a
+no-op for float32 loads. It is wired into `load_generative` and `load_seq2seq` before weights
+load. The only way past it is `MM_ALLOW_NON_NATIVE_BF16=1`, which nothing in the pipeline sets and
+which prints a banner declaring the output a non-artefact.
+
+Two deliberate rule-breaks are recorded here so neither reads later as a breach: job 50695
+targeted `g32-2gpu-1` by `--nodelist` against the standing rule never to let work land there,
+because it was a diagnostic whose purpose was to measure that node (it was cancelled as redundant
+once published-vs-fresh answered the question directly), and it carried the override flag.
+
+### TF32, measured rather than assumed
+
+```
+tf32_matmul_allowed        false
+tf32_cudnn_allowed         TRUE      <- PyTorch's default IS true
+float32_matmul_precision   "highest"
+```
+
+The cuDNN flag defaults to true and is harmless here only because the encoder path is matmul-only
+with no convolutions. Had there been a convolution anywhere in it, A100 fp32 would have run at
+TF32's 10-bit mantissa and been LESS precise than the V100's true fp32, inverting the assumption
+this audit worked from. This result is clean by a property of the model architecture, not by
+anything the code asserted.
+
+### Cost model, so nobody repeats my estimate
+
+A full FLAN-T5-base block is about **45 minutes**, not the 12 extrapolated from block 25's
+quarter-block. The 4.4 GB `rq1_validated_perturbations.csv` read and the variant-table build are
+**fixed costs per job**, independent of block size. Every estimate made from a partial block will
+be wrong in the same direction.
+
 ## 9. What is preserved nowhere
 
 After the final blob-hash sweep — hashing every working-tree file with `git hash-object` and
