@@ -300,6 +300,15 @@ were correct.
 
 Read this section before quoting any per-instance entropy value for FLAN-T5-base.
 
+**THE ONE THING TO TAKE FROM THIS SECTION.** Report GROSS movement; never report a net
+direction. From the same 7,867 instances, under two defensible treatments of 178 unresolvable
+strings, the net zero-entropy crossing is **-45 at the lower bound and +1 at the upper** -- one
+says 45 instances left the zero-entropy stratum, the other says one joined it. The gross figures
+are stable across the same bounds: 125-137 instances cross the boundary either way, and 506-510
+instances change entropy at all. Gross movement is the measurement. Net movement is noise with a
+sign attached, and the mean shift behaves the same way (-0.0031 against +0.0018, both tiny
+against a mean of 0.239).
+
 ### What the manuscript says
 
 > Experiments ran on a SLURM-managed cluster using NVIDIA L40S and A100 accelerators in
