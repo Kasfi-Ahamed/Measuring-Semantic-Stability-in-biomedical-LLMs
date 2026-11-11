@@ -1,0 +1,9 @@
+{
+  "block": 17,
+  "rows": 45764,
+  "both_have_text": 45757,
+  "identical": 44785,
+  "differing": 972,
+  "null_on_one_side": 7,
+  "string_divergence_rate": 0.021243
+}

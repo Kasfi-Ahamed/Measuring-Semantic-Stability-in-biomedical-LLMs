@@ -1,0 +1,26 @@
+{
+  "cui_differing_sample.csv": {
+    "bytes": 2291,
+    "sha256": "b3431d826cb1df7a4a6534e26536c3d21dcccc37b443a016e18f8dd098025bb3"
+  },
+  "cui_divergence_summary.json": {
+    "bytes": 448,
+    "sha256": "2630d2fee17ae376673f4e18afe46e7fffa096938a41d5db0f015867dfc30885"
+  },
+  "flan_shard0017_ampere_regen.csv": {
+    "bytes": 2851924,
+    "sha256": "82a637c38807929390765d2b9fea63c160c9524c1ea7204665a0f26c868e5f44"
+  },
+  "flan_shard0017_ampere_regen.differences_sample.csv": {
+    "bytes": 20359,
+    "sha256": "a4b38b6c970a9c5e0af926b0ce8e4b299d6ec2f9c00f893bbc6cb45d05fc8043"
+  },
+  "flan_shard0017_ampere_regen.differing_rows.csv": {
+    "bytes": 74739,
+    "sha256": "76ef1d2b8ae237c83acc4c1373573d06cc588b1a16df66abcd40ca5519064d79"
+  },
+  "flan_shard0017_ampere_regen.summary.json": {
+    "bytes": 166,
+    "sha256": "d8a86801f96a9759d2b6fc0068efe127f8cf6726c5266ca1672329f5cac6fe97"
+  }
+}

@@ -1,0 +1,973 @@
+instance_id,input_variant_id,input_type,output_text_regen,output_text_published_v100,same
+mm_0136256,mm_0136256_p07,perturbation,additive models,additive,False
+mm_0136256,mm_0136256_p08,perturbation,additive models,additive,False
+mm_0136257,mm_0136257_p07,perturbation,additive models,additive,False
+mm_0136257,mm_0136257_p08,perturbation,additive models,additive,False
+mm_0136259,mm_0136259_p02,perturbation,fitness,GAMs,False
+mm_0136270,mm_0136270_p07,perturbation,phishing,Phishing,False
+mm_0136270,mm_0136270_p08,perturbation,phishing,Phishing,False
+mm_0136271,mm_0136271_p07,perturbation,phishing,Phishing,False
+mm_0136271,mm_0136271_p08,perturbation,phishing,Phishing,False
+mm_0136272,mm_0136272_p07,perturbation,phishing,Phishing,False
+mm_0136272,mm_0136272_p08,perturbation,phishing,Phishing,False
+mm_0136273,mm_0136273_p07,perturbation,phishing,Phishing,False
+mm_0136273,mm_0136273_p08,perturbation,phishing,Phishing,False
+mm_0136274,mm_0136274_p07,perturbation,phishing,Phishing,False
+mm_0136274,mm_0136274_p08,perturbation,phishing,Phishing,False
+mm_0136315,mm_0136315_p05,perturbation,board,health,False
+mm_0136323,mm_0136323_orig,original,board,criteria,False
+mm_0136334,mm_0136334_p07,perturbation,population,demographic,False
+mm_0136334,mm_0136334_p08,perturbation,population,demographic,False
+mm_0136335,mm_0136335_p07,perturbation,population,demographic,False
+mm_0136335,mm_0136335_p08,perturbation,population,demographic,False
+mm_0136338,mm_0136338_p05,perturbation,idea,rebozo,False
+mm_0136389,mm_0136389_p02,perturbation,p62,S403 - p62,False
+mm_0136391,mm_0136391_p06,perturbation,ubiquitin,p62,False
+mm_0136392,mm_0136392_p05,perturbation,ubiquitin,p62,False
+mm_0136394,mm_0136394_p05,perturbation,ubiquitin,p62,False
+mm_0136395,mm_0136395_p05,perturbation,ubiquitin,p62,False
+mm_0136448,mm_0136448_orig,original,current coatings,coatings,False
+mm_0136449,mm_0136449_orig,original,current coatings,coatings,False
+mm_0136450,mm_0136450_orig,original,current coatings,coatings,False
+mm_0136494,mm_0136494_p02,perturbation,non-spatial,non - spatial information,False
+mm_0136554,mm_0136554_p01,perturbation,disruption,cardioprotection,False
+mm_0136561,mm_0136561_p01,perturbation,cardioprotective,cardioprotective effect,False
+mm_0136632,mm_0136632_p07,perturbation,body mass index,HBM,False
+mm_0136632,mm_0136632_p08,perturbation,body mass index,HBM,False
+mm_0136633,mm_0136633_p07,perturbation,body mass index,HBM,False
+mm_0136633,mm_0136633_p08,perturbation,body mass index,HBM,False
+mm_0136634,mm_0136634_p07,perturbation,body mass index,HBM,False
+mm_0136634,mm_0136634_p08,perturbation,body mass index,HBM,False
+mm_0136635,mm_0136635_p07,perturbation,body mass index,HBM,False
+mm_0136635,mm_0136635_p08,perturbation,body mass index,HBM,False
+mm_0136656,mm_0136656_p01,perturbation,obesity,leptin,False
+mm_0136668,mm_0136668_p07,perturbation,compositional,compositional makeup,False
+mm_0136668,mm_0136668_p08,perturbation,compositional,compositional makeup,False
+mm_0136669,mm_0136669_p07,perturbation,compositional,compositional makeup,False
+mm_0136669,mm_0136669_p08,perturbation,compositional,compositional makeup,False
+mm_0136670,mm_0136670_p07,perturbation,compositional,compositional makeup,False
+mm_0136670,mm_0136670_p08,perturbation,compositional,compositional makeup,False
+mm_0136671,mm_0136671_p07,perturbation,compositional,compositional makeup,False
+mm_0136671,mm_0136671_p08,perturbation,compositional,compositional makeup,False
+mm_0136672,mm_0136672_p07,perturbation,compositional,compositional makeup,False
+mm_0136672,mm_0136672_p08,perturbation,compositional,compositional makeup,False
+mm_0136745,mm_0136745_p07,perturbation,hypospadias,neo-yoke repair,False
+mm_0136745,mm_0136745_p08,perturbation,hypospadias,neo-yoke repair,False
+mm_0136746,mm_0136746_p07,perturbation,hypospadias,neo-yoke repair,False
+mm_0136746,mm_0136746_p08,perturbation,hypospadias,neo-yoke repair,False
+mm_0136747,mm_0136747_p07,perturbation,hypospadias,neo-yoke repair,False
+mm_0136747,mm_0136747_p08,perturbation,hypospadias,neo-yoke repair,False
+mm_0136748,mm_0136748_p07,perturbation,hypospadias,neo-yoke repair,False
+mm_0136748,mm_0136748_p08,perturbation,hypospadias,neo-yoke repair,False
+mm_0136749,mm_0136749_p07,perturbation,hypospadias,neo-yoke repair,False
+mm_0136749,mm_0136749_p08,perturbation,hypospadias,neo-yoke repair,False
+mm_0136840,mm_0136840_p02,perturbation,gene polymorphism,aryl hydrocarbon receptor,False
+mm_0136843,mm_0136843_p02,perturbation,gene polymorphism,aryl hydrocarbon receptor,False
+mm_0136846,mm_0136846_p01,perturbation,gene polymorphism,aryl hydrocarbon receptor,False
+mm_0136850,mm_0136850_p02,perturbation,gene polymorphism,aryl hydrocarbon receptor,False
+mm_0136860,mm_0136860_p07,perturbation,semen,medical history,False
+mm_0136860,mm_0136860_p08,perturbation,semen,medical history,False
+mm_0136861,mm_0136861_p07,perturbation,semen,medical history,False
+mm_0136861,mm_0136861_p08,perturbation,semen,medical history,False
+mm_0136862,mm_0136862_p07,perturbation,semen,medical history,False
+mm_0136862,mm_0136862_p08,perturbation,semen,medical history,False
+mm_0136863,mm_0136863_p07,perturbation,semen,medical history,False
+mm_0136863,mm_0136863_p08,perturbation,semen,medical history,False
+mm_0136864,mm_0136864_p07,perturbation,semen,medical history,False
+mm_0136864,mm_0136864_p08,perturbation,semen,medical history,False
+mm_0136865,mm_0136865_p07,perturbation,semen,medical history,False
+mm_0136865,mm_0136865_p08,perturbation,semen,medical history,False
+mm_0136866,mm_0136866_p07,perturbation,semen,medical history,False
+mm_0136866,mm_0136866_p08,perturbation,semen,medical history,False
+mm_0136867,mm_0136867_p07,perturbation,semen,medical history,False
+mm_0136867,mm_0136867_p08,perturbation,semen,medical history,False
+mm_0136874,mm_0136874_p02,perturbation,infertile,prevalence,False
+mm_0136885,mm_0136885_p02,perturbation,G,distribution,False
+mm_0136923,mm_0136923_orig,original,hepatocellular injury,men,False
+mm_0136924,mm_0136924_orig,original,hepatocellular injury,men,False
+mm_0136934,mm_0136934_p02,perturbation,histological cholestasis,biopsies,False
+mm_0136937,mm_0136937_p02,perturbation,histological cholestasis,biopsy,False
+mm_0136938,mm_0136938_p01,perturbation,hepatocyte apoptosis,hepatocyte,False
+mm_0136975,mm_0136975_p02,perturbation,GJTs,perforations,False
+mm_0136976,mm_0136976_p02,perturbation,GJTs,perforations,False
+mm_0136987,mm_0136987_p02,perturbation,oligoarticular adolescent idiopathic,oligoarticular adolescent idiopathic arthritis,False
+mm_0137001,mm_0137001_p01,perturbation,randomised,open - label,False
+mm_0137121,mm_0137121_p05,perturbation,osteomyelitis,bone osteomyelitis,False
+mm_0137123,mm_0137123_p05,perturbation,osteomyelitis,bone osteomyelitis,False
+mm_0137123,mm_0137123_p06,perturbation,osteomyelitis,bone osteomyelitis,False
+mm_0137124,mm_0137124_p05,perturbation,osteomyelitis,bone osteomyelitis,False
+mm_0137125,mm_0137125_p05,perturbation,osteomyelitis,bone osteomyelitis,False
+mm_0137150,mm_0137150_p02,perturbation,test of significance,statistics,False
+mm_0137216,mm_0137216_p02,perturbation,methylation,lymph node metastasis,False
+mm_0137261,mm_0137261_p02,perturbation,saliva,sample volume,False
+mm_0137263,mm_0137263_p01,perturbation,DBS,noise,False
+mm_0137265,mm_0137265_p01,perturbation,Anti-HIV,anti-HIV,False
+mm_0137267,mm_0137267_p02,perturbation,Anti-HCV,Anti - HCV,False
+mm_0137284,mm_0137284_p01,perturbation,HIV,HCV,False
+mm_0137289,mm_0137289_p01,perturbation,HIV,HCV,False
+mm_0137289,mm_0137289_p02,perturbation,anti-HCV,anti-HIV,False
+mm_0137291,mm_0137291_p02,perturbation,HCV,HIV,False
+mm_0137328,mm_0137328_p05,perturbation,communication,communication gaps,False
+mm_0137329,mm_0137329_p05,perturbation,communication,communication gaps,False
+mm_0137330,mm_0137330_p05,perturbation,communication,communication gaps,False
+mm_0137378,mm_0137378_p01,perturbation,patient-centred care,pathology,False
+mm_0137378,mm_0137378_p02,perturbation,VA,quality,False
+mm_0137379,mm_0137379_p01,perturbation,footpath,patient-centred care,False
+mm_0137380,mm_0137380_p02,perturbation,pathology,quality,False
+mm_0137412,mm_0137412_p01,perturbation,13p,mitochondrial,False
+mm_0137474,mm_0137474_p02,perturbation,heart rate,diastolic blood pressure,False
+mm_0137491,mm_0137491_p01,perturbation,GXR,CGI - I,False
+mm_0137494,mm_0137494_p01,perturbation,GXR,CGI - I,False
+mm_0137519,mm_0137519_p01,perturbation,osteomyelitis,melioidosis,False
+mm_0137541,mm_0137541_p05,perturbation,blood cell,blood cells,False
+mm_0137541,mm_0137541_p06,perturbation,blood cell,blood cells,False
+mm_0137579,mm_0137579_p02,perturbation,difference,cancer,False
+mm_0137653,mm_0137653_p07,perturbation,coagulant,factor XIII,False
+mm_0137653,mm_0137653_p08,perturbation,coagulant,factor XIII,False
+mm_0137655,mm_0137655_p07,perturbation,coagulant,factor XIII,False
+mm_0137655,mm_0137655_p08,perturbation,coagulant,factor XIII,False
+mm_0137666,mm_0137666_p02,perturbation,strain- stiffening behavior,fibrin ' s strain,False
+mm_0137684,mm_0137684_p02,perturbation,fiber,fiber properties,False
+mm_0137736,mm_0137736_p05,perturbation,Kappa,smear,False
+mm_0137738,mm_0137738_p05,perturbation,Kappa,smear,False
+mm_0137780,mm_0137780_p02,perturbation,tumor,imaging,False
+mm_0137785,mm_0137785_p01,perturbation,tumor,imaging,False
+mm_0137791,mm_0137791_orig,original,interrogating wavelengths,readouts,False
+mm_0137792,mm_0137792_orig,original,interrogating wavelengths,readouts,False
+mm_0137793,mm_0137793_orig,original,interrogating wavelengths,readouts,False
+mm_0137799,mm_0137799_p02,perturbation,endometrioid,endometrioid tumors,False
+mm_0137801,mm_0137801_p01,perturbation,endometrioid,endometrioid tumors,False
+mm_0137826,mm_0137826_p02,perturbation,display curvature,effect of display curvature,False
+mm_0137877,mm_0137877_p01,perturbation,analysis,adjustment,False
+mm_0137931,mm_0137931_p05,perturbation,A,A.,False
+mm_0137931,mm_0137931_p06,perturbation,A,A.,False
+mm_0137932,mm_0137932_p05,perturbation,A,A.,False
+mm_0137932,mm_0137932_p06,perturbation,A,A.,False
+mm_0137933,mm_0137933_p05,perturbation,A,A.,False
+mm_0137933,mm_0137933_p06,perturbation,A,A.,False
+mm_0137957,mm_0137957_p01,perturbation,Mycelia,fungal,False
+mm_0137957,mm_0137957_p02,perturbation,Mycelia,fungal,False
+mm_0138022,mm_0138022_p02,perturbation,worse survival,survival,False
+mm_0138031,mm_0138031_p05,perturbation,toxicity,acute,False
+mm_0138031,mm_0138031_p06,perturbation,toxicity,acute,False
+mm_0138032,mm_0138032_p06,perturbation,toxicity,acute,False
+mm_0138045,mm_0138045_p01,perturbation,dose-escaled,dose - escalated,False
+mm_0138045,mm_0138045_p02,perturbation,dose-escaled,dose - escalated,False
+mm_0138046,mm_0138046_p03,perturbation,low V60,morbidity,False
+mm_0138046,mm_0138046_p04,perturbation,low V60,morbidity,False
+mm_0138047,mm_0138047_p03,perturbation,low V60,morbidity,False
+mm_0138047,mm_0138047_p04,perturbation,low V60,morbidity,False
+mm_0138073,mm_0138073_p05,perturbation,questioning,SP,False
+mm_0138073,mm_0138073_p06,perturbation,questioning,SP,False
+mm_0138079,mm_0138079_p03,perturbation,ED,interrogation,False
+mm_0138079,mm_0138079_p04,perturbation,ED,interrogation,False
+mm_0138080,mm_0138080_p03,perturbation,ED,interrogation,False
+mm_0138080,mm_0138080_p04,perturbation,ED,interrogation,False
+mm_0138116,mm_0138116_p01,perturbation,contrast - enhanced volume,volume,False
+mm_0138118,mm_0138118_p02,perturbation,invasive,angiography,False
+mm_0138125,mm_0138125_p01,perturbation,SSM,diagnostic accuracy,False
+mm_0138125,mm_0138125_p05,perturbation,diagnostic accuracy,SSM,False
+mm_0138125,mm_0138125_p06,perturbation,diagnostic accuracy,SSM,False
+mm_0138126,mm_0138126_p05,perturbation,diagnostic accuracy,SSM,False
+mm_0138126,mm_0138126_p06,perturbation,diagnostic accuracy,SSM,False
+mm_0138127,mm_0138127_p06,perturbation,radiation,radiation doses,False
+mm_0138128,mm_0138128_p06,perturbation,radiation,radiation doses,False
+mm_0138150,mm_0138150_p01,perturbation,follow - up,make,False
+mm_0138152,mm_0138152_orig,original,hallux valgus,hallux valgus angle,False
+mm_0138153,mm_0138153_orig,original,hallux valgus,hallux valgus angle,False
+mm_0138154,mm_0138154_p02,perturbation,symptomatic,very satisfied,False
+mm_0138155,mm_0138155_p02,perturbation,symptomatic,very satisfied,False
+mm_0138271,mm_0138271_p02,perturbation,point - of - care,point-of-care,False
+mm_0138290,mm_0138290_p07,perturbation,AA,MDCVs,False
+mm_0138290,mm_0138290_p08,perturbation,AA,MDCVs,False
+mm_0138291,mm_0138291_p07,perturbation,AA,MDCVs,False
+mm_0138291,mm_0138291_p08,perturbation,AA,MDCVs,False
+mm_0138292,mm_0138292_p07,perturbation,AA,MDCVs,False
+mm_0138292,mm_0138292_p08,perturbation,AA,MDCVs,False
+mm_0138293,mm_0138293_p07,perturbation,AA,MDCVs,False
+mm_0138293,mm_0138293_p08,perturbation,AA,MDCVs,False
+mm_0138300,mm_0138300_p02,perturbation,MDCVs,MDCV,False
+mm_0138301,mm_0138301_p02,perturbation,MDCVs,MDCV,False
+mm_0138303,mm_0138303_p02,perturbation,MDCVs,MDCV,False
+mm_0138338,mm_0138338_p05,perturbation,adjustment,behavioral adjustment,False
+mm_0138338,mm_0138338_p06,perturbation,adjustment,behavioral adjustment,False
+mm_0138339,mm_0138339_orig,original,reduced adaptive functioning,adaptive functioning,False
+mm_0138340,mm_0138340_orig,original,reduced adaptive functioning,adaptive functioning,False
+mm_0138345,mm_0138345_p02,perturbation,need,support services,False
+mm_0138378,mm_0138378_p01,perturbation,planarian,head,False
+mm_0138405,mm_0138405_p07,perturbation,fractures,fracture,False
+mm_0138405,mm_0138405_p08,perturbation,fractures,fracture,False
+mm_0138408,mm_0138408_p02,perturbation,Vertebral Fracture,fracture,False
+mm_0138423,mm_0138423_p02,perturbation,osteoporosis,fracture,False
+mm_0138455,mm_0138455_p01,perturbation,spine fracture,fracture,False
+mm_0138510,mm_0138510_orig,original,burnout,stressor,False
+mm_0138511,mm_0138511_orig,original,burnout,stressor,False
+mm_0138533,mm_0138533_orig,original,E,E.,False
+mm_0138533,mm_0138533_p05,perturbation,E,E.,False
+mm_0138533,mm_0138533_p06,perturbation,E,E.,False
+mm_0138533,mm_0138533_p07,perturbation,E,E.,False
+mm_0138533,mm_0138533_p08,perturbation,E,E.,False
+mm_0138534,mm_0138534_orig,original,E,E.,False
+mm_0138534,mm_0138534_p07,perturbation,E,E.,False
+mm_0138534,mm_0138534_p08,perturbation,E,E.,False
+mm_0138539,mm_0138539_orig,original,E,E.,False
+mm_0138539,mm_0138539_p03,perturbation,E,E.,False
+mm_0138539,mm_0138539_p04,perturbation,E,E.,False
+mm_0138539,mm_0138539_p05,perturbation,E,E.,False
+mm_0138539,mm_0138539_p06,perturbation,E,E.,False
+mm_0138540,mm_0138540_orig,original,E,E.,False
+mm_0138540,mm_0138540_p03,perturbation,E,E.,False
+mm_0138540,mm_0138540_p04,perturbation,E,E.,False
+mm_0138541,mm_0138541_orig,original,E,E.,False
+mm_0138541,mm_0138541_p03,perturbation,E,E.,False
+mm_0138541,mm_0138541_p04,perturbation,E,E.,False
+mm_0138542,mm_0138542_p07,perturbation,coli,Bacteroidal,False
+mm_0138542,mm_0138542_p08,perturbation,coli,Bacteroidal,False
+mm_0138543,mm_0138543_p07,perturbation,coli,Bacteroidal,False
+mm_0138543,mm_0138543_p08,perturbation,coli,Bacteroidal,False
+mm_0138548,mm_0138548_p03,perturbation,E,E.,False
+mm_0138548,mm_0138548_p04,perturbation,E,E.,False
+mm_0138548,mm_0138548_p07,perturbation,E,E.,False
+mm_0138548,mm_0138548_p08,perturbation,E,E.,False
+mm_0138549,mm_0138549_p03,perturbation,E,E.,False
+mm_0138549,mm_0138549_p04,perturbation,E,E.,False
+mm_0138549,mm_0138549_p07,perturbation,E,E.,False
+mm_0138549,mm_0138549_p08,perturbation,E,E.,False
+mm_0138556,mm_0138556_orig,original,E,E.,False
+mm_0138556,mm_0138556_p07,perturbation,E,E.,False
+mm_0138556,mm_0138556_p08,perturbation,E,E.,False
+mm_0138557,mm_0138557_orig,original,E,E.,False
+mm_0138557,mm_0138557_p07,perturbation,E,E.,False
+mm_0138557,mm_0138557_p08,perturbation,E,E.,False
+mm_0138558,mm_0138558_orig,original,E,E.,False
+mm_0138558,mm_0138558_p07,perturbation,E,E.,False
+mm_0138558,mm_0138558_p08,perturbation,E,E.,False
+mm_0138559,mm_0138559_p02,perturbation,coli concentration,coli,False
+mm_0138577,mm_0138577_orig,original,study,surgery,False
+mm_0138578,mm_0138578_orig,original,study,surgery,False
+mm_0138579,mm_0138579_orig,original,study,surgery,False
+mm_0138686,mm_0138686_p05,perturbation,cardiac function,ex vivo cardiac function,False
+mm_0138687,mm_0138687_p06,perturbation,cardiac function,ex vivo cardiac function,False
+mm_0138691,mm_0138691_p06,perturbation,cardiac function,ex vivo cardiac function,False
+mm_0138703,mm_0138703_p01,perturbation,PLB,SERCA2a,False
+mm_0138712,mm_0138712_p05,perturbation,carotenoids,pequi oil,False
+mm_0138712,mm_0138712_p06,perturbation,carotenoids,pequi oil,False
+mm_0138756,mm_0138756_p02,perturbation,RM,treatment,False
+mm_0138759,mm_0138759_p02,perturbation,CSC,RM,False
+mm_0138761,mm_0138761_p02,perturbation,CSC,RM,False
+mm_0138764,mm_0138764_orig,original,anti-metastatic,anti-metastatic agent,False
+mm_0138764,mm_0138764_p01,perturbation,anti-metastasis agent,anti-metastasis,False
+mm_0138765,mm_0138765_orig,original,anti-metastatic,anti-metastatic agent,False
+mm_0138765,mm_0138765_p02,perturbation,anti-metastasis agent,anti-metastasis,False
+mm_0138766,mm_0138766_orig,original,anti-metastatic,anti-metastatic agent,False
+mm_0138767,mm_0138767_orig,original,anti-metastatic,anti-metastatic agent,False
+mm_0138768,mm_0138768_orig,original,anti-metastatic,anti-metastatic agent,False
+mm_0138778,mm_0138778_p02,perturbation,IBD,microbiome dysbiosis,False
+mm_0138818,mm_0138818_orig,original,fatty liver,lipid droplets,False
+mm_0138819,mm_0138819_orig,original,fatty liver,lipid droplets,False
+mm_0138820,mm_0138820_orig,original,fatty liver,lipid droplets,False
+mm_0138821,mm_0138821_orig,original,fatty liver,lipid droplets,False
+mm_0138822,mm_0138822_orig,original,fatty liver,lipid droplets,False
+mm_0138823,mm_0138823_orig,original,fatty liver,lipid droplets,False
+mm_0138824,mm_0138824_orig,original,fatty liver,lipid droplets,False
+mm_0138825,mm_0138825_orig,original,fatty liver,lipid droplets,False
+mm_0138825,mm_0138825_p01,perturbation,lipid droplets,fatty liver,False
+mm_0138825,mm_0138825_p02,perturbation,lipid droplets,fatty liver,False
+mm_0138826,mm_0138826_orig,original,fatty liver,lipid droplets,False
+mm_0138827,mm_0138827_orig,original,fatty liver,lipid droplets,False
+mm_0138828,mm_0138828_orig,original,fatty liver,lipid droplets,False
+mm_0138829,mm_0138829_orig,original,fatty liver,lipid droplets,False
+mm_0138830,mm_0138830_orig,original,fatty liver,lipid droplets,False
+mm_0138831,mm_0138831_orig,original,fatty liver,lipid droplets,False
+mm_0138832,mm_0138832_orig,original,fatty liver,lipid droplets,False
+mm_0138849,mm_0138849_orig,original,LD,liver proteins,False
+mm_0138850,mm_0138850_orig,original,LD,liver proteins,False
+mm_0138851,mm_0138851_orig,original,LD,liver proteins,False
+mm_0138908,mm_0138908_p03,perturbation,amputees] exhibit NAA levels that are indistinguishable,amputees] exhibit NAA levels that are indistinguishable from controls,False
+mm_0138908,mm_0138908_p04,perturbation,amputees] exhibit NAA levels that are indistinguishable,amputees] exhibit NAA levels that are indistinguishable from controls,False
+mm_0138909,mm_0138909_p03,perturbation,amputees] exhibit NAA levels that are indistinguishable,amputees] exhibit NAA levels that are indistinguishable from controls,False
+mm_0138909,mm_0138909_p04,perturbation,amputees] exhibit NAA levels that are indistinguishable,amputees] exhibit NAA levels that are indistinguishable from controls,False
+mm_0138910,mm_0138910_p03,perturbation,amputees] exhibit NAA levels that are indistinguishable,amputees] exhibit NAA levels that are indistinguishable from controls,False
+mm_0138917,mm_0138917_p01,perturbation,deafferentation,amputee,False
+mm_0138919,mm_0138919_p01,perturbation,deafferented cortex,deafferented,False
+mm_0138920,mm_0138920_p01,perturbation,deafferented cortex,deafferented,False
+mm_0139005,mm_0139005_p02,perturbation,relationship,vitamin D,False
+mm_0139006,mm_0139006_p02,perturbation,relationship,vitamin D,False
+mm_0139038,mm_0139038_p01,perturbation,vitamin D,hypovitaminosis D,False
+mm_0139162,mm_0139162_orig,original,color,color measurements,False
+mm_0139163,mm_0139163_orig,original,color,color measurements,False
+mm_0139164,mm_0139164_orig,original,color,color measurements,False
+mm_0139176,mm_0139176_p05,perturbation,agenesis,tooth agenesis,False
+mm_0139177,mm_0139177_p05,perturbation,agenesis,tooth agenesis,False
+mm_0139180,mm_0139180_p06,perturbation,agenesis,tooth agenesis,False
+mm_0139263,mm_0139263_p01,perturbation,non - abdominal solid cancer,mortality,False
+mm_0139265,mm_0139265_p01,perturbation,BCS,deathrate,False
+mm_0139281,mm_0139281_p02,perturbation,paclitaxel,solid lipid nanoparticles,False
+mm_0139296,mm_0139296_p02,perturbation,chitosan,chemotherapeutic,False
+mm_0139363,mm_0139363_p02,perturbation,epigenetic editing,epigenetic,False
+mm_0139370,mm_0139370_p01,perturbation,epigenetic,epigenetic editing,False
+mm_0139373,mm_0139373_p02,perturbation,epigenetic editing,epigenetic,False
+mm_0139376,mm_0139376_p03,perturbation,Ascl1,striated cells,False
+mm_0139376,mm_0139376_p04,perturbation,Ascl1,striated cells,False
+mm_0139377,mm_0139377_p03,perturbation,Ascl1,striated cells,False
+mm_0139377,mm_0139377_p04,perturbation,Ascl1,striated cells,False
+mm_0139378,mm_0139378_p04,perturbation,Ascl1,striated cells,False
+mm_0139380,mm_0139380_p03,perturbation,Ascl1,striated cells,False
+mm_0139380,mm_0139380_p04,perturbation,Ascl1,striated cells,False
+mm_0139381,mm_0139381_p04,perturbation,Ascl1,striated cells,False
+mm_0139382,mm_0139382_p03,perturbation,Ascl1,striated cells,False
+mm_0139392,mm_0139392_p01,perturbation,blue light,Ascl1,False
+mm_0139426,mm_0139426_p01,perturbation,muscle hypofunction,botulinum neurotoxin,False
+mm_0139428,mm_0139428_p01,perturbation,muscle hypofunction,botulinum neurotoxin,False
+mm_0139437,mm_0139437_p02,perturbation,injection,precarious,False
+mm_0139442,mm_0139442_p07,perturbation,masseter,grinding path,False
+mm_0139442,mm_0139442_p08,perturbation,masseter,grinding path,False
+mm_0139443,mm_0139443_p07,perturbation,masseter,grinding path,False
+mm_0139443,mm_0139443_p08,perturbation,masseter,grinding path,False
+mm_0139444,mm_0139444_p07,perturbation,masseter,grinding path,False
+mm_0139444,mm_0139444_p08,perturbation,masseter,grinding path,False
+mm_0139445,mm_0139445_p07,perturbation,masseter,grinding path,False
+mm_0139445,mm_0139445_p08,perturbation,masseter,grinding path,False
+mm_0139446,mm_0139446_p07,perturbation,masseter,grinding path,False
+mm_0139446,mm_0139446_p08,perturbation,masseter,grinding path,False
+mm_0139447,mm_0139447_p07,perturbation,masseter,grinding path,False
+mm_0139447,mm_0139447_p08,perturbation,masseter,grinding path,False
+mm_0139448,mm_0139448_p07,perturbation,masseter,grinding path,False
+mm_0139448,mm_0139448_p08,perturbation,masseter,grinding path,False
+mm_0139451,mm_0139451_p02,perturbation,mandible,temporalis,False
+mm_0139478,mm_0139478_p02,perturbation,implant,bone regeneration,False
+mm_0139494,mm_0139494_orig,original,rehabilitation,implant rehabilitation,False
+mm_0139495,mm_0139495_orig,original,rehabilitation,implant rehabilitation,False
+mm_0139496,mm_0139496_orig,original,rehabilitation,implant rehabilitation,False
+mm_0139497,mm_0139497_orig,original,rehabilitation,implant rehabilitation,False
+mm_0139497,mm_0139497_p02,perturbation,HIV,implant rehabilitation,False
+mm_0139498,mm_0139498_orig,original,rehabilitation,implant rehabilitation,False
+mm_0139499,mm_0139499_orig,original,rehabilitation,implant rehabilitation,False
+mm_0139525,mm_0139525_p01,perturbation,vaginal,vaginal smears,False
+mm_0139558,mm_0139558_p01,perturbation,hepatitis E,infection,False
+mm_0139559,mm_0139559_p02,perturbation,hepatitis E,infection,False
+mm_0139573,mm_0139573_p01,perturbation,adenine,eradication,False
+mm_0139617,mm_0139617_p02,perturbation,PET,SECT,False
+mm_0139629,mm_0139629_p01,perturbation,SECTdist,activity,False
+mm_0139651,mm_0139651_orig,original,Xpert,TB,False
+mm_0139652,mm_0139652_orig,original,Xpert,TB,False
+mm_0139653,mm_0139653_orig,original,Xpert,TB,False
+mm_0139654,mm_0139654_orig,original,Xpert,TB,False
+mm_0139655,mm_0139655_orig,original,Xpert,TB,False
+mm_0139656,mm_0139656_orig,original,Xpert,TB,False
+mm_0139657,mm_0139657_orig,original,Xpert,TB,False
+mm_0139660,mm_0139660_p01,perturbation,cross-sectioned,xpert availability,False
+mm_0139737,mm_0139737_p02,perturbation,engrafment,Engraftment,False
+mm_0139739,mm_0139739_p01,perturbation,engrafment,Engraftment,False
+mm_0139742,mm_0139742_p01,perturbation,Engraftment,engrafment,False
+mm_0139742,mm_0139742_p02,perturbation,Engraftment,engrafment,False
+mm_0139785,mm_0139785_p01,perturbation,stents,plaque,False
+mm_0139836,mm_0139836_p01,perturbation,regulatory framework,5YFV,False
+mm_0139838,mm_0139838_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139838,mm_0139838_p01,perturbation,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139839,mm_0139839_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139839,mm_0139839_p02,perturbation,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY IN HORSES,False
+mm_0139840,mm_0139840_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139840,mm_0139840_p01,perturbation,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139840,mm_0139840_p02,perturbation,pulmonary arterioyst,pulmonary arterioystrophy,False
+mm_0139841,mm_0139841_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139841,mm_0139841_p01,perturbation,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139842,mm_0139842_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139843,mm_0139843_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139844,mm_0139844_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139844,mm_0139844_p01,perturbation,DETERMINATION OF pulmonic ARTERY PULSE W,DETERMINATION OF pulmonic ARTERY PULSE WAVE VELOCITY,False
+mm_0139845,mm_0139845_orig,original,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY,False
+mm_0139845,mm_0139845_p01,perturbation,DETERMINATION OF PULMONARY ARTERY PULSE W,DETERMINATION OF PULMONARY ARTERY PULSE WAVE VELOCITY IN HORSES,False
+mm_0139854,mm_0139854_orig,original,pulse wave velocity,arterial stiffness,False
+mm_0139861,mm_0139861_p02,perturbation,pressure sensor catheter,angstrom,False
+mm_0139862,mm_0139862_p02,perturbation,pressure sensor catheter,catheter,False
+mm_0139867,mm_0139867_p02,perturbation,mean ( SD ) PWV,mean (  SD ) PWV,False
+mm_0139868,mm_0139868_p02,perturbation,mean ( SD ) PWV,mean (  SD ) PWV,False
+mm_0139872,mm_0139872_p01,perturbation,arterial pressures,mean arterial pressures,False
+mm_0139921,mm_0139921_p02,perturbation,urine voiding,HepG2,False
+mm_0139957,mm_0139957_p02,perturbation,robotic,surgery,False
+mm_0139977,mm_0139977_p02,perturbation,robotic-aid,robotic,False
+mm_0140030,mm_0140030_p01,perturbation,blubber,acute response,False
+mm_0140031,mm_0140031_p01,perturbation,acute response,acute,False
+mm_0140033,mm_0140033_p02,perturbation,blubber,acute response,False
+mm_0140044,mm_0140044_p01,perturbation,testing for human papillomavirus,testing for,False
+mm_0140044,mm_0140044_p02,perturbation,testing for,testing for human papillomavirus,False
+mm_0140045,mm_0140045_p02,perturbation,testing for,testing for human papillomavirus,False
+mm_0140073,mm_0140073_p02,perturbation,self - sampling,HPV,False
+mm_0140140,mm_0140140_p01,perturbation,immunostability,immunostaining,False
+mm_0140143,mm_0140143_p02,perturbation,immunostability,immunostaining,False
+mm_0140154,mm_0140154_p01,perturbation,G84E,tumor,False
+mm_0140197,mm_0140197_p02,perturbation,antibiotics,prematurely stop an antibiotic course,False
+mm_0140237,mm_0140237_p01,perturbation,Al,TE,False
+mm_0140238,mm_0140238_p01,perturbation,TE,Al,False
+mm_0140239,mm_0140239_p01,perturbation,TE,Al,False
+mm_0140240,mm_0140240_p07,perturbation,factors,seasonal fluctuations,False
+mm_0140240,mm_0140240_p08,perturbation,factors,seasonal fluctuations,False
+mm_0140241,mm_0140241_p07,perturbation,factors,seasonal fluctuations,False
+mm_0140241,mm_0140241_p08,perturbation,factors,seasonal fluctuations,False
+mm_0140242,mm_0140242_p07,perturbation,factors,seasonal fluctuations,False
+mm_0140242,mm_0140242_p08,perturbation,factors,seasonal fluctuations,False
+mm_0140255,mm_0140255_p05,perturbation,CD40,degenerative diseases,False
+mm_0140255,mm_0140255_p06,perturbation,CD40,degenerative diseases,False
+mm_0140257,mm_0140257_p05,perturbation,CD40,degenerative diseases,False
+mm_0140258,mm_0140258_p05,perturbation,CD40,degenerative diseases,False
+mm_0140258,mm_0140258_p06,perturbation,CD40,degenerative diseases,False
+mm_0140262,mm_0140262_p05,perturbation,CD40,degenerative diseases,False
+mm_0140280,mm_0140280_p02,perturbation,mouse,mouse microglia,False
+mm_0140305,mm_0140305_orig,original,inhibition,NF-B,False
+mm_0140306,mm_0140306_orig,original,inhibition,NF-B,False
+mm_0140306,mm_0140306_p02,perturbation,crushing,Crushing,False
+mm_0140307,mm_0140307_orig,original,inhibition,NF-B,False
+mm_0140307,mm_0140307_p02,perturbation,crushing,Crushing,False
+mm_0140308,mm_0140308_orig,original,inhibition,NF-B,False
+mm_0140309,mm_0140309_orig,original,inhibition,NF-B,False
+mm_0140310,mm_0140310_orig,original,inhibition,NF-B,False
+mm_0140311,mm_0140311_orig,original,inhibition,NF-B,False
+mm_0140314,mm_0140314_p01,perturbation,NOX2,NF - B,False
+mm_0140361,mm_0140361_p02,perturbation,breast cancer,prognosis,False
+mm_0140379,mm_0140379_p01,perturbation,breast cancer,clustering,False
+mm_0140406,mm_0140406_orig,original,count nuclei manually,count nuclei manually and automatically,False
+mm_0140407,mm_0140407_orig,original,count nuclei manually,count nuclei manually and automatically,False
+mm_0140408,mm_0140408_orig,original,count nuclei manually,count nuclei manually and automatically,False
+mm_0140409,mm_0140409_orig,original,count nuclei manually,count nuclei manually and automatically,False
+mm_0140410,mm_0140410_orig,original,count nuclei manually,count nuclei manually and automatically,False
+mm_0140421,mm_0140421_p01,perturbation,mass spectrometry,Generation of High - Quality SWATH,False
+mm_0140423,mm_0140423_p02,perturbation,acquisition,mass spectrometry,False
+mm_0140476,mm_0140476_p02,perturbation,sarcoma,right heart sarcoma,False
+mm_0140481,mm_0140481_p02,perturbation,resection,cocksure margins,False
+mm_0140489,mm_0140489_p07,perturbation,sarcomas,heart sarcomas,False
+mm_0140489,mm_0140489_p08,perturbation,sarcomas,heart sarcomas,False
+mm_0140499,mm_0140499_p02,perturbation,multimodality treatment,multimodality,False
+mm_0140601,mm_0140601_p02,perturbation,changes,climactic changes,False
+mm_0140654,mm_0140654_p02,perturbation,chronic pain,pain,False
+mm_0140670,mm_0140670_p01,perturbation,PI3K,chronic pain,False
+mm_0140670,mm_0140670_p06,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140671,mm_0140671_p06,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140672,mm_0140672_p05,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140672,mm_0140672_p06,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140674,mm_0140674_p05,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140674,mm_0140674_p06,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140679,mm_0140679_p06,perturbation,opioid tolerance,opioid-induced hyperalgesia,False
+mm_0140709,mm_0140709_orig,original,herd protection,secular trend,False
+mm_0140709,mm_0140709_p02,perturbation,decline,trend,False
+mm_0140710,mm_0140710_orig,original,herd protection,secular trend,False
+mm_0140711,mm_0140711_orig,original,herd protection,secular trend,False
+mm_0140712,mm_0140712_orig,original,herd protection,secular trend,False
+mm_0140713,mm_0140713_orig,original,herd protection,secular trend,False
+mm_0140740,mm_0140740_p01,perturbation,infection,pneumococcal infection,False
+mm_0140740,mm_0140740_p02,perturbation,pneumococcal infection,infection,False
+mm_0140741,mm_0140741_p02,perturbation,infection,pneumococcal infection,False
+mm_0140742,mm_0140742_p02,perturbation,infection,pneumococcal infection,False
+mm_0140787,mm_0140787_p01,perturbation,age,SCD,False
+mm_0140839,mm_0140839_p06,perturbation,embryo transfer,embryo culture,False
+mm_0140840,mm_0140840_p05,perturbation,embryo transfer,embryo culture,False
+mm_0140840,mm_0140840_p06,perturbation,embryo transfer,embryo culture,False
+mm_0140843,mm_0140843_p05,perturbation,embryo transfer,embryo culture,False
+mm_0140844,mm_0140844_p05,perturbation,embryo transfer,embryo culture,False
+mm_0140845,mm_0140845_p06,perturbation,embryo transfer,embryo culture,False
+mm_0140847,mm_0140847_p05,perturbation,embryo transfer,embryo culture,False
+mm_0140847,mm_0140847_p06,perturbation,embryo transfer,embryo culture,False
+mm_0140848,mm_0140848_p05,perturbation,embryo transfer,embryo culture,False
+mm_0140877,mm_0140877_orig,original,sex - specific,sex - specific observation,False
+mm_0140878,mm_0140878_orig,original,sex - specific,sex - specific observation,False
+mm_0140879,mm_0140879_orig,original,sex - specific,sex - specific observation,False
+mm_0140880,mm_0140880_orig,original,sex - specific,sex - specific observation,False
+mm_0140881,mm_0140881_orig,original,sex - specific,sex - specific observation,False
+mm_0140905,mm_0140905_p02,perturbation,self - management intervention,MyHEART,False
+mm_0140930,mm_0140930_p02,perturbation,lifestyle alteration,lifestyle,False
+mm_0140952,mm_0140952_p02,perturbation,blood pressure,health coach,False
+mm_0141034,mm_0141034_p01,perturbation,ampere diet,diet,False
+mm_0141037,mm_0141037_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141038,mm_0141038_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141038,mm_0141038_p06,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141039,mm_0141039_p06,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141040,mm_0141040_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141040,mm_0141040_p06,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141041,mm_0141041_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141042,mm_0141042_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141044,mm_0141044_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141045,mm_0141045_p06,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141046,mm_0141046_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141046,mm_0141046_p06,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141047,mm_0141047_p05,perturbation,rotifer,endocrine appetite regulation genes,False
+mm_0141062,mm_0141062_p05,perturbation,larval,rotifer,False
+mm_0141062,mm_0141062_p06,perturbation,larval,rotifer,False
+mm_0141063,mm_0141063_p07,perturbation,rotifer,larvae,False
+mm_0141063,mm_0141063_p08,perturbation,rotifer,larvae,False
+mm_0141064,mm_0141064_p07,perturbation,rotifer,larvae,False
+mm_0141064,mm_0141064_p08,perturbation,rotifer,larvae,False
+mm_0141082,mm_0141082_p02,perturbation,diet,hansenii,False
+mm_0141113,mm_0141113_p05,perturbation,AKU,amyloid,False
+mm_0141113,mm_0141113_p06,perturbation,AKU,amyloid,False
+mm_0141116,mm_0141116_p05,perturbation,AKU,amyloid,False
+mm_0141116,mm_0141116_p06,perturbation,AKU,amyloid,False
+mm_0141118,mm_0141118_p06,perturbation,AKU,amyloid,False
+mm_0141120,mm_0141120_p05,perturbation,AKU,amyloid,False
+mm_0141120,mm_0141120_p06,perturbation,AKU,amyloid,False
+mm_0141130,mm_0141130_p01,perturbation,arthropathy,AKU,False
+mm_0141130,mm_0141130_p02,perturbation,arthropathy,AKU,False
+mm_0141133,mm_0141133_p01,perturbation,arthropathy,AKU,False
+mm_0141173,mm_0141173_p05,perturbation,ASA,dosage,False
+mm_0141174,mm_0141174_p06,perturbation,ASA,dosage,False
+mm_0141175,mm_0141175_p06,perturbation,ASA,dosage,False
+mm_0141177,mm_0141177_p05,perturbation,ASA,dosage,False
+mm_0141197,mm_0141197_p02,perturbation,major,ASA,False
+mm_0141207,mm_0141207_p07,perturbation,excretion,metabolites,False
+mm_0141207,mm_0141207_p08,perturbation,excretion,metabolites,False
+mm_0141208,mm_0141208_p07,perturbation,excretion,metabolites,False
+mm_0141208,mm_0141208_p08,perturbation,excretion,metabolites,False
+mm_0141209,mm_0141209_p07,perturbation,excretion,metabolites,False
+mm_0141209,mm_0141209_p08,perturbation,excretion,metabolites,False
+mm_0141210,mm_0141210_p07,perturbation,excretion,metabolites,False
+mm_0141210,mm_0141210_p08,perturbation,excretion,metabolites,False
+mm_0141211,mm_0141211_p07,perturbation,excretion,metabolites,False
+mm_0141211,mm_0141211_p08,perturbation,excretion,metabolites,False
+mm_0141227,mm_0141227_p05,perturbation,ASA,pharmacology,False
+mm_0141227,mm_0141227_p06,perturbation,ASA,pharmacology,False
+mm_0141228,mm_0141228_p01,perturbation,method,ASA,False
+mm_0141228,mm_0141228_p06,perturbation,ASA,pharmacology,False
+mm_0141229,mm_0141229_p01,perturbation,method,ASA,False
+mm_0141229,mm_0141229_p05,perturbation,ASA,pharmacology,False
+mm_0141229,mm_0141229_p06,perturbation,ASA,pharmacology,False
+mm_0141230,mm_0141230_p05,perturbation,ASA,pharmacology,False
+mm_0141232,mm_0141232_p05,perturbation,ASA,pharmacology,False
+mm_0141234,mm_0141234_p06,perturbation,ASA,pharmacology,False
+mm_0141235,mm_0141235_p05,perturbation,ASA,pharmacology,False
+mm_0141241,mm_0141241_p01,perturbation,dosage,ASA,False
+mm_0141241,mm_0141241_p02,perturbation,dosage,ASA,False
+mm_0141242,mm_0141242_p01,perturbation,dosage,ASA,False
+mm_0141255,mm_0141255_p01,perturbation,fatalities,mortality,False
+mm_0141322,mm_0141322_p01,perturbation,HP,eradication,False
+mm_0141325,mm_0141325_p02,perturbation,HP,eradication,False
+mm_0141365,mm_0141365_p01,perturbation,CSF,CSF  - amyloid,False
+mm_0141367,mm_0141367_p02,perturbation,CSF,apolipoprotein E,False
+mm_0141370,mm_0141370_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141370,mm_0141370_p02,perturbation,AD,abnormal  - amyloid 1 - 42,False
+mm_0141370,mm_0141370_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141370,mm_0141370_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141371,mm_0141371_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141371,mm_0141371_p02,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141371,mm_0141371_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141371,mm_0141371_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141372,mm_0141372_p01,perturbation,AD,abnormal  - amyloid 1 - 42,False
+mm_0141372,mm_0141372_p02,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141372,mm_0141372_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141372,mm_0141372_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141373,mm_0141373_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141373,mm_0141373_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141373,mm_0141373_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141374,mm_0141374_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141374,mm_0141374_p02,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141374,mm_0141374_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141374,mm_0141374_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141375,mm_0141375_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141375,mm_0141375_p02,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141375,mm_0141375_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141375,mm_0141375_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141376,mm_0141376_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141376,mm_0141376_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141376,mm_0141376_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141377,mm_0141377_p01,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141377,mm_0141377_p02,perturbation,abnormal - amyloid 1 - 42,abnormal  - amyloid 1 - 42,False
+mm_0141377,mm_0141377_p07,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141377,mm_0141377_p08,perturbation,abnormal -amyloid 1-42,AD,False
+mm_0141380,mm_0141380_p01,perturbation,CSF - amyloid,CSF  - amyloid,False
+mm_0141404,mm_0141404_p01,perturbation,mismatch repair,negative epistatic interaction,False
+mm_0141410,mm_0141410_p01,perturbation,mismatch repair,negative epistatic interaction,False
+mm_0141414,mm_0141414_p01,perturbation,gene,MLH1,False
+mm_0141416,mm_0141416_p01,perturbation,gene,MLH1,False
+mm_0141416,mm_0141416_p02,perturbation,MLH1,gene,False
+mm_0141441,mm_0141441_p06,perturbation,isolate,mutation rates,False
+mm_0141488,mm_0141488_p06,perturbation,exercise intolerance,fatiguing,False
+mm_0141489,mm_0141489_p05,perturbation,exercise intolerance,fatiguing,False
+mm_0141490,mm_0141490_p06,perturbation,exercise intolerance,fatiguing,False
+mm_0141491,mm_0141491_p05,perturbation,exercise intolerance,fatiguing,False
+mm_0141493,mm_0141493_p06,perturbation,exercise intolerance,fatiguing,False
+mm_0141536,mm_0141536_orig,original,Part V,synthesis,False
+mm_0141537,mm_0141537_orig,original,Part V,synthesis,False
+mm_0141538,mm_0141538_orig,original,Part V,synthesis,False
+mm_0141539,mm_0141539_orig,original,Part V,synthesis,False
+mm_0141596,mm_0141596_p02,perturbation,EoE,Eosinophil,False
+mm_0141597,mm_0141597_p01,perturbation,Eosinophil,EoE,False
+mm_0141597,mm_0141597_p02,perturbation,EoE,Eosinophil,False
+mm_0141598,mm_0141598_p02,perturbation,EoE,Eosinophil,False
+mm_0141600,mm_0141600_p02,perturbation,EoE,Eosinophil,False
+mm_0141665,mm_0141665_p02,perturbation,dengue,grave dengue,False
+mm_0141697,mm_0141697_p01,perturbation,mutants,M,False
+mm_0141697,mm_0141697_p02,perturbation,mutants,M,False
+mm_0141709,mm_0141709_orig,original,M,M.,False
+mm_0141709,mm_0141709_p07,perturbation,M,M.,False
+mm_0141709,mm_0141709_p08,perturbation,M,M.,False
+mm_0141710,mm_0141710_orig,original,smegmatis,polymorphism,False
+mm_0141711,mm_0141711_orig,original,smegmatis,polymorphism,False
+mm_0141728,mm_0141728_p06,perturbation,pleural effusion,embolism,False
+mm_0141729,mm_0141729_p06,perturbation,pleural effusion,embolism,False
+mm_0141730,mm_0141730_p06,perturbation,pleural effusion,embolism,False
+mm_0141732,mm_0141732_p05,perturbation,pleural effusion,embolism,False
+mm_0141759,mm_0141759_orig,original,effusion,pleural effusion,False
+mm_0141760,mm_0141760_orig,original,effusion,pleural effusion,False
+mm_0141761,mm_0141761_orig,original,effusion,pleural effusion,False
+mm_0141762,mm_0141762_orig,original,effusion,pleural effusion,False
+mm_0141775,mm_0141775_p02,perturbation,Foot & Ankle Surgery,Ankle,False
+mm_0141780,mm_0141780_p02,perturbation,Surgery,Ankle,False
+mm_0141815,mm_0141815_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141815,mm_0141815_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141816,mm_0141816_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141816,mm_0141816_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141817,mm_0141817_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141817,mm_0141817_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141818,mm_0141818_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141818,mm_0141818_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141819,mm_0141819_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141819,mm_0141819_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141820,mm_0141820_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141820,mm_0141820_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141821,mm_0141821_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141822,mm_0141822_p03,perturbation,control inflammation,vagus nerve,False
+mm_0141822,mm_0141822_p04,perturbation,control inflammation,vagus nerve,False
+mm_0141878,mm_0141878_p05,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141878,mm_0141878_p06,perturbation,active Bacterial and Eukaryotic Fibrolytic Communities,active bacteria,False
+mm_0141879,mm_0141879_p05,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141879,mm_0141879_p06,perturbation,active Bacterial and Eukaryotic Fibrolytic Communities,active bacteria,False
+mm_0141880,mm_0141880_p05,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141880,mm_0141880_p06,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141881,mm_0141881_p05,perturbation,active Bacterial and Eukaryotic Fibrolytic Communities,active bacteria,False
+mm_0141881,mm_0141881_p06,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141882,mm_0141882_p05,perturbation,active Bacterial and Eukaryotic Fibrolytic Communities,active bacteria,False
+mm_0141882,mm_0141882_p06,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141884,mm_0141884_p06,perturbation,active bacteria,active Bacterial and Eukaryotic Fibrolytic Communities,False
+mm_0141949,mm_0141949_orig,original,CAR8,Heme Activator Protein 3,False
+mm_0141950,mm_0141950_orig,original,CAR8,Heme Activator Protein 3,False
+mm_0141951,mm_0141951_orig,original,CAR8,Heme Activator Protein 3,False
+mm_0141952,mm_0141952_orig,original,CAR8,Heme Activator Protein 3,False
+mm_0141953,mm_0141953_orig,original,CAR8,Heme Activator Protein 3,False
+mm_0141953,mm_0141953_p02,perturbation,CAR8,Heme Activator Protein 3,False
+mm_0141984,mm_0141984_p01,perturbation,compensatory hypothesis,hypothesis,False
+mm_0142046,mm_0142046_p05,perturbation,SCT,allo-SCT,False
+mm_0142047,mm_0142047_p06,perturbation,SCT,allo-SCT,False
+mm_0142058,mm_0142058_orig,original,CNS,relapse,False
+mm_0142060,mm_0142060_p01,perturbation,SCT,CNS,False
+mm_0142091,mm_0142091_p02,perturbation,mesenchymal stem cells,mesenchymal stem cell,False
+mm_0142115,mm_0142115_orig,original,immunohistochemistry,ONC,False
+mm_0142116,mm_0142116_orig,original,immunohistochemistry,ONC,False
+mm_0142117,mm_0142117_orig,original,immunohistochemistry,ONC,False
+mm_0142118,mm_0142118_orig,original,immunohistochemistry,ONC,False
+mm_0142136,mm_0142136_p01,perturbation,BMSC,ocular disease,False
+mm_0142141,mm_0142141_p05,perturbation,non-perturbative,measurement,False
+mm_0142141,mm_0142141_p06,perturbation,non-perturbative,measurement,False
+mm_0142142,mm_0142142_p06,perturbation,non-perturbative,measurement,False
+mm_0142143,mm_0142143_p05,perturbation,non-perturbative,measurement,False
+mm_0142143,mm_0142143_p06,perturbation,non-perturbative,measurement,False
+mm_0142152,mm_0142152_p01,perturbation,methane - ground TDLAS,DPAL,False
+mm_0142153,mm_0142153_p05,perturbation,map,CUT&RUN,False
+mm_0142154,mm_0142154_p06,perturbation,map,CUT&RUN,False
+mm_0142155,mm_0142155_p05,perturbation,map,CUT&RUN,False
+mm_0142204,mm_0142204_p02,perturbation,cancer stem like cells,cancer stem,False
+mm_0142229,mm_0142229_p02,perturbation,pharmacological stymy,CSCs,False
+mm_0142230,mm_0142230_p01,perturbation,blockade,CSCs,False
+mm_0142269,mm_0142269_p02,perturbation,knockout,double knockout,False
+mm_0142287,mm_0142287_p07,perturbation,differences,speciation,False
+mm_0142287,mm_0142287_p08,perturbation,differences,speciation,False
+mm_0142288,mm_0142288_p07,perturbation,differences,speciation,False
+mm_0142288,mm_0142288_p08,perturbation,differences,speciation,False
+mm_0142289,mm_0142289_p07,perturbation,differences,speciation,False
+mm_0142289,mm_0142289_p08,perturbation,differences,speciation,False
+mm_0142303,mm_0142303_orig,original,fumarate hydrase,hematopoietic stem cell functions,False
+mm_0142304,mm_0142304_orig,original,fumarate hydrase,hematopoietic stem cell functions,False
+mm_0142305,mm_0142305_orig,original,fumarate hydrase,hematopoietic stem cell functions,False
+mm_0142306,mm_0142306_orig,original,fumarate hydrase,hematopoietic stem cell functions,False
+mm_0142307,mm_0142307_orig,original,fumarate hydrase,hematopoietic stem cell functions,False
+mm_0142366,mm_0142366_p07,perturbation,cancer,barcodes,False
+mm_0142366,mm_0142366_p08,perturbation,cancer,barcodes,False
+mm_0142367,mm_0142367_p07,perturbation,cancer,barcodes,False
+mm_0142367,mm_0142367_p08,perturbation,cancer,barcodes,False
+mm_0142368,mm_0142368_p07,perturbation,cancer,barcodes,False
+mm_0142368,mm_0142368_p08,perturbation,cancer,barcodes,False
+mm_0142369,mm_0142369_p07,perturbation,cancer,barcodes,False
+mm_0142369,mm_0142369_p08,perturbation,cancer,barcodes,False
+mm_0142402,mm_0142402_p01,perturbation,influenza,influenza A viruses,False
+mm_0142404,mm_0142404_p02,perturbation,influenza,influenza A viruses,False
+mm_0142503,mm_0142503_p07,perturbation,distress,TUG,False
+mm_0142503,mm_0142503_p08,perturbation,distress,TUG,False
+mm_0142504,mm_0142504_p07,perturbation,distress,TUG,False
+mm_0142504,mm_0142504_p08,perturbation,distress,TUG,False
+mm_0142505,mm_0142505_p07,perturbation,distress,TUG,False
+mm_0142505,mm_0142505_p08,perturbation,distress,TUG,False
+mm_0142506,mm_0142506_p07,perturbation,distress,TUG,False
+mm_0142506,mm_0142506_p08,perturbation,distress,TUG,False
+mm_0142507,mm_0142507_p07,perturbation,distress,TUG,False
+mm_0142507,mm_0142507_p08,perturbation,distress,TUG,False
+mm_0142509,mm_0142509_p02,perturbation,mapping,serum,False
+mm_0142511,mm_0142511_p01,perturbation,microRNAs,miRNAs,False
+mm_0142538,mm_0142538_p05,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142540,mm_0142540_p05,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142541,mm_0142541_p05,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142541,mm_0142541_p06,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142542,mm_0142542_p06,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142543,mm_0142543_p05,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142543,mm_0142543_p06,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142544,mm_0142544_p05,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142545,mm_0142545_p05,perturbation,serum miRNAs,immune-related mRNAs,False
+mm_0142565,mm_0142565_p03,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142565,mm_0142565_p04,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142566,mm_0142566_p03,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142566,mm_0142566_p04,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142567,mm_0142567_p03,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142567,mm_0142567_p04,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142568,mm_0142568_p03,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142568,mm_0142568_p04,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142569,mm_0142569_p03,perturbation,synchronized reactivation of a unilaterally paralyzed,synchronized reactivation of a unilaterally paralyzed vocal fold,False
+mm_0142601,mm_0142601_p05,perturbation,unilateral laryngeal pacing system,unilateral vocal fold paralysis,False
+mm_0142601,mm_0142601_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142601,mm_0142601_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142602,mm_0142602_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142602,mm_0142602_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142603,mm_0142603_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142603,mm_0142603_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142604,mm_0142604_p06,perturbation,unilateral laryngeal pacing system,unilateral vocal fold paralysis,False
+mm_0142604,mm_0142604_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142604,mm_0142604_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142605,mm_0142605_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142605,mm_0142605_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142606,mm_0142606_p06,perturbation,unilateral laryngeal pacing system,unilateral vocal fold paralysis,False
+mm_0142606,mm_0142606_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142606,mm_0142606_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142607,mm_0142607_p06,perturbation,unilateral laryngeal pacing system,unilateral vocal fold paralysis,False
+mm_0142608,mm_0142608_p07,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142608,mm_0142608_p08,perturbation,tuning paralysis,unilateral tuning paralysis,False
+mm_0142610,mm_0142610_p01,perturbation,disease,hypermucoviscous Klebsiella pneumoniae,False
+mm_0142620,mm_0142620_orig,original,K,K.,False
+mm_0142620,mm_0142620_p07,perturbation,K,K.,False
+mm_0142620,mm_0142620_p08,perturbation,K,K.,False
+mm_0142621,mm_0142621_orig,original,K,K.,False
+mm_0142621,mm_0142621_p07,perturbation,K,K.,False
+mm_0142621,mm_0142621_p08,perturbation,K,K.,False
+mm_0142625,mm_0142625_p01,perturbation,pneumoniae,HMKP,False
+mm_0142626,mm_0142626_p05,perturbation,HMKP,HMKP infections,False
+mm_0142626,mm_0142626_p06,perturbation,HMKP,HMKP infections,False
+mm_0142629,mm_0142629_p01,perturbation,HMKP infections,HMKP,False
+mm_0142629,mm_0142629_p06,perturbation,HMKP,HMKP infections,False
+mm_0142630,mm_0142630_p06,perturbation,HMKP,HMKP infections,False
+mm_0142655,mm_0142655_orig,original,K1,alls,False
+mm_0142656,mm_0142656_orig,original,K1,alls,False
+mm_0142657,mm_0142657_orig,original,K1,alls,False
+mm_0142658,mm_0142658_orig,original,K1,alls,False
+mm_0142659,mm_0142659_orig,original,K1,alls,False
+mm_0142660,mm_0142660_orig,original,K1,alls,False
+mm_0142686,mm_0142686_p02,perturbation,ST23,ST,False
+mm_0142688,mm_0142688_p01,perturbation,ST,ST23,False
+mm_0142696,mm_0142696_orig,original,ST65-K2,ST23-K1,False
+mm_0142697,mm_0142697_orig,original,ST65-K2,ST23-K1,False
+mm_0142698,mm_0142698_orig,original,ST65-K2,ST23-K1,False
+mm_0142699,mm_0142699_orig,original,ST65-K2,ST23-K1,False
+mm_0142700,mm_0142700_orig,original,ST65-K2,ST23-K1,False
+mm_0142701,mm_0142701_orig,original,ST65-K2,ST23-K1,False
+mm_0142702,mm_0142702_orig,original,ST65-K2,ST23-K1,False
+mm_0142703,mm_0142703_orig,original,ST65-K2,ST23-K1,False
+mm_0142704,mm_0142704_orig,original,ST65-K2,ST23-K1,False
+mm_0142704,mm_0142704_p02,perturbation,ST65 - K2,ST23 - K1,False
+mm_0142705,mm_0142705_p07,perturbation,HMKP,homology,False
+mm_0142705,mm_0142705_p08,perturbation,HMKP,homology,False
+mm_0142706,mm_0142706_p07,perturbation,HMKP,homology,False
+mm_0142706,mm_0142706_p08,perturbation,HMKP,homology,False
+mm_0142707,mm_0142707_p07,perturbation,HMKP,homology,False
+mm_0142707,mm_0142707_p08,perturbation,HMKP,homology,False
+mm_0142750,mm_0142750_p05,perturbation,research,mixed methodology,False
+mm_0142802,mm_0142802_p01,perturbation,spleen,lymphocyte proliferation,False
+mm_0142810,mm_0142810_p01,perturbation,lymphocyte proliferation,spleen,False
+mm_0142811,mm_0142811_p02,perturbation,lymphocyte proliferation,spleen,False
+mm_0142891,mm_0142891_p02,perturbation,bacteria,pathogen,False
+mm_0142920,mm_0142920_p01,perturbation,exosporium assembly,assembly,False
+mm_0142920,mm_0142920_p02,perturbation,exosporium assembly,assembly,False
+mm_0142974,mm_0142974_p02,perturbation,cardiovascular risk management,RA,False
+mm_0143005,mm_0143005_p07,perturbation,simvastatin,Educated,False
+mm_0143005,mm_0143005_p08,perturbation,simvastatin,Educated,False
+mm_0143006,mm_0143006_p07,perturbation,simvastatin,Educated,False
+mm_0143006,mm_0143006_p08,perturbation,simvastatin,Educated,False
+mm_0143007,mm_0143007_p07,perturbation,simvastatin,Educated,False
+mm_0143007,mm_0143007_p08,perturbation,simvastatin,Educated,False
+mm_0143008,mm_0143008_p02,perturbation,exercise,mice,False
+mm_0143008,mm_0143008_p07,perturbation,simvastatin,Educated,False
+mm_0143008,mm_0143008_p08,perturbation,simvastatin,Educated,False
+mm_0143009,mm_0143009_p01,perturbation,exercise,mice,False
+mm_0143009,mm_0143009_p07,perturbation,simvastatin,Educated,False
+mm_0143009,mm_0143009_p08,perturbation,simvastatin,Educated,False
+mm_0143010,mm_0143010_p07,perturbation,simvastatin,Educated,False
+mm_0143010,mm_0143010_p08,perturbation,simvastatin,Educated,False
+mm_0143011,mm_0143011_p07,perturbation,simvastatin,Educated,False
+mm_0143011,mm_0143011_p08,perturbation,simvastatin,Educated,False
+mm_0143033,mm_0143033_p02,perturbation,marker of mitochondrial fission,simvastatin,False
+mm_0143034,mm_0143034_p02,perturbation,marker of mitochondrial fission,simvastatin,False
+mm_0143037,mm_0143037_p02,perturbation,marker of autophagy,simvastatin,False
+mm_0143157,mm_0143157_p02,perturbation,esophageal,esophageal stenting,False
+mm_0143169,mm_0143169_p02,perturbation,squamous cell carcinoma,cancer,False
+mm_0143225,mm_0143225_p02,perturbation,radiation,short course radiation,False
+mm_0143234,mm_0143234_p01,perturbation,prostate cancer,metastatic prostate cancer,False
+mm_0143244,mm_0143244_p02,perturbation,congenital,congenital hypogonadotrophic hypogonadism,False
+mm_0143251,mm_0143251_p01,perturbation,disorders,GnRH,False
+mm_0143350,mm_0143350_p01,perturbation,B,B - cell lymphoma,False
+mm_0143350,mm_0143350_p02,perturbation,B,B - cell lymphoma,False
+mm_0143353,mm_0143353_p01,perturbation,B - cell,Non - Hodgkin lymphoma,False
+mm_0143357,mm_0143357_p01,perturbation,non-homologous,lymphoma,False
+mm_0143359,mm_0143359_p01,perturbation,B - cell non - hodgkin lymphoma,B - cell,False
+mm_0143365,mm_0143365_orig,original,Non-Hodgkin lymphoma,B-cell Non-Hodgkin lymphoma,False
+mm_0143366,mm_0143366_orig,original,Non-Hodgkin lymphoma,B-cell Non-Hodgkin lymphoma,False
+mm_0143372,mm_0143372_p02,perturbation,non - hodgkin lymphoma,B - cell Non - Hodgkin lymphoma,False
+mm_0143375,mm_0143375_p02,perturbation,B - cell Non - Hodgkin lymphoma,non - hodgkin lymphoma,False
+mm_0143377,mm_0143377_p02,perturbation,Non - Hodgkin lymphoma,non - hodgkin lymphoma,False
+mm_0143402,mm_0143402_p01,perturbation,Effects of static cold storage and hypothermic machine perfusion on oxid,Effects of static cold storage and hypothermic machine perfusion on oxidative stress factors,False
+mm_0143402,mm_0143402_p02,perturbation,Effects of static cold storage and hypothermic machine perfusion on oxid,Effects of static cold storage and hypothermic machine perfusion on oxidative stress factors,False
+mm_0143416,mm_0143416_p07,perturbation,liver,livers,False
+mm_0143416,mm_0143416_p08,perturbation,liver,livers,False
+mm_0143417,mm_0143417_p07,perturbation,liver,livers,False
+mm_0143417,mm_0143417_p08,perturbation,liver,livers,False
+mm_0143418,mm_0143418_p02,perturbation,liver,liver transplant,False
+mm_0143418,mm_0143418_p07,perturbation,liver,livers,False
+mm_0143418,mm_0143418_p08,perturbation,liver,livers,False
+mm_0143419,mm_0143419_p01,perturbation,liver,liver transplant,False
+mm_0143419,mm_0143419_p02,perturbation,liver,liver transplant,False
+mm_0143419,mm_0143419_p07,perturbation,liver,livers,False
+mm_0143419,mm_0143419_p08,perturbation,liver,livers,False
+mm_0143420,mm_0143420_p07,perturbation,liver,livers,False
+mm_0143420,mm_0143420_p08,perturbation,liver,livers,False
+mm_0143421,mm_0143421_p07,perturbation,liver,livers,False
+mm_0143421,mm_0143421_p08,perturbation,liver,livers,False
+mm_0143462,mm_0143462_p07,perturbation,paediatric,data,False
+mm_0143462,mm_0143462_p08,perturbation,paediatric,data,False
+mm_0143463,mm_0143463_p07,perturbation,paediatric,data,False
+mm_0143463,mm_0143463_p08,perturbation,paediatric,data,False
+mm_0143464,mm_0143464_p02,perturbation,medical,medical records,False
+mm_0143563,mm_0143563_orig,original,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143563,mm_0143563_p01,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143563,mm_0143563_p02,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143563,mm_0143563_p03,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143563,mm_0143563_p04,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143564,mm_0143564_orig,original,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143564,mm_0143564_p01,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143564,mm_0143564_p02,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143564,mm_0143564_p03,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143564,mm_0143564_p04,perturbation,pseudorheumatoid chondrodysplasi,pseudorheumatoid chondrodysplasia,False
+mm_0143609,mm_0143609_p05,perturbation,femoral tunnel,measurement,False
+mm_0143610,mm_0143610_p05,perturbation,femoral tunnel,measurement,False
+mm_0143610,mm_0143610_p06,perturbation,femoral tunnel,measurement,False
+mm_0143611,mm_0143611_orig,original,BPII,postoperative,False
+mm_0143612,mm_0143612_orig,original,BPII,postoperative,False
+mm_0143663,mm_0143663_p02,perturbation,fluid restriction,goal-directed fluid restriction,False
+mm_0143700,mm_0143700_p01,perturbation,CTLA - 4,prognostic value,False
+mm_0143727,mm_0143727_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143728,mm_0143728_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143729,mm_0143729_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143730,mm_0143730_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143731,mm_0143731_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143732,mm_0143732_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143733,mm_0143733_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143734,mm_0143734_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143735,mm_0143735_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143736,mm_0143736_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143737,mm_0143737_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143738,mm_0143738_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143739,mm_0143739_orig,original,CTLA-4+ CD4+ lymphocytes,CTLA-4+,False
+mm_0143744,mm_0143744_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143744,mm_0143744_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143744,mm_0143744_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis: Detection of an El,False
+mm_0143745,mm_0143745_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143745,mm_0143745_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143746,mm_0143746_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143746,mm_0143746_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis: Detection of an El,False
+mm_0143746,mm_0143746_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143747,mm_0143747_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143747,mm_0143747_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143747,mm_0143747_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143748,mm_0143748_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143748,mm_0143748_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143748,mm_0143748_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis: Detection of an El,False
+mm_0143749,mm_0143749_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143749,mm_0143749_p02,perturbation,In vitro Stepwise Reconstitution of Amino Zen Derived,In vitro Stepwise Reconstitution of Amino Zen Derived Vinyl Isocyanide Biosynthesis: Detection of an El,False
+mm_0143750,mm_0143750_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143750,mm_0143750_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid educe,In vitro Stepwise Reconstitution of Amino Acid educe Vinyl Isocyanide Biosynthesis,False
+mm_0143750,mm_0143750_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143751,mm_0143751_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143751,mm_0143751_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143751,mm_0143751_p02,perturbation,In vitro Stepwise Reconstitution of Amino Zen Derived,In vitro Stepwise Reconstitution of Amino Zen Derived Vinyl Isocyanide Biosynthesis: Detection of an El,False
+mm_0143752,mm_0143752_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143752,mm_0143752_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid infer Vinyl,In vitro Stepwise Reconstitution of Amino Acid infer Vinyl Isocyanide Biosynthesis: Detection of an Elus,False
+mm_0143752,mm_0143752_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143753,mm_0143753_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143753,mm_0143753_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143753,mm_0143753_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143754,mm_0143754_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143754,mm_0143754_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143755,mm_0143755_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143755,mm_0143755_p01,perturbation,In vitro piecemeal Reconstitution of Amino Acid Derive,In vitro piecemeal Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis: Detection of an,False
+mm_0143755,mm_0143755_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid educe,In vitro Stepwise Reconstitution of Amino Acid educe Vinyl Isocyanide Biosynthesis,False
+mm_0143756,mm_0143756_orig,original,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143756,mm_0143756_p01,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143756,mm_0143756_p02,perturbation,In vitro Stepwise Reconstitution of Amino Acid Derived,In vitro Stepwise Reconstitution of Amino Acid Derived Vinyl Isocyanide Biosynthesis,False
+mm_0143766,mm_0143766_p01,perturbation,disease resistance,administration,False
+mm_0143792,mm_0143792_p02,perturbation,serum,serum innate immune parameters,False
+mm_0143799,mm_0143799_p01,perturbation,parasite,roach,False
+mm_0143799,mm_0143799_p07,perturbation,p,p.,False
+mm_0143799,mm_0143799_p08,perturbation,p,p.,False
+mm_0143800,mm_0143800_p01,perturbation,parasite,roach,False
+mm_0143800,mm_0143800_p07,perturbation,p,p.,False
+mm_0143800,mm_0143800_p08,perturbation,p,p.,False
+mm_0143801,mm_0143801_p07,perturbation,p,p.,False
+mm_0143801,mm_0143801_p08,perturbation,p,p.,False
+mm_0143802,mm_0143802_p02,perturbation,parasite,roach,False
+mm_0143802,mm_0143802_p07,perturbation,p,p.,False
+mm_0143802,mm_0143802_p08,perturbation,p,p.,False
+mm_0143808,mm_0143808_orig,original,P,P.,False
+mm_0143860,mm_0143860_p02,perturbation,multidrug,multidrug - resistant,False
+mm_0143885,mm_0143885_p01,perturbation,azocyclotin,disruption,False
+mm_0143897,mm_0143897_p05,perturbation,frog,frogs,False
+mm_0143898,mm_0143898_p05,perturbation,frog,frogs,False
+mm_0143898,mm_0143898_p06,perturbation,frog,frogs,False
+mm_0143899,mm_0143899_p05,perturbation,frog,frogs,False
+mm_0143899,mm_0143899_p06,perturbation,frog,frogs,False
+mm_0143931,mm_0143931_p05,perturbation,Blenke,vapour-liquid-equilibrium,False
+mm_0143931,mm_0143931_p06,perturbation,Blenke,vapour-liquid-equilibrium,False
+mm_0143936,mm_0143936_p02,perturbation,ethanol,mash,False
+mm_0143948,mm_0143948_p01,perturbation,analysis,acid,False
+mm_0143960,mm_0143960_p05,perturbation,-glucan,-glucan laminarin,False
+mm_0143960,mm_0143960_p06,perturbation,-glucan,-glucan laminarin,False
+mm_0143961,mm_0143961_p05,perturbation,-glucan,-glucan laminarin,False
+mm_0143962,mm_0143962_p06,perturbation,-glucan,-glucan laminarin,False
+mm_0143963,mm_0143963_p05,perturbation,-glucan,-glucan laminarin,False
+mm_0143963,mm_0143963_p06,perturbation,-glucan,-glucan laminarin,False
+mm_0143980,mm_0143980_p02,perturbation,agariphila,GH30,False
+mm_0143981,mm_0143981_p01,perturbation,agariphila,GH30,False
+mm_0143981,mm_0143981_p02,perturbation,agariphila,GH30,False
+mm_0143982,mm_0143982_p02,perturbation,agariphila,GH30,False
+mm_0144026,mm_0144026_p01,perturbation,mental health,reforms,False
+mm_0144036,mm_0144036_p01,perturbation,ampere,questionnaire,False
+mm_0144075,mm_0144075_p03,perturbation,alphavirus,infection with,False
+mm_0144076,mm_0144076_p03,perturbation,alphavirus,infection with,False
+mm_0144077,mm_0144077_p03,perturbation,alphavirus,infection with,False
+mm_0144077,mm_0144077_p04,perturbation,alphavirus,infection with,False
+mm_0144078,mm_0144078_p03,perturbation,alphavirus,infection with,False
+mm_0144079,mm_0144079_p03,perturbation,alphavirus,infection with,False
+mm_0144079,mm_0144079_p04,perturbation,alphavirus,infection with,False
+mm_0144099,mm_0144099_p01,perturbation,mayv,anti-mayv,False
+mm_0144105,mm_0144105_p06,perturbation,antiviral,thienopyridine,False
+mm_0144107,mm_0144107_p06,perturbation,antiviral,thienopyridine,False
+mm_0144108,mm_0144108_p06,perturbation,antiviral,thienopyridine,False
+mm_0144110,mm_0144110_p05,perturbation,antiviral,thienopyridine,False
+mm_0144110,mm_0144110_p06,perturbation,antiviral,thienopyridine,False
+mm_0144111,mm_0144111_p05,perturbation,antiviral,thienopyridine,False
+mm_0144111,mm_0144111_p06,perturbation,antiviral,thienopyridine,False
+mm_0144112,mm_0144112_p05,perturbation,antiviral,thienopyridine,False
+mm_0144112,mm_0144112_p06,perturbation,antiviral,thienopyridine,False
+mm_0144114,mm_0144114_p01,perturbation,drug,therapeutic,False
+mm_0144164,mm_0144164_orig,original,iCa,mean lowest iCa,False
+mm_0144164,mm_0144164_p07,perturbation,lowest,iCa,False
+mm_0144164,mm_0144164_p08,perturbation,lowest,iCa,False
+mm_0144165,mm_0144165_orig,original,iCa,mean lowest iCa,False
+mm_0144165,mm_0144165_p07,perturbation,lowest,iCa,False
+mm_0144165,mm_0144165_p08,perturbation,lowest,iCa,False
+mm_0144188,mm_0144188_p06,perturbation,stones,hypointense foci,False
+mm_0144189,mm_0144189_p01,perturbation,stones,hypointense,False
+mm_0144189,mm_0144189_p05,perturbation,stones,hypointense foci,False
+mm_0144189,mm_0144189_p06,perturbation,stones,hypointense foci,False
+mm_0144190,mm_0144190_p05,perturbation,stones,hypointense foci,False
+mm_0144190,mm_0144190_p06,perturbation,stones,hypointense foci,False
+mm_0144192,mm_0144192_p02,perturbation,stones,hypointense,False

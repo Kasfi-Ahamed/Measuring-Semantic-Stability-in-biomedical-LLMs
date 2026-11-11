@@ -1,0 +1,13 @@
+{
+  "differing_string_rows": 972,
+  "resolvable_both_sides": 794,
+  "ambiguous_either_side": 0,
+  "compared": 794,
+  "same_cui": 102,
+  "different_cui": 692,
+  "unresolvable_rows": 178,
+  "string_coverage": 0.9393,
+  "cui_divergence_lower": 0.871537,
+  "cui_divergence_upper": 0.895062,
+  "bounds_note": "lower = resolved-different / compared; upper = (resolved-different + unresolvable) / (compared + unresolvable); AMBIGUOUS excluded from both"
+}

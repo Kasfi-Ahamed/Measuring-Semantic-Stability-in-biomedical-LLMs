@@ -1,0 +1,41 @@
+input_variant_id,output_text_published_v100,cui_pub,output_text_regen,cui_regen
+mm_0136256_p07,additive,C0442796,additive models,C0181920
+mm_0136256_p08,additive,C0442796,additive models,C0181920
+mm_0136257_p07,additive,C0442796,additive models,C0181920
+mm_0136257_p08,additive,C0442796,additive models,C0181920
+mm_0136259_p02,GAMs,C0061057,fitness,C1456706
+mm_0136315_p05,health,C0018684,board,C0972401
+mm_0136323_orig,criteria,C0243161,board,C0972401
+mm_0136334_p07,demographic,C0011298,population,C1257890
+mm_0136334_p08,demographic,C0011298,population,C1257890
+mm_0136335_p07,demographic,C0011298,population,C1257890
+mm_0136335_p08,demographic,C0011298,population,C1257890
+mm_0136338_p05,rebozo,C0168388,idea,C1031756
+mm_0136389_p02,S403 - p62,C2715937,p62,C1420393
+mm_0136391_p06,p62,C1420393,ubiquitin,C0041538
+mm_0136392_p05,p62,C1420393,ubiquitin,C0041538
+mm_0136394_p05,p62,C1420393,ubiquitin,C0041538
+mm_0136395_p05,p62,C1420393,ubiquitin,C0041538
+mm_0136448_orig,coatings,C1704806,current coatings,C1273642
+mm_0136449_orig,coatings,C1704806,current coatings,C1273642
+mm_0136450_orig,coatings,C1704806,current coatings,C1273642
+mm_0136494_p02,non - spatial information,C0871397,non-spatial,C1428114
+mm_0136554_p01,cardioprotection,C0007209,disruption,C0332453
+mm_0136632_p07,HBM,C1416917,body mass index,C1305855
+mm_0136632_p08,HBM,C1416917,body mass index,C1305855
+mm_0136633_p07,HBM,C1416917,body mass index,C1305855
+mm_0136633_p08,HBM,C1416917,body mass index,C1305855
+mm_0136634_p07,HBM,C1416917,body mass index,C1305855
+mm_0136634_p08,HBM,C1416917,body mass index,C1305855
+mm_0136635_p07,HBM,C1416917,body mass index,C1305855
+mm_0136635_p08,HBM,C1416917,body mass index,C1305855
+mm_0136656_p01,leptin,C1416825,obesity,C0028754
+mm_0136745_p07,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136745_p08,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136746_p07,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136746_p08,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136747_p07,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136747_p08,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136748_p07,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136748_p08,neo-yoke repair,C0339891,hypospadias,C0848558
+mm_0136749_p07,neo-yoke repair,C0339891,hypospadias,C0848558
