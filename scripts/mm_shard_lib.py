@@ -496,3 +496,74 @@ def grid_status(root: Path, mapped: Path | str | None = None) -> dict[str, Any]:
             done = [sid for sid in range(n) if shard_is_complete(shard_csv(root, fam, k, sid))]
             out["per_model_complete"][f"{fam}:{k}"] = done
     return out
+
+
+# ---------------------------------------------------------------------------
+# bfloat16 capability guard
+#
+# WHY THIS EXISTS. The manuscript states: "Experiments ran on a SLURM-managed cluster using
+# NVIDIA L40S and A100 accelerators in bfloat16. Nodes without native bfloat16 support are
+# excluded, because emulated arithmetic would perturb the very quantities being measured."
+#
+# That criterion was enforced by nothing but a literal node name in an sbatch --exclude line.
+# No code in this repository has ever checked compute capability. On 2026-09-08 and 09-09,
+# three FLAN-T5-base generative runs (blocks 17, 18, 19; jobs 32008, 32171, 32203) loaded
+# bf16 weights on g32-2gpu-1, a Tesla V100-PCIE-32GB. Volta is compute capability 7.0; native
+# bf16 arithmetic begins at 8.0 (Ampere). The node was added to the exclude list in commit
+# 6e4413f on 2026-09-10, about nine hours after the last of those runs.
+#
+# The assertion that DID fire on those jobs was:
+#     DEVICE OK [seq2seq:flan-t5-base]: param_devices=['cuda:0'] | GPU=Tesla V100-PCIE-32GB
+# It tests PLACEMENT. The fault was CAPABILITY. The evidence of the fault and the assertion
+# that passed are on the same line of the same log. A node list is hygiene; this is a check.
+# ---------------------------------------------------------------------------
+
+def assert_bf16_capable(tag: str = "", *, dtype: Any = None) -> dict:
+    """Fail the job unless the current CUDA device natively supports bfloat16.
+
+    Call this in every load path that requests torch.bfloat16, BEFORE weights are loaded.
+    Returns the capability record so callers can log it. Pass dtype to make the guard a
+    no-op for non-bf16 loads (the encoders run float32 and are unaffected).
+    """
+    import torch
+
+    if dtype is not None and dtype is not torch.bfloat16:
+        return {"checked": False, "reason": f"dtype={dtype} is not bfloat16"}
+
+    if not torch.cuda.is_available():
+        raise RuntimeError(f"assert_bf16_capable({tag!r}): no CUDA device visible.")
+
+    major, minor = torch.cuda.get_device_capability(0)
+    name = torch.cuda.get_device_name(0)
+    try:
+        torch_says = bool(torch.cuda.is_bf16_supported())
+    except Exception as exc:                                  # pragma: no cover
+        torch_says = f"error: {exc}"
+
+    rec = {
+        "checked": True,
+        "card": name,
+        "compute_capability": f"{major}.{minor}",
+        "native_bf16": major >= 8,
+        "torch_cuda_is_bf16_supported": torch_says,
+    }
+
+    if major < 8:
+        raise RuntimeError(
+            f"assert_bf16_capable({tag!r}): REFUSING TO RUN bfloat16 ON NON-NATIVE HARDWARE.\n"
+            f"  card                        : {name}\n"
+            f"  compute capability          : {major}.{minor}  (native bf16 needs >= 8.0)\n"
+            f"  torch.cuda.is_bf16_supported: {torch_says}\n"
+            f"The manuscript states that nodes without native bfloat16 support are excluded "
+            f"because emulated arithmetic would perturb the quantities being measured. This "
+            f"node does not meet that criterion. Placement assertions cannot catch this: they "
+            f"test where the weights are, not what the arithmetic does. Exclude the node, or "
+            f"load in float32 and say so."
+        )
+
+    print(
+        f"BF16 OK [{tag}]: {name} | compute capability {major}.{minor} "
+        f"| is_bf16_supported={torch_says}",
+        flush=True,
+    )
+    return rec
